@@ -993,12 +993,26 @@ body.flux-vif .cours__vif::before{
 .table-scroll{overflow-x:auto;}
 [hidden]{display:none !important;}
 
-/* Tant qu'aucun cours n'est arrivé, la section est repliée à zéro
-   plutôt que masquée : `hidden` lui retirerait sa boîte de mise en
-   page, et l'observateur qui déclenche le chargement ne verrait jamais
-   rien approcher. Repliée, elle occupe zéro pixel mais existe. */
+/* Trois états. `attente` : rien n'est encore arrivé, la section est
+   repliée à zéro plutôt que masquée — `hidden` lui retirerait sa boîte
+   de mise en page, et l'observateur qui déclenche le chargement ne
+   verrait jamais rien approcher. `ok` : les cours sont là. `ko` : la
+   recherche a échoué pour de bon, et on le dit.
+
+   Disparaître en silence serait plus propre mais malhonnête : le
+   lecteur ne pourrait pas distinguer un site incomplet d'un réseau qui
+   bloque le fournisseur. On montre le titre et une phrase — jamais une
+   grille vide, jamais un chiffre inventé. */
 .marches[data-etat="attente"]{padding-block:0; border-top:none;}
 .marches[data-etat="attente"] > .wrap{display:none;}
+.marches[data-etat="ko"] .marches__barre,
+.marches[data-etat="ko"] .marches__tete,
+.marches[data-etat="ko"] .marches__pages{display:none;}
+.marches__panne{
+  border:1.5px dashed var(--rule-strong); background:var(--paper-2);
+  padding:clamp(22px,3vw,32px); font-size:15px; line-height:1.65;
+  color:var(--ink-2); max-width:62ch; text-wrap:pretty;
+}
 
 /* ============================================================
    MARCHÉS
@@ -9052,7 +9066,12 @@ window.PC = (function(){
         /* Rien n'est jamais arrivé : la section n'a pas lieu d'être.
            Si des cours sont déjà affichés, on les garde et on dit
            seulement que la mise à jour a échoué. */
-        if (!rangs.length){ hote.setAttribute('data-etat', 'attente'); return; }
+        if (!rangs.length){
+          hote.setAttribute('data-etat', 'ko');
+          boite.innerHTML = '<p class="marches__panne">' +
+            ech(e && e.limite ? PC.t('m.limite') : PC.t('m.ko')) + '</p>';
+          return;
+        }
         dit(e && e.limite ? PC.t('m.limite') : PC.t('m.ko'), false);
       })
       .then(function(){ enVol = false; });
