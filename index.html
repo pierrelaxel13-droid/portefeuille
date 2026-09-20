@@ -170,6 +170,19 @@ p{margin:0;}
   font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.04em;
   white-space:nowrap;
 }
+.cours-etat{
+  margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+  letter-spacing:.03em; color:var(--ink-3); text-wrap:pretty;
+}
+.cours-etat[data-vif="1"]{color:var(--accent);}
+.cours-etat[data-vif="1"]::before{
+  content:""; display:inline-block; width:6px; height:6px; margin-right:7px;
+  border-radius:50%; background:currentColor; vertical-align:middle;
+  animation:bat 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .cours-etat[data-vif="1"]::before{animation:none;}
+}
 .cours__vif{background:var(--accent-soft); color:var(--accent);}
 /* Un point qui bat pendant que la connexion est ouverte. Il ne dit pas
    « ça marche » dans l'absolu : il dit « ce prix-là arrive en ce moment ». */
@@ -2984,6 +2997,10 @@ window.PC = (function(){
   'e.gate.essai.d':     ["Un portefeuille rempli, avec son historique. Rien \u00e0 saisir, rien \u00e0 cr\u00e9er.","A filled portfolio, with its history. Nothing to enter, nothing to create.","Una cartera completa, con su historial. Nada que introducir, nada que crear.","Ein gef\u00fclltes Portfolio samt Verlauf. Nichts einzugeben, nichts anzulegen."],
   'e.gate.mes':         ["Commencer avec mes chiffres","Start with my own figures","Empezar con mis cifras","Mit meinen Zahlen beginnen"],
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
+  'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
+  'e.src.vif':          ["Cours en direct \u2014 {{s}}","Live prices \u2014 {{s}}","Cotizaciones en directo \u2014 {{s}}","Kurse live \u2014 {{s}}"],
+  'e.src.pose':         ["Cours de {{s}}, relev\u00e9 \u00e0 {{h}}","Prices from {{s}}, taken at {{h}}","Cotizaciones de {{s}}, tomadas a las {{h}}","Kurse von {{s}}, erfasst um {{h}}"],
+  'e.src.rien':         ["Aucun fournisseur de cours n'a r\u00e9pondu. Vos montants restent ceux que vous avez saisis.","No price provider answered. Your amounts stay as you entered them.","Ning\u00fan proveedor de cotizaciones ha respondido. Sus importes siguen siendo los que introdujo.","Kein Kursanbieter hat geantwortet. Ihre Betr\u00e4ge bleiben, wie Sie sie eingetragen haben."],
   'e.dir.code':         ["Code du cours","Price code","C\u00f3digo de cotizaci\u00f3n","Kurs-Code"],
   'e.dir.aide':         ["Bitcoin, Ethereum, Solana\u2026 laissez ce champ vide pour saisir le cours \u00e0 la main. Rempli, le cours se cherche tout seul \u00e0 chaque ouverture.","Bitcoin, Ethereum, Solana\u2026 leave this empty to type the price by hand. Filled in, the price fetches itself each time you open the page.","Bitcoin, Ethereum, Solana\u2026 deje este campo vac\u00edo para introducir la cotizaci\u00f3n a mano. Relleno, la cotizaci\u00f3n se busca sola en cada apertura.","Bitcoin, Ethereum, Solana\u2026 leer lassen, um den Kurs von Hand einzutragen. Ausgef\u00fcllt, holt sich der Kurs bei jedem \u00d6ffnen selbst."],
   'e.dir.actif':        ["En direct \u2014 {{s}}","Live \u2014 {{s}}","En directo \u2014 {{s}}","Live \u2014 {{s}}"],
@@ -4058,6 +4075,10 @@ window.PC = (function(){
           <p class="solde__k" id="solde-k" data-i18n="e.k.valtot">Valeur totale</p>
           <p class="solde__v" id="solde-v">—</p>
           <p class="solde__d"><span id="solde-delta"></span><span class="solde__n" id="solde-n"></span></p>
+          <!-- D'ou viennent les cours affiches, et quand. Cachee tant
+               qu'aucune ligne ne suit de cours : sans code, la question
+               ne se pose pas. -->
+          <p class="cours-etat" id="cours-etat" hidden></p>
           <div class="solde__actions">
             <button class="btn" type="button" id="solde-ajout" data-i18n="e.solde.ajout">Ajouter une ligne</button>
             <button class="btn btn--ghost" type="button" id="solde-jour" data-i18n="e.solde.jour">Valeur du jour</button>
@@ -6007,6 +6028,9 @@ window.PC = (function(){
     /* La valeur totale a sa propre surface en tête : la laisser aussi
        dans la grille la répéterait à deux lignes d'intervalle. */
     document.getElementById('solde-v').textContent = eur.format(t.val);
+    /* La provenance des cours se réaffiche avec le reste : changer de
+       langue ou de devise réécrit cette ligne comme les autres. */
+    majEtatCours();
     document.getElementById('solde-delta').innerHTML =
       marque(t.perf, eur.format(Math.abs(t.gain)) + '  ·  ' + pourcent(t.perf));
     document.getElementById('solde-n').textContent =
@@ -7218,11 +7242,139 @@ window.PC = (function(){
      une clé qu'une page publique ne peut pas garder — il faudra un
      relais qui la détienne. La réponse attendue garde la même forme :
      {"<code>":{"<devise>":<nombre>}}. */
-  const COURS_SOURCE = window.PC_COURS_SOURCE || 'https://api.coingecko.com/api/v3/simple/price';
   const COURS_FRAIS = 5 * 60 * 1000;
   const CLE_COURS = 'pierrelco.cours.v1';
   let coursEnVol = false;
   let coursEtat = null;
+  let coursSource = null;   /* qui a répondu la dernière fois */
+  let coursQuand = 0;       /* et à quelle heure */
+
+  /* Code maison -> symbole de marche, et contrepartie cotee. Deux des
+     trois fournisseurs ne parlent qu'en paires : « bitcoin » ne leur
+     dit rien, « BTCEUR » si. */
+  const PAIRES = {
+    bitcoin:'BTC', ethereum:'ETH', solana:'SOL', ripple:'XRP',
+    cardano:'ADA', dogecoin:'DOGE', polkadot:'DOT', chainlink:'LINK',
+    litecoin:'LTC', 'avalanche-2':'AVAX', tron:'TRX', binancecoin:'BNB'
+  };
+  const CONTREPARTIE = {EUR:'EUR', USD:'USDT', GBP:'GBP'};
+
+  /* Un appel qui ne revient pas est pire qu'un appel qui echoue : il
+     bloquerait la chaine sur son premier maillon. */
+  function avecDelai(p, ms){
+    return new Promise(function(ok, ko){
+      const t = setTimeout(function(){ ko(new Error('delai')); }, ms);
+      p.then(function(v){ clearTimeout(t); ok(v); },
+             function(e){ clearTimeout(t); ko(e); });
+    });
+  }
+  function litJSON(u){
+    return avecDelai(fetch(u, {headers:{'Accept':'application/json'}})
+      .then(function(r){
+        if (r.status === 429){ const e = new Error('limite'); e.limite = true; throw e; }
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json();
+      }), 9000);
+  }
+
+  /* ===== Les fournisseurs, dans l'ordre d'essai =====
+     Aucun ne demande de cle, et tous trois autorisent l'appel depuis un
+     navigateur. On les essaie l'un apres l'autre jusqu'a ce qu'un
+     reponde : c'est ce qui fait qu'il n'y a rien a toucher, meme si
+     l'un d'eux est injoignable depuis tel pays ou tel reseau.
+
+     `PC_COURS_SOURCE` reste prioritaire sur les trois : c'est par la
+     que passera votre propre relais, pour la bourse notamment. */
+  const FOURNISSEURS = [
+    {
+      nom:'CoinGecko',
+      cherche:function(ids, dev){
+        return litJSON('https://api.coingecko.com/api/v3/simple/price?ids=' +
+          encodeURIComponent(ids.join(',')) + '&vs_currencies=' + encodeURIComponent(dev))
+          .then(function(o){
+            const p = {};
+            ids.forEach(function(i){
+              const e = o && o[i];
+              if (e && typeof e[dev] === 'number' && e[dev] > 0) p[i] = e[dev];
+            });
+            return p;
+          });
+      }
+    },
+    {
+      nom:'Binance',
+      cherche:function(ids, dev){
+        const q = CONTREPARTIE[dev.toUpperCase()];
+        if (!q) return Promise.reject(new Error('devise sans paire'));
+        const couples = [];
+        ids.forEach(function(i){ if (PAIRES[i]) couples.push({id:i, s:PAIRES[i] + q}); });
+        if (!couples.length) return Promise.reject(new Error('aucun code connu'));
+        const liste = '[' + couples.map(function(c){ return '"' + c.s + '"'; }).join(',') + ']';
+        return litJSON('https://api.binance.com/api/v3/ticker/price?symbols=' +
+          encodeURIComponent(liste))
+          .then(function(o){
+            const p = {};
+            if (!Array.isArray(o)) return p;
+            o.forEach(function(x){
+              const sym = String(x.symbol || '').toUpperCase();
+              couples.forEach(function(c){
+                if (c.s !== sym) return;
+                const v = parseFloat(x.price);
+                if (isFinite(v) && v > 0) p[c.id] = v;
+              });
+            });
+            return p;
+          });
+      }
+    },
+    {
+      nom:'Coinbase',
+      cherche:function(ids, dev){
+        /* Un actif par appel : c'est pourquoi il vient en dernier. */
+        const utiles = ids.filter(function(i){ return PAIRES[i]; });
+        if (!utiles.length) return Promise.reject(new Error('aucun code connu'));
+        return Promise.all(utiles.map(function(i){
+          return litJSON('https://api.coinbase.com/v2/prices/' +
+            encodeURIComponent(PAIRES[i] + '-' + dev.toUpperCase()) + '/spot')
+            .then(function(o){
+              const v = o && o.data && parseFloat(o.data.amount);
+              return (isFinite(v) && v > 0) ? {id:i, v:v} : null;
+            }, function(){ return null; });
+        })).then(function(r){
+          /* Tous les appels ont échoué : ce fournisseur est injoignable,
+             il ne doit pas passer pour quelqu'un qui a répondu sans
+             connaître les codes. */
+          if (r.every(function(x){ return x === null; }))
+            throw new Error('injoignable');
+          const p = {};
+          r.forEach(function(x){ if (x) p[x.id] = x.v; });
+          return p;
+        });
+      }
+    }
+  ];
+
+  /* Le relais maison, quand il y en a un, passe devant les trois. */
+  function fournisseurs(){
+    if (!window.PC_COURS_SOURCE) return FOURNISSEURS;
+    const u = window.PC_COURS_SOURCE;
+    return [{
+      nom:'Relais',
+      cherche:function(ids, dev){
+        return litJSON(u + (u.indexOf('?') === -1 ? '?' : '&') +
+          'ids=' + encodeURIComponent(ids.join(',')) +
+          '&vs_currencies=' + encodeURIComponent(dev))
+          .then(function(o){
+            const p = {};
+            ids.forEach(function(i){
+              const e = o && o[i];
+              if (e && typeof e[dev] === 'number' && e[dev] > 0) p[i] = e[dev];
+            });
+            return p;
+          });
+      }
+    }].concat(FOURNISSEURS);
+  }
 
   function symbolesSuivis(){
     const vus = {};
@@ -7265,33 +7417,43 @@ window.PC = (function(){
         (Date.now() - cache.t) < COURS_FRAIS &&
         ids.every(function(i){ return typeof cache.p[i] === 'number'; })){
       const n = poseCours(cache.p);
+      if (cache.src){ coursSource = cache.src; coursQuand = cache.t; }
       if (n) ecrire();
-      return Promise.resolve({code:'cache', n:n});
+      majEtatCours();
+      return Promise.resolve({code:'cache', n:n, src:coursSource});
     }
     if (coursEnVol) return Promise.resolve({code:'envol', n:0});
     coursEnVol = true;
-    const u = COURS_SOURCE +
-      (COURS_SOURCE.indexOf('?') === -1 ? '?' : '&') +
-      'ids=' + encodeURIComponent(ids.join(',')) +
-      '&vs_currencies=' + encodeURIComponent(dev);
-    return fetch(u, {headers:{'Accept':'application/json'}})
+    const liste = fournisseurs();
+    let limite = false, repondu = false;
+    /* On descend la chaîne : le premier qui rend au moins un prix
+       gagne. L'échec d'un fournisseur n'est pas une panne tant qu'il en
+       reste un derrière — c'est tout l'intérêt d'en avoir trois. */
+    function essaie(k){
+      if (k >= liste.length) return Promise.resolve(null);
+      return liste[k].cherche(ids, dev).then(function(p){
+        if (p && Object.keys(p).length) return {nom:liste[k].nom, p:p};
+        /* Il a répondu, mais ne connaît aucun de ces codes. Ce n'est pas
+           la même chose qu'un fournisseur injoignable, et ça n'appelle
+           pas le même conseil : là il faut vérifier l'orthographe. */
+        repondu = true;
+        return essaie(k + 1);
+      }, function(e){
+        /* 429 : on retient qu'on a été limité, mais on continue la
+           chaîne — un autre fournisseur n'a pas la même limite. */
+        if (e && e.limite) limite = true;
+        return essaie(k + 1);
+      });
+    }
+    return essaie(0)
       .then(function(r){
-        /* 429 : on n'insiste pas. Une boucle de reprise ferait fermer la
-           porte pour de bon. */
-        if (r.status === 429) return {code:'limite', n:0};
-        if (!r.ok) return {code:'ko', n:0};
-        return r.json().then(function(o){
-          const prix = {};
-          ids.forEach(function(i){
-            const e = o && o[i];
-            if (e && typeof e[dev] === 'number' && e[dev] > 0) prix[i] = e[dev];
-          });
-          const absents = ids.filter(function(i){ return !(i in prix); });
-          const n = poseCours(prix);
-          /* On ne garde en cache que ce qu'on a vraiment reçu. */
-          if (Object.keys(prix).length) ecritCacheCours({t:Date.now(), dev:dev, p:prix});
-          return {code:absents.length ? 'inconnu' : 'ok', n:n, absents:absents};
-        });
+        if (!r) return {code:repondu ? 'inconnu' : (limite ? 'limite' : 'ko'),
+                        n:0, absents:repondu ? ids : []};
+        const absents = ids.filter(function(i){ return !(i in r.p); });
+        const n = poseCours(r.p);
+        coursSource = r.nom; coursQuand = Date.now();
+        ecritCacheCours({t:coursQuand, dev:dev, p:r.p, src:r.nom});
+        return {code:absents.length ? 'inconnu' : 'ok', n:n, absents:absents, src:r.nom};
       })
       .catch(function(){ return {code:'ko', n:0}; })
       .then(function(r){
@@ -7301,9 +7463,101 @@ window.PC = (function(){
            courbe avance donc d'elle-même, sans saisie. */
         if (r.n) ecrire();
         rendre();
+        majEtatCours();
         return r;
       });
   }
+
+  /* ===== Reconnaître une crypto à son nom =====
+     Le code de marché était un champ de plus, qu'il fallait avoir vu
+     pour le remplir. Une ligne nommée « Bitcoin » n'a aucune raison
+     d'exiger qu'on tape « bitcoin » à côté : on le déduit.
+
+     Les tickers sont là parce qu'on écrit aussi bien « BTC » que
+     « Bitcoin », et les accents sont retirés parce qu'on écrit aussi
+     bien « Ethereum » que « Ethéreum ». */
+  const NOMS_CODES = {
+    bitcoin:'bitcoin', btc:'bitcoin', xbt:'bitcoin',
+    ethereum:'ethereum', eth:'ethereum', ether:'ethereum',
+    solana:'solana', sol:'solana',
+    ripple:'ripple', xrp:'ripple',
+    cardano:'cardano', ada:'cardano',
+    dogecoin:'dogecoin', doge:'dogecoin',
+    polkadot:'polkadot', dot:'polkadot',
+    chainlink:'chainlink', link:'chainlink',
+    litecoin:'litecoin', ltc:'litecoin',
+    avalanche:'avalanche-2', avax:'avalanche-2',
+    tron:'tron', trx:'tron',
+    bnb:'binancecoin', binance:'binancecoin', binancecoin:'binancecoin',
+    monero:'monero', xmr:'monero'
+  };
+  function codeDepuisNom(nom){
+    const t = String(nom || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, ' ').trim();
+    if (!t) return null;
+    if (NOMS_CODES[t]) return NOMS_CODES[t];
+    /* « Bitcoin long terme », « Mon ETH », « ETF Bitcoin » : on regarde
+       mot à mot, le premier reconnu l'emporte. */
+    const mots = t.split(' ');
+    for (let i = 0; i < mots.length; i++){
+      if (NOMS_CODES[mots[i]]) return NOMS_CODES[mots[i]];
+    }
+    return null;
+  }
+  /* Les lignes déjà créées en profitent aussi : sans ça il aurait fallu
+     rouvrir chacune pour lui donner un code à la main. Réversible — la
+     fiche montre le code et permet de le retirer. */
+  function devineCodes(){
+    let n = 0;
+    actifs.forEach(function(a){
+      if (a.sym) return;
+      if (typeof a.q !== 'number' || typeof a.pu !== 'number') return;
+      const c = codeDepuisNom(a.nom);
+      if (c){ a.sym = c; n++; }
+    });
+    return n;
+  }
+
+  /* L'heure d'un relevé, sans la date : on ne lit pas « 18:07 » comme
+     on lit « le 20 septembre ». */
+  function heureCourte(ms){
+    if (!ms) return '—';
+    try {
+      return new Intl.DateTimeFormat(PC.locale(),
+        {hour:'2-digit', minute:'2-digit'}).format(new Date(ms));
+    } catch (e){ return '—'; }
+  }
+
+  /* Dit d'où viennent les cours affichés, et quand. Une page qui montre
+     des chiffres de marché doit dire lesquels : sans ça, le visiteur
+     n'a aucun moyen de distinguer le marché d'un souvenir. */
+  function majEtatCours(){
+    const el = document.getElementById('cours-etat');
+    if (!el) return;
+    /* Une ligne qui suit un cours sans porter de code est le cas le
+       plus courant, et le plus silencieux : on le nomme. */
+    const aCours = actifs.some(function(a){
+      return typeof a.q === 'number' && typeof a.pu === 'number';
+    });
+    if (!symbolesSuivis().length){
+      if (!aCours){ el.hidden = true; return; }
+      el.hidden = false;
+      el.removeAttribute('data-vif');
+      el.textContent = PC.t('e.src.sanscode');
+      return;
+    }
+    el.hidden = false;
+    if (flux && document.body.classList.contains('flux-vif')){
+      el.setAttribute('data-vif', '1');
+      el.textContent = PC.t('e.src.vif', {s:fluxNom});
+      return;
+    }
+    el.removeAttribute('data-vif');
+    if (!coursSource){ el.textContent = PC.t('e.src.rien'); return; }
+    el.textContent = PC.t('e.src.pose', {s:coursSource, h:heureCourte(coursQuand)});
+  }
+
   /* ============================================================
      FLUX EN DIRECT
      ------------------------------------------------------------
@@ -7327,20 +7581,14 @@ window.PC = (function(){
      La connexion se ferme dès que l'onglet passe en arrière-plan : un
      flux ouvert dans une poche vide une batterie. */
   const FLUX_SOURCE = window.PC_FLUX_SOURCE || 'wss://stream.binance.com:9443/stream';
-  /* Code du fournisseur de cours → symbole de marché. Une table et non
-     une règle : « avalanche-2 » ne se devine pas depuis « AVAX ». */
-  const FLUX_PAIRES = {
-    bitcoin:'BTC', ethereum:'ETH', solana:'SOL', ripple:'XRP',
-    cardano:'ADA', dogecoin:'DOGE', polkadot:'DOT', chainlink:'LINK',
-    litecoin:'LTC', 'avalanche-2':'AVAX', tron:'TRX', binancecoin:'BNB'
-  };
-  /* La contrepartie cotée. Le dollar se traite en USDT sur ce marché.
-     Une devise absente d'ici n'a pas de flux : la ligne reste sur son
+  /* `PAIRES` et `CONTREPARTIE` sont les tables des fournisseurs HTTP :
+     le flux parle le même langage de marché qu'eux. Une devise absente
+     de `CONTREPARTIE` n'a pas de flux — la ligne reste alors sur son
      cours HTTP, ce qui est correct et non dégradé. */
-  const FLUX_CONTREPARTIE = {EUR:'EUR', USD:'USDT', GBP:'GBP'};
   const FLUX_ECRIT_MS = 60000;
   const FLUX_PEINT_MS = 250;
 
+  let fluxNom = 'Binance';
   let flux = null, fluxPaires = '', fluxRetard = 0, fluxMinuteur = null,
       fluxDernierEcrit = 0, fluxPeinture = null, fluxVoulu = false;
   /* Vrai quand des ticks ont changé une valeur qui n'est pas encore
@@ -7352,12 +7600,12 @@ window.PC = (function(){
 
   /* Les paires à suivre, pour la devise affichée. */
   function fluxLignes(){
-    const q = FLUX_CONTREPARTIE[PC.devise];
+    const q = CONTREPARTIE[PC.devise];
     if (!q) return [];
     const vus = {};
     actifs.forEach(function(a){
       const code = a.sym && String(a.sym).trim().toLowerCase();
-      const base = code && FLUX_PAIRES[code];
+      const base = code && PAIRES[code];
       if (base && typeof a.q === 'number' && a.q > 0) vus[(base + q).toLowerCase()] = code;
     });
     return Object.keys(vus).sort().map(function(p){ return {paire:p, sym:vus[p]}; });
@@ -7365,6 +7613,7 @@ window.PC = (function(){
 
   function etatFlux(on){
     document.body.classList.toggle('flux-vif', !!on);
+    majEtatCours();
   }
 
   /* Réécrit les quelques nombres qui bougent. Volontairement court :
@@ -7397,6 +7646,7 @@ window.PC = (function(){
       bouge = true;
     });
     if (!bouge) return;
+    coursSource = fluxNom; coursQuand = Date.now();
     majCours();
     if (!fluxPeinture) fluxPeinture = setTimeout(function(){
       fluxPeinture = null; peintVif();
@@ -8104,7 +8354,9 @@ window.PC = (function(){
       ligne.q = qDet;
       ligne.pu = puSaisi;
       ligne.puMaj = jourISO(Date.now());
-      const sym = document.getElementById('a-sym').value.trim().toLowerCase();
+      /* Le champ prime s'il est rempli ; sinon le nom parle. */
+      const sym = document.getElementById('a-sym').value.trim().toLowerCase()
+        || codeDepuisNom(nom) || '';
       if (sym) ligne.sym = sym;
       ligne.val = valeurCours(ligne);
     }
@@ -8382,6 +8634,10 @@ window.PC = (function(){
      dès l'ouverture, sans bouton à trouver. Différé pour ne pas retarder
      le premier rendu — un appel réseau ne doit jamais faire attendre
      l'affichage de chiffres qu'on a déjà. */
+  /* Avant la première recherche : les lignes existantes reçoivent leur
+     code, sinon elles resteraient muettes jusqu'à ce qu'on les rouvre. */
+  if (devineCodes()) ecrire();
+
   setTimeout(function(){
     if (!symbolesSuivis().length) return;
     chercheCours(false).then(function(r){
