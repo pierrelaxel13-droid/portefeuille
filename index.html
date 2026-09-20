@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260920.1911";</script>
+<script>window.PC_VERSION = "260920.1928";</script>
 </head>
 <body>
 
@@ -1005,7 +1005,7 @@ body.flux-vif .cours__vif::before{
    bloque le fournisseur. On montre le titre et une phrase — jamais une
    grille vide, jamais un chiffre inventé. */
 .marches[data-etat="attente"]{padding-block:0; border-top:none;}
-.marches[data-etat="attente"] > .wrap{display:none;}
+.marches[data-etat="attente"] > *{display:none;}
 .marches[data-etat="ko"] .marches__barre,
 .marches[data-etat="ko"] .marches__tete,
 .marches[data-etat="ko"] .marches__pages{display:none;}
@@ -3146,6 +3146,8 @@ window.PC = (function(){
   'e.gate.mes':         ["Commencer avec mes chiffres","Start with my own figures","Empezar con mis cifras","Mit meinen Zahlen beginnen"],
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
+  'm.onglet':           ["March\u00e9s","Markets","Mercados","M\u00e4rkte"],
+  'm.courbe':           ["Le cours du march\u00e9","The market price","La cotizaci\u00f3n del mercado","Der Marktkurs"],
   'm.h2':                 ["Les march\u00e9s, en direct.","The markets, live.","Los mercados, en directo.","Die M\u00e4rkte, live."],
   'm.intro':              ["Les cours ci-dessous viennent du march\u00e9, pas d'une capture d'\u00e9cran. Ils se rafra\u00eechissent pendant que vous lisez cette page.","The prices below come from the market, not from a screenshot. They refresh while you read this page.","Las cotizaciones de abajo vienen del mercado, no de una captura de pantalla. Se actualizan mientras lee esta p\u00e1gina.","Die Kurse unten kommen vom Markt, nicht aus einem Screenshot. Sie aktualisieren sich, w\u00e4hrend Sie diese Seite lesen."],
   'm.cherche':            ["Chercher une crypto","Search a coin","Buscar una cripto","Krypto suchen"],
@@ -3787,48 +3789,6 @@ window.PC = (function(){
     <p class="preuve__exemple reveal">
       <b data-i18n="ribbon.b">Données d'exemple.</b> <span data-i18n="ribbon.txt">Tous les montants et performances de cette page sont fictifs, le temps que les chiffres réels soient saisis.</span>
     </p>
-  </div>
-</section>
-
-<!-- ===== MARCHÉS =====
-     Des cours réels, sur la page publique, avant toute connexion. C'est
-     ce qui distingue une démonstration d'une capture d'écran : le
-     visiteur peut vérifier lui-même, en comparant avec n'importe quelle
-     autre source, que les chiffres bougent et qu'ils sont justes.
-
-     Toute la section se retire d'elle-même si aucun cours n'arrive :
-     une devanture qui montre une grille vide est pire qu'une devanture
-     qui n'en a pas. -->
-<section class="section section--rule marches" id="marches" data-etat="attente">
-  <div class="wrap">
-    <div class="section__head">
-      <h2 data-i18n="m.h2">Les marchés, en direct.</h2>
-      <p class="section__intro" data-i18n="m.intro">Les cours ci-dessous viennent du marché, pas d'une capture d'écran.</p>
-    </div>
-
-    <div class="marches__vue" id="mar-vue-liste">
-      <div class="marches__barre">
-        <input class="marches__q" id="mar-q" type="search" autocomplete="off"
-               spellcheck="false" data-i18n-titre="m.cherche" placeholder="Chercher une crypto">
-        <p class="marches__etat mono" id="mar-etat" role="status"></p>
-      </div>
-      <div class="marches__tete mono" aria-hidden="true">
-        <span data-i18n="m.rang">Rang</span>
-        <span data-i18n="m.nom">Nom</span>
-        <span data-i18n="m.prix">Prix</span>
-        <span data-i18n="m.var">24 h</span>
-        <span data-i18n="m.cap">Capitalisation</span>
-        <span data-i18n="m.7j">7 jours</span>
-      </div>
-      <div class="marches__liste" id="mar-liste"></div>
-      <div class="marches__pages">
-        <button class="btn-ghost" type="button" id="mar-moins" data-i18n="m.precedent">Page précédente</button>
-        <span class="mono" id="mar-page">1</span>
-        <button class="btn-ghost" type="button" id="mar-plus" data-i18n="m.suivant">Page suivante</button>
-      </div>
-    </div>
-
-    <div class="marches__vue" id="mar-vue-fiche" hidden></div>
   </div>
 </section>
 
@@ -4483,6 +4443,39 @@ window.PC = (function(){
       </div>
     </div>
 
+    </div>
+
+    <!-- Les marchés vivent du côté connexion : ce sont les cours qui
+         font bouger un portefeuille, pas un argument de devanture. -->
+    <div class="pan marches" id="pan-marches" role="tabpanel" aria-labelledby="ong-marches" tabindex="0" data-etat="attente" hidden>
+      <div class="section__head">
+        <h2 data-i18n="m.h2">Les marchés, en direct.</h2>
+        <p class="section__intro" data-i18n="m.intro">Les cours ci-dessous viennent du marché, pas d'une capture d'écran.</p>
+      </div>
+
+      <div class="marches__vue" id="mar-vue-liste">
+        <div class="marches__barre">
+          <input class="marches__q" id="mar-q" type="search" autocomplete="off"
+                 spellcheck="false" data-i18n-titre="m.cherche" placeholder="Chercher une crypto">
+          <p class="marches__etat mono" id="mar-etat" role="status"></p>
+        </div>
+        <div class="marches__tete mono" aria-hidden="true">
+          <span data-i18n="m.rang">Rang</span>
+          <span data-i18n="m.nom">Nom</span>
+          <span data-i18n="m.prix">Prix</span>
+          <span data-i18n="m.var">24 h</span>
+          <span data-i18n="m.cap">Capitalisation</span>
+          <span data-i18n="m.7j">7 jours</span>
+        </div>
+        <div class="marches__liste" id="mar-liste"></div>
+        <div class="marches__pages">
+          <button class="btn-ghost" type="button" id="mar-moins" data-i18n="m.precedent">Page précédente</button>
+          <span class="mono" id="mar-page">1</span>
+          <button class="btn-ghost" type="button" id="mar-plus" data-i18n="m.suivant">Page suivante</button>
+        </div>
+      </div>
+
+      <div class="marches__vue" id="mar-vue-fiche" hidden></div>
     </div>
 
     <div class="pan" id="pan-actif" role="tabpanel" tabindex="0" hidden>
@@ -6730,6 +6723,19 @@ window.PC = (function(){
         blocCours(a) +
       '</section>') +
 
+      (a.sym && window.PC_MARCHES ? '<section class="pa__sect">' +
+        '<h4 class="pa__h">' + PC.t('m.courbe') + '</h4>' +
+        '<div class="carte"><div class="carte__c">' +
+          '<div class="fiche-m__plages">' +
+            PC_MARCHES.plages.map(function(p, i){
+              return '<button class="fiche-m__plage" type="button" data-paplage="' + i +
+                '" aria-pressed="' + (i === plageActif) + '">' + echap(p) + '</button>';
+            }).join('') +
+          '</div>' +
+          '<div id="pa-graphe-m"></div>' +
+        '</div></div>' +
+      '</section>' : '') +
+
       '<section class="pa__sect">' +
         '<h4 class="pa__h">' + PC.t('e.pa.courbe') + '</h4>' +
         '<div class="carte">' +
@@ -6762,6 +6768,12 @@ window.PC = (function(){
     boite.hidden = !trace;
     vide.hidden = trace;
     if (!trace) vide.innerHTML = serie.length === 1 ? motCourbeVide(1) : PC.t('e.pa.courbe.vide');
+
+    /* Le cours du marché arrive du réseau : la fiche est déjà lisible
+       sans lui, il s'ajoute quand il est là. */
+    if (a.sym && window.PC_MARCHES){
+      PC_MARCHES.trace('pa-graphe-m', a.sym, plageActif);
+    }
 
     requestAnimationFrame(function(){
       hote.querySelectorAll('.jauge-l__f').forEach(function(f){ f.style.width = f.dataset.w + '%'; });
@@ -7098,9 +7110,11 @@ window.PC = (function(){
   const panneaux = {
     general: document.getElementById('pan-general'),
     ajout:   document.getElementById('pan-ajout'),
-    actif:   document.getElementById('pan-actif')
+    actif:   document.getElementById('pan-actif'),
+    marches: document.getElementById('pan-marches')
   };
   let vueCourante = 'general';
+  let plageActif = 2;   /* 7 jours : assez pour voir une tendance */
 
   function construitOnglets(){
     const avaitFocus = barreOnglets.contains(document.activeElement);
@@ -7115,6 +7129,7 @@ window.PC = (function(){
                   note:pourcent(a.inv ? res / a.inv * 100 : 0),
                   ton:res > 0 ? 'up' : (res < 0 ? 'down' : 'flat')});
     });
+    liste.push({cle:'marches', id:'ong-marches', nom:PC.t('m.onglet')});
     liste.push({cle:'ajout', id:'ong-ajout', nom:PC.t('e.ong.ajout'), ajout:true});
 
     barreOnglets.innerHTML = liste.map(function(o){
@@ -7142,7 +7157,12 @@ window.PC = (function(){
   }
 
   function poseVue(cible, sansDefilement){
-    vueCourante = cible === 'actif' || cible === 'ajout' ? cible : 'general';
+    vueCourante = (cible === 'actif' || cible === 'ajout' || cible === 'marches')
+      ? cible : 'general';
+    /* Un panneau masqué n'a pas de boîte de mise en page : l'observateur
+       du module ne le verrait jamais approcher. C'est l'ouverture de la
+       vue qui déclenche le chargement. */
+    if (vueCourante === 'marches' && window.PC_MARCHES) PC_MARCHES.ouvre();
     Object.keys(panneaux).forEach(function(k){
       panneaux[k].hidden = k !== vueCourante;
       panneaux[k].classList.remove('entre');
@@ -7173,6 +7193,11 @@ window.PC = (function(){
 
   /* La barre porte les actifs eux-mêmes : elle se refait donc à chaque
      rendu, comme le reste de ce qui dépend d'eux. */
+  const ICONE_MARCHES =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M3 17l5-6 4 4 5-8"/><path d="M17 7h4v4"/></svg>';
+
   function construitBarreApp(){
     if (!barreApp) return;
     const entrees = [{dest:'accueil', nom:PC.t('e.bar.accueil'), icone:ICONE_ACCUEIL}];
@@ -7180,6 +7205,7 @@ window.PC = (function(){
       entrees.push({dest:'actif:' + i, nom:a.nom,
                     pastille:(a.nom.trim().charAt(0) || '?').toUpperCase()});
     });
+    entrees.push({dest:'marches', nom:PC.t('m.onglet'), icone:ICONE_MARCHES});
     entrees.push({dest:'ajout', nom:PC.t('e.bar.ajouter'), icone:ICONE_AJOUT});
 
     barreApp.innerHTML = entrees.map(function(e){
@@ -7195,7 +7221,8 @@ window.PC = (function(){
   function majBarreApp(dest){
     if (!barreApp) return;
     const courant = dest ||
-      (vueCourante === 'ajout' ? 'ajout'
+      (vueCourante === 'marches' ? 'marches'
+       : vueCourante === 'ajout' ? 'ajout'
        : (vueCourante === 'actif' && ouvert !== null ? 'actif:' + ouvert : 'accueil'));
     let vu = null;
     barreApp.querySelectorAll('[data-dest]').forEach(function(b){
@@ -7228,6 +7255,7 @@ window.PC = (function(){
     if (!b) return;
     const d = b.dataset.dest;
     if (d === 'accueil'){ ouvert = null; poseVue('general'); }
+    else if (d === 'marches'){ ouvert = null; poseVue('marches'); }
     else if (d === 'ajout'){
       poseVue('ajout');
       setTimeout(function(){ const n = document.getElementById('a-nom'); if (n) n.focus(); }, 60);
@@ -7240,6 +7268,7 @@ window.PC = (function(){
     if (!b) return;
     const c = b.dataset.cible;
     if (c === 'general'){ ouvert = null; poseVue('general'); }
+    else if (c === 'marches'){ ouvert = null; poseVue('marches'); }
     else if (c === 'ajout'){ poseVue('ajout'); setTimeout(function(){ document.getElementById('a-nom').focus(); }, 60); }
     else ouvreActif(+c.split(':')[1]);
   });
@@ -8337,7 +8366,19 @@ window.PC = (function(){
     else if (c.id === 'co-ouvrir') ouvreCours();
     else if (c.id === 'co-enreg') enregistreCours();
     else if (c.id === 'co-oter') oteCours();
-    else if (c.id === 'co-maj'){
+    const pl = c.closest('[data-paplage]');
+    if (pl){
+      plageActif = +pl.getAttribute('data-paplage');
+      const a = actifs[ouvert];
+      document.querySelectorAll('[data-paplage]').forEach(function(x){
+        x.setAttribute('aria-pressed', String(+x.getAttribute('data-paplage') === plageActif));
+      });
+      if (a && a.sym && window.PC_MARCHES){
+        PC_MARCHES.trace('pa-graphe-m', a.sym, plageActif);
+      }
+      return;
+    }
+    if (c.id === 'co-maj'){
       c.disabled = true;
       c.textContent = PC.t('e.dir.encours');
       chercheCours(true).then(function(r){ dire(motCours(r)); });
@@ -8929,7 +8970,7 @@ window.PC = (function(){
    ============================================================ */
 (function(){
   'use strict';
-  const hote = document.getElementById('marches');
+  const hote = document.getElementById('pan-marches');
   if (!hote || !window.PC || !window.fetch) return;
 
   const BASE = window.PC_MARCHE_SOURCE || 'https://api.coingecko.com/api/v3';
@@ -8946,6 +8987,8 @@ window.PC = (function(){
   const btnMoins = document.getElementById('mar-moins');
   const btnPlus = document.getElementById('mar-plus');
 
+  const memoire = {};   /* courbes déjà reçues, par crypto et par plage */
+  const enVolCourbe = {};   /* et celles encore en chemin */
   let page = 1, recherche = '', rangs = [], ouverte = null, minuteur = null;
   let dernier = 0, enVol = false, vu = false;
 
@@ -9246,13 +9289,49 @@ window.PC = (function(){
       charge(false);
     }, RYTHME);
   }
-  if (window.IntersectionObserver){
-    new IntersectionObserver(function(entrees, obs){
-      if (entrees[0].isIntersecting){ obs.disconnect(); eveille(); }
-    }, {rootMargin:'400px'}).observe(hote);
-  } else {
-    eveille();
-  }
+  window.PC_MARCHES = {
+    ouvre: eveille,
+    plages: PLAGES.map(function(p){ return p[0]; }),
+    /* Trace la courbe d'une crypto dans un conteneur désigné par son
+       identifiant — jamais par une référence. Entre le départ de la
+       requête et sa réponse, un rendu peut reconstruire la fiche : le
+       nœud qu'on tenait n'appartient alors plus à la page, et on
+       écrirait dans le vide. On le retrouve au moment d'écrire.
+
+       Les points sont gardés quelques minutes : revenir sur une plage
+       déjà vue, ou un simple rendu, ne doit pas redemander au réseau ce
+       qu'on a déjà. */
+    trace: function(cibleId, id, i){
+      if (!cibleId || !id) return;
+      const jours = (PLAGES[i] || PLAGES[2])[1];
+      const cle = id + '|' + jours + '|' + dev();
+      const pose = function(pts){
+        const c = document.getElementById(cibleId);
+        if (c) c.innerHTML = pts ? courbe(pts) : '';
+      };
+      const garde = memoire[cle];
+      if (garde && Date.now() - garde.t < 180000){ pose(garde.p); return; }
+      /* Deux rendus qui se suivent demanderaient deux fois la même
+         courbe avant que la première réponse n'arrive. Une requête en
+         vol sert tout le monde. */
+      if (!enVolCourbe[cle]){
+        enVolCourbe[cle] = json(BASE + '/coins/' + encodeURIComponent(id) +
+            '/market_chart?vs_currency=' + dev() + '&days=' + jours)
+          .then(function(o){
+            let pts = (o && o.prices) || [];
+            if ((PLAGES[i] || [])[0] === '1h' && pts.length){
+              const debut = pts[pts.length - 1][0] - 3600e3;
+              const tranche = pts.filter(function(p){ return p[0] >= debut; });
+              if (tranche.length > 1) pts = tranche;
+            }
+            memoire[cle] = {t:Date.now(), p:pts};
+            delete enVolCourbe[cle];
+            return pts;
+          }, function(e){ delete enVolCourbe[cle]; throw e; });
+      }
+      enVolCourbe[cle].then(pose, function(){ pose(null); });
+    }
+  };
 
   /* Changer de devise ou de langue réécrit tous ces nombres. */
   PC.surChangement(function(){
