@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260920.2019";</script>
+<script>window.PC_VERSION = "260920.2044";</script>
 </head>
 <body>
 
@@ -3198,6 +3198,12 @@ window.PC = (function(){
   'e.co.vide':          ["Cette ligne ne suit aucun cours\u00a0: sa valeur ne bouge que si vous la modifiez. Liez-la \u00e0 un cours et il suffira d'en changer le prix.","This line follows no price: its value only moves if you change it. Link it to a price and you will only have to update that price.","Esta l\u00ednea no sigue ninguna cotizaci\u00f3n\u00a0: su valor solo cambia si lo modifica. V\u00ednculela a una cotizaci\u00f3n y bastar\u00e1 con actualizar el precio.","Diese Position folgt keinem Kurs: Ihr Wert \u00e4ndert sich nur, wenn Sie ihn \u00e4ndern. Verkn\u00fcpfen Sie sie mit einem Kurs \u2014 dann gen\u00fcgt es, den Preis zu \u00e4ndern."],
   'e.co.actif':         ["{{q}} \u00d7 {{p}}, relev\u00e9 le {{d}} \u2014 changez le cours et la valeur suit\u00a0; changez la quantit\u00e9 et le montant investi quand vous achetez.","{{q}} \u00d7 {{p}}, taken on {{d}} \u2014 change the price and the value follows; change the quantity and the amount invested when you buy more.","{{q}} \u00d7 {{p}}, tomado el {{d}} \u2014 cambie la cotizaci\u00f3n y el valor la sigue; cambie la cantidad y el importe invertido cuando compre m\u00e1s.","{{q}} \u00d7 {{p}}, erfasst am {{d}} \u2014 \u00e4ndern Sie den Kurs, und der Wert folgt; \u00e4ndern Sie Menge und investierten Betrag, wenn Sie nachkaufen."],
   'e.co.qte':           ["Quantit\u00e9 d\u00e9tenue","Quantity held","Cantidad en cartera","Gehaltene Menge"],
+  'e.me.unite':         ["Unit\u00e9","Unit","Unidad","Einheit"],
+  'e.me.u.oz':          ["Onces troy","Troy ounces","Onzas troy","Feinunzen"],
+  'e.me.u.g':           ["Grammes","Grams","Gramos","Gramm"],
+  'e.me.u.kg':          ["Kilos","Kilos","Kilos","Kilo"],
+  'e.me.aide':          ["L'or et l'argent se cotent \u00e0 l'once troy (31,1035\u00a0g). Comptez en grammes ou en kilos si c'est ainsi que vous d\u00e9tenez\u00a0: la conversion se fait toute seule.","Gold and silver are quoted per troy ounce (31.1035 g). Count in grams or kilos if that is how you hold them: the conversion happens on its own.","El oro y la plata se cotizan por onza troy (31,1035\u00a0g). Cuente en gramos o kilos si as\u00ed los tiene: la conversi\u00f3n se hace sola.","Gold und Silber werden je Feinunze (31,1035\u00a0g) notiert. Rechnen Sie in Gramm oder Kilo, wenn Sie es so halten \u2014 die Umrechnung geschieht von selbst."],
+  'e.me.jeton':         ["Le cours suit un jeton adoss\u00e9 au m\u00e9tal, une unit\u00e9 pour une once. Il colle au march\u00e9 de tr\u00e8s pr\u00e8s, mais ce n'est pas le fixing officiel de Londres\u00a0: comptez un \u00e9cart de quelques dixi\u00e8mes de pour cent.","The price follows a metal-backed token, one unit per ounce. It tracks the market closely, but it is not the official London fix: expect a gap of a few tenths of a percent.","La cotizaci\u00f3n sigue un token respaldado por el metal, una unidad por onza. Se ajusta mucho al mercado, pero no es el fixing oficial de Londres: cuente con unas d\u00e9cimas de diferencia.","Der Kurs folgt einem metallgedeckten Token, eine Einheit je Unze. Er liegt sehr nah am Markt, ist aber nicht das offizielle Londoner Fixing: Rechnen Sie mit einigen Zehntelprozent Abweichung."],
   'e.co.indiquer':      ["Lier \u00e0 un cours","Link to a price","Vincular a una cotizaci\u00f3n","Mit einem Kurs verkn\u00fcpfen"],
   'e.co.modifier':      ["Mettre le cours \u00e0 jour","Update the price","Actualizar la cotizaci\u00f3n","Kurs aktualisieren"],
   'e.co.enreg':         ["Enregistrer","Save","Guardar","Speichern"],
@@ -4420,6 +4426,18 @@ window.PC = (function(){
                Vide, le cours reste saisi a la main : c'est le cas de la
                bourse, dont aucun fournisseur gratuit ne repond sans cle. -->
           <div class="champ" id="champ-sym" hidden><label for="a-sym" data-i18n="e.dir.code">Code du cours</label><input id="a-sym" type="text" list="liste-cours" placeholder="bitcoin" autocomplete="off" spellcheck="false"></div>
+          <!-- L'or et l'argent se cotent a l'once troy. Personne ne
+               detient « 8 onces » dans sa tete : on detient 250 grammes
+               ou un lingot. Le champ n'apparait que pour un metal, et
+               la conversion se fait toute seule. -->
+          <div class="champ" id="champ-unite" hidden><label for="a-unite" data-i18n="e.me.unite">Unité</label>
+            <select id="a-unite">
+              <option value="g" data-i18n="e.me.u.g">Grammes</option>
+              <option value="oz" data-i18n="e.me.u.oz">Onces troy</option>
+              <option value="kg" data-i18n="e.me.u.kg">Kilos</option>
+            </select>
+            <p class="champ__note" data-i18n="e.me.aide">L'or et l'argent se cotent à l'once troy (31,1035 g). Comptez en grammes ou en kilos si c'est ainsi que vous détenez : la conversion se fait toute seule.</p>
+          </div>
           <div class="champ" id="champ-rev" hidden><label for="a-rev" data-i18n="e.rev.champ">Revenu</label><input id="a-rev" type="text" inputmode="decimal" placeholder="780"></div>
           <div class="champ" id="champ-revp" hidden><label for="a-revp" data-i18n="e.rev.periode">Périodicité</label>
             <select id="a-revp">
@@ -4437,6 +4455,10 @@ window.PC = (function(){
           <option value="polkadot"></option><option value="chainlink"></option>
           <option value="litecoin"></option><option value="avalanche-2"></option>
           <option value="tron"></option><option value="monero"></option>
+          <!-- L'or et l'argent : ce sont les codes des jetons adosses au
+               metal, seuls cours de l'or et de l'argent qu'un
+               fournisseur gratuit serve depuis un navigateur. -->
+          <option value="pax-gold"></option><option value="kinesis-silver"></option>
         </datalist>
         <div class="apercu-calc" id="apercu-calc" aria-live="polite">
           <span><span class="apercu-calc__k" data-i18n="e.ap.res">Résultat</span> <span class="apercu-calc__v" id="ap-res">—</span></span>
@@ -6479,13 +6501,16 @@ window.PC = (function(){
     const etat = (v !== null)
       ? '<p class="tx__etat">' +
           PC.t('e.co.actif', {
-            q:'<b>' + echap(qteTexte(a.q)) + '</b>',
+            q:'<b>' + echap(qteTexte(a.q) +
+                (a.unite && a.unite !== 'u' ? ' ' + PC.t('e.me.u.' + a.unite).toLowerCase() : '')) + '</b>',
             p:'<b id="co-prix">' + echap(eur.format(a.pu)) + '</b>',
             d:echap(a.puMaj ? dateCourte(a.puMaj) : '—')}) +
           ' ' + source +
         '</p>'
       : '<p class="tx__etat">' + PC.t('e.co.vide') + '</p>';
-    return '<div class="carte"><div class="carte__c">' + etat +
+    const jeton = estMetal(a.sym)
+      ? '<p class="cours-etat">' + PC.t('e.me.jeton') + '</p>' : '';
+    return '<div class="carte"><div class="carte__c">' + etat + jeton +
       '<button class="btn btn--ghost" type="button" id="co-ouvrir">' +
         PC.t(v !== null ? 'e.co.modifier' : 'e.co.indiquer') + '</button>' +
       '<div class="tx__form" id="co-bloc" hidden style="margin-top:16px">' +
@@ -6502,6 +6527,15 @@ window.PC = (function(){
           '<input id="co-sym" type="text" list="liste-cours" placeholder="bitcoin" ' +
           'autocomplete="off" spellcheck="false" value="' +
           (a.sym ? echapAttr(a.sym) : '') + '"></div>' +
+        '<div class="champ" id="co-champ-unite"' + (estMetal(a.sym) ? '' : ' hidden') + '>' +
+          '<label for="co-unite">' + PC.t('e.me.unite') + '</label>' +
+          '<select id="co-unite">' +
+            ['g', 'oz', 'kg'].map(function(u){
+              return '<option value="' + u + '"' + ((a.unite || 'oz') === u ? ' selected' : '') +
+                     '>' + PC.t('e.me.u.' + u) + '</option>';
+            }).join('') +
+          '</select>' +
+          '<p class="champ__note">' + PC.t('e.me.aide') + '</p></div>' +
         '<button class="btn" type="button" id="co-enreg">' + PC.t('e.co.enreg') + '</button>' +
       '</div>' +
       '<p class="err" id="co-err" role="alert"></p>' +
@@ -6584,6 +6618,10 @@ window.PC = (function(){
        l'est plus. */
     const sym = document.getElementById('co-sym').value.trim().toLowerCase();
     if (sym) a.sym = sym; else delete a.sym;
+    if (estMetal(sym)){
+      const u = document.getElementById('co-unite');
+      a.unite = (u && UNITES[u.value]) ? u.value : 'oz';
+    } else delete a.unite;
     delete a.puAuto; delete a.puH;
     /* Un cours et un taux garanti ne peuvent pas cohabiter : ils
        donneraient deux valeurs différentes pour la même ligne. Le
@@ -6594,10 +6632,21 @@ window.PC = (function(){
     dire(PC.t('e.co.ok', {x:a.nom, v:eur.format(a.val)}));
   }
 
+  /* La fiche est reecrite a chaque rendu : on ne peut pas accrocher
+     d'ecouteur a un champ qui n'existe pas encore. On ecoute donc le
+     document, une fois pour toutes. */
+  document.addEventListener('input', function(e){
+    const c = e.target;
+    if (!c || c.id !== 'co-sym') return;
+    const ch = document.getElementById('co-champ-unite');
+    if (ch) ch.hidden = !estMetal(c.value.trim().toLowerCase());
+  });
+
   function oteCours(){
     const a = actifs[ouvert];
     if (!a) return;
     delete a.q; delete a.pu; delete a.puMaj; delete a.sym; delete a.puAuto; delete a.puH;
+    delete a.unite;
     ecrire(); rendre();
     dire(PC.t('e.co.oteok', {x:a.nom}));
   }
@@ -7460,7 +7509,9 @@ window.PC = (function(){
   function valeurCours(a){
     if (typeof a.q !== 'number' || typeof a.pu !== 'number') return null;
     if (!(a.q > 0) || !(a.pu > 0)) return null;
-    return Math.round(a.q * a.pu * 100) / 100;
+    /* On garde la quantité telle qu'elle a été saisie — 250 grammes
+       restent 250 grammes à la relecture — et on convertit ici. */
+    return Math.round(a.q * facteurUnite(a) * a.pu * 100) / 100;
   }
   function majCours(){
     actifs.forEach(function(a){
@@ -7509,6 +7560,30 @@ window.PC = (function(){
     litecoin:'LTC', 'avalanche-2':'AVAX', tron:'TRX', binancecoin:'BNB'
   };
   const CONTREPARTIE = {EUR:'EUR', USD:'USDT', GBP:'GBP'};
+
+  /* ===== L'or et l'argent =====
+     Aucun fournisseur gratuit ne sert le fixing de Londres sans clé.
+     Ce qui EST servi sans clé, c'est le cours des jetons adossés au
+     métal : une unité pour une once troy, gardée en coffre. Le prix
+     colle au marché de très près, sans être le fixing — et la page le
+     dit, plutôt que de laisser croire à une cotation officielle.
+
+     Plusieurs codes par métal : un fournisseur peut retirer une ligne,
+     et ils partent tous dans la même requête, donc en chercher deux ne
+     coûte rien. Le premier qui répond l'emporte. */
+  const METAUX = {
+    'pax-gold':      {codes:['pax-gold', 'tether-gold'], unite:'oz'},
+    'kinesis-silver':{codes:['kinesis-silver', 'silver-tokenized'], unite:'oz'}
+  };
+  /* Ce qu'on multiplie pour passer de l'unité saisie à l'unité cotée.
+     `u` est l'unité muette des lignes ordinaires : une action est une
+     action, et le facteur vaut 1. */
+  const UNITES = {u:1, oz:1, g:1 / 31.1034768, kg:1000 / 31.1034768};
+  function estMetal(sym){ return !!METAUX[String(sym || '').trim().toLowerCase()]; }
+  function facteurUnite(a){
+    const f = UNITES[a && a.unite];
+    return typeof f === 'number' ? f : 1;
+  }
 
   /* Un appel qui ne revient pas est pire qu'un appel qui echoue : il
      bloquerait la chaine sur son premier maillon. */
@@ -7634,6 +7709,30 @@ window.PC = (function(){
     });
     return Object.keys(vus);
   }
+  /* Les codes réellement demandés : ceux des lignes, plus les codes de
+     remplacement des métaux. Une seule requête les porte tous. */
+  function codesADemander(syms){
+    const vus = {};
+    syms.forEach(function(x){
+      vus[x] = 1;
+      const m = METAUX[x];
+      if (m) m.codes.forEach(function(c){ vus[c] = 1; });
+    });
+    return Object.keys(vus);
+  }
+  /* Le prix d'un code, en passant par ses remplaçants s'il n'a rien
+     rendu lui-même. */
+  function prixDe(prix, sym){
+    const p = prix[sym];
+    if (typeof p === 'number' && p > 0) return p;
+    const m = METAUX[sym];
+    if (!m) return null;
+    for (let i = 0; i < m.codes.length; i++){
+      const v = prix[m.codes[i]];
+      if (typeof v === 'number' && v > 0) return v;
+    }
+    return null;
+  }
   function litCacheCours(){
     try { return JSON.parse(localStorage.getItem(CLE_COURS) || 'null'); }
     catch (e){ return null; }
@@ -7649,7 +7748,7 @@ window.PC = (function(){
     const auj = jourISO(Date.now());
     actifs.forEach(function(a){
       if (!a.sym) return;
-      const p = prix[String(a.sym).trim().toLowerCase()];
+      const p = prixDe(prix, String(a.sym).trim().toLowerCase());
       if (typeof p !== 'number' || !(p > 0)) return;
       if (a.pu === p) return;
       a.pu = p; a.puMaj = auj; a.puAuto = true;
@@ -7660,13 +7759,14 @@ window.PC = (function(){
   function chercheCours(force){
     const ids = symbolesSuivis();
     if (!ids.length) return Promise.resolve({code:'aucun', n:0});
+    const demandes = codesADemander(ids);
     const dev = String(PC.devise).toLowerCase();
     const cache = litCacheCours();
     /* Le cache ne vaut que pour la devise dans laquelle il a été pris :
        changer d'affichage doit redemander, pas convertir au jugé. */
     if (!force && cache && cache.dev === dev && cache.p &&
         (Date.now() - cache.t) < COURS_FRAIS &&
-        ids.every(function(i){ return typeof cache.p[i] === 'number'; })){
+        ids.every(function(i){ return prixDe(cache.p, i) !== null; })){
       const n = poseCours(cache.p);
       if (cache.src){ coursSource = cache.src; coursQuand = cache.t; }
       if (n) ecrire();
@@ -7682,7 +7782,7 @@ window.PC = (function(){
        reste un derrière — c'est tout l'intérêt d'en avoir trois. */
     function essaie(k){
       if (k >= liste.length) return Promise.resolve(null);
-      return liste[k].cherche(ids, dev).then(function(p){
+      return liste[k].cherche(demandes, dev).then(function(p){
         if (p && Object.keys(p).length) return {nom:liste[k].nom, p:p};
         /* Il a répondu, mais ne connaît aucun de ces codes. Ce n'est pas
            la même chose qu'un fournisseur injoignable, et ça n'appelle
@@ -7700,7 +7800,7 @@ window.PC = (function(){
       .then(function(r){
         if (!r) return {code:repondu ? 'inconnu' : (limite ? 'limite' : 'ko'),
                         n:0, absents:repondu ? ids : []};
-        const absents = ids.filter(function(i){ return !(i in r.p); });
+        const absents = ids.filter(function(i){ return prixDe(r.p, i) === null; });
         const n = poseCours(r.p);
         coursSource = r.nom; coursQuand = Date.now();
         ecritCacheCours({t:coursQuand, dev:dev, p:r.p, src:r.nom});
@@ -7740,7 +7840,20 @@ window.PC = (function(){
     avalanche:'avalanche-2', avax:'avalanche-2',
     tron:'tron', trx:'tron',
     bnb:'binancecoin', binance:'binancecoin', binancecoin:'binancecoin',
-    monero:'monero', xmr:'monero'
+    monero:'monero', xmr:'monero',
+    /* L'or et l'argent. « Lingot », « once » et les tickers passent au
+       mot à mot ; « or » et « argent » non — voir juste en dessous. */
+    gold:'pax-gold', xau:'pax-gold', paxg:'pax-gold', lingot:'pax-gold',
+    silver:'kinesis-silver', xag:'kinesis-silver'
+  };
+  /* Deux mots français ne peuvent pas être reconnus au milieu d'une
+     phrase : « or » est une conjonction, et « argent » veut d'abord
+     dire « de l'argent ». « Argent placé » n'est pas une ligne de métal.
+     Ils ne comptent donc que si le nom ne dit rien d'autre. */
+  const NOMS_CODES_SEULS = {
+    or:'pax-gold', "or physique":'pax-gold', "once d or":'pax-gold',
+    argent:'kinesis-silver', "argent physique":'kinesis-silver',
+    "argent metal":'kinesis-silver'
   };
   function codeDepuisNom(nom){
     const t = String(nom || '').toLowerCase()
@@ -7748,6 +7861,7 @@ window.PC = (function(){
       .replace(/[^a-z0-9]+/g, ' ').trim();
     if (!t) return null;
     if (NOMS_CODES[t]) return NOMS_CODES[t];
+    if (NOMS_CODES_SEULS[t]) return NOMS_CODES_SEULS[t];
     /* « Bitcoin long terme », « Mon ETH », « ETF Bitcoin » : on regarde
        mot à mot, le premier reconnu l'emporte. */
     const mots = t.split(' ');
@@ -7765,7 +7879,11 @@ window.PC = (function(){
       if (a.sym) return;
       if (typeof a.q !== 'number' || typeof a.pu !== 'number') return;
       const c = codeDepuisNom(a.nom);
-      if (c){ a.sym = c; n++; }
+      /* Un metal, jamais d'office : son cours est a l'once, et la
+         quantite deja saisie est peut-etre en grammes. On corrigerait
+         un chiffre juste en un chiffre faux, sans rien demander. La
+         fiche, elle, propose le lien avec le champ d'unite a cote. */
+      if (c && !estMetal(c)){ a.sym = c; n++; }
     });
     return n;
   }
@@ -8551,16 +8669,39 @@ window.PC = (function(){
     document.getElementById('champ-pu').hidden = !on;
     document.getElementById('champ-sym').hidden = !on;
     document.getElementById('champ-val').hidden = on;
+    if (!on){ const u = document.getElementById('champ-unite'); if (u) u.hidden = true; }
     if (on) document.getElementById('a-val').value = '';
     else { document.getElementById('a-pu').value = ''; document.getElementById('a-sym').value = ''; }
   }
   const caseCours = document.getElementById('a-cours-on');
+  /* Le formulaire devine le metal comme il devine le reste : au nom
+     tape, ou au code s'il est donne. Rien a choisir dans une liste de
+     categories -- on ecrit « Or », le champ d'unite apparait. */
+  function codeVoulu(){
+    const sc = document.getElementById('a-sym');
+    const sn = document.getElementById('a-nom');
+    return (sc && sc.value.trim().toLowerCase()) ||
+           codeDepuisNom(sn ? sn.value : '') || '';
+  }
+  function majUnite(){
+    const ch = document.getElementById('champ-unite');
+    if (!ch) return;
+    const on = !!(caseCours && caseCours.checked) && estMetal(codeVoulu());
+    ch.hidden = !on;
+    const aide = document.getElementById('aide-unite');
+    if (aide) aide.hidden = !on;
+  }
+  ['a-nom', 'a-sym'].forEach(function(id){
+    const ch = document.getElementById(id);
+    if (ch) ch.addEventListener('input', majUnite);
+  });
   if (caseTaux) caseTaux.addEventListener('change', function(){
     montreTaux(caseTaux.checked);
     if (caseTaux.checked && caseCours && caseCours.checked){ caseCours.checked = false; montreCours(false); }
   });
   if (caseCours) caseCours.addEventListener('change', function(){
     montreCours(caseCours.checked);
+    majUnite();
     if (caseCours.checked && caseTaux && caseTaux.checked){ caseTaux.checked = false; montreTaux(false); }
   });
 
@@ -8621,6 +8762,12 @@ window.PC = (function(){
       const sym = document.getElementById('a-sym').value.trim().toLowerCase()
         || codeDepuisNom(nom) || '';
       if (sym) ligne.sym = sym;
+      /* L'unite n'existe que sur un metal : ailleurs elle serait une
+         case de plus a comprendre pour rien. */
+      if (estMetal(sym)){
+        const u = document.getElementById('a-unite');
+        ligne.unite = (u && UNITES[u.value]) ? u.value : 'oz';
+      }
       ligne.val = valeurCours(ligne);
     }
     if (rev !== null && rev > 0){
@@ -8634,6 +8781,7 @@ window.PC = (function(){
     e.target.reset();
     montreTaux(false);
     montreCours(false);
+    majUnite();
     champCat.value = 'immo';
     boitePuces.querySelectorAll('.puce-cat').forEach(function(x, k){ x.setAttribute('aria-pressed', String(k === 0)); });
     apercu.classList.remove('on');
@@ -8997,6 +9145,13 @@ window.PC = (function(){
 
   const memoire = {};   /* courbes déjà reçues, par crypto et par plage */
   const enVolCourbe = {};   /* et celles encore en chemin */
+  /* Un rang par conteneur de courbe. Les réponses ne reviennent pas
+     dans l'ordre où on les demande : une plage lente demandée d'abord
+     peut arriver après une plage rapide demandée ensuite, et écraser
+     la courbe que le lecteur vient de réclamer. On ne compare donc pas
+     les dates d'arrivée — on retient QUELLE demande est la dernière,
+     et elle seule a le droit d'écrire. */
+  const rangCourbe = {};
   let page = 1, recherche = '', rangs = [], ouverte = null, minuteur = null;
   let dernier = 0, enVol = false, vu = false;
   /* Le fournisseur gratuit tolère une dizaine d'appels par minute.
@@ -9275,8 +9430,12 @@ window.PC = (function(){
   function chargeCourbe(){
     const cible = document.getElementById('mar-graphe');
     if (!cible || !ouverte) return;
-    const jours = PLAGES[plage][1];
+    /* Ce qu'on demande MAINTENANT. Le reste de cette fonction s'y
+       tient : « plage » aura pu changer d'ici la réponse. */
+    const quoi = plage;
+    const jours = PLAGES[quoi][1];
     const id = ouverte;
+    const rang = (rangCourbe['mar-graphe'] = (rangCourbe['mar-graphe'] || 0) + 1);
     let borne = false;
     const demande = function(j){
       return json(BASE + '/coins/' + encodeURIComponent(id) +
@@ -9293,23 +9452,27 @@ window.PC = (function(){
         let pts = (o && o.prices) || [];
         /* « 1h » n'existe pas chez le fournisseur : on demande la
            journée et on n'en garde que la dernière heure. */
-        if (PLAGES[plage][0] === '1h' && pts.length){
+        if (PLAGES[quoi][0] === '1h' && pts.length){
           const debut = pts[pts.length - 1][0] - 3600e3;
           const tranche = pts.filter(function(p){ return p[0] >= debut; });
           if (tranche.length > 1) pts = tranche;
         }
         /* Le conteneur est retrouvé maintenant : un rendu a pu remplacer
-           la fiche pendant que la requête voyageait. */
+           la fiche pendant que la requête voyageait. Et on se tait si
+           une demande plus récente est partie depuis, ou si le lecteur
+           a changé de crypto : cette réponse-ci ne répond plus à rien. */
         const c = document.getElementById('mar-graphe');
-        if (c) c.innerHTML = courbe(pts) +
+        if (!c || rangCourbe['mar-graphe'] !== rang || ouverte !== id) return;
+        c.innerHTML = courbe(pts) +
           (borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
       })
       .catch(function(e){
         noteRefus(e);
         const c = document.getElementById('mar-graphe');
+        if (!c || rangCourbe['mar-graphe'] !== rang || ouverte !== id) return;
         /* Jamais un cadre vide : on dit que cette période n'a pas pu
            être chargée, et que les autres restent disponibles. */
-        if (c) c.innerHTML = '<p class="fiche-m__mot">' + ech(PC.t('m.plagevide')) + '</p>';
+        c.innerHTML = '<p class="fiche-m__mot">' + ech(PC.t('m.plagevide')) + '</p>';
       });
   }
 
@@ -9410,9 +9573,12 @@ window.PC = (function(){
         return tranche.length > 1 ? tranche : pts;
       };
       let borne = false;
+      const rang = (rangCourbe[cibleId] = (rangCourbe[cibleId] || 0) + 1);
       const pose = function(pts){
         const c = document.getElementById(cibleId);
-        if (!c) return;
+        /* Une demande plus récente est partie pour ce même cadre : la
+           réponse qu'on tient est périmée, même si elle arrive après. */
+        if (!c || rangCourbe[cibleId] !== rang) return;
         if (!pts){ c.innerHTML = '<p class="fiche-m__mot">' + ech(PC.t('m.plagevide')) + '</p>'; return; }
         c.innerHTML = courbe(coupe(pts)) +
           (borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
