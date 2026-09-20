@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260920.1928";</script>
+<script>window.PC_VERSION = "260920.2003";</script>
 </head>
 <body>
 
@@ -8991,6 +8991,10 @@ window.PC = (function(){
   const enVolCourbe = {};   /* et celles encore en chemin */
   let page = 1, recherche = '', rangs = [], ouverte = null, minuteur = null;
   let dernier = 0, enVol = false, vu = false;
+  /* Le fournisseur gratuit tolère une dizaine d'appels par minute.
+     Continuer à frapper après un refus ne fait que prolonger le refus :
+     on se tait, de plus en plus longtemps, puis on réessaie. */
+  let repos = 0, refus = 0;
 
   function dev(){ return String(PC.devise).toLowerCase(); }
 
@@ -9076,7 +9080,32 @@ window.PC = (function(){
         ech(PC.t('m.vide')) + '</p>';
       return;
     }
-    boite.innerHTML = liste.map(ligne).join('');
+    /* Quand ce sont les mêmes cryptos dans le même ordre — le cas de
+       tous les rafraîchissements — on réécrit les nombres et rien
+       d'autre. Reconstruire la liste toutes les 45 secondes remplacerait
+       la ligne qu'on s'apprête à toucher, et le geste tomberait dans le
+       vide : c'est ce qui donnait l'impression que ça buguait par
+       moments. */
+    const boutons = boite.querySelectorAll('[data-piece]');
+    const memes = boutons.length === liste.length &&
+      Array.prototype.every.call(boutons, function(b, i){
+        return b.getAttribute('data-piece') === liste[i].id;
+      });
+    if (!memes){ boite.innerHTML = liste.map(ligne).join(''); return; }
+    liste.forEach(function(c, i){
+      const b = boutons[i];
+      const v = c.price_change_percentage_24h;
+      const monte = !(v < 0);
+      const p = b.querySelector('.marches__prix');
+      const va = b.querySelector('.marches__var');
+      const ca = b.querySelector('.marches__cap');
+      if (p) p.textContent = prix(c.current_price);
+      if (va){
+        va.setAttribute('data-dir', monte ? 'up' : 'down');
+        va.textContent = (monte ? '▲' : '▼') + ' ' + PC.pourcent(v || 0, 2);
+      }
+      if (ca) ca.textContent = gros(c.market_cap);
+    });
   }
 
   function urlListe(){
@@ -9090,8 +9119,17 @@ window.PC = (function(){
       '&sparkline=true&price_change_percentage=24h';
   }
 
+  function noteRefus(e){
+    if (!e || !e.limite) return false;
+    /* 45 s, puis 90, puis 180, plafonné à 5 minutes. */
+    refus = Math.min(refus + 1, 3);
+    repos = Date.now() + Math.min(FRAIS * Math.pow(2, refus), 300000);
+    return true;
+  }
+
   function charge(force){
     if (enVol) return Promise.resolve();
+    if (Date.now() < repos) return Promise.resolve();
     if (!force && Date.now() - dernier < FRAIS) return Promise.resolve();
     enVol = true;
     if (!rangs.length) dit(PC.t('m.charge'), true);
@@ -9104,12 +9142,14 @@ window.PC = (function(){
         hote.setAttribute('data-etat', 'ok');
         peint(rangs);
         dit(PC.t('m.maj', {h:heure(dernier)}), true);
+        refus = 0; repos = 0;
         btnMoins.disabled = !!recherche || page <= 1;
         btnPlus.disabled = !!recherche || rangs.length < PAR_PAGE;
         numPage.textContent = PC.t('m.page', {n:String(page)});
-        if (ouverte) majFiche();
+        if (ouverte) rafraichitFiche();
       })
       .catch(function(e){
+        noteRefus(e);
         /* Rien n'est jamais arrivé : la section n'a pas lieu d'être.
            Si des cours sont déjà affichés, on les garde et on dit
            seulement que la mise à jour a échoué. */
@@ -9176,8 +9216,8 @@ window.PC = (function(){
         '<span class="marches__tic">' + ech(c.symbol) + '</span>' +
         (c.market_cap_rank ? '<span class="fiche-m__rang">#' + c.market_cap_rank + '</span>' : '') +
       '</div>' +
-      '<p class="fiche-m__prix">' + prix(c.current_price) + '</p>' +
-      '<p class="marches__var" style="text-align:left;font-size:15px" data-dir="' +
+      '<p class="fiche-m__prix" id="mf-prix">' + prix(c.current_price) + '</p>' +
+      '<p class="marches__var" id="mf-var" style="text-align:left;font-size:15px" data-dir="' +
         (monte ? 'up' : 'down') + '">' + (monte ? '▲' : '▼') + ' ' +
         PC.pourcent(v || 0, 2) + ' <span style="color:var(--ink-3)">' +
         ech(PC.t('m.var')) + '</span></p>' +
@@ -9202,6 +9242,24 @@ window.PC = (function(){
       '</div>';
   }
 
+  /* Sur une fiche ouverte, un rafraîchissement ne doit toucher que le
+     prix et sa variation. Tout réécrire effacerait le graphique, ferait
+     sauter le défilement, et remplacerait les boutons de plage au
+     moment précis où l'on en vise un. */
+  function rafraichitFiche(){
+    const c = rangs.filter(function(x){ return x.id === ouverte; })[0];
+    if (!c) return;
+    const v = c.price_change_percentage_24h, monte = !(v < 0);
+    const p = document.getElementById('mf-prix');
+    if (p) p.textContent = prix(c.current_price);
+    const va = document.getElementById('mf-var');
+    if (va){
+      va.setAttribute('data-dir', monte ? 'up' : 'down');
+      va.innerHTML = (monte ? '▲' : '▼') + ' ' + PC.pourcent(v || 0, 2) +
+        ' <span style="color:var(--ink-3)">' + ech(PC.t('m.var')) + '</span>';
+    }
+  }
+
   function chargeCourbe(){
     const cible = document.getElementById('mar-graphe');
     if (!cible || !ouverte) return;
@@ -9217,9 +9275,16 @@ window.PC = (function(){
           const tranche = pts.filter(function(p){ return p[0] >= debut; });
           if (tranche.length > 1) pts = tranche;
         }
-        cible.innerHTML = courbe(pts);
+        /* Le conteneur est retrouvé maintenant : un rendu a pu remplacer
+           la fiche pendant que la requête voyageait. */
+        const c = document.getElementById('mar-graphe');
+        if (c) c.innerHTML = courbe(pts);
       })
-      .catch(function(){ cible.innerHTML = ''; });
+      .catch(function(e){
+        noteRefus(e);
+        const c = document.getElementById('mar-graphe');
+        if (c) c.innerHTML = '';
+      });
   }
 
   function ouvre(id){
@@ -9273,7 +9338,9 @@ window.PC = (function(){
           if (!ids.length){ rangs = []; peint([]); return; }
           recherche = ids; dernier = 0; return charge(true);
         })
-        .catch(function(){ dit(PC.t('m.ko'), false); });
+        .catch(function(e){
+          dit(noteRefus(e) ? PC.t('m.limite') : PC.t('m.ko'), false);
+        });
     }, 350);
   });
 
@@ -9305,29 +9372,36 @@ window.PC = (function(){
       if (!cibleId || !id) return;
       const jours = (PLAGES[i] || PLAGES[2])[1];
       const cle = id + '|' + jours + '|' + dev();
+      /* « 1h » et « 24h » demandent la même journée au fournisseur : la
+         seule différence est la tranche qu'on en garde. La mémoire tient
+         donc les points BRUTS, et la coupe se fait à l'affichage —
+         sinon les deux plages se partagent une case et la première
+         ouverte impose ses points à la seconde. */
+      const coupe = function(pts){
+        if ((PLAGES[i] || [])[0] !== '1h' || !pts || !pts.length) return pts;
+        const debut = pts[pts.length - 1][0] - 3600e3;
+        const tranche = pts.filter(function(p){ return p[0] >= debut; });
+        return tranche.length > 1 ? tranche : pts;
+      };
       const pose = function(pts){
         const c = document.getElementById(cibleId);
-        if (c) c.innerHTML = pts ? courbe(pts) : '';
+        if (c) c.innerHTML = pts ? courbe(coupe(pts)) : '';
       };
       const garde = memoire[cle];
       if (garde && Date.now() - garde.t < 180000){ pose(garde.p); return; }
       /* Deux rendus qui se suivent demanderaient deux fois la même
          courbe avant que la première réponse n'arrive. Une requête en
          vol sert tout le monde. */
+      if (Date.now() < repos){ pose(garde ? garde.p : null); return; }
       if (!enVolCourbe[cle]){
         enVolCourbe[cle] = json(BASE + '/coins/' + encodeURIComponent(id) +
             '/market_chart?vs_currency=' + dev() + '&days=' + jours)
           .then(function(o){
-            let pts = (o && o.prices) || [];
-            if ((PLAGES[i] || [])[0] === '1h' && pts.length){
-              const debut = pts[pts.length - 1][0] - 3600e3;
-              const tranche = pts.filter(function(p){ return p[0] >= debut; });
-              if (tranche.length > 1) pts = tranche;
-            }
+            const pts = (o && o.prices) || [];
             memoire[cle] = {t:Date.now(), p:pts};
             delete enVolCourbe[cle];
             return pts;
-          }, function(e){ delete enVolCourbe[cle]; throw e; });
+          }, function(e){ delete enVolCourbe[cle]; noteRefus(e); throw e; });
       }
       enVolCourbe[cle].then(pose, function(){ pose(null); });
     }
