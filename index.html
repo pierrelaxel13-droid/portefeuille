@@ -26,6 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<script>window.PC_VERSION = "260920.1911";</script>
 </head>
 <body>
 
@@ -3415,7 +3416,9 @@ window.PC = (function(){
     if (dev) dev.textContent = nomDevise();
     const sub = document.getElementById('sub-devise');
     if (sub) sub.textContent = t('e.ajouter.s', {dev:nomDevise()});
-    const taux = document.getElementById('foot-taux');
+    const ver = document.getElementById('foot-version');
+  if (ver && window.PC_VERSION) ver.textContent = 'v' + window.PC_VERSION;
+  const taux = document.getElementById('foot-taux');
     if (taux) taux.textContent = devise === 'EUR' ? '' : t('foot.taux', {d:TAUX_DATE});
   }
 
@@ -4544,6 +4547,7 @@ window.PC = (function(){
     <span data-i18n="foot.1">© 2026 Pierrel &amp; Co — chiffres d'exemple, sans valeur contractuelle.</span>
     <span data-i18n="foot.2">Cette page n'est pas un conseil en investissement.</span>
     <span id="foot-taux"></span>
+    <span class="mono" id="foot-version" style="color:var(--ink-3); font-size:11.5px"></span>
   </div>
   <div class="wrap legal">
     <details id="mentions-legales">
