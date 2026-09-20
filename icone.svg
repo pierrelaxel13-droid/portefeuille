@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pierrel &amp; Co — portefeuille">
+  <!-- Pas de texte : une police manquante au moment du rendu transformerait
+       un monogramme en rectangle vide. La courbe qui monte dit la même chose
+       et se lit encore à 48 px. -->
+  <rect width="512" height="512" rx="114" fill="#4B21E8"/>
+  <path d="M96 340 L188 268 L268 300 L416 150"
+        fill="none" stroke="#F2F0E9" stroke-width="34"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="416" cy="150" r="30" fill="#F2F0E9"/>
+  <path d="M96 400 H416" stroke="#F2F0E9" stroke-opacity=".38"
+        stroke-width="16" stroke-linecap="round"/>
+</svg>

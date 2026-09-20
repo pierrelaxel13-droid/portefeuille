@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pierrel &amp; Co — portefeuille">
+  <!-- Variante « maskable » : le système peut rogner jusqu'aux 20 % du bord,
+       donc tout le dessin tient dans le cercle central. -->
+  <rect width="512" height="512" fill="#4B21E8"/>
+  <path d="M146 326 L214 274 L274 298 L378 194"
+        fill="none" stroke="#F2F0E9" stroke-width="28"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="378" cy="194" r="24" fill="#F2F0E9"/>
+  <path d="M146 368 H378" stroke="#F2F0E9" stroke-opacity=".38"
+        stroke-width="14" stroke-linecap="round"/>
+</svg>
