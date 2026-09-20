@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260920.2003";</script>
+<script>window.PC_VERSION = "260920.2019";</script>
 </head>
 <body>
 
@@ -1129,6 +1129,12 @@ body.flux-vif .cours__vif::before{
 .fiche-m__graphe .trait{fill:none; stroke:var(--accent); stroke-width:2; stroke-linejoin:round; stroke-linecap:round;}
 .fiche-m__graphe .reglure{stroke:var(--rule); stroke-width:1;}
 .fiche-m__graphe .axe{fill:var(--ink-3); font-family:'IBM Plex Mono', monospace; font-size:11px;}
+/* Un cadre vide ne dit pas pourquoi il est vide : une période absente
+   doit s'annoncer, sinon elle se lit comme une panne du site. */
+.fiche-m__mot{
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; line-height:1.6;
+  color:var(--ink-3); padding:26px 2px; text-wrap:pretty;
+}
 .fiche-m__stats{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));
   gap:1px; background:var(--rule); border:1px solid var(--rule); margin-top:26px;
@@ -3146,6 +3152,8 @@ window.PC = (function(){
   'e.gate.mes':         ["Commencer avec mes chiffres","Start with my own figures","Empezar con mis cifras","Mit meinen Zahlen beginnen"],
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
+  'm.borne':            ["Le fournisseur gratuit ne remonte pas au-del\u00e0 d'un an\u00a0: voici l'ann\u00e9e \u00e9coul\u00e9e.","The free provider does not go back beyond one year: here is the past year.","El proveedor gratuito no se remonta m\u00e1s de un a\u00f1o: aqu\u00ed tiene el a\u00f1o transcurrido.","Der kostenlose Anbieter reicht nicht weiter als ein Jahr zur\u00fcck: hier das vergangene Jahr."],
+  'm.plagevide':        ["Cette p\u00e9riode n'a pas pu \u00eatre charg\u00e9e. Les autres restent disponibles.","This period could not be loaded. The others are still available.","Este periodo no se ha podido cargar. Los dem\u00e1s siguen disponibles.","Dieser Zeitraum konnte nicht geladen werden. Die anderen bleiben verf\u00fcgbar."],
   'm.onglet':           ["March\u00e9s","Markets","Mercados","M\u00e4rkte"],
   'm.courbe':           ["Le cours du march\u00e9","The market price","La cotizaci\u00f3n del mercado","Der Marktkurs"],
   'm.h2':                 ["Les march\u00e9s, en direct.","The markets, live.","Los mercados, en directo.","Die M\u00e4rkte, live."],
@@ -9129,7 +9137,11 @@ window.PC = (function(){
 
   function charge(force){
     if (enVol) return Promise.resolve();
-    if (Date.now() < repos) return Promise.resolve();
+    /* Le repos ne vaut que pour ce qui part tout seul. Un clic est une
+       intention : le brider reviendrait à punir l'utilisateur d'un
+       refus qu'il n'a pas provoqué, et à figer tout l'écran parce
+       qu'une seule période a échoué. */
+    if (!force && Date.now() < repos) return Promise.resolve();
     if (!force && Date.now() - dernier < FRAIS) return Promise.resolve();
     enVol = true;
     if (!rangs.length) dit(PC.t('m.charge'), true);
@@ -9264,8 +9276,19 @@ window.PC = (function(){
     const cible = document.getElementById('mar-graphe');
     if (!cible || !ouverte) return;
     const jours = PLAGES[plage][1];
-    json(BASE + '/coins/' + encodeURIComponent(ouverte) + '/market_chart?vs_currency=' +
-         dev() + '&days=' + jours)
+    const id = ouverte;
+    let borne = false;
+    const demande = function(j){
+      return json(BASE + '/coins/' + encodeURIComponent(id) +
+        '/market_chart?vs_currency=' + dev() + '&days=' + j);
+    };
+    demande(jours)
+      .catch(function(e){
+        /* Même borne d'un an que sur la fiche d'un actif. */
+        if (jours !== 'max') throw e;
+        borne = true;
+        return demande('365');
+      })
       .then(function(o){
         let pts = (o && o.prices) || [];
         /* « 1h » n'existe pas chez le fournisseur : on demande la
@@ -9278,12 +9301,15 @@ window.PC = (function(){
         /* Le conteneur est retrouvé maintenant : un rendu a pu remplacer
            la fiche pendant que la requête voyageait. */
         const c = document.getElementById('mar-graphe');
-        if (c) c.innerHTML = courbe(pts);
+        if (c) c.innerHTML = courbe(pts) +
+          (borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
       })
       .catch(function(e){
         noteRefus(e);
         const c = document.getElementById('mar-graphe');
-        if (c) c.innerHTML = '';
+        /* Jamais un cadre vide : on dit que cette période n'a pas pu
+           être chargée, et que les autres restent disponibles. */
+        if (c) c.innerHTML = '<p class="fiche-m__mot">' + ech(PC.t('m.plagevide')) + '</p>';
       });
   }
 
@@ -9383,19 +9409,33 @@ window.PC = (function(){
         const tranche = pts.filter(function(p){ return p[0] >= debut; });
         return tranche.length > 1 ? tranche : pts;
       };
+      let borne = false;
       const pose = function(pts){
         const c = document.getElementById(cibleId);
-        if (c) c.innerHTML = pts ? courbe(coupe(pts)) : '';
+        if (!c) return;
+        if (!pts){ c.innerHTML = '<p class="fiche-m__mot">' + ech(PC.t('m.plagevide')) + '</p>'; return; }
+        c.innerHTML = courbe(coupe(pts)) +
+          (borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
+      };
+      const demande = function(j){
+        return json(BASE + '/coins/' + encodeURIComponent(id) +
+          '/market_chart?vs_currency=' + dev() + '&days=' + j);
       };
       const garde = memoire[cle];
       if (garde && Date.now() - garde.t < 180000){ pose(garde.p); return; }
       /* Deux rendus qui se suivent demanderaient deux fois la même
          courbe avant que la première réponse n'arrive. Une requête en
          vol sert tout le monde. */
-      if (Date.now() < repos){ pose(garde ? garde.p : null); return; }
       if (!enVolCourbe[cle]){
-        enVolCourbe[cle] = json(BASE + '/coins/' + encodeURIComponent(id) +
-            '/market_chart?vs_currency=' + dev() + '&days=' + jours)
+        enVolCourbe[cle] = demande(jours)
+          .catch(function(e){
+            /* Le fournisseur gratuit borne l'historique à un an :
+               « max » y est refusé. Plutôt qu'un cadre vide, on montre
+               la plus longue période qu'il sert, et on dit laquelle. */
+            if (jours !== 'max') throw e;
+            borne = true;
+            return demande('365');
+          })
           .then(function(o){
             const pts = (o && o.prices) || [];
             memoire[cle] = {t:Date.now(), p:pts};
