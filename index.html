@@ -163,6 +163,27 @@ p{margin:0;}
 }
 .preuve__exemple b{font-weight:500; color:var(--accent);}
 
+/* D'où vient le prix : reçu, ou tapé. Deux tons, pas deux couleurs de
+   statut — ce n'est ni un gain ni une perte. */
+.cours__vif, .cours__main{
+  display:inline-block; margin-left:6px; padding:1px 8px; border-radius:999px;
+  font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.04em;
+  white-space:nowrap;
+}
+.cours__vif{background:var(--accent-soft); color:var(--accent);}
+/* Un point qui bat pendant que la connexion est ouverte. Il ne dit pas
+   « ça marche » dans l'absolu : il dit « ce prix-là arrive en ce moment ». */
+body.flux-vif .cours__vif::before{
+  content:""; display:inline-block; width:6px; height:6px; margin-right:6px;
+  border-radius:50%; background:currentColor; vertical-align:middle;
+  animation:bat 1.6s ease-in-out infinite;
+}
+@keyframes bat{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:.35; transform:scale(.72);}}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) body.flux-vif .cours__vif::before{animation:none;}
+}
+.cours__main{border:1px solid var(--rule); color:var(--ink-3);}
+
 /* ===== Texture de fond : courbes de performance =====
    L'équivalent, pour ce sujet, des lignes de niveau organiques. */
 .field{
@@ -2963,6 +2984,17 @@ window.PC = (function(){
   'e.gate.essai.d':     ["Un portefeuille rempli, avec son historique. Rien \u00e0 saisir, rien \u00e0 cr\u00e9er.","A filled portfolio, with its history. Nothing to enter, nothing to create.","Una cartera completa, con su historial. Nada que introducir, nada que crear.","Ein gef\u00fclltes Portfolio samt Verlauf. Nichts einzugeben, nichts anzulegen."],
   'e.gate.mes':         ["Commencer avec mes chiffres","Start with my own figures","Empezar con mis cifras","Mit meinen Zahlen beginnen"],
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
+  'e.dir.code':         ["Code du cours","Price code","C\u00f3digo de cotizaci\u00f3n","Kurs-Code"],
+  'e.dir.aide':         ["Bitcoin, Ethereum, Solana\u2026 laissez ce champ vide pour saisir le cours \u00e0 la main. Rempli, le cours se cherche tout seul \u00e0 chaque ouverture.","Bitcoin, Ethereum, Solana\u2026 leave this empty to type the price by hand. Filled in, the price fetches itself each time you open the page.","Bitcoin, Ethereum, Solana\u2026 deje este campo vac\u00edo para introducir la cotizaci\u00f3n a mano. Relleno, la cotizaci\u00f3n se busca sola en cada apertura.","Bitcoin, Ethereum, Solana\u2026 leer lassen, um den Kurs von Hand einzutragen. Ausgef\u00fcllt, holt sich der Kurs bei jedem \u00d6ffnen selbst."],
+  'e.dir.actif':        ["En direct \u2014 {{s}}","Live \u2014 {{s}}","En directo \u2014 {{s}}","Live \u2014 {{s}}"],
+  'e.dir.maj':          ["Actualiser le cours","Refresh the price","Actualizar la cotizaci\u00f3n","Kurs aktualisieren"],
+  'e.dir.encours':      ["Recherche du cours\u2026","Fetching the price\u2026","Buscando la cotizaci\u00f3n\u2026","Kurs wird geholt\u2026"],
+  'e.dir.ok':           ["{{n}} cours mis \u00e0 jour.","{{n}} price(s) updated.","{{n}} cotizaci\u00f3n(es) actualizada(s).","{{n}} Kurs(e) aktualisiert."],
+  'e.dir.rien':         ["Aucun cours n'a boug\u00e9 depuis la derni\u00e8re fois.","No price has moved since last time.","Ninguna cotizaci\u00f3n ha cambiado desde la \u00faltima vez.","Kein Kurs hat sich seit dem letzten Mal ge\u00e4ndert."],
+  'e.dir.ko':           ["Le cours n'a pas pu \u00eatre r\u00e9cup\u00e9r\u00e9. La derni\u00e8re valeur connue est conserv\u00e9e.","The price could not be fetched. The last known value is kept.","No se ha podido obtener la cotizaci\u00f3n. Se conserva el \u00faltimo valor conocido.","Der Kurs konnte nicht geholt werden. Der letzte bekannte Wert bleibt erhalten."],
+  'e.dir.limite':       ["Le fournisseur de cours limite les appels. R\u00e9essayez dans une minute.","The price provider is rate-limiting. Try again in a minute.","El proveedor de cotizaciones limita las llamadas. Int\u00e9ntelo en un minuto.","Der Kursanbieter drosselt die Aufrufe. Versuchen Sie es in einer Minute erneut."],
+  'e.dir.inconnu':      ["Code inconnu du fournisseur\u00a0: {{s}}. V\u00e9rifiez l'orthographe, ou laissez le champ vide pour saisir le cours \u00e0 la main.","Code unknown to the provider: {{s}}. Check the spelling, or leave the field empty to enter the price by hand.","C\u00f3digo desconocido para el proveedor: {{s}}. Compruebe la ortograf\u00eda, o deje el campo vac\u00edo para introducir la cotizaci\u00f3n a mano.","Code beim Anbieter unbekannt: {{s}}. Pr\u00fcfen Sie die Schreibweise, oder lassen Sie das Feld leer, um den Kurs von Hand einzutragen."],
+  'e.dir.saisi':        ["saisi \u00e0 la main","entered by hand","introducido a mano","von Hand eingetragen"],
   'e.co.opt':           ["Valeur li\u00e9e \u00e0 un cours","Value follows a price","Valor ligado a una cotizaci\u00f3n","Wert folgt einem Kurs"],
   'e.co.pu':            ["Cours unitaire","Unit price","Cotizaci\u00f3n unitaria","Kurs je Einheit"],
   'e.co.t':             ["Cours","Price","Cotizaci\u00f3n","Kurs"],
@@ -4182,6 +4214,10 @@ window.PC = (function(){
           <div class="champ" id="champ-taux" hidden><label for="a-taux" data-i18n="e.tx.champ">Taux annuel garanti (%)</label><input id="a-taux" type="text" inputmode="decimal" placeholder="3" autocomplete="off"></div>
           <div class="champ" id="champ-depuis" hidden><label for="a-depuis" data-i18n="e.tx.depuis">Depuis le</label><input id="a-depuis" type="date"></div>
           <div class="champ" id="champ-pu" hidden><label for="a-pu" data-i18n="e.co.pu">Cours unitaire</label><input id="a-pu" type="text" inputmode="decimal" placeholder="95 000" autocomplete="off"></div>
+          <!-- Le code identifie la ligne chez le fournisseur de cours.
+               Vide, le cours reste saisi a la main : c'est le cas de la
+               bourse, dont aucun fournisseur gratuit ne repond sans cle. -->
+          <div class="champ" id="champ-sym" hidden><label for="a-sym" data-i18n="e.dir.code">Code du cours</label><input id="a-sym" type="text" list="liste-cours" placeholder="bitcoin" autocomplete="off" spellcheck="false"></div>
           <div class="champ" id="champ-rev" hidden><label for="a-rev" data-i18n="e.rev.champ">Revenu</label><input id="a-rev" type="text" inputmode="decimal" placeholder="780"></div>
           <div class="champ" id="champ-revp" hidden><label for="a-revp" data-i18n="e.rev.periode">Périodicité</label>
             <select id="a-revp">
@@ -4192,6 +4228,14 @@ window.PC = (function(){
           </div>
           <button class="btn" type="submit" data-i18n="e.f.ajouter">Ajouter</button>
         </form>
+        <datalist id="liste-cours">
+          <option value="bitcoin"></option><option value="ethereum"></option>
+          <option value="solana"></option><option value="ripple"></option>
+          <option value="cardano"></option><option value="dogecoin"></option>
+          <option value="polkadot"></option><option value="chainlink"></option>
+          <option value="litecoin"></option><option value="avalanche-2"></option>
+          <option value="tron"></option><option value="monero"></option>
+        </datalist>
         <div class="apercu-calc" id="apercu-calc" aria-live="polite">
           <span><span class="apercu-calc__k" data-i18n="e.ap.res">Résultat</span> <span class="apercu-calc__v" id="ap-res">—</span></span>
           <span><span class="apercu-calc__k" data-i18n="e.ap.perf">Performance</span> <span class="apercu-calc__v" id="ap-perf">—</span></span>
@@ -4199,6 +4243,7 @@ window.PC = (function(){
         </div>
         <p class="rel__expl" style="margin:16px 0 0" data-i18n="e.tx.aide">Livret, fonds euros, obligation : si le taux est connu d'avance, remplissez ces deux champs et laissez la valeur vide.</p>
         <p class="rel__expl" style="margin:8px 0 0" data-i18n="e.co.aide">Actions, ETF, crypto : indiquez combien vous en détenez et le cours du jour.</p>
+        <p class="rel__expl" style="margin:8px 0 0" data-i18n="e.dir.aide">Bitcoin, Ethereum, Solana… laissez ce champ vide pour saisir le cours à la main.</p>
         <p class="err" id="err-actif" aria-live="polite"></p>
         <p class="mur" id="mur-actifs" hidden></p>
       </div>
@@ -6186,12 +6231,19 @@ window.PC = (function(){
      ligne liée à un cours, y revenir est la routine, pas l'exception. */
   function blocCours(a){
     const v = valeurCours(a);
+    /* D'où vient le prix affiché : reçu du fournisseur, ou tapé. La
+       distinction compte — on ne lit pas un chiffre de la même façon
+       selon qu'il vient d'un marché ou de sa propre mémoire. */
+    const source = a.sym
+      ? '<span class="cours__vif">' + PC.t('e.dir.actif', {s:echap(a.sym)}) + '</span>'
+      : '<span class="cours__main">' + PC.t('e.dir.saisi') + '</span>';
     const etat = (v !== null)
       ? '<p class="tx__etat">' +
           PC.t('e.co.actif', {
             q:'<b>' + echap(qteTexte(a.q)) + '</b>',
-            p:'<b>' + echap(eur.format(a.pu)) + '</b>',
+            p:'<b id="co-prix">' + echap(eur.format(a.pu)) + '</b>',
             d:echap(a.puMaj ? dateCourte(a.puMaj) : '—')}) +
+          ' ' + source +
         '</p>'
       : '<p class="tx__etat">' + PC.t('e.co.vide') + '</p>';
     return '<div class="carte"><div class="carte__c">' + etat +
@@ -6207,9 +6259,15 @@ window.PC = (function(){
         '<div class="champ"><label for="co-inv">' + PC.t('e.f.inv') + '</label>' +
           '<input id="co-inv" type="text" inputmode="decimal" value="' +
           echapAttr(String(a.inv)) + '"></div>' +
+        '<div class="champ"><label for="co-sym">' + PC.t('e.dir.code') + '</label>' +
+          '<input id="co-sym" type="text" list="liste-cours" placeholder="bitcoin" ' +
+          'autocomplete="off" spellcheck="false" value="' +
+          (a.sym ? echapAttr(a.sym) : '') + '"></div>' +
         '<button class="btn" type="button" id="co-enreg">' + PC.t('e.co.enreg') + '</button>' +
       '</div>' +
       '<p class="err" id="co-err" role="alert"></p>' +
+      (a.sym ? '<button class="btn btn--ghost" type="button" id="co-maj" style="margin-top:12px">' +
+        PC.t('e.dir.maj') + '</button>' : '') +
       (v !== null ? '<button class="tx__oter" type="button" id="co-oter">' + PC.t('e.co.retirer') + '</button>' : '') +
     '</div></div>';
   }
@@ -6281,6 +6339,13 @@ window.PC = (function(){
     if (p === null || !(p > 0)){ err.textContent = PC.t('e.co.err.pu'); return; }
     if (iv === null || iv < 0){ err.textContent = PC.t('e.err.inv'); return; }
     a.q = q; a.pu = p; a.inv = iv; a.puMaj = jourISO(Date.now());
+    if (fluxVoulu) setTimeout(ouvreFlux, 0);
+    /* Un prix tapé à la main n'est plus un prix reçu : le dire, sinon
+       la fiche continuerait d'annoncer « en direct » un chiffre qui ne
+       l'est plus. */
+    const sym = document.getElementById('co-sym').value.trim().toLowerCase();
+    if (sym) a.sym = sym; else delete a.sym;
+    delete a.puAuto; delete a.puH;
     /* Un cours et un taux garanti ne peuvent pas cohabiter : ils
        donneraient deux valeurs différentes pour la même ligne. Le
        dernier posé l'emporte. */
@@ -6293,7 +6358,7 @@ window.PC = (function(){
   function oteCours(){
     const a = actifs[ouvert];
     if (!a) return;
-    delete a.q; delete a.pu; delete a.puMaj;
+    delete a.q; delete a.pu; delete a.puMaj; delete a.sym; delete a.puAuto; delete a.puH;
     ecrire(); rendre();
     dire(PC.t('e.co.oteok', {x:a.nom}));
   }
@@ -6331,8 +6396,11 @@ window.PC = (function(){
       [PC.t('e.th.val'), eur.format(a.val)],
       [PC.t('e.th.res'), marque(res, eur.format(Math.abs(res)))],
       [PC.t('e.ap.perf'), marque(perf, pourcent(perf))]
-    ].map(function(k){
-      return '<div class="kpi"><div class="kpi__k">' + k[0] + '</div><div class="kpi__v">' + k[1] + '</div></div>';
+    ].map(function(k, i){
+      /* La valeur porte une ancre : c'est le seul de ces quatre chiffres
+         qu'un tick fait bouger entre deux rendus complets. */
+      return '<div class="kpi"><div class="kpi__k">' + k[0] + '</div><div class="kpi__v"' +
+        (i === 1 ? ' id="pa-val"' : '') + '>' + k[1] + '</div></div>';
     }).join('');
 
     const place = [
@@ -7125,6 +7193,315 @@ window.PC = (function(){
       if (v !== null) a.val = v;
     });
   }
+  /* ============================================================
+     COURS EN DIRECT
+     ------------------------------------------------------------
+     Une ligne qui porte un code va chercher son cours toute seule.
+     Tout le reste en découle : la valeur est quantité × cours, donc
+     le capital avance sans qu'on saisisse quoi que ce soit.
+
+     Les règles qu'on se donne, parce qu'un fournisseur gratuit se
+     ferme vite si on l'oublie :
+     - un seul appel pour toutes les lignes, jamais un par ligne ;
+     - pas plus d'une fois toutes les cinq minutes, sauf demande
+       expresse : rouvrir la page dix fois ne fait pas dix appels ;
+     - un seul appel en vol à la fois.
+
+     Et surtout : un échec ne casse rien. Hors réseau, derrière un
+     pare-feu, dans un cadre qui interdit les appels sortants, ou si le
+     fournisseur refuse, la dernière valeur connue reste en place et la
+     page dit depuis quand. On ne remplace jamais un chiffre réel par
+     un vide ou par un zéro.
+
+     `PC_COURS_SOURCE` permet de pointer ailleurs sans toucher au code :
+     c'est par là que passera la bourse, dont les fournisseurs exigent
+     une clé qu'une page publique ne peut pas garder — il faudra un
+     relais qui la détienne. La réponse attendue garde la même forme :
+     {"<code>":{"<devise>":<nombre>}}. */
+  const COURS_SOURCE = window.PC_COURS_SOURCE || 'https://api.coingecko.com/api/v3/simple/price';
+  const COURS_FRAIS = 5 * 60 * 1000;
+  const CLE_COURS = 'pierrelco.cours.v1';
+  let coursEnVol = false;
+  let coursEtat = null;
+
+  function symbolesSuivis(){
+    const vus = {};
+    actifs.forEach(function(a){
+      if (a.sym) vus[String(a.sym).trim().toLowerCase()] = 1;
+    });
+    return Object.keys(vus);
+  }
+  function litCacheCours(){
+    try { return JSON.parse(localStorage.getItem(CLE_COURS) || 'null'); }
+    catch (e){ return null; }
+  }
+  function ecritCacheCours(o){
+    try { localStorage.setItem(CLE_COURS, JSON.stringify(o)); } catch (e){}
+  }
+  /* Pose les prix reçus sur les lignes qui les portent, et rend le
+     nombre de lignes réellement changées : un cours identique ne compte
+     pas, sinon chaque ouverture inscrirait un relevé pour rien. */
+  function poseCours(prix){
+    let n = 0;
+    const auj = jourISO(Date.now());
+    actifs.forEach(function(a){
+      if (!a.sym) return;
+      const p = prix[String(a.sym).trim().toLowerCase()];
+      if (typeof p !== 'number' || !(p > 0)) return;
+      if (a.pu === p) return;
+      a.pu = p; a.puMaj = auj; a.puAuto = true;
+      n++;
+    });
+    return n;
+  }
+  function chercheCours(force){
+    const ids = symbolesSuivis();
+    if (!ids.length) return Promise.resolve({code:'aucun', n:0});
+    const dev = String(PC.devise).toLowerCase();
+    const cache = litCacheCours();
+    /* Le cache ne vaut que pour la devise dans laquelle il a été pris :
+       changer d'affichage doit redemander, pas convertir au jugé. */
+    if (!force && cache && cache.dev === dev && cache.p &&
+        (Date.now() - cache.t) < COURS_FRAIS &&
+        ids.every(function(i){ return typeof cache.p[i] === 'number'; })){
+      const n = poseCours(cache.p);
+      if (n) ecrire();
+      return Promise.resolve({code:'cache', n:n});
+    }
+    if (coursEnVol) return Promise.resolve({code:'envol', n:0});
+    coursEnVol = true;
+    const u = COURS_SOURCE +
+      (COURS_SOURCE.indexOf('?') === -1 ? '?' : '&') +
+      'ids=' + encodeURIComponent(ids.join(',')) +
+      '&vs_currencies=' + encodeURIComponent(dev);
+    return fetch(u, {headers:{'Accept':'application/json'}})
+      .then(function(r){
+        /* 429 : on n'insiste pas. Une boucle de reprise ferait fermer la
+           porte pour de bon. */
+        if (r.status === 429) return {code:'limite', n:0};
+        if (!r.ok) return {code:'ko', n:0};
+        return r.json().then(function(o){
+          const prix = {};
+          ids.forEach(function(i){
+            const e = o && o[i];
+            if (e && typeof e[dev] === 'number' && e[dev] > 0) prix[i] = e[dev];
+          });
+          const absents = ids.filter(function(i){ return !(i in prix); });
+          const n = poseCours(prix);
+          /* On ne garde en cache que ce qu'on a vraiment reçu. */
+          if (Object.keys(prix).length) ecritCacheCours({t:Date.now(), dev:dev, p:prix});
+          return {code:absents.length ? 'inconnu' : 'ok', n:n, absents:absents};
+        });
+      })
+      .catch(function(){ return {code:'ko', n:0}; })
+      .then(function(r){
+        coursEnVol = false;
+        coursEtat = r;
+        /* `ecrire` recalcule les valeurs et inscrit un relevé daté : la
+           courbe avance donc d'elle-même, sans saisie. */
+        if (r.n) ecrire();
+        rendre();
+        return r;
+      });
+  }
+  /* ============================================================
+     FLUX EN DIRECT
+     ------------------------------------------------------------
+     Une connexion permanente vers un marché, qui pousse un prix par
+     seconde. Pas de clé, et une WebSocket échappe au contrôle d'origine
+     qui bloque un appel HTTP depuis un cadre étranger.
+
+     Deux règles tenues strictement, sans quoi le direct coûte plus
+     qu'il ne rapporte :
+
+     - ON N'ÉCRIT PAS À CHAQUE TICK. Le stockage et l'historique se
+       moquent d'une seconde. Un tick met à jour les chiffres à l'écran ;
+       la valeur n'est enregistrée qu'une fois par minute, et à la
+       fermeture. Autrement on écrirait des milliers de fois par heure,
+       pour un historique qui reste de toute façon journalier.
+     - ON NE REDESSINE PAS À CHAQUE TICK. On réécrit les quelques
+       nombres qui changent. Redessiner l'espace ferait sauter le
+       défilement, perdrait le curseur dans un champ ouvert, et
+       refabriquerait les graphiques pour rien.
+
+     La connexion se ferme dès que l'onglet passe en arrière-plan : un
+     flux ouvert dans une poche vide une batterie. */
+  const FLUX_SOURCE = window.PC_FLUX_SOURCE || 'wss://stream.binance.com:9443/stream';
+  /* Code du fournisseur de cours → symbole de marché. Une table et non
+     une règle : « avalanche-2 » ne se devine pas depuis « AVAX ». */
+  const FLUX_PAIRES = {
+    bitcoin:'BTC', ethereum:'ETH', solana:'SOL', ripple:'XRP',
+    cardano:'ADA', dogecoin:'DOGE', polkadot:'DOT', chainlink:'LINK',
+    litecoin:'LTC', 'avalanche-2':'AVAX', tron:'TRX', binancecoin:'BNB'
+  };
+  /* La contrepartie cotée. Le dollar se traite en USDT sur ce marché.
+     Une devise absente d'ici n'a pas de flux : la ligne reste sur son
+     cours HTTP, ce qui est correct et non dégradé. */
+  const FLUX_CONTREPARTIE = {EUR:'EUR', USD:'USDT', GBP:'GBP'};
+  const FLUX_ECRIT_MS = 60000;
+  const FLUX_PEINT_MS = 250;
+
+  let flux = null, fluxPaires = '', fluxRetard = 0, fluxMinuteur = null,
+      fluxDernierEcrit = 0, fluxPeinture = null, fluxVoulu = false;
+  /* Vrai quand des ticks ont changé une valeur qui n'est pas encore
+     enregistrée. Sans ce témoin, la fermeture écrivait à chaque fois —
+     y compris au démarrage, où `majVue` passe par là avant même qu'on
+     soit entré dans l'espace : la page inscrivait alors un portefeuille
+     vide, et le portail d'accueil ne s'affichait plus. */
+  let fluxSale = false;
+
+  /* Les paires à suivre, pour la devise affichée. */
+  function fluxLignes(){
+    const q = FLUX_CONTREPARTIE[PC.devise];
+    if (!q) return [];
+    const vus = {};
+    actifs.forEach(function(a){
+      const code = a.sym && String(a.sym).trim().toLowerCase();
+      const base = code && FLUX_PAIRES[code];
+      if (base && typeof a.q === 'number' && a.q > 0) vus[(base + q).toLowerCase()] = code;
+    });
+    return Object.keys(vus).sort().map(function(p){ return {paire:p, sym:vus[p]}; });
+  }
+
+  function etatFlux(on){
+    document.body.classList.toggle('flux-vif', !!on);
+  }
+
+  /* Réécrit les quelques nombres qui bougent. Volontairement court :
+     tout ce qui n'est pas ici attendra le prochain rendu complet. */
+  function peintVif(){
+    const t = totaux();
+    const sv = document.getElementById('solde-v');
+    if (sv) sv.textContent = eur.format(t.val);
+    document.querySelectorAll('#lignes .ligne').forEach(function(el){
+      const a = actifs[+el.getAttribute('data-ligne')];
+      if (!a) return;
+      const b = el.querySelector('.ligne__m b');
+      if (b) b.textContent = eur.format(a.val);
+    });
+    if (ouvert !== null && actifs[ouvert]){
+      const a = actifs[ouvert];
+      const pu = document.getElementById('co-prix');
+      if (pu) pu.textContent = eur.format(a.pu);
+      const pv = document.getElementById('pa-val');
+      if (pv) pv.textContent = eur.format(a.val);
+    }
+  }
+
+  function tick(sym, prix){
+    let bouge = false;
+    actifs.forEach(function(a){
+      if (!a.sym || String(a.sym).trim().toLowerCase() !== sym) return;
+      if (a.pu === prix) return;
+      a.pu = prix; a.puH = Date.now(); a.puAuto = true;
+      bouge = true;
+    });
+    if (!bouge) return;
+    majCours();
+    if (!fluxPeinture) fluxPeinture = setTimeout(function(){
+      fluxPeinture = null; peintVif();
+    }, FLUX_PEINT_MS);
+    fluxSale = true;
+    if (Date.now() - fluxDernierEcrit > FLUX_ECRIT_MS){
+      fluxDernierEcrit = Date.now();
+      fluxSale = false;
+      ecrire();
+    }
+  }
+
+  function coupeFlux(){
+    if (fluxMinuteur){ clearTimeout(fluxMinuteur); fluxMinuteur = null; }
+    if (flux){ const s = flux; flux = null; fluxPaires = ''; try { s.close(); } catch (e){} }
+    etatFlux(false);
+  }
+
+  function ouvreFlux(){
+    fluxVoulu = true;
+    if (document.hidden) return;
+    const l = fluxLignes();
+    const cle = l.map(function(x){ return x.paire; }).join('/');
+    /* Déjà connecté aux bonnes paires : on ne rouvre pas pour rien. */
+    if (flux && cle === fluxPaires) return;
+    if (flux || fluxMinuteur) coupeFlux();
+    if (!l.length) return;
+    const parPaire = {};
+    l.forEach(function(x){ parPaire[x.paire] = x.sym; });
+    const u = FLUX_SOURCE + (FLUX_SOURCE.indexOf('?') === -1 ? '?' : '&') +
+      'streams=' + l.map(function(x){ return x.paire + '@miniTicker'; }).join('/');
+    let s;
+    try { s = new WebSocket(u); } catch (e){ return; }
+    flux = s; fluxPaires = cle;
+    /* Une connexion n'a rien prouvé tant qu'elle n'a rien livré. Un
+       serveur qui accepte puis raccroche aussitôt déclenche `onopen`
+       comme un bon : remettre le compteur à zéro là faisait repartir
+       les tentatives sans fin, et la page harcelait un serveur qui la
+       refusait. C'est le premier message reçu qui compte. */
+    let recu = false;
+    s.onopen = function(){ recu = false; };
+    s.onmessage = function(ev){
+      if (!recu){ recu = true; fluxRetard = 0; etatFlux(true); }
+      let o;
+      try { o = JSON.parse(ev.data); } catch (e){ return; }
+      const d = o && (o.data || o);
+      if (!d || !d.s || typeof d.c === 'undefined') return;
+      const sym = parPaire[String(d.s).toLowerCase()];
+      const prix = parseFloat(d.c);
+      if (sym && isFinite(prix) && prix > 0) tick(sym, prix);
+    };
+    s.onclose = function(){
+      if (flux === s){ flux = null; fluxPaires = ''; }
+      etatFlux(false);
+      if (!fluxVoulu || document.hidden) return;
+      /* Trois tentatives espacées, puis on renonce. Le cours HTTP reste
+         juste, et s'acharner sur un serveur qui refuse ne le fera pas
+         accepter. */
+      if (fluxRetard >= 3) return;
+      const attente = [2000, 5000, 15000][fluxRetard++];
+      fluxMinuteur = setTimeout(function(){ fluxMinuteur = null; ouvreFlux(); }, attente);
+    };
+    /* `onclose` suit toujours `onerror` : tout est traité là. */
+    s.onerror = function(){};
+  }
+
+  function fermeFlux(){
+    fluxVoulu = false;
+    coupeFlux();
+    videFlux();
+  }
+  /* Enregistre ce que les ticks ont changé depuis la dernière minute,
+     et rien d'autre : sans changement en attente, on ne touche pas au
+     stockage. */
+  function videFlux(){
+    if (!fluxSale) return;
+    fluxSale = false;
+    fluxDernierEcrit = Date.now();
+    ecrire();
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden){ coupeFlux(); videFlux(); }
+    else if (fluxVoulu){
+      /* Revenir sur la page vaut une seconde chance : le réseau a pu
+         changer pendant qu'elle était en arrière-plan. */
+      fluxRetard = 0;
+      ouvreFlux();
+    }
+  });
+  window.addEventListener('pagehide', videFlux);
+
+  /* Le message qu'on montre après une recherche. Chaque cas a le sien :
+     « ça n'a pas marché » sans dire pourquoi n'aide personne. */
+  function motCours(r){
+    if (!r) return '';
+    if (r.code === 'limite') return PC.t('e.dir.limite');
+    if (r.code === 'ko') return PC.t('e.dir.ko');
+    if (r.code === 'inconnu' && r.absents && r.absents.length)
+      return PC.t('e.dir.inconnu', {s:r.absents.join(', ')});
+    if (r.n) return PC.t('e.dir.ok', {n:String(r.n)});
+    if (r.code === 'ok' || r.code === 'cache') return PC.t('e.dir.rien');
+    return '';
+  }
+
   /* Une quantité n'a pas un nombre fixe de décimales : 120 parts d'ETF
      s'écrivent sans virgule, 0,0431 BTC en compte quatre. Le maximum
      seul, sans minimum, coupe les zéros inutiles. */
@@ -7496,6 +7873,11 @@ window.PC = (function(){
     else if (c.id === 'co-ouvrir') ouvreCours();
     else if (c.id === 'co-enreg') enregistreCours();
     else if (c.id === 'co-oter') oteCours();
+    else if (c.id === 'co-maj'){
+      c.disabled = true;
+      c.textContent = PC.t('e.dir.encours');
+      chercheCours(true).then(function(r){ dire(motCours(r)); });
+    }
   });
 
   /* ============================================================
@@ -7654,9 +8036,10 @@ window.PC = (function(){
      les contredire. Le champ disparaît donc pendant que le cours est là. */
   function montreCours(on){
     document.getElementById('champ-pu').hidden = !on;
+    document.getElementById('champ-sym').hidden = !on;
     document.getElementById('champ-val').hidden = on;
     if (on) document.getElementById('a-val').value = '';
-    else document.getElementById('a-pu').value = '';
+    else { document.getElementById('a-pu').value = ''; document.getElementById('a-sym').value = ''; }
   }
   const caseCours = document.getElementById('a-cours-on');
   if (caseTaux) caseTaux.addEventListener('change', function(){
@@ -7721,6 +8104,8 @@ window.PC = (function(){
       ligne.q = qDet;
       ligne.pu = puSaisi;
       ligne.puMaj = jourISO(Date.now());
+      const sym = document.getElementById('a-sym').value.trim().toLowerCase();
+      if (sym) ligne.sym = sym;
       ligne.val = valeurCours(ligne);
     }
     if (rev !== null && rev > 0){
@@ -7729,6 +8114,8 @@ window.PC = (function(){
     }
     actifs.push(ligne);
     ecrire(); rendre(); dire(PC.t('e.msg.ajoute', {x:nom}));
+    /* Une ligne de plus, c'est peut-être une paire de plus à suivre. */
+    if (fluxVoulu) ouvreFlux();
     e.target.reset();
     montreTaux(false);
     montreCours(false);
@@ -7747,6 +8134,7 @@ window.PC = (function(){
     if (ouvert === i) ouvert = null;
     else if (ouvert !== null && ouvert > i) ouvert--;
     ecrire(); rendre(); dire(PC.t('e.msg.retire', {x:nom}));
+    if (fluxVoulu) ouvreFlux();
     if (depuisSaPage){ ouvert = null; poseVue('general'); }
   }
 
@@ -7870,7 +8258,12 @@ window.PC = (function(){
                         pu:(typeof a.q === 'number' && a.q > 0 && typeof a.pu === 'number' && a.pu > 0)
                            ? a.pu : undefined,
                         puMaj:(typeof a.puMaj === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(a.puMaj))
-                              ? a.puMaj : undefined}));
+                              ? a.puMaj : undefined,
+                        /* Un code de cours est court et sans espace : on
+                           refuse le reste plutôt que de l'envoyer tel quel
+                           dans une adresse. */
+                        sym:(typeof a.sym === 'string' && /^[a-z0-9-]{1,40}$/.test(a.sym.trim().toLowerCase()))
+                            ? a.sym.trim().toLowerCase() : undefined}));
           historique = Array.isArray(o.historique)
             ? o.historique.filter(function(r){
                 return r && typeof r.d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.d) && isFinite(r.val);
@@ -7895,6 +8288,9 @@ window.PC = (function(){
 
   function majVue(){
     document.body.classList.toggle('vue-espace', dansEspace);
+    /* Le flux ne vit que dans l'espace client : la vitrine n'affiche
+       aucun chiffre qu'il ferait bouger. */
+    if (window.PC_ESPACE && PC_ESPACE.flux) PC_ESPACE.flux(dansEspace);
     PC.majTitre(dansEspace);
     document.querySelectorAll('.site-nav a').forEach(function(a){
       a.setAttribute('aria-current', String(a.getAttribute('href') === ADRESSE && dansEspace));
@@ -7971,7 +8367,30 @@ window.PC = (function(){
 
   construitSelecteurs();
   rendre();
+
+  /* La bascule de vue est dans un autre script : on lui laisse une
+     poignee plutot qu'une variable globale de plus. */
+  window.PC_ESPACE = {
+    flux:function(dedans){
+      if (dedans) ouvreFlux(); else fermeFlux();
+    }
+  };
   majVue();
+  if (document.body.classList.contains('vue-espace')) ouvreFlux();
+
+  /* Au chargement, une fois la page posée : le capital avance tout seul
+     dès l'ouverture, sans bouton à trouver. Différé pour ne pas retarder
+     le premier rendu — un appel réseau ne doit jamais faire attendre
+     l'affichage de chiffres qu'on a déjà. */
+  setTimeout(function(){
+    if (!symbolesSuivis().length) return;
+    chercheCours(false).then(function(r){
+      const m = motCours(r);
+      /* On ne dit rien quand rien n'a bougé : une notification à chaque
+         ouverture pour annoncer qu'il ne s'est rien passé est du bruit. */
+      if (m && r.n) dire(m);
+    });
+  }, 1200);
 
   /* Un changement de langue ou de devise réécrit tout ce que ce script
      a produit : les puces de catégorie, les tableaux, les graphes et
@@ -7980,6 +8399,11 @@ window.PC = (function(){
   PC.surChangement(function(){
     construitPuces();
     construitSelecteurs();
+    /* Changer de devise change le cours : il est demandé dans la devise
+       affichée, jamais converti après coup. Et les paires du flux ne
+       sont plus les mêmes — BTCEUR n'est pas BTCUSDT. */
+    if (symbolesSuivis().length) chercheCours(true);
+    if (fluxVoulu) ouvreFlux();
     /* Le libellé de la bascule est écrit en JavaScript : il ne porte pas
        de `data-i18n` et ne serait donc pas retraduit tout seul. */
     if (basculeVue){
