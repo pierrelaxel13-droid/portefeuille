@@ -51,6 +51,19 @@ globalThis.fetch = async (url, opts) => {
       sy + ',2026-09-21,22:00:00,' + p + ',' + p + ',' + p + ',' + p + ',1000',
       {status:200});
   }
+  if (u.pathname === '/v1/finance/search'){
+    if (mode === 'recherche429') return new Response('Too Many Requests', {status:429});
+    return new Response(JSON.stringify({quotes:[
+      {symbol:'CW8.PA',  quoteType:'ETF',    longname:'Amundi MSCI World UCITS ETF',
+       exchDisp:'Paris',     typeDisp:'ETF'},
+      {symbol:'CW8.MI',  quoteType:'ETF',    longname:'Amundi MSCI World UCITS ETF',
+       exchDisp:'Milan',     typeDisp:'ETF'},
+      {symbol:'IWDA.AS', quoteType:'ETF',    shortname:'iShares Core MSCI World',
+       exchDisp:'Amsterdam', typeDisp:'ETF'},
+      {symbol:'WLD.PA',  quoteType:'CRYPTOCURRENCY', longname:'a exclure',
+       exchDisp:'x', typeDisp:'Crypto'}
+    ], news:[]}), {status:200});
+  }
   if (u.hostname === 'query1.finance.yahoo.com'){
     if (mode === 'yahoo429') return new Response('Too Many Requests', {status:429});
     const sym = decodeURIComponent(u.pathname.split('/chart/')[1] || '');
@@ -406,6 +419,44 @@ o = await r.json();
 dit('« yh:cw8.pa » repond comme « yh:CW8.PA »', !!o['yh:cw8.pa'], JSON.stringify(o));
 dit('le symbole part en majuscules', vus.some(x => x.includes('/chart/CW8.PA')),
     vus.filter(x => x.includes('/chart/')).join(' '));
+
+// [30] Chercher un titre par son NOM. Sans ca, il faut connaitre
+//      « CW8.PA » avant d'ouvrir la page : demander la reponse pour
+//      poser la question.
+console.log('[30] la recherche par nom');
+r = await worker.fetch(new Request(
+  'https://relais.test/?cherche=' + encodeURIComponent('amundi msci world'),
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('des candidats sont rendus', Array.isArray(o.resultats) && o.resultats.length >= 3,
+    (o.resultats || []).length + ' resultat(s)');
+dit('le code est pret a coller', (o.resultats||[])[0] &&
+    o.resultats[0].code === 'yh:CW8.PA', JSON.stringify((o.resultats||[])[0]));
+dit('la place de cotation distingue les doublons',
+    (o.resultats||[]).some(x => x.place === 'Paris') &&
+    (o.resultats||[]).some(x => x.place === 'Milan'),
+    (o.resultats||[]).map(x => x.place).join(', '));
+dit('ce qui n est pas un titre est ecarte',
+    !(o.resultats||[]).some(x => x.code === 'yh:WLD.PA'),
+    (o.resultats||[]).map(x => x.code).join(' '));
+dit('sans cle Twelve Data', r.status === 200, 'statut ' + r.status);
+
+// [31] une recherche trop courte ne part pas au reseau
+vus.length = 0;
+r = await worker.fetch(new Request('https://relais.test/?cherche=a',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('une lettre ne declenche rien', (o.resultats||[]).length === 0 && vus.length === 0,
+    vus.length + ' appel(s)');
+
+// [32] une limite ne doit pas passer pour « aucun resultat »
+mode = 'recherche429';
+r = await worker.fetch(new Request('https://relais.test/?cherche=amundi',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('une limite se distingue d un resultat vide', r.status === 429 && !!o.erreur,
+    JSON.stringify(o).slice(0, 80));
+mode = 'ok';
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

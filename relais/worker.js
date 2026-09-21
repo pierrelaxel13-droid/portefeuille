@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-21.7';
+const VERSION = '2026-09-21.8';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
    traitent differemment un navigateur et un programme. Un appel sans
@@ -76,6 +76,7 @@ function texteNu(brut, n){
 const AMONT = 'https://api.twelvedata.com';
 const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
 const STOOQ = 'https://stooq.com/q/l/';
+const RECHERCHE = 'https://query1.finance.yahoo.com/v1/finance/search';
 /* Le palier gratuit compte 8 appels par minute et 800 par jour. On
    garde donc les réponses : sans cela, trois visiteurs suffiraient à
    épuiser la journée. */
@@ -477,6 +478,55 @@ async function prix(codes, devise, env){
   return {prix:fini, retard:retard};
 }
 
+/* ===== Chercher un titre par son nom =====
+   Sans ca, il faut connaitre « CW8.PA » avant d'ouvrir la page -- ce
+   qui revient a demander la reponse pour poser la question. On rend
+   donc les candidats, avec leur place de cotation : c'est le seul
+   moyen de choisir entre les cinq lignes du meme fonds, cotees dans
+   cinq pays et deux devises.
+
+   On ne choisit PAS a la place de l'utilisateur. Prendre le premier
+   resultat attacherait un jour la cotation de Milan a un portefeuille
+   parisien, sans que rien ne le signale. */
+async function cherche(q){
+  let r, texte;
+  try {
+    r = await fetch(RECHERCHE + '?q=' + encodeURIComponent(q) +
+                    '&quotesCount=10&newsCount=0',
+                    {headers:Object.assign({'Accept':'application/json'}, ENTETES),
+                     cf:{cacheTtl:3600, cacheEverything:true}});
+    texte = await r.text();
+  } catch (e){
+    const err = new Error('reseau');
+    err.amont = {statut:0, source:'Yahoo', message:'la recherche n a pas repondu'};
+    throw err;
+  }
+  if (r.status === 429){
+    const e = new Error('limite'); e.limite = true;
+    e.amont = {statut:429, source:'Yahoo', message:'Yahoo limite les recherches'};
+    throw e;
+  }
+  let o = null;
+  try { o = JSON.parse(texte); } catch (e){}
+  if (!o || !Array.isArray(o.quotes)){
+    const e = new Error('amont');
+    e.amont = {statut:r.status, source:'Yahoo', message:texteNu(texte, 160)};
+    throw e;
+  }
+  const GARDE = {EQUITY:1, ETF:1, MUTUALFUND:1, INDEX:1};
+  return o.quotes
+    .filter(function(x){ return x && x.symbol && GARDE[x.quoteType]; })
+    .slice(0, 8)
+    .map(function(x){
+      return {
+        code: 'yh:' + x.symbol,
+        nom: x.longname || x.shortname || x.symbol,
+        place: x.exchDisp || x.exchange || '',
+        genre: x.typeDisp || x.quoteType || ''
+      };
+    });
+}
+
 export default {
   async fetch(req, env){
     const origine = origineAutorisee(req, env);
@@ -492,6 +542,20 @@ export default {
     if (req.method !== 'GET') return json({erreur:'methode'}, 405, origine);
 
     const u = new URL(req.url);
+
+    /* Recherche par nom : « ?cherche=amundi msci world ». */
+    const q = (u.searchParams.get('cherche') || '').trim();
+    if (q){
+      if (q.length < 2) return json({resultats:[]}, 200, origine);
+      try {
+        return json({resultats: await cherche(q)}, 200, origine);
+      } catch (e){
+        if (e && e.limite) return json({erreur:'limite', resultats:[]}, 429, origine);
+        return json({erreur:'recherche impossible',
+                     amont:(e && e.amont) || null, resultats:[]}, 502, origine);
+      }
+    }
+
     const ids = (u.searchParams.get('ids') || '').split(',')
       .map(function(x){ return x.trim(); }).filter(Boolean);
     const devise = (u.searchParams.get('vs_currencies') || 'eur').toLowerCase();
