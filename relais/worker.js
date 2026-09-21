@@ -15,12 +15,19 @@
    ------------------------------------------------------------------
    Exactement la forme que la page attend de ses autres fournisseurs :
 
-     GET /?ids=tw:CW8:XPAR,tw:AAPL&vs_currencies=eur
-     -> {"tw:CW8:XPAR":{"eur":512.3},"tw:AAPL":{"eur":198.74}}
+     GET /?ids=yh:CW8.PA,yh:AAPL&vs_currencies=eur
+     -> {"yh:CW8.PA":{"eur":512.3},"yh:AAPL":{"eur":182.84}}
 
-   Un code se lit « tw:SYMBOLE » ou « tw:SYMBOLE:PLACE ». La place
-   (XPAR pour Paris, XETR pour Francfort, XAMS pour Amsterdam…) lève
-   l'ambiguïté quand le même symbole est coté à plusieurs endroits.
+   Deux sources, deux préfixes :
+
+   - « yh:SYMBOLE » va chez Yahoo Finance. Aucune clé, et il couvre
+     Euronext, Xetra, Milan, Londres et les États-Unis. Le symbole
+     porte le suffixe de sa place : CW8.PA, IWDA.AS, SAP.DE, AAPL.
+   - « tw:SYMBOLE » ou « tw:SYMBOLE:PLACE » va chez Twelve Data, avec
+     une clé. Son palier gratuit ne sert que les marchés américains.
+
+   Les montants sont rendus dans la devise demandée, convertis au taux
+   du jour — ou absents si le taux manque, jamais convertis au jugé.
 
    Les codes qui ne commencent pas par « tw: » sont ignorés en
    silence : ce sont des cryptos, que la page ira chercher ailleurs.
@@ -35,7 +42,7 @@
    utilisable ; annoncé comme du direct, il est faux. */
 
 const AMONT = 'https://api.twelvedata.com';
-const PREFIXE = 'tw:';
+const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
 /* Le palier gratuit compte 8 appels par minute et 800 par jour. On
    garde donc les réponses : sans cela, trois visiteurs suffiraient à
    épuiser la journée. */
@@ -63,11 +70,28 @@ function origineAutorisee(req, env){
   return permis.indexOf(o) === -1 ? null : o;
 }
 
-/* « tw:CW8:XPAR » -> {code, symbole, place} */
+/* Deux sources, deux prefixes.
+
+   « tw: » va chez Twelve Data. Son palier gratuit ne sert en pratique
+   que les marches americains : un ETF d'Euronext y repond « This
+   symbol is available starting with the Grow plan ».
+
+   « yh: » va chez Yahoo Finance, qui couvre Euronext, Xetra, Milan,
+   Londres, sans cle. Ce n'est pas une API publiee : elle peut changer
+   sans prevenir, et elle ne promet rien. C'est le prix a payer pour
+   ne pas facturer 79 $ par mois a quelqu'un qui suit trois lignes.
+   Le README le dit ; on ne le decouvre pas le jour de la panne.
+
+   « yh:CW8.PA »  -> {code, source:'yh', symbole:'CW8.PA'}
+   « tw:CW8:XPAR » -> {code, source:'tw', symbole:'CW8', place:'XPAR'} */
 function lit(id){
   const p = String(id).split(':');
-  if (p[0] !== 'tw' || !p[1]) return null;
-  return {code:id, symbole:p[1].toUpperCase(), place:(p[2] || '').toUpperCase()};
+  if (p[0] === 'yh' && p[1]) return {code:id, source:'yh', symbole:p[1]};
+  if (p[0] === 'tw' && p[1]) {
+    return {code:id, source:'tw', symbole:p[1].toUpperCase(),
+            place:(p[2] || '').toUpperCase()};
+  }
+  return null;
 }
 
 /* Le nom de la variable qui porte la cle du fournisseur.
@@ -145,9 +169,61 @@ async function taux(de, vers, env){
   return v;
 }
 
+/* Yahoo rend une cotation par appel. Un portefeuille compte quelques
+   lignes, pas quelques milliers : c'est acceptable, et Cloudflare en
+   autorise cent mille par jour. */
+async function chezYahoo(symbole){
+  let r, texte;
+  try {
+    r = await fetch(YAHOO + encodeURIComponent(symbole) +
+                    '?interval=1d&range=1d',
+                    {cf:{cacheTtl:FRAICHE, cacheEverything:true}});
+    texte = await r.text();
+  } catch (e){
+    const err = new Error('reseau');
+    err.amont = {statut:0, message:'Yahoo n a pas repondu du tout'};
+    throw err;
+  }
+  let o = null;
+  try { o = JSON.parse(texte); } catch (e){}
+  const m = o && o.chart && o.chart.result && o.chart.result[0] &&
+            o.chart.result[0].meta;
+  if (!m){
+    const e = new Error('amont');
+    const dit = (o && o.chart && o.chart.error && o.chart.error.description) ||
+                texte.slice(0, 200) || '(reponse vide)';
+    e.amont = {statut:r.status, code:r.status, message:dit};
+    throw e;
+  }
+  let v = parseFloat(m.regularMarketPrice);
+  let dev = String(m.currency || '').toUpperCase();
+  /* Londres cote en PENCE, pas en livres. « GBp » vaut un centieme de
+     « GBP » : le confondre divise ou multiplie un portefeuille par
+     cent, en silence. */
+  if (String(m.currency) === 'GBp'){ v = v / 100; dev = 'GBP'; }
+  if (!isFinite(v) || v <= 0){
+    const e = new Error('amont');
+    e.amont = {statut:r.status, code:null, message:'aucun cours pour ' + symbole};
+    throw e;
+  }
+  return {valeur:v, dev:dev, ouvert:m.marketState === 'REGULAR'};
+}
+
+/* Le taux de change, chez Yahoo aussi : « USDEUR=X ». On ne fait pas
+   dependre la bourse europeenne d'une cle Twelve Data que l'utilisateur
+   n'a peut-etre pas. */
+async function tauxYahoo(de, vers){
+  if (de === vers) return 1;
+  const r = await chezYahoo(de + vers + '=X');
+  return r.valeur;
+}
+
 async function prix(codes, devise, env){
   const lus = codes.map(lit).filter(Boolean);
   if (!lus.length) return {prix:{}, retard:null};
+
+  const twelve = lus.filter(function(x){ return x.source === 'tw'; });
+  const yh = lus.filter(function(x){ return x.source === 'yh'; });
 
   /* L'amont veut deux listes parallèles : les symboles, et les places.
      Il faut donc qu'elles s'alignent — un symbole sans place décalerait
@@ -156,7 +232,7 @@ async function prix(codes, devise, env){
      pratique un portefeuille tient sur une ou deux places, et le palier
      gratuit compte les APPELS, pas les symboles. */
   const groupes = {};
-  lus.forEach(function(x){
+  twelve.forEach(function(x){
     (groupes[x.place] = groupes[x.place] || []).push(x);
   });
 
@@ -191,15 +267,28 @@ async function prix(codes, devise, env){
     if (g.length === 1) par[g[0].code] = rep;
     else g.forEach(function(x){ par[x.code] = rep && rep[x.symbole]; });
   }
-  /* Rien trouvé du tout, et une raison sous la main : on la donne. Une
-     réponse vide laisserait croire que les symboles sont justes et que
-     le fournisseur n'a rien. */
-  if (!Object.keys(par).length && soucis.length) throw soucis[0];
+
 
   const sortie = {};
   let retard = null;
   const besoins = {};
-  lus.forEach(function(x){
+
+  /* Yahoo, ligne par ligne. Une ligne qui echoue n'emporte pas les
+     autres, comme pour Twelve Data. */
+  for (const x of yh){
+    try {
+      const q = await chezYahoo(x.symbole);
+      besoins[q.dev] = 1;
+      sortie[x.code] = {brut:q.valeur, dev:q.dev, yahoo:true};
+      if (!q.ouvert) retard = 'cloture';
+      else if (retard === null) retard = 'differe';
+    } catch (e){
+      if (fatale(e)) throw e;
+      soucis.push(e);
+    }
+  }
+
+  twelve.forEach(function(x){
     const q = par[x.code];
     if (!q || q.status === 'error') return;
     const v = parseFloat(q.close != null ? q.close : q.price);
@@ -213,11 +302,21 @@ async function prix(codes, devise, env){
     else if (retard === null) retard = 'differe';
   });
 
+  /* Rien du tout, et une raison sous la main : on la donne plutot
+     qu'une reponse vide, qui laisserait croire a des symboles justes. */
+  if (!Object.keys(sortie).length && soucis.length) throw soucis[0];
+
   const cible = String(devise).toUpperCase();
   const taux_ = {};
+  /* Le taux vient de la meme maison que le cours : sans cle Twelve
+     Data, une ligne Yahoo doit quand meme pouvoir se convertir. */
+  const parYahoo = Object.keys(sortie).some(function(c){ return sortie[c].yahoo; });
   for (const d of Object.keys(besoins)){
-    try { taux_[d] = await taux(d, cible, env); }
-    catch (e){ taux_[d] = null; }
+    try {
+      taux_[d] = (parYahoo || !cleAmont(env))
+        ? await tauxYahoo(d, cible)
+        : await taux(d, cible, env);
+    } catch (e){ taux_[d] = null; }
   }
 
   const fini = {};
@@ -246,11 +345,6 @@ export default {
       }});
     }
     if (req.method !== 'GET') return json({erreur:'methode'}, 405, origine);
-    if (!cleAmont(env)) return json({
-      erreur:'cle absente',
-      quoi:'Ajoutez une variable nommee TWELVEDATA, de type Secret, ' +
-           'dont la valeur est la cle de votre compte twelvedata.com.'
-    }, 500, origine);
 
     const u = new URL(req.url);
     const ids = (u.searchParams.get('ids') || '').split(',')
@@ -261,6 +355,18 @@ export default {
     /* Plus de 40 codes d'un coup, c'est un appel qui n'est pas le fait
        d'un portefeuille : on borne plutôt que de payer pour lui. */
     if (ids.length > 40) return json({erreur:'trop de codes'}, 400, origine);
+
+    /* La cle n'est exigee que si l'on s'adresse a Twelve Data. Les
+       codes « yh: » n'en ont pas besoin, et reclamer une cle pour eux
+       ferait croire a un relais mal installe. */
+    if (!cleAmont(env) && ids.some(function(i){ return /^tw:/.test(i); })){
+      return json({
+        erreur:'cle absente',
+        quoi:'Les codes « tw: » passent par twelvedata.com et demandent ' +
+             'une variable TWELVEDATA, de type Secret. Les codes « yh: » ' +
+             'n en ont pas besoin.'
+      }, 500, origine);
+    }
 
     try {
       const r = await prix(ids, devise, env);

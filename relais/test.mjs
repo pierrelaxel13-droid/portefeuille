@@ -15,9 +15,25 @@ const COURS = {
   'ESE':  {close:'31.88',  currency:'EUR', is_market_open:true}
 };
 
+const YH = {
+  'CW8.PA':   {regularMarketPrice:512.30, currency:'EUR', marketState:'REGULAR'},
+  'IWDA.AS':  {regularMarketPrice:98.44,  currency:'EUR', marketState:'CLOSED'},
+  'AAPL':     {regularMarketPrice:198.74, currency:'USD', marketState:'CLOSED'},
+  'VUSA.L':   {regularMarketPrice:8900,   currency:'GBp', marketState:'REGULAR'},
+  'USDEUR=X': {regularMarketPrice:0.92,   currency:'EUR', marketState:'REGULAR'},
+  'GBPEUR=X': {regularMarketPrice:1.17,   currency:'EUR', marketState:'REGULAR'}
+};
+
 globalThis.fetch = async (url) => {
   const u = new URL(String(url));
   vus.push(u.pathname + '?' + u.searchParams.toString());
+  if (u.hostname === 'query1.finance.yahoo.com'){
+    const sym = decodeURIComponent(u.pathname.split('/chart/')[1] || '');
+    const m = YH[sym];
+    if (!m) return new Response(JSON.stringify({chart:{result:null,
+      error:{description:'No data found, symbol may be delisted'}}}), {status:404});
+    return new Response(JSON.stringify({chart:{result:[{meta:m}], error:null}}), {status:200});
+  }
   if (mode === '429') return new Response('{}', {status:429});
   if (mode === '500') return new Response('{}', {status:500});
   if (u.pathname === '/exchange_rate'){
@@ -183,6 +199,60 @@ o = await r.json();
 dit('un reseau mort se distingue d un refus', r.status === 502 &&
     (o.amont||{}).statut === 0, JSON.stringify(o.amont));
 globalThis.fetch = vraiFetch;
+
+// [16] Yahoo : la source qui couvre l'Europe, sans cle.
+console.log('[16] la bourse europeenne, par Yahoo');
+vus.length = 0;
+r = await worker.fetch(new Request(
+  'https://relais.test/?ids=yh:CW8.PA,yh:IWDA.AS,yh:AAPL&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});   // AUCUNE cle
+o = await r.json();
+dit('un ETF d Euronext repond', o['yh:CW8.PA'] && o['yh:CW8.PA'].eur === 512.3,
+    JSON.stringify(o['yh:CW8.PA']));
+dit('un ETF d Amsterdam aussi', o['yh:IWDA.AS'] && o['yh:IWDA.AS'].eur === 98.44,
+    JSON.stringify(o['yh:IWDA.AS']));
+dit('une action americaine est convertie', o['yh:AAPL'] &&
+    Math.abs(o['yh:AAPL'].eur - 198.74*0.92) < 0.01, JSON.stringify(o['yh:AAPL']));
+dit('sans aucune cle Twelve Data', r.status === 200, 'statut ' + r.status);
+dit('aucun appel a Twelve Data', !vus.some(x => x.includes('/quote')),
+    vus.filter(x=>x.includes('/quote')).join(' '));
+
+// [17] Londres cote en PENCE. Confondre GBp et GBP divise ou
+//      multiplie un portefeuille par cent, en silence.
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:VUSA.L&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+console.log('[17] Londres, en pence');
+dit('8900 pence = 89 GBP = 104,13 EUR', o['yh:VUSA.L'] &&
+    Math.abs(o['yh:VUSA.L'].eur - 89*1.17) < 0.01, JSON.stringify(o['yh:VUSA.L']));
+
+// [18] les deux sources dans le meme appel
+r = await worker.fetch(new Request(
+  'https://relais.test/?ids=yh:CW8.PA,tw:AAPL,bitcoin&vs_currencies=eur',
+  {headers:{Origin:BON}}), ENV);
+o = await r.json();
+console.log('[18] Yahoo et Twelve Data ensemble');
+dit('la ligne Yahoo est la', !!o['yh:CW8.PA'], JSON.stringify(o['yh:CW8.PA']));
+dit('la ligne Twelve Data aussi', !!o['tw:AAPL'], JSON.stringify(o['tw:AAPL']));
+dit('la crypto reste ignoree', !o.bitcoin);
+
+// [19] un symbole Yahoo inconnu ne doit pas emporter les bons
+r = await worker.fetch(new Request(
+  'https://relais.test/?ids=yh:CW8.PA,yh:NEXISTEPAS.XX&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+console.log('[19] un symbole Yahoo faux parmi des bons');
+dit('le bon passe', !!o['yh:CW8.PA'], JSON.stringify(Object.keys(o)));
+dit('le faux est absent', !o['yh:NEXISTEPAS.XX']);
+
+// [20] un « tw: » sans cle doit le dire, un « yh: » sans cle non
+r = await worker.fetch(new Request('https://relais.test/?ids=tw:AAPL',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+console.log('[20] la cle n est exigee que par Twelve Data');
+dit('« tw: » sans cle est signale', r.status === 500, 'statut ' + r.status);
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+dit('« yh: » sans cle fonctionne', r.status === 200, 'statut ' + r.status);
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

@@ -33,7 +33,12 @@ la journée consomme quelques dizaines d'appels, pas des centaines.
 Pas de ligne de commande, pas de logiciel à installer, pas de carte
 bancaire. Comptez dix minutes.
 
-### 1. La clé du fournisseur de cours
+### 1. La clé du fournisseur de cours — facultative
+
+**Sautez cette étape si vos lignes sont européennes.** Les codes `yh:`
+(voir plus bas) ne demandent aucune clé, et couvrent Euronext, Xetra,
+Milan, Londres et les États-Unis. La clé ne sert qu'aux codes `tw:`.
+
 
 Allez sur **twelvedata.com** et créez un compte gratuit. Une fois
 connecté, la clé s'affiche dans **API Key** (ou *Dashboard → API Key*).
@@ -136,6 +141,51 @@ Dans l'espace client : **menu** (les trois points, en haut à droite) →
 
 Les cours de bourse passent désormais par lui.
 
+## Les codes de vos lignes
+
+Le code se saisit dans le champ **« Code du cours »**, au même endroit
+que `bitcoin` ou `pax-gold`.
+
+### Le cas courant : `yh:`
+
+```
+yh:CW8.PA        un ETF coté à Paris
+yh:IWDA.AS       un ETF coté à Amsterdam
+yh:AAPL          une action américaine
+```
+
+Le symbole, puis un suffixe pour la place :
+
+- Paris (Euronext) — `.PA`
+- Amsterdam — `.AS`
+- Bruxelles — `.BR`
+- Francfort (Xetra) — `.DE`
+- Milan — `.MI`
+- Londres — `.L`
+- New York, Nasdaq — aucun suffixe
+
+`yh:` **ne demande aucune clé**. C'est la source à utiliser pour tout
+ce qui est européen.
+
+Pour trouver le bon symbole : cherchez votre ETF sur
+`finance.yahoo.com` et recopiez ce qui s'affiche en haut de sa fiche.
+
+### L'autre : `tw:`
+
+```
+tw:AAPL          une action américaine
+tw:MSFT:XNAS     avec la place de cotation, si besoin
+```
+
+`tw:` passe par twelvedata.com et demande la variable `TWELVEDATA`.
+**Son offre gratuite ne couvre pas les bourses européennes** : un ETF
+d'Euronext y répond *« This symbol is available starting with the Grow
+plan »*, une offre à plusieurs dizaines d'euros par mois.
+
+Il reste utile pour les valeurs américaines. Mais si vous n'avez pas de
+clé, ne vous en occupez pas : `yh:` suffit, et l'étape 4 se réduit à
+`ORIGINES`.
+
 ## Si vous préférez la ligne de commande
 
 Le même relais se déploie en trois commandes, depuis ce dossier :
@@ -172,6 +222,14 @@ veille. Le relais le signale, et la page l'écrit sous vos montants :
 *« cours de bourse différé, pas du direct »*. Un chiffre différé annoncé
 comme tel est utilisable ; annoncé comme du direct, il est faux.
 
+**`yh:` ne repose sur aucune API publiée.** Yahoo ne documente pas
+cette adresse et ne promet rien : elle peut changer de forme, ou cesser
+de répondre, sans préavis. C'est le prix à payer pour ne pas facturer
+plusieurs dizaines d'euros par mois à quelqu'un qui suit trois lignes —
+mais il faut le savoir avant la panne, pas le jour où elle arrive. Si
+elle survient, la page ne se casse pas : elle garde vos derniers
+montants et dit qu'elle n'a pas eu les cours.
+
 **Il ne touche pas à vos chiffres.** Il ne voit ni vos montants, ni vos
 quantités, ni votre historique : uniquement la liste des symboles dont
 la page veut le prix. Tout le reste ne quitte pas votre navigateur.
@@ -180,7 +238,9 @@ la page veut le prix. Tout le reste ne quitte pas votre navigateur.
 
 | Ce que vous voyez | Ce qu'il faut regarder |
 |---|---|
-| `{"erreur":"cle absente"}` | L'étape 4 n'a pas été faite, ou le nom n'est pas exactement `TWELVEDATA`. La réponse dit quoi faire. |
+| `{"erreur":"cle absente"}` | Vous utilisez un code `tw:` sans avoir posé `TWELVEDATA`. Passez en `yh:`, qui n'a besoin de rien. |
+| `available starting with the Grow plan` | Twelve Data ne sert pas cette bourse gratuitement. Utilisez `yh:` à la place. |
+| `No data found, symbol may be delisted` | Le symbole Yahoo est faux. Cherchez-le sur `finance.yahoo.com` et recopiez-le exactement. |
 | `{"erreur":"origine non autorisee"}` | `ORIGINES` ne contient pas l'adresse de votre site. Depuis la barre d'adresse du navigateur, cette erreur ne doit PAS apparaître — si elle apparaît, `ORIGINES` est vide ou mal recopié. |
 | `{"erreur":"limite"}` | Le quota du fournisseur est atteint. Attendez une minute. |
 | `{"erreur":"le fournisseur a refuse", ...}` | La réponse contient `amont.message` : c'est le fournisseur qui parle, mot pour mot, et `quoi` dit la suite. Un message parlant de `API key` signifie que `TWELVEDATA` est absente, périmée ou mal recopiée. |
@@ -192,7 +252,7 @@ Pour voir ce que répond le relais, ouvrez directement dans un
 navigateur :
 
 ```
-https://VOTRE-RELAIS.workers.dev/?ids=tw:CW8:XPAR&vs_currencies=eur
+https://VOTRE-RELAIS.workers.dev/?ids=yh:CW8.PA&vs_currencies=eur
 ```
 
 Vous devez lire quelque chose comme
