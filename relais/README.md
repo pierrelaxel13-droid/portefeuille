@@ -74,12 +74,29 @@ servira à l'étape 5.
 ### 4. Poser la clé, et dire qui a le droit d'appeler
 
 Toujours sur la page du worker, allez dans **Settings** → **Variables
-and Secrets** (ou *Variables*), et ajoutez **deux** entrées :
+and Secrets** (ou *Variables*), et ajoutez **deux** entrées.
 
-| Nom | Type | Valeur |
-|---|---|---|
-| `CLE` | **Secret** (chiffré) | la clé de l'étape 1 |
-| `ORIGINES` | Texte | `https://pierrelaxel13-droid.github.io` |
+**Tapez les deux noms à la main.** Ils font trois et huit lettres ; les
+copier depuis un tableau emporte souvent un bout de bordure, et
+Cloudflare refuse alors le nom — *« le nom de la variable ne peut pas
+commencer par - »*. Ni tiret, ni barre verticale, ni espace, ni accent
+grave : les lettres seules, en majuscules.
+
+Première entrée :
+
+- Nom : CLE
+- Type : **Secret** (chiffré)
+- Valeur : la clé de l'étape 1
+
+Seconde entrée :
+
+- Nom : ORIGINES
+- Type : Texte
+- Valeur : l'adresse de votre site, par exemple
+  `https://pierrelaxel13-droid.github.io`
+
+Si un champ contient déjà quelque chose, videz-le entièrement (clic
+dedans, Ctrl+A, Suppr) avant de retaper.
 
 `CLE` doit être de type **Secret** : Cloudflare la chiffre, et elle
 cesse d'être lisible, même par vous. C'est voulu — une clé qu'on peut
@@ -161,7 +178,7 @@ la page veut le prix. Tout le reste ne quitte pas votre navigateur.
 
 | Ce que vous voyez | Ce qu'il faut regarder |
 |---|---|
-| `{"erreur":"clé absente..."}` | L'étape 4 n'a pas été faite, ou `CLE` est mal orthographié (majuscules comprises). |
+| `{"erreur":"clé absente..."}` | L'étape 4 n'a pas été faite, ou `CLE` est mal orthographié — majuscules comprises, et sans caractère parasite collé au début. |
 | `{"erreur":"origine non autorisee"}` | `ORIGINES` ne contient pas l'adresse de votre site. Depuis la barre d'adresse du navigateur, cette erreur ne doit PAS apparaître — si elle apparaît, `ORIGINES` est vide ou mal recopié. |
 | `{"erreur":"limite"}` | Le quota du fournisseur est atteint. Attendez une minute. |
 | `{"erreur":"amont injoignable"}` | La clé est refusée par le fournisseur, ou son service est en panne. Reprenez l'étape 1. |
