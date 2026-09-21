@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-21.6';
+const VERSION = '2026-09-21.7';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
    traitent differemment un navigateur et un programme. Un appel sans
@@ -138,7 +138,12 @@ function origineAutorisee(req, env){
    « tw:CW8:XPAR » -> {code, source:'tw', symbole:'CW8', place:'XPAR'} */
 function lit(id){
   const p = String(id).split(':');
-  if (p[0] === 'yh' && p[1]) return {code:id, source:'yh', symbole:p[1]};
+  /* En MAJUSCULES, toujours. La page range les codes en minuscules au
+     moment de la saisie : « yh:CW8.PA » tape par l'utilisateur arrive
+     ici en « yh:cw8.pa ». Le meme code marcherait alors a la main et
+     echouerait depuis l'application -- l'ecart le plus penible a
+     diagnostiquer, parce que les deux essais semblent identiques. */
+  if (p[0] === 'yh' && p[1]) return {code:id, source:'yh', symbole:p[1].toUpperCase()};
   if (p[0] === 'st' && p[1]) return {code:id, source:'st', symbole:p[1].toLowerCase()};
   if (p[0] === 'tw' && p[1]) {
     return {code:id, source:'tw', symbole:p[1].toUpperCase(),

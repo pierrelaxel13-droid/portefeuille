@@ -368,6 +368,10 @@ mode = 'ok';
 //      garde la phrase, pas le balisage.
 console.log('[28] une page HTML devient une phrase');
 mode = 'stooqHtml';
+/* On garde le faux d'origine sous le coude : sans ca, ce remplacement
+   vaut pour tout ce qui suit, et les tests d'apres mesurent une panne
+   qu'on a fabriquee ici. */
+const fauxDOrigine = globalThis.fetch;
 globalThis.fetch = (function(vrai){
   return async (url, opts) => {
     const u = new URL(String(url));
@@ -388,7 +392,20 @@ o = await r.json();
 const m = (o.amont || {}).message || '';
 dit('le balisage a disparu', !/[<>]/.test(m), m.slice(0, 90));
 dit('la phrase est lisible', m.includes('Exceeded the daily hits limit'), m.slice(0, 120));
+globalThis.fetch = fauxDOrigine;
 mode = 'ok';
+
+// [29] La page range les codes en minuscules a la saisie. Le meme
+//      symbole doit donc marcher dans les deux casses, sinon il
+//      fonctionne a la main et echoue depuis l'application.
+console.log('[29] la casse du symbole Yahoo');
+vus.length = 0;
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:cw8.pa&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('« yh:cw8.pa » repond comme « yh:CW8.PA »', !!o['yh:cw8.pa'], JSON.stringify(o));
+dit('le symbole part en majuscules', vus.some(x => x.includes('/chart/CW8.PA')),
+    vus.filter(x => x.includes('/chart/')).join(' '));
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);
