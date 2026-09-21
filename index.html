@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260921.1824";</script>
+<script>window.PC_VERSION = "260921.1841";</script>
 </head>
 <body>
 
@@ -1131,6 +1131,7 @@ body.flux-vif .cours__vif::before{
   margin:10px 0 0; font-family:'IBM Plex Mono', monospace; font-size:15px;
   font-variant-numeric:tabular-nums; display:flex; gap:8px; align-items:baseline;
 }
+.fiche-m__perf[data-dir="nul"]{color:var(--ink-3); font-size:13px;}
 .fiche-m__perf[data-dir="up"]{color:var(--gain);}
 .fiche-m__perf[data-dir="down"]{color:var(--loss);}
 .fiche-m__perf span{color:var(--ink-3); font-size:13px;}
@@ -3162,8 +3163,9 @@ window.PC = (function(){
   'e.gate.mes':         ["Commencer avec mes chiffres","Start with my own figures","Empezar con mis cifras","Mit meinen Zahlen beginnen"],
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
-  'm.borne':            ["Le fournisseur gratuit ne remonte pas au-del\u00e0 d'un an\u00a0: voici l'ann\u00e9e \u00e9coul\u00e9e.","The free provider does not go back beyond one year: here is the past year.","El proveedor gratuito no se remonta m\u00e1s de un a\u00f1o: aqu\u00ed tiene el a\u00f1o transcurrido.","Der kostenlose Anbieter reicht nicht weiter als ein Jahr zur\u00fcck: hier das vergangene Jahr."],
   'm.surplage':         ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
+  'm.perfcourt':        ["Pas assez de points sur cette p\u00e9riode pour mesurer une \u00e9volution.","Not enough points over this period to measure a change.","No hay suficientes puntos en este periodo para medir una evoluci\u00f3n.","Zu wenige Punkte in diesem Zeitraum, um eine Ver\u00e4nderung zu messen."],
+  'e.hp.pasassez':      ["Il faut deux relev\u00e9s pour mesurer une \u00e9volution\u00a0: vous en avez {{n}} sur cette p\u00e9riode.","Measuring a change takes two statements: you have {{n}} over this period.","Para medir una evoluci\u00f3n hacen falta dos registros: tiene {{n}} en este periodo.","F\u00fcr eine Ver\u00e4nderung braucht es zwei Eintr\u00e4ge: Sie haben {{n}} in diesem Zeitraum."],
   'e.hp.1m':            ["1 mois","1 month","1 mes","1 Monat"],
   'e.hp.3m':            ["3 mois","3 months","3 meses","3 Monate"],
   'e.hp.6m':            ["6 mois","6 months","6 meses","6 Monate"],
@@ -8471,13 +8473,27 @@ window.PC = (function(){
       seul.innerHTML = (tous.length >= 2 && plageHisto !== 'tout')
         ? PC.t('e.hp.court') : motCourbeVide(vus.length);
     }
-    if (perf) majPerfHisto(perf, vus);
+    /* Quand la courbe ne se trace pas, le message sous elle explique
+       deja pourquoi : une deuxieme ligne disant la meme chose fait du
+       bruit, pas de la clarte. */
+    if (perf){
+      if (!trace) perf.hidden = true;
+      else majPerfHisto(perf, vus);
+    }
   }
 
   function majPerfHisto(hote, vus){
-    if (!vus || vus.length < 2){ hote.hidden = true; return; }
+    /* Pareil ici : on ne masque pas, on explique. Quelqu'un qui vient
+       de saisir ses montants n'a qu'un relevé, et une ligne vide ne lui
+       apprend pas qu'il lui en faut un deuxième. */
+    const court = function(k){
+      hote.hidden = false;
+      hote.setAttribute('data-dir', 'nul');
+      hote.innerHTML = '<span>' + echap(PC.t('e.hp.pasassez', {n:String(k)})) + '</span>';
+    };
+    if (!vus || vus.length < 2){ court(vus ? vus.length : 0); return; }
     const a = vus[0].val, b = vus[vus.length - 1].val;
-    if (!(a > 0)){ hote.hidden = true; return; }
+    if (!(a > 0)){ court(vus.length); return; }
     const v = (b - a) / a * 100, monte = !(v < 0);
     hote.hidden = false;
     hote.setAttribute('data-dir', monte ? 'up' : 'down');
@@ -9439,8 +9455,13 @@ window.PC = (function(){
   }
 
   /* ===== La fiche d'une crypto ===== */
+  /* Pas de « max ». Le palier gratuit s'arrête à un an, donc « max »
+     rendait exactement la même courbe que « 1a » : deux boutons pour
+     une seule période, ce qui n'est pas une profondeur de plus, juste
+     une promesse qu'on ne tient pas. « 1a » est le fond du puits, et il
+     le dit en étant le dernier. */
   const PLAGES = [['1h','1'], ['24h','1'], ['7j','7'], ['30j','30'],
-                  ['90j','90'], ['1a','365'], ['max','max']];
+                  ['90j','90'], ['1a','365']];
   let plage = 2;   /* 7 jours par défaut : assez pour voir une tendance */
 
   function courbe(pts){
@@ -9549,7 +9570,7 @@ window.PC = (function(){
      appel refusé compte quand même dans le quota. On sert l'année, et
      on le dit. */
   const FENETRES = {'1h':3600e3, '24h':86400e3, '7j':6048e5, '30j':2592e6,
-                    '90j':7776e6, '1a':31536e6, 'max':Infinity};
+                    '90j':7776e6, '1a':31536e6};
   const PROFONDEURS = [['1', 86400e3], ['7', 6048e5], ['365', 31536e6]];
   function profondeur(nom){
     const besoin = FENETRES[nom];
@@ -9595,12 +9616,12 @@ window.PC = (function(){
     const cle = id + '|' + jours + '|' + dev();
     const coupe = function(pts){
       const f = FENETRES[nom];
-      if (!pts || !pts.length || f === Infinity) return pts;
+      if (!pts || !pts.length || !f) return pts;
       const debut = pts[pts.length - 1][0] - f;
       const t = pts.filter(function(p){ return p[0] >= debut; });
       return t.length > 1 ? t : pts;
     };
-    const fini = function(pts){ return {pts:coupe(pts), borne:nom === 'max'}; };
+    const fini = function(pts){ return {pts:coupe(pts)}; };
     const garde = memoire[cle];
     if (garde && Date.now() - garde.t < FRAICHE) return Promise.resolve(fini(garde.p));
     /* Deux demandes pour la même série n'en font qu'une. */
@@ -9622,9 +9643,14 @@ window.PC = (function(){
      déjà en haut de la fiche. Changer de plage change ce chiffre : c'est
      tout l'intérêt de changer de plage. */
   function ligneperf(nom, pts){
-    if (!pts || pts.length < 2) return '';
+    /* Une ligne absente se lit « c'est cassé ». Une ligne qui dit
+       pourquoi se lit « il n'y a rien à mesurer » — ce n'est pas la
+       même information, et seule la seconde est vraie. */
+    const court = '<p class="fiche-m__perf" data-dir="nul"><span>' +
+      ech(PC.t('m.perfcourt')) + '</span></p>';
+    if (!pts || pts.length < 2) return court;
     const a = pts[0][1], b = pts[pts.length - 1][1];
-    if (!(a > 0)) return '';
+    if (!(a > 0)) return court;
     const v = (b - a) / a * 100, monte = !(v < 0);
     return '<p class="fiche-m__perf" data-dir="' + (monte ? 'up' : 'down') + '">' +
       (monte ? '▲' : '▼') + ' ' + PC.pourcent(v, 2) +
@@ -9660,8 +9686,7 @@ window.PC = (function(){
     };
     pointsPlage(id, nom).then(function(r){
       const c = encore(); if (!c) return;
-      c.innerHTML = courbe(r.pts) + ligneperf(nom, r.pts) +
-        (r.borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
+      c.innerHTML = courbe(r.pts) + ligneperf(nom, r.pts);
     }, function(e){
       const c = encore(); if (!c) return;
       c.innerHTML = motDEchec(e);
@@ -9781,8 +9806,7 @@ window.PC = (function(){
     };
     pointsPlage(id, nom).then(function(r){
       const c = encore(); if (!c) return;
-      c.innerHTML = courbe(r.pts) + ligneperf(nom, r.pts) +
-        (r.borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
+      c.innerHTML = courbe(r.pts) + ligneperf(nom, r.pts);
     }, function(e){
       const c = encore(); if (!c) return;
       c.innerHTML = motDEchec(e);
