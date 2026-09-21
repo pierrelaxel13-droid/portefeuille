@@ -74,37 +74,39 @@ servira à l'étape 5.
 ### 4. Poser la clé, et dire qui a le droit d'appeler
 
 Toujours sur la page du worker, allez dans **Settings** → **Variables
-and Secrets** (ou *Variables*), et ajoutez **deux** entrées.
+and Secrets** (ou *Variables*).
 
-**Tapez les deux noms à la main.** Ils font trois et huit lettres ; les
-copier depuis un tableau emporte souvent un bout de bordure, et
-Cloudflare refuse alors le nom — *« le nom de la variable ne peut pas
-commencer par - »*. Ni tiret, ni barre verticale, ni espace, ni accent
-grave : les lettres seules, en majuscules.
+**Attention au vocabulaire.** Le tableau de bord, en français, appelle
+**« Clé »** le champ du *nom* de la variable — au sens clé/valeur. Ce
+n'est pas là que va votre clé d'API. Lisez ces deux champs comme :
 
-Première entrée :
+- **Clé** = le nom de la variable (`TWELVEDATA`, `ORIGINES`)
+- **Valeur** = ce qu'elle contient
 
-- Nom : CLE
-- Type : **Secret** (chiffré)
-- Valeur : la clé de l'étape 1
+Ajoutez **deux** entrées. Tapez les noms à la main : les copier depuis
+un texte emporte souvent un caractère parasite, et Cloudflare répond
+alors *« Le nom de la variable doit commencer par une lettre »*.
 
-Seconde entrée :
+**Première entrée — votre clé d'API**
 
-- Nom : ORIGINES
-- Type : Texte
+- Clé (le nom) : `TWELVEDATA`
+- Valeur : la clé copiée à l'étape 1
+- Cochez **Secret** : Cloudflare la chiffre, et elle cesse d'être
+  lisible, même par vous. C'est voulu — une clé qu'on peut relire est
+  une clé qui peut fuir.
+
+**Seconde entrée — qui a le droit d'appeler**
+
+- Clé (le nom) : `ORIGINES`
 - Valeur : l'adresse de votre site, par exemple
   `https://pierrelaxel13-droid.github.io`
+- Ne cochez **pas** Secret : ce n'en est pas un.
+
+Sans `ORIGINES`, le relais est ouvert à tous : votre quota devient
+celui de tout le monde.
 
 Si un champ contient déjà quelque chose, videz-le entièrement (clic
 dedans, Ctrl+A, Suppr) avant de retaper.
-
-`CLE` doit être de type **Secret** : Cloudflare la chiffre, et elle
-cesse d'être lisible, même par vous. C'est voulu — une clé qu'on peut
-relire est une clé qui peut fuir.
-
-`ORIGINES` dit quels sites ont le droit d'appeler ce relais. Sans elle,
-le relais est ouvert à tous : votre quota devient celui de tout le
-monde.
 
 Enregistrez (**Save**, puis **Deploy** si le bouton apparaît).
 
@@ -142,7 +144,7 @@ Le même relais se déploie en trois commandes, depuis ce dossier :
 npm install -g wrangler
 wrangler login
 wrangler deploy
-wrangler secret put CLE
+wrangler secret put TWELVEDATA
 ```
 
 `ORIGINES` se règle alors dans `wrangler.toml`, et un `wrangler deploy`
@@ -178,7 +180,7 @@ la page veut le prix. Tout le reste ne quitte pas votre navigateur.
 
 | Ce que vous voyez | Ce qu'il faut regarder |
 |---|---|
-| `{"erreur":"clé absente..."}` | L'étape 4 n'a pas été faite, ou `CLE` est mal orthographié — majuscules comprises, et sans caractère parasite collé au début. |
+| `{"erreur":"cle absente"}` | L'étape 4 n'a pas été faite, ou le nom n'est pas exactement `TWELVEDATA`. La réponse dit quoi faire. |
 | `{"erreur":"origine non autorisee"}` | `ORIGINES` ne contient pas l'adresse de votre site. Depuis la barre d'adresse du navigateur, cette erreur ne doit PAS apparaître — si elle apparaît, `ORIGINES` est vide ou mal recopié. |
 | `{"erreur":"limite"}` | Le quota du fournisseur est atteint. Attendez une minute. |
 | `{"erreur":"amont injoignable"}` | La clé est refusée par le fournisseur, ou son service est en panne. Reprenez l'étape 1. |

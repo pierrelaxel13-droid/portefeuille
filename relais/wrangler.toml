@@ -8,4 +8,4 @@ compatibility_date = "2026-09-21"
 ORIGINES = "https://pierrelaxel13-droid.github.io"
 
 # La cle du fournisseur ne se met PAS ici : ce fichier est versionne.
-#   wrangler secret put CLE
+#   wrangler secret put TWELVEDATA

@@ -36,7 +36,7 @@ globalThis.fetch = async (url) => {
   return new Response('{}', {status:404});
 };
 
-const ENV = {CLE:'SECRET-QUI-NE-DOIT-PAS-SORTIR', ORIGINES:'https://pierrelaxel13-droid.github.io'};
+const ENV = {TWELVEDATA:'SECRET-QUI-NE-DOIT-PAS-SORTIR', ORIGINES:'https://pierrelaxel13-droid.github.io'};
 const appel = (q, origine) => worker.fetch(
   new Request('https://relais.test/?' + q, {headers: origine ? {Origin:origine} : {}}), ENV);
 const BON = 'https://pierrelaxel13-droid.github.io';
@@ -107,6 +107,14 @@ mode = 'ok';
 r = await worker.fetch(new Request('https://relais.test/?ids=tw:CW8', {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 console.log('[8] relais mal installe');
 dit('dit que la cle manque', r.status === 500, 'statut ' + r.status);
+dit('et dit quoi faire', ((await r.clone().json()).quoi || '').includes('TWELVEDATA'));
+
+// [8b] l'ancien nom reste accepte : personne ne doit etre casse par
+//      le changement de nom.
+r = await worker.fetch(new Request('https://relais.test/?ids=tw:CW8:XPAR&vs_currencies=eur',
+      {headers:{Origin:BON}}), {CLE:ENV.TWELVEDATA, ORIGINES:ENV.ORIGINES});
+dit('l ancien nom CLE marche encore', r.status === 200 &&
+    (await r.json())['tw:CW8:XPAR'] !== undefined, 'statut ' + r.status);
 
 // [9] garde-fou sur le nombre de codes
 r = await appel('ids=' + Array.from({length:41}, (_,i)=>'tw:X'+i).join(','), BON);

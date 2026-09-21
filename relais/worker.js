@@ -70,12 +70,26 @@ function lit(id){
   return {code:id, symbole:p[1].toUpperCase(), place:(p[2] || '').toUpperCase()};
 }
 
+/* Le nom de la variable qui porte la cle du fournisseur.
+
+   Elle s'appelait « CLE ». Mauvais nom : le tableau de bord de
+   Cloudflare, en francais, intitule « Cle » le champ du NOM de la
+   variable — au sens cle/valeur. Une variable NOMMEE « CLE » invitait
+   donc a coller la cle d'API dans le champ du nom, ce qui est
+   precisement l'erreur commise a l'installation.
+
+   « TWELVEDATA » ne se confond avec rien. L'ancien nom reste accepte
+   pour ceux qui l'ont deja pose. */
+function cleAmont(env){
+  return env.TWELVEDATA || env.CLE || '';
+}
+
 async function amont(chemin, params, env){
   const u = new URL(AMONT + chemin);
   Object.keys(params).forEach(function(k){
     if (params[k]) u.searchParams.set(k, params[k]);
   });
-  u.searchParams.set('apikey', env.CLE);
+  u.searchParams.set('apikey', cleAmont(env));
   const r = await fetch(u.toString(), {cf:{cacheTtl:FRAICHE, cacheEverything:true}});
   if (r.status === 429){ const e = new Error('limite'); e.limite = true; throw e; }
   if (!r.ok) throw new Error('amont ' + r.status);
@@ -170,7 +184,11 @@ export default {
       }});
     }
     if (req.method !== 'GET') return json({erreur:'methode'}, 405, origine);
-    if (!env.CLE) return json({erreur:'clé absente : posez le secret CLE'}, 500, origine);
+    if (!cleAmont(env)) return json({
+      erreur:'cle absente',
+      quoi:'Ajoutez une variable nommee TWELVEDATA, de type Secret, ' +
+           'dont la valeur est la cle de votre compte twelvedata.com.'
+    }, 500, origine);
 
     const u = new URL(req.url);
     const ids = (u.searchParams.get('ids') || '').split(',')
