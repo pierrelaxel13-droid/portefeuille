@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260920.2044";</script>
+<script>window.PC_VERSION = "260921.1757";</script>
 </head>
 <body>
 
@@ -1124,6 +1124,16 @@ body.flux-vif .cours__vif::before{
 }
 .fiche-m__plage:hover{border-color:var(--accent); color:var(--ink);}
 .fiche-m__plage[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff;}
+/* La performance sur la fenêtre affichée. Elle est sous la courbe et
+   non dans l'en-tête : elle change avec le bouton de plage, et doit se
+   lire à côté de ce qu'elle résume. */
+.fiche-m__perf{
+  margin:10px 0 0; font-family:'IBM Plex Mono', monospace; font-size:15px;
+  font-variant-numeric:tabular-nums; display:flex; gap:8px; align-items:baseline;
+}
+.fiche-m__perf[data-dir="up"]{color:var(--gain);}
+.fiche-m__perf[data-dir="down"]{color:var(--loss);}
+.fiche-m__perf span{color:var(--ink-3); font-size:13px;}
 .fiche-m__graphe{width:100%; height:auto; display:block; overflow:visible;}
 .fiche-m__graphe .aire{fill:var(--accent); opacity:.1;}
 .fiche-m__graphe .trait{fill:none; stroke:var(--accent); stroke-width:2; stroke-linejoin:round; stroke-linecap:round;}
@@ -3153,6 +3163,8 @@ window.PC = (function(){
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
   'm.borne':            ["Le fournisseur gratuit ne remonte pas au-del\u00e0 d'un an\u00a0: voici l'ann\u00e9e \u00e9coul\u00e9e.","The free provider does not go back beyond one year: here is the past year.","El proveedor gratuito no se remonta m\u00e1s de un a\u00f1o: aqu\u00ed tiene el a\u00f1o transcurrido.","Der kostenlose Anbieter reicht nicht weiter als ein Jahr zur\u00fcck: hier das vergangene Jahr."],
+  'm.surplage':         ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
+  'm.plagelimite':      ["Le fournisseur gratuit limite le nombre d'appels. On retente dans {{s}}\u00a0s, sans rien faire.","The free provider limits how many calls it accepts. Retrying in {{s}}s, nothing to do.","El proveedor gratuito limita el n\u00famero de llamadas. Se reintenta en {{s}}\u00a0s, sin hacer nada.","Der kostenlose Anbieter begrenzt die Zahl der Abrufe. Neuer Versuch in {{s}}\u00a0s, ohne Ihr Zutun."],
   'm.plagevide':        ["Cette p\u00e9riode n'a pas pu \u00eatre charg\u00e9e. Les autres restent disponibles.","This period could not be loaded. The others are still available.","Este periodo no se ha podido cargar. Los dem\u00e1s siguen disponibles.","Dieser Zeitraum konnte nicht geladen werden. Die anderen bleiben verf\u00fcgbar."],
   'm.onglet':           ["March\u00e9s","Markets","Mercados","M\u00e4rkte"],
   'm.courbe':           ["Le cours du march\u00e9","The market price","La cotizaci\u00f3n del mercado","Der Marktkurs"],
@@ -9427,53 +9439,139 @@ window.PC = (function(){
     }
   }
 
+  /* ===== Une série par profondeur, découpée pour les sept plages =====
+     Le fournisseur gratuit compte les appels, et il ne compte pas large.
+     Une série par bouton, c'était sept appels pour sept boutons : le
+     refus tombait avant le dernier, et les plages suivantes restaient
+     vides — y compris celles qui avaient marché juste avant.
+
+     On ne demande donc que trois profondeurs — le jour, la semaine,
+     l'année — et on y découpe les sept fenêtres. Revenir sur une plage
+     déjà vue ne coûte plus rien, et faire le tour des sept coûte trois
+     appels au lieu de sept.
+
+     « max » n'est jamais demandé : le palier gratuit le refuse, et un
+     appel refusé compte quand même dans le quota. On sert l'année, et
+     on le dit. */
+  const FENETRES = {'1h':3600e3, '24h':86400e3, '7j':6048e5, '30j':2592e6,
+                    '90j':7776e6, '1a':31536e6, 'max':Infinity};
+  const PROFONDEURS = [['1', 86400e3], ['7', 6048e5], ['365', 31536e6]];
+  function profondeur(nom){
+    const besoin = FENETRES[nom];
+    for (let i = 0; i < PROFONDEURS.length; i++){
+      if (PROFONDEURS[i][1] >= besoin) return PROFONDEURS[i][0];
+    }
+    return '365';
+  }
+  const CLE_COURBES = 'pierrelco.courbes.v1';
+  const FRAICHE = 10 * 60 * 1000;
+  try {
+    const gard = JSON.parse(localStorage.getItem(CLE_COURBES) || 'null');
+    if (gard && typeof gard === 'object'){
+      Object.keys(gard).forEach(function(k){
+        if (gard[k] && Date.now() - gard[k].t < FRAICHE) memoire[k] = gard[k];
+      });
+    }
+  } catch (e){}
+  /* On n'ecrit pas tout : une serie d'un an pese une dizaine de
+     kilo-octets, et le navigateur ferme le robinet vers cinq mega. On
+     garde les plus recentes, et on laisse filer le reste — le pire
+     qu'il puisse arriver est un appel de plus. */
+  const GARDE_MAX = 24;
+  function rangeCourbes(){
+    try {
+      const clefs = Object.keys(memoire)
+        .filter(function(k){ return memoire[k] && Date.now() - memoire[k].t < FRAICHE; })
+        .sort(function(x, y){ return memoire[y].t - memoire[x].t; })
+        .slice(0, GARDE_MAX);
+      const o = {};
+      clefs.forEach(function(k){ o[k] = memoire[k]; });
+      localStorage.setItem(CLE_COURBES, JSON.stringify(o));
+    } catch (e){
+      /* Plus de place : on vide plutot que de laisser un reste
+         illisible, et la page repart sur le reseau. */
+      try { localStorage.removeItem(CLE_COURBES); } catch (e2){}
+    }
+  }
+
+  /* Les points d'une plage, découpés dans la série qui la couvre. */
+  function pointsPlage(id, nom){
+    const jours = profondeur(nom);
+    const cle = id + '|' + jours + '|' + dev();
+    const coupe = function(pts){
+      const f = FENETRES[nom];
+      if (!pts || !pts.length || f === Infinity) return pts;
+      const debut = pts[pts.length - 1][0] - f;
+      const t = pts.filter(function(p){ return p[0] >= debut; });
+      return t.length > 1 ? t : pts;
+    };
+    const fini = function(pts){ return {pts:coupe(pts), borne:nom === 'max'}; };
+    const garde = memoire[cle];
+    if (garde && Date.now() - garde.t < FRAICHE) return Promise.resolve(fini(garde.p));
+    /* Deux demandes pour la même série n'en font qu'une. */
+    if (!enVolCourbe[cle]){
+      enVolCourbe[cle] = json(BASE + '/coins/' + encodeURIComponent(id) +
+          '/market_chart?vs_currency=' + dev() + '&days=' + jours)
+        .then(function(o){
+          const pts = (o && o.prices) || [];
+          memoire[cle] = {t:Date.now(), p:pts};
+          rangeCourbes();
+          delete enVolCourbe[cle];
+          return pts;
+        }, function(e){ delete enVolCourbe[cle]; noteRefus(e); throw e; });
+    }
+    return enVolCourbe[cle].then(fini);
+  }
+
+  /* La performance sur la fenêtre montrée — pas sur les 24 h, qui sont
+     déjà en haut de la fiche. Changer de plage change ce chiffre : c'est
+     tout l'intérêt de changer de plage. */
+  function ligneperf(nom, pts){
+    if (!pts || pts.length < 2) return '';
+    const a = pts[0][1], b = pts[pts.length - 1][1];
+    if (!(a > 0)) return '';
+    const v = (b - a) / a * 100, monte = !(v < 0);
+    return '<p class="fiche-m__perf" data-dir="' + (monte ? 'up' : 'down') + '">' +
+      (monte ? '▲' : '▼') + ' ' + PC.pourcent(v, 2) +
+      ' <span>' + ech(PC.t('m.surplage', {p:nom})) + '</span></p>';
+  }
+
+  /* Un refus pour trop d'appels n'est pas une panne, c'est une attente.
+     On la nomme, et on repart tout seul quand elle est passée — sinon
+     il faudrait re-cliquer sans savoir quand. */
+  let reprise = null;
+  function secondesDAttente(){ return Math.max(1, Math.ceil((repos - Date.now()) / 1000)); }
+  function reprend(fn){
+    if (reprise) clearTimeout(reprise);
+    reprise = setTimeout(function(){ reprise = null; fn(); },
+                         Math.max(1000, repos - Date.now()));
+  }
+  function motDEchec(e){
+    return '<p class="fiche-m__mot">' + ech(e && e.limite
+      ? PC.t('m.plagelimite', {s:String(secondesDAttente())}) : PC.t('m.plagevide')) + '</p>';
+  }
+
   function chargeCourbe(){
     const cible = document.getElementById('mar-graphe');
     if (!cible || !ouverte) return;
-    /* Ce qu'on demande MAINTENANT. Le reste de cette fonction s'y
-       tient : « plage » aura pu changer d'ici la réponse. */
-    const quoi = plage;
-    const jours = PLAGES[quoi][1];
+    /* Ce qu'on demande MAINTENANT : « plage » aura pu changer d'ici la
+       réponse, et c'est la dernière demande FAITE qui doit gagner. */
+    const nom = PLAGES[plage][0];
     const id = ouverte;
     const rang = (rangCourbe['mar-graphe'] = (rangCourbe['mar-graphe'] || 0) + 1);
-    let borne = false;
-    const demande = function(j){
-      return json(BASE + '/coins/' + encodeURIComponent(id) +
-        '/market_chart?vs_currency=' + dev() + '&days=' + j);
+    const encore = function(){
+      const c = document.getElementById('mar-graphe');
+      return (c && rangCourbe['mar-graphe'] === rang && ouverte === id) ? c : null;
     };
-    demande(jours)
-      .catch(function(e){
-        /* Même borne d'un an que sur la fiche d'un actif. */
-        if (jours !== 'max') throw e;
-        borne = true;
-        return demande('365');
-      })
-      .then(function(o){
-        let pts = (o && o.prices) || [];
-        /* « 1h » n'existe pas chez le fournisseur : on demande la
-           journée et on n'en garde que la dernière heure. */
-        if (PLAGES[quoi][0] === '1h' && pts.length){
-          const debut = pts[pts.length - 1][0] - 3600e3;
-          const tranche = pts.filter(function(p){ return p[0] >= debut; });
-          if (tranche.length > 1) pts = tranche;
-        }
-        /* Le conteneur est retrouvé maintenant : un rendu a pu remplacer
-           la fiche pendant que la requête voyageait. Et on se tait si
-           une demande plus récente est partie depuis, ou si le lecteur
-           a changé de crypto : cette réponse-ci ne répond plus à rien. */
-        const c = document.getElementById('mar-graphe');
-        if (!c || rangCourbe['mar-graphe'] !== rang || ouverte !== id) return;
-        c.innerHTML = courbe(pts) +
-          (borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
-      })
-      .catch(function(e){
-        noteRefus(e);
-        const c = document.getElementById('mar-graphe');
-        if (!c || rangCourbe['mar-graphe'] !== rang || ouverte !== id) return;
-        /* Jamais un cadre vide : on dit que cette période n'a pas pu
-           être chargée, et que les autres restent disponibles. */
-        c.innerHTML = '<p class="fiche-m__mot">' + ech(PC.t('m.plagevide')) + '</p>';
-      });
+    pointsPlage(id, nom).then(function(r){
+      const c = encore(); if (!c) return;
+      c.innerHTML = courbe(r.pts) + ligneperf(nom, r.pts) +
+        (r.borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
+    }, function(e){
+      const c = encore(); if (!c) return;
+      c.innerHTML = motDEchec(e);
+      if (e && e.limite) reprend(chargeCourbe);
+    });
   }
 
   function ouvre(id){
@@ -9557,61 +9655,38 @@ window.PC = (function(){
        Les points sont gardés quelques minutes : revenir sur une plage
        déjà vue, ou un simple rendu, ne doit pas redemander au réseau ce
        qu'on a déjà. */
-    trace: function(cibleId, id, i){
-      if (!cibleId || !id) return;
-      const jours = (PLAGES[i] || PLAGES[2])[1];
-      const cle = id + '|' + jours + '|' + dev();
-      /* « 1h » et « 24h » demandent la même journée au fournisseur : la
-         seule différence est la tranche qu'on en garde. La mémoire tient
-         donc les points BRUTS, et la coupe se fait à l'affichage —
-         sinon les deux plages se partagent une case et la première
-         ouverte impose ses points à la seconde. */
-      const coupe = function(pts){
-        if ((PLAGES[i] || [])[0] !== '1h' || !pts || !pts.length) return pts;
-        const debut = pts[pts.length - 1][0] - 3600e3;
-        const tranche = pts.filter(function(p){ return p[0] >= debut; });
-        return tranche.length > 1 ? tranche : pts;
-      };
-      let borne = false;
-      const rang = (rangCourbe[cibleId] = (rangCourbe[cibleId] || 0) + 1);
-      const pose = function(pts){
-        const c = document.getElementById(cibleId);
-        /* Une demande plus récente est partie pour ce même cadre : la
-           réponse qu'on tient est périmée, même si elle arrive après. */
-        if (!c || rangCourbe[cibleId] !== rang) return;
-        if (!pts){ c.innerHTML = '<p class="fiche-m__mot">' + ech(PC.t('m.plagevide')) + '</p>'; return; }
-        c.innerHTML = courbe(coupe(pts)) +
-          (borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
-      };
-      const demande = function(j){
-        return json(BASE + '/coins/' + encodeURIComponent(id) +
-          '/market_chart?vs_currency=' + dev() + '&days=' + j);
-      };
-      const garde = memoire[cle];
-      if (garde && Date.now() - garde.t < 180000){ pose(garde.p); return; }
-      /* Deux rendus qui se suivent demanderaient deux fois la même
-         courbe avant que la première réponse n'arrive. Une requête en
-         vol sert tout le monde. */
-      if (!enVolCourbe[cle]){
-        enVolCourbe[cle] = demande(jours)
-          .catch(function(e){
-            /* Le fournisseur gratuit borne l'historique à un an :
-               « max » y est refusé. Plutôt qu'un cadre vide, on montre
-               la plus longue période qu'il sert, et on dit laquelle. */
-            if (jours !== 'max') throw e;
-            borne = true;
-            return demande('365');
-          })
-          .then(function(o){
-            const pts = (o && o.prices) || [];
-            memoire[cle] = {t:Date.now(), p:pts};
-            delete enVolCourbe[cle];
-            return pts;
-          }, function(e){ delete enVolCourbe[cle]; noteRefus(e); throw e; });
-      }
-      enVolCourbe[cle].then(pose, function(){ pose(null); });
+    trace: traceDans,
+    /* Vider la memoire des courbes. Sert aux tests, et a la bascule de
+       devise, ou les points gardes ne valent plus rien. */
+    oublie: function(){
+      Object.keys(memoire).forEach(function(k){ delete memoire[k]; });
+      rangeCourbes();
     }
   };
+
+  /* Le même chargeur que la fiche de Marchés : une série par
+     profondeur, découpée pour la plage demandée. Nommée plutôt
+     qu'anonyme, pour pouvoir se rappeler elle-même à la reprise. */
+  function traceDans(cibleId, id, i){
+    if (!cibleId || !id) return;
+    const nom = (PLAGES[i] || PLAGES[2])[0];
+    const rang = (rangCourbe[cibleId] = (rangCourbe[cibleId] || 0) + 1);
+    const encore = function(){
+      const c = document.getElementById(cibleId);
+      /* Une demande plus récente est partie pour ce même cadre : la
+         réponse qu'on tient est périmée, même si elle arrive après. */
+      return (c && rangCourbe[cibleId] === rang) ? c : null;
+    };
+    pointsPlage(id, nom).then(function(r){
+      const c = encore(); if (!c) return;
+      c.innerHTML = courbe(r.pts) + ligneperf(nom, r.pts) +
+        (r.borne ? '<p class="fiche-m__mot">' + ech(PC.t('m.borne')) + '</p>' : '');
+    }, function(e){
+      const c = encore(); if (!c) return;
+      c.innerHTML = motDEchec(e);
+      if (e && e.limite) reprend(function(){ traceDans(cibleId, id, i); });
+    });
+  }
 
   /* Changer de devise ou de langue réécrit tous ces nombres. */
   PC.surChangement(function(){
