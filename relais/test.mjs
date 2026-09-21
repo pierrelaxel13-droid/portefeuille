@@ -15,6 +15,7 @@ const COURS = {
   'ESE':  {close:'31.88',  currency:'EUR', is_market_open:true}
 };
 
+const ST = {'cw8.fr':511.90, 'aapl.us':198.10, 'vusa.uk':89.05};
 const YH = {
   'CW8.PA':   {regularMarketPrice:512.30, currency:'EUR', marketState:'REGULAR'},
   'IWDA.AS':  {regularMarketPrice:98.44,  currency:'EUR', marketState:'CLOSED'},
@@ -27,7 +28,20 @@ const YH = {
 globalThis.fetch = async (url) => {
   const u = new URL(String(url));
   vus.push(u.pathname + '?' + u.searchParams.toString());
+  if (u.hostname === 'stooq.com'){
+    const sy = (u.searchParams.get('s') || '').toLowerCase();
+    if (mode === 'stooq429') return new Response('Too Many Requests', {status:429});
+    const p = ST[sy];
+    if (p === undefined){
+      return new Response('Symbol,Date,Time,Open,High,Low,Close,Volume\n' +
+        sy + ',N/D,N/D,N/D,N/D,N/D,N/D,N/D', {status:200});
+    }
+    return new Response('Symbol,Date,Time,Open,High,Low,Close,Volume\n' +
+      sy + ',2026-09-21,22:00:00,' + p + ',' + p + ',' + p + ',' + p + ',1000',
+      {status:200});
+  }
   if (u.hostname === 'query1.finance.yahoo.com'){
+    if (mode === 'yahoo429') return new Response('Too Many Requests', {status:429});
     const sym = decodeURIComponent(u.pathname.split('/chart/')[1] || '');
     const m = YH[sym];
     if (!m) return new Response(JSON.stringify({chart:{result:null,
@@ -253,6 +267,49 @@ dit('« tw: » sans cle est signale', r.status === 500, 'statut ' + r.status);
 r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 dit('« yh: » sans cle fonctionne', r.status === 200, 'statut ' + r.status);
+
+// [21] Yahoo limite la machine : Stooq doit prendre le relais, sans
+//      que l'utilisateur ait quoi que ce soit a changer.
+console.log('[21] Yahoo refuse, Stooq repond');
+mode = 'yahoo429';
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('la ligne est servie quand meme', r.status === 200 && !!o['yh:CW8.PA'],
+    JSON.stringify(o));
+dit('au cours de Stooq', o['yh:CW8.PA'] && o['yh:CW8.PA'].eur === 511.9,
+    JSON.stringify(o['yh:CW8.PA']));
+dit('annonce comme une cloture', o.retard === 'cloture', o.retard);
+
+// [22] les deux refusent : on dit ce que CHACUNE a repondu, sinon on
+//      accuse la mauvaise.
+console.log('[22] les deux portes fermees');
+mode = 'stooq429';   // yahoo429 deja actif ? non : un seul mode a la fois
+mode = 'yahoo429';
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:INCONNU.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('les deux sources sont nommees',
+    (JSON.stringify(o).includes('Yahoo') && JSON.stringify(o).includes('Stooq')),
+    JSON.stringify(o.amont || o).slice(0, 150));
+mode = 'ok';
+
+// [23] « st: » vise Stooq directement, sans passer par Yahoo
+vus.length = 0;
+r = await worker.fetch(new Request('https://relais.test/?ids=st:cw8.fr&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+console.log('[23] Stooq choisi explicitement');
+dit('la ligne repond', !!o['st:cw8.fr'], JSON.stringify(o['st:cw8.fr']));
+dit('sans appeler Yahoo', !vus.some(x => x.includes('/chart/')),
+    vus.filter(x=>x.includes('/chart/')).join(' '));
+
+// [24] Londres chez Stooq : toujours des livres, jamais des pence
+r = await worker.fetch(new Request('https://relais.test/?ids=st:vusa.uk&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('Stooq Londres converti depuis GBP', o['st:vusa.uk'] &&
+    Math.abs(o['st:vusa.uk'].eur - 89.05*1.17) < 0.02, JSON.stringify(o['st:vusa.uk']));
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

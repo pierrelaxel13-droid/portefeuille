@@ -43,6 +43,7 @@
 
 const AMONT = 'https://api.twelvedata.com';
 const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
+const STOOQ = 'https://stooq.com/q/l/';
 /* Le palier gratuit compte 8 appels par minute et 800 par jour. On
    garde donc les réponses : sans cela, trois visiteurs suffiraient à
    épuiser la journée. */
@@ -87,6 +88,7 @@ function origineAutorisee(req, env){
 function lit(id){
   const p = String(id).split(':');
   if (p[0] === 'yh' && p[1]) return {code:id, source:'yh', symbole:p[1]};
+  if (p[0] === 'st' && p[1]) return {code:id, source:'st', symbole:p[1].toLowerCase()};
   if (p[0] === 'tw' && p[1]) {
     return {code:id, source:'tw', symbole:p[1].toUpperCase(),
             place:(p[2] || '').toUpperCase()};
@@ -184,6 +186,16 @@ async function chezYahoo(symbole){
     err.amont = {statut:0, message:'Yahoo n a pas repondu du tout'};
     throw err;
   }
+  /* Yahoo limite par adresse IP, et celles de Cloudflare sont
+     partagees entre des milliers de projets : ce refus-la n'est
+     souvent pas le fait de l'utilisateur. C'est une attente, pas une
+     panne, et ca ne se dit pas pareil. */
+  if (r.status === 429){
+    const e = new Error('limite'); e.limite = true;
+    e.amont = {statut:429, source:'Yahoo',
+               message:'Yahoo limite les appels venant de cette machine'};
+    throw e;
+  }
   let o = null;
   try { o = JSON.parse(texte); } catch (e){}
   const m = o && o.chart && o.chart.result && o.chart.result[0] &&
@@ -192,7 +204,7 @@ async function chezYahoo(symbole){
     const e = new Error('amont');
     const dit = (o && o.chart && o.chart.error && o.chart.error.description) ||
                 texte.slice(0, 200) || '(reponse vide)';
-    e.amont = {statut:r.status, code:r.status, message:dit};
+    e.amont = {statut:r.status, code:r.status, source:'Yahoo', message:dit};
     throw e;
   }
   let v = parseFloat(m.regularMarketPrice);
@@ -203,10 +215,66 @@ async function chezYahoo(symbole){
   if (String(m.currency) === 'GBp'){ v = v / 100; dev = 'GBP'; }
   if (!isFinite(v) || v <= 0){
     const e = new Error('amont');
-    e.amont = {statut:r.status, code:null, message:'aucun cours pour ' + symbole};
+    e.amont = {statut:r.status, code:null, source:'Yahoo',
+               message:'aucun cours pour ' + symbole};
     throw e;
   }
   return {valeur:v, dev:dev, ouvert:m.marketState === 'REGULAR'};
+}
+
+/* ===== Stooq, la source de secours =====
+   Yahoo refuse souvent les machines partagees ; Stooq, non. Il rend du
+   CSV, une ligne par symbole, et couvre Paris, Francfort, Londres et
+   les Etats-Unis. Ses cours sont ceux de la cloture : c'est moins
+   frais, et c'est dit.
+
+   Ses symboles ne s'ecrivent pas comme ceux de Yahoo. On traduit les
+   suffixes dont on est sur, et on s'abstient pour les autres plutot
+   que de deviner -- un symbole devine repond « N/D », ce qui ressemble
+   a une panne. */
+const VERS_STOOQ = {'.PA':'.fr', '.DE':'.de', '.L':'.uk', '':'.us'};
+function versStooq(symboleYahoo){
+  const i = String(symboleYahoo).lastIndexOf('.');
+  const base = i === -1 ? symboleYahoo : symboleYahoo.slice(0, i);
+  const suf = i === -1 ? '' : symboleYahoo.slice(i);
+  const t = VERS_STOOQ[suf.toUpperCase()];
+  if (t === undefined) return null;
+  return (base + t).toLowerCase();
+}
+
+async function chezStooq(symbole){
+  let r, texte;
+  try {
+    r = await fetch(STOOQ + '?s=' + encodeURIComponent(symbole) +
+                    '&f=sd2t2ohlcv&h&e=csv',
+                    {cf:{cacheTtl:FRAICHE, cacheEverything:true}});
+    texte = await r.text();
+  } catch (e){
+    const err = new Error('reseau');
+    err.amont = {statut:0, source:'Stooq', message:'Stooq n a pas repondu du tout'};
+    throw err;
+  }
+  if (r.status === 429){
+    const e = new Error('limite'); e.limite = true;
+    e.amont = {statut:429, source:'Stooq', message:'Stooq limite les appels'};
+    throw e;
+  }
+  /* Deux lignes : l'entete, puis la cotation. « N/D » partout signifie
+     que le symbole n'existe pas chez lui. */
+  const lignes = String(texte).trim().split(/\r?\n/);
+  const cols = (lignes[1] || '').split(',');
+  const v = parseFloat(cols[6]);
+  if (!isFinite(v) || v <= 0){
+    const e = new Error('amont');
+    e.amont = {statut:r.status, code:null, source:'Stooq',
+               message:'aucun cours pour ' + symbole + ' (' +
+                       String(texte).trim().slice(0, 80) + ')'};
+    throw e;
+  }
+  /* Stooq ne dit pas la devise : elle se deduit de la place. */
+  const dev = /\.fr$|\.de$/.test(symbole) ? 'EUR'
+            : /\.uk$/.test(symbole) ? 'GBP' : 'USD';
+  return {valeur:v, dev:dev, ouvert:false, source:'Stooq'};
 }
 
 /* Le taux de change, chez Yahoo aussi : « USDEUR=X ». On ne fait pas
@@ -223,7 +291,7 @@ async function prix(codes, devise, env){
   if (!lus.length) return {prix:{}, retard:null};
 
   const twelve = lus.filter(function(x){ return x.source === 'tw'; });
-  const yh = lus.filter(function(x){ return x.source === 'yh'; });
+  const yh = lus.filter(function(x){ return x.source === 'yh' || x.source === 'st'; });
 
   /* L'amont veut deux listes parallèles : les symboles, et les places.
      Il faut donc qu'elles s'alignent — un symbole sans place décalerait
@@ -276,14 +344,33 @@ async function prix(codes, devise, env){
   /* Yahoo, ligne par ligne. Une ligne qui echoue n'emporte pas les
      autres, comme pour Twelve Data. */
   for (const x of yh){
-    try {
-      const q = await chezYahoo(x.symbole);
+    let q = null;
+    const essais = [];
+    /* Yahoo d'abord : plus frais, et il couvre plus de places. Stooq
+       ensuite, s'il sait traduire le symbole. On ne s'arrete donc pas
+       au premier refus -- c'est tout l'interet d'avoir deux portes. */
+    const portes = [function(){ return chezYahoo(x.symbole); }];
+    const sy = x.source === 'st' ? x.symbole : versStooq(x.symbole);
+    if (x.source === 'st') portes.length = 0;
+    if (sy) portes.push(function(){ return chezStooq(sy); });
+
+    for (const porte of portes){
+      try { q = await porte(); break; }
+      catch (e){ essais.push((e && e.amont) || {message:String(e && e.message)}); }
+    }
+    if (q){
       besoins[q.dev] = 1;
       sortie[x.code] = {brut:q.valeur, dev:q.dev, yahoo:true};
       if (!q.ouvert) retard = 'cloture';
       else if (retard === null) retard = 'differe';
-    } catch (e){
-      if (fatale(e)) throw e;
+    } else {
+      /* Aucune porte n'a ouvert : on garde ce que CHACUNE a dit. Un
+         seul message ferait accuser la mauvaise source. */
+      const e = new Error('amont');
+      e.amont = {statut:0, code:null, symbole:x.code, essais:essais,
+                 message:essais.map(function(a){
+                   return (a.source || '?') + ' : ' + a.message;
+                 }).join(' | ')};
       soucis.push(e);
     }
   }
