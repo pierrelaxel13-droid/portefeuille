@@ -99,7 +99,10 @@ vus.length = 0;
 r = await appel('ids=bitcoin,ethereum&vs_currencies=eur', BON);
 o = await r.json();
 console.log('[3] codes qui ne sont pas les siens');
-dit('rendu vide', Object.keys(o).length === 0, JSON.stringify(o));
+/* « relais » et « retard » accompagnent la reponse sans etre des
+   cours : on compte les lignes, pas les cles. */
+const cours = x => Object.keys(x).filter(k => k !== 'relais' && k !== 'retard');
+dit('aucun cours rendu', cours(o).length === 0, JSON.stringify(o));
 dit('aucun appel a l amont', vus.length === 0, vus.length + ' appel(s)');
 
 // [4] melange crypto + bourse : il ne repond que pour sa part
@@ -107,7 +110,7 @@ r = await appel('ids=bitcoin,tw:CW8:XPAR&vs_currencies=eur', BON);
 o = await r.json();
 console.log('[4] melange');
 dit('la bourse est la', !!o['tw:CW8:XPAR']);
-dit('la crypto est absente', !o.bitcoin, JSON.stringify(Object.keys(o)));
+dit('la crypto est absente', !o.bitcoin, JSON.stringify(cours(o)));
 
 // [5] un symbole inconnu de l amont ne casse pas les autres
 r = await appel('ids=tw:CW8:XPAR,tw:NIMPORTEQUOI&vs_currencies=eur', BON);
@@ -172,7 +175,7 @@ COURS['XXX'] = {close:'100', currency:'JPY', is_market_open:true};
 r = await appel('ids=tw:XXX,tw:CW8:XPAR&vs_currencies=eur', BON);
 o = await r.json();
 console.log('[12] devise sans taux connu');
-dit('la ligne est absente plutot que fausse', !o['tw:XXX'], JSON.stringify(Object.keys(o)));
+dit('la ligne est absente plutot que fausse', !o['tw:XXX'], JSON.stringify(cours(o)));
 dit('les autres passent quand meme', !!o['tw:CW8:XPAR']);
 delete COURS['XXX'];
 
@@ -256,7 +259,7 @@ r = await worker.fetch(new Request(
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 o = await r.json();
 console.log('[19] un symbole Yahoo faux parmi des bons');
-dit('le bon passe', !!o['yh:CW8.PA'], JSON.stringify(Object.keys(o)));
+dit('le bon passe', !!o['yh:CW8.PA'], JSON.stringify(cours(o)));
 dit('le faux est absent', !o['yh:NEXISTEPAS.XX']);
 
 // [20] un « tw: » sans cle doit le dire, un « yh: » sans cle non
@@ -310,6 +313,18 @@ r = await worker.fetch(new Request('https://relais.test/?ids=st:vusa.uk&vs_curre
 o = await r.json();
 dit('Stooq Londres converti depuis GBP', o['st:vusa.uk'] &&
     Math.abs(o['st:vusa.uk'].eur - 89.05*1.17) < 0.02, JSON.stringify(o['st:vusa.uk']));
+
+// [25] chaque reponse dit quelle version repond : sans ca, « j'ai
+//      redeploye » et « je crois avoir redeploye » se ressemblent trop.
+console.log('[25] la version voyage dans la reponse');
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('sur une reponse qui marche', typeof o.relais === 'string', o.relais);
+r = await worker.fetch(new Request('https://relais.test/?ids=tw:AAPL',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('sur une erreur aussi', typeof o.relais === 'string', o.relais);
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

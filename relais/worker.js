@@ -41,6 +41,15 @@
    et la page l'affiche. Un chiffre différé annoncé comme tel est
    utilisable ; annoncé comme du direct, il est faux. */
 
+/* Le numero de version voyage dans CHAQUE reponse.
+
+   Sans lui, « j'ai redeploye » et « je crois avoir redeploye » se
+   ressemblent trop : on a passe deux echanges a diagnostiquer un bug
+   deja corrige, simplement parce que rien ne disait quelle version
+   repondait. Un champ de trop dans la reponse coute moins cher qu'un
+   aller-retour de plus. */
+const VERSION = '2026-09-21.4';
+
 const AMONT = 'https://api.twelvedata.com';
 const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
 const STOOQ = 'https://stooq.com/q/l/';
@@ -50,6 +59,11 @@ const STOOQ = 'https://stooq.com/q/l/';
 const FRAICHE = 600;         /* secondes */
 
 function json(corps, etat, origine){
+  /* La page ne lit que les cles qu'elle a demandees : un champ de plus
+     ne la gene pas, comme « retard » avant lui. */
+  if (corps && typeof corps === 'object' && !Array.isArray(corps)){
+    corps = Object.assign({}, corps, {relais:VERSION});
+  }
   return new Response(JSON.stringify(corps), {
     status: etat || 200,
     headers: {
