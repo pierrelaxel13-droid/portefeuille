@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260921.1757";</script>
+<script>window.PC_VERSION = "260921.1824";</script>
 </head>
 <body>
 
@@ -3164,6 +3164,14 @@ window.PC = (function(){
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
   'm.borne':            ["Le fournisseur gratuit ne remonte pas au-del\u00e0 d'un an\u00a0: voici l'ann\u00e9e \u00e9coul\u00e9e.","The free provider does not go back beyond one year: here is the past year.","El proveedor gratuito no se remonta m\u00e1s de un a\u00f1o: aqu\u00ed tiene el a\u00f1o transcurrido.","Der kostenlose Anbieter reicht nicht weiter als ein Jahr zur\u00fcck: hier das vergangene Jahr."],
   'm.surplage':         ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
+  'e.hp.1m':            ["1 mois","1 month","1 mes","1 Monat"],
+  'e.hp.3m':            ["3 mois","3 months","3 meses","3 Monate"],
+  'e.hp.6m':            ["6 mois","6 months","6 meses","6 Monate"],
+  'e.hp.1a':            ["1 an","1 year","1 a\u00f1o","1 Jahr"],
+  'e.hp.tout':          ["Tout","All","Todo","Alles"],
+  'e.hp.perf':          ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
+  'e.hp.depuis':        ["du {{a}} au {{b}}","from {{a}} to {{b}}","del {{a}} al {{b}}","vom {{a}} bis {{b}}"],
+  'e.hp.court':         ["Pas assez de relev\u00e9s sur cette p\u00e9riode\u00a0: il en faut deux pour mesurer une \u00e9volution. Les autres p\u00e9riodes restent disponibles.","Not enough statements over this period: two are needed to measure a change. The other periods remain available.","No hay suficientes registros en este periodo: hacen falta dos para medir una evoluci\u00f3n. Los dem\u00e1s periodos siguen disponibles.","Zu wenige Eintr\u00e4ge in diesem Zeitraum: f\u00fcr eine Ver\u00e4nderung braucht es zwei. Die anderen Zeitr\u00e4ume bleiben verf\u00fcgbar."],
   'm.plagelimite':      ["Le fournisseur gratuit limite le nombre d'appels. On retente dans {{s}}\u00a0s, sans rien faire.","The free provider limits how many calls it accepts. Retrying in {{s}}s, nothing to do.","El proveedor gratuito limita el n\u00famero de llamadas. Se reintenta en {{s}}\u00a0s, sin hacer nada.","Der kostenlose Anbieter begrenzt die Zahl der Abrufe. Neuer Versuch in {{s}}\u00a0s, ohne Ihr Zutun."],
   'm.plagevide':        ["Cette p\u00e9riode n'a pas pu \u00eatre charg\u00e9e. Les autres restent disponibles.","This period could not be loaded. The others are still available.","Este periodo no se ha podido cargar. Los dem\u00e1s siguen disponibles.","Dieser Zeitraum konnte nicht geladen werden. Die anderen bleiben verf\u00fcgbar."],
   'm.onglet':           ["March\u00e9s","Markets","Mercados","M\u00e4rkte"],
@@ -4311,7 +4319,12 @@ window.PC = (function(){
         <h3 data-i18n="e.courbe.t">Évolution de votre portefeuille</h3>
         <span id="hist-info">—</span>
       </div>
+      <!-- La période regardée, et la performance qui va avec. Le
+           chiffre du haut de page est celui de TOUT l'historique ; ici
+           on demande « et sur le mois ? », qui est une autre question. -->
+      <div class="fiche-m__plages" id="hist-plages"></div>
       <div class="courbe" id="courbe"><div class="courbe__bulle" id="bulle" role="status" aria-live="polite"></div></div>
+      <p class="fiche-m__perf" id="hist-perf" hidden></p>
       <p class="courbe__seul" id="courbe-seul" hidden></p>
     </div>
 
@@ -6667,6 +6680,8 @@ window.PC = (function(){
     const hote = document.getElementById('page-actif');
     if (ouvert === null || !actifs[ouvert]){ hote.innerHTML = ''; return; }
 
+    /* Pris AVANT de reecrire la page : apres, le noeud n'existe plus. */
+    const grapheM = document.getElementById('pa-graphe-m');
     const a = actifs[ouvert], t = totaux();
     const res = a.val - a.inv;
     const perf = a.inv ? res / a.inv * 100 : 0;
@@ -6801,7 +6816,11 @@ window.PC = (function(){
                 '" aria-pressed="' + (i === plageActif) + '">' + echap(p) + '</button>';
             }).join('') +
           '</div>' +
-          '<div id="pa-graphe-m"></div>' +
+          /* On garde ce qui est dejà dessiné : la fiche se refait dès
+             qu'un cours arrive, et repartir d'un cadre vide faisait
+             clignoter la courbe — ou la laissait blanche le temps d'un
+             aller-retour réseau. */
+          '<div id="pa-graphe-m">' + (grapheM ? grapheM.innerHTML : '') + '</div>' +
         '</div></div>' +
       '</section>' : '') +
 
@@ -8282,6 +8301,15 @@ window.PC = (function(){
     return PC.langue === 'en' ? mois + ' ' + jour : jour + ' ' + mois;
   }
 
+  /* Les deux bouts d'une période. Sans l'année, « du 21 sept. au
+     21 sept. » pouvait couvrir treize mois sans que rien ne le dise. On
+     ne l'ajoute que lorsqu'elle change quelque chose. */
+  function bornesPeriode(a, b){
+    const meme = a.slice(0, 4) === b.slice(0, 4);
+    const av = dateCourte(a) + (meme ? '' : ' ' + a.slice(0, 4));
+    return {a:av, b:dateCourte(b) + (meme ? '' : ' ' + b.slice(0, 4))};
+  }
+
   /* Échelle à graduations rondes, comme sur l'accueil. */
   function echelleRonde2(min, max, nb){
     const brut = (max - min) / nb;
@@ -8376,21 +8404,87 @@ window.PC = (function(){
       : '<b>' + PC.t('e.aucunreleve.b') + '</b> ' + PC.t('e.aucunreleve');
   }
 
+  /* ===== La performance sur une période choisie =====
+     Le grand chiffre du haut de page compare le total d'aujourd'hui à
+     tout l'investi : c'est la performance DEPUIS LE DÉBUT, et elle ne
+     répond pas à « et ce mois-ci ? ». Ces boutons-là y répondent, sur
+     les relevés déjà enregistrés — aucun appel au réseau, c'est
+     l'historique du client et rien d'autre. */
+  const HISTO_PLAGES = [['1m', 30], ['3m', 91], ['6m', 182], ['1a', 365], ['tout', null]];
+  let plageHisto = 'tout';
+
+  function construitPlagesHisto(){
+    const hote = document.getElementById('hist-plages');
+    if (!hote) return;
+    hote.innerHTML = HISTO_PLAGES.map(function(p){
+      return '<button class="fiche-m__plage" type="button" data-histplage="' + p[0] +
+        '" aria-pressed="' + (p[0] === plageHisto) + '">' +
+        echap(PC.t('e.hp.' + p[0])) + '</button>';
+    }).join('');
+  }
+
+  /* Ces boutons vivent dans la vue generale, pas dans la fiche d'un
+     actif : ils ont leur propre ecoute, posee sur le document une fois
+     pour toutes -- la carte est reecrite a chaque rendu. */
+  document.addEventListener('click', function(e){
+    const b = e.target && e.target.closest && e.target.closest('[data-histplage]');
+    if (!b) return;
+    plageHisto = b.getAttribute('data-histplage');
+    dessineCourbe();
+  });
+
+  function coupeHisto(pts){
+    const p = HISTO_PLAGES.filter(function(x){ return x[0] === plageHisto; })[0];
+    const jours = p ? p[1] : null;
+    if (!jours || !pts.length) return pts;
+    /* On compte à partir du DERNIER relevé, pas d'aujourd'hui : si
+       personne n'a rien saisi depuis six semaines, « 1 mois » ne doit
+       pas rendre une fenêtre vide. */
+    const fin = new Date(pts[pts.length - 1].d + 'T12:00:00').getTime();
+    const debut = fin - jours * 86400e3;
+    return pts.filter(function(x){
+      return new Date(x.d + 'T12:00:00').getTime() >= debut;
+    });
+  }
+
   function dessineCourbe(){
     const hote = document.getElementById('courbe');
     const seul = document.getElementById('courbe-seul');
     const info = document.getElementById('hist-info');
-    const vus = histoVisible();
+    const perf = document.getElementById('hist-perf');
+    const tous = histoVisible();
+    construitPlagesHisto();
+    const vus = coupeHisto(tous);
 
-    info.textContent = vus.length
-      ? vus.length + ' ' + PC.pluriel(vus.length, 'e.point.un', 'e.point.plus') +
-        (vus.length < historique.length ? ' · ' + droit('moisHisto') + ' ' + PC.t('e.rap.mois') : '')
+    info.textContent = tous.length
+      ? tous.length + ' ' + PC.pluriel(tous.length, 'e.point.un', 'e.point.plus') +
+        (tous.length < historique.length ? ' · ' + droit('moisHisto') + ' ' + PC.t('e.rap.mois') : '')
       : '—';
 
     const trace = traceCourbe(hote, document.getElementById('bulle'), vus, 'c');
     hote.hidden = !trace;
     seul.hidden = trace;
-    if (!trace) seul.innerHTML = motCourbeVide(vus.length);
+    /* Une période trop courte n'est pas la même chose qu'un historique
+       vide : on ne renvoie pas le client à « enregistrez un relevé »
+       s'il en a vingt, mais aucun ce mois-ci. */
+    if (!trace){
+      seul.innerHTML = (tous.length >= 2 && plageHisto !== 'tout')
+        ? PC.t('e.hp.court') : motCourbeVide(vus.length);
+    }
+    if (perf) majPerfHisto(perf, vus);
+  }
+
+  function majPerfHisto(hote, vus){
+    if (!vus || vus.length < 2){ hote.hidden = true; return; }
+    const a = vus[0].val, b = vus[vus.length - 1].val;
+    if (!(a > 0)){ hote.hidden = true; return; }
+    const v = (b - a) / a * 100, monte = !(v < 0);
+    hote.hidden = false;
+    hote.setAttribute('data-dir', monte ? 'up' : 'down');
+    hote.innerHTML = (monte ? '▲' : '▼') + ' ' + PC.pourcent(v, 1) +
+      ' <b style="font-weight:500">' + echap(PC.somme(b - a)) + '</b>' +
+      ' <span>' + echap(PC.t('e.hp.depuis',
+        bornesPeriode(vus[0].d, vus[vus.length - 1].d))) + '</span>';
   }
 
   /* --- Carte des relevés ---
@@ -9165,6 +9259,7 @@ window.PC = (function(){
      et elle seule a le droit d'écrire. */
   const rangCourbe = {};
   let page = 1, recherche = '', rangs = [], ouverte = null, minuteur = null;
+  let battements = 0;   /* pour espacer les rafraichissements sur une fiche */
   let dernier = 0, enVol = false, vu = false;
   /* Le fournisseur gratuit tolère une dizaine d'appels par minute.
      Continuer à frapper après un refus ne fait que prolonger le refus :
@@ -9640,6 +9735,13 @@ window.PC = (function(){
     charge(true);
     minuteur = setInterval(function(){
       if (document.hidden) return;
+      /* Une fiche ouverte masque la liste. La rafraichir au meme rythme
+         consommerait le quota du fournisseur sous les pieds de celui
+         qui regarde une courbe -- et c'est ce quota qui manque quand on
+         passe d'une periode a l'autre. On ralentit au lieu de couper :
+         le prix de la fiche vient de cette liste, le figer serait
+         pire que l'attente. */
+      if (ouverte && (++battements % 3) !== 0) return;
       charge(false);
     }, RYTHME);
   }
