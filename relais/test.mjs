@@ -25,9 +25,20 @@ const YH = {
   'GBPEUR=X': {regularMarketPrice:1.17,   currency:'EUR', marketState:'REGULAR'}
 };
 
-globalThis.fetch = async (url) => {
+const entetesVus = [];
+globalThis.fetch = async (url, opts) => {
   const u = new URL(String(url));
   vus.push(u.pathname + '?' + u.searchParams.toString());
+  entetesVus.push((opts && opts.headers) || {});
+  /* Les vrais refusent un appel qui ne se presente pas : on le
+     reproduit, sinon le test ne prouve rien sur ce point. */
+  if (mode === 'exigeNavigateur' && !((opts && opts.headers) || {})['User-Agent']){
+    if (u.hostname === 'stooq.com'){
+      return new Response('<meta charset=utf-8><title>Stooq</title>' +
+        '<center>Exceeded the daily hits limit</center>', {status:404});
+    }
+    return new Response('Too Many Requests', {status:429});
+  }
   if (u.hostname === 'stooq.com'){
     const sy = (u.searchParams.get('s') || '').toLowerCase();
     if (mode === 'stooq429') return new Response('Too Many Requests', {status:429});
@@ -338,6 +349,46 @@ r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_curren
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 dit('un cours l est, brievement', /max-age=60/.test(r.headers.get('Cache-Control') || ''),
     r.headers.get('Cache-Control'));
+
+// [27] Yahoo et Stooq traitent un programme et un navigateur
+//      differemment. Sans « User-Agent », l'un refuse et l'autre sert
+//      une page HTML -- c'est ce qu'on a recu en vrai.
+console.log('[27] le relais se presente');
+mode = 'exigeNavigateur'; entetesVus.length = 0;
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('la ligne est servie', r.status === 200 && !!o['yh:CW8.PA'], JSON.stringify(o));
+dit('un User-Agent accompagne chaque appel',
+    entetesVus.every(h => !!h['User-Agent']),
+    entetesVus.length + ' appel(s)');
+mode = 'ok';
+
+// [28] une page d'erreur HTML ne se recopie pas telle quelle : on en
+//      garde la phrase, pas le balisage.
+console.log('[28] une page HTML devient une phrase');
+mode = 'stooqHtml';
+globalThis.fetch = (function(vrai){
+  return async (url, opts) => {
+    const u = new URL(String(url));
+    if (u.hostname === 'stooq.com'){
+      return new Response('<meta charset=utf-8><title>Stooq</title>' +
+        '<center style=font-family:arial>Exceeded the daily hits limit</center>',
+        {status:404});
+    }
+    if (u.hostname === 'query1.finance.yahoo.com'){
+      return new Response('Too Many Requests', {status:429});
+    }
+    return vrai(url, opts);
+  };
+})(globalThis.fetch);
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+const m = (o.amont || {}).message || '';
+dit('le balisage a disparu', !/[<>]/.test(m), m.slice(0, 90));
+dit('la phrase est lisible', m.includes('Exceeded the daily hits limit'), m.slice(0, 120));
+mode = 'ok';
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

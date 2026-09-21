@@ -48,7 +48,30 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-21.5';
+const VERSION = '2026-09-21.6';
+
+/* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
+   traitent differemment un navigateur et un programme. Un appel sans
+   « User-Agent » -- ce que fait Cloudflare par defaut -- se fait
+   refouler par le premier (429) et servir une page HTML par le second.
+   On se presente donc comme ce qu'on est du point de vue du serveur :
+   quelqu'un qui lit une page. */
+const ENTETES = {
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ' +
+                'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
+  'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8'
+};
+
+/* Une page d'erreur HTML n'a pas a etre recopiee telle quelle dans un
+   message : on en retire le balisage pour ne garder que la phrase,
+   qui est la seule chose utile. */
+function texteNu(brut, n){
+  return String(brut)
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, n || 160);
+}
 
 const AMONT = 'https://api.twelvedata.com';
 const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
@@ -207,7 +230,8 @@ async function chezYahoo(symbole){
   try {
     r = await fetch(YAHOO + encodeURIComponent(symbole) +
                     '?interval=1d&range=1d',
-                    {cf:{cacheTtl:FRAICHE, cacheEverything:true}});
+                    {headers:Object.assign({'Accept':'application/json'}, ENTETES),
+                     cf:{cacheTtl:FRAICHE, cacheEverything:true}});
     texte = await r.text();
   } catch (e){
     const err = new Error('reseau');
@@ -231,7 +255,7 @@ async function chezYahoo(symbole){
   if (!m){
     const e = new Error('amont');
     const dit = (o && o.chart && o.chart.error && o.chart.error.description) ||
-                texte.slice(0, 200) || '(reponse vide)';
+                texteNu(texte, 200) || '(reponse vide)';
     e.amont = {statut:r.status, code:r.status, source:'Yahoo', message:dit};
     throw e;
   }
@@ -275,7 +299,8 @@ async function chezStooq(symbole){
   try {
     r = await fetch(STOOQ + '?s=' + encodeURIComponent(symbole) +
                     '&f=sd2t2ohlcv&h&e=csv',
-                    {cf:{cacheTtl:FRAICHE, cacheEverything:true}});
+                    {headers:Object.assign({'Accept':'text/csv,text/plain'}, ENTETES),
+                     cf:{cacheTtl:FRAICHE, cacheEverything:true}});
     texte = await r.text();
   } catch (e){
     const err = new Error('reseau');
@@ -295,8 +320,8 @@ async function chezStooq(symbole){
   if (!isFinite(v) || v <= 0){
     const e = new Error('amont');
     e.amont = {statut:r.status, code:null, source:'Stooq',
-               message:'aucun cours pour ' + symbole + ' (' +
-                       String(texte).trim().slice(0, 80) + ')'};
+               message:'aucun cours pour ' + symbole + ' \u2014 ' +
+                       (texteNu(texte, 160) || '(reponse vide)')};
     throw e;
   }
   /* Stooq ne dit pas la devise : elle se deduit de la place. */
