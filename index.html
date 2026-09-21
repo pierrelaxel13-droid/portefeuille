@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260921.1841";</script>
+<script>window.PC_VERSION = "260921.1928";</script>
 </head>
 <body>
 
@@ -3164,6 +3164,16 @@ window.PC = (function(){
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
   'm.surplage':         ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
+  'e.rel.bouton':       ["Relais pour la bourse\u2026","Stock market relay\u2026","Rel\u00e9 para la bolsa\u2026","Relais f\u00fcr die B\u00f6rse\u2026"],
+  'e.rel.titre':        ["Relais pour la bourse","Stock market relay","Rel\u00e9 para la bolsa","Relais f\u00fcr die B\u00f6rse"],
+  'e.rel.quoi':         ["Le cours d'une action ou d'un ETF n'est pas une donn\u00e9e libre\u00a0: il faut une cl\u00e9 de compte, et une cl\u00e9 pos\u00e9e dans une page web est lisible par tous. Un relais la garde de son c\u00f4t\u00e9. Collez ici son adresse\u00a0; laissez vide si vous n'en avez pas.","The price of a share or an ETF is not free data: it takes an account key, and a key placed in a web page is readable by anyone. A relay keeps it on its own side. Paste its address here; leave empty if you have none.","La cotizaci\u00f3n de una acci\u00f3n o un ETF no es un dato libre: hace falta una clave de cuenta, y una clave puesta en una p\u00e1gina web la lee cualquiera. Un rel\u00e9 la guarda de su lado. Pegue aqu\u00ed su direcci\u00f3n; d\u00e9jelo vac\u00edo si no tiene."," Der Kurs einer Aktie oder eines ETF ist kein freies Datum: Es braucht einen Kontoschl\u00fcssel, und ein Schl\u00fcssel in einer Webseite ist f\u00fcr alle lesbar. Ein Relais beh\u00e4lt ihn auf seiner Seite. F\u00fcgen Sie hier seine Adresse ein; leer lassen, wenn Sie keines haben."],
+  'e.rel.champ':        ["Adresse du relais","Relay address","Direcci\u00f3n del rel\u00e9","Adresse des Relais"],
+  'e.rel.aide':         ["Vos lignes de bourse portent alors un code de la forme tw:CW8:XPAR \u2014 le symbole, puis la place de cotation.","Your market lines then carry a code shaped like tw:CW8:XPAR \u2014 the symbol, then the trading venue.","Sus l\u00edneas de bolsa llevan entonces un c\u00f3digo con la forma tw:CW8:XPAR: el s\u00edmbolo y luego el mercado.","Ihre B\u00f6rsenpositionen tragen dann einen Code der Form tw:CW8:XPAR \u2014 Symbol, dann Handelsplatz."],
+  'e.rel.ok':           ["Relais enregistr\u00e9. Les cours de bourse passeront par lui.","Relay saved. Market prices will go through it.","Rel\u00e9 guardado. Las cotizaciones pasar\u00e1n por \u00e9l.","Relais gespeichert. Die B\u00f6rsenkurse laufen dar\u00fcber."],
+  'e.rel.ote':          ["Relais retir\u00e9. Les cours de bourse redeviennent manuels.","Relay removed. Market prices go back to manual.","Rel\u00e9 retirado. Las cotizaciones vuelven a ser manuales.","Relais entfernt. B\u00f6rsenkurse sind wieder manuell."],
+  'e.rel.err':          ["Cette adresse n'est pas une adresse web compl\u00e8te (elle doit commencer par https://).","This is not a complete web address (it must start with https://).","Esta no es una direcci\u00f3n web completa (debe empezar por https://).","Das ist keine vollst\u00e4ndige Webadresse (sie muss mit https:// beginnen)."],
+  'e.src.differe':      ["{{s}}, relev\u00e9 \u00e0 {{h}} \u2014 cours de bourse diff\u00e9r\u00e9, pas du direct.","{{s}}, taken at {{h}} \u2014 delayed market price, not live.","{{s}}, tomado a las {{h}} \u2014 cotizaci\u00f3n diferida, no en directo.","{{s}}, erfasst um {{h}} \u2014 verz\u00f6gerter B\u00f6rsenkurs, nicht live."],
+  'e.src.cloture':      ["{{s}}, relev\u00e9 \u00e0 {{h}} \u2014 march\u00e9 ferm\u00e9\u00a0: c'est le cours de cl\u00f4ture.","{{s}}, taken at {{h}} \u2014 market closed: this is the closing price.","{{s}}, tomado a las {{h}} \u2014 mercado cerrado: es el precio de cierre.","{{s}}, erfasst um {{h}} \u2014 Markt geschlossen: das ist der Schlusskurs."],
   'm.perfcourt':        ["Pas assez de points sur cette p\u00e9riode pour mesurer une \u00e9volution.","Not enough points over this period to measure a change.","No hay suficientes puntos en este periodo para medir una evoluci\u00f3n.","Zu wenige Punkte in diesem Zeitraum, um eine Ver\u00e4nderung zu messen."],
   'e.hp.pasassez':      ["Il faut deux relev\u00e9s pour mesurer une \u00e9volution\u00a0: vous en avez {{n}} sur cette p\u00e9riode.","Measuring a change takes two statements: you have {{n}} over this period.","Para medir una evoluci\u00f3n hacen falta dos registros: tiene {{n}} en este periodo.","F\u00fcr eine Ver\u00e4nderung braucht es zwei Eintr\u00e4ge: Sie haben {{n}} in diesem Zeitraum."],
   'e.hp.1m':            ["1 mois","1 month","1 mes","1 Monat"],
@@ -4244,6 +4254,7 @@ window.PC = (function(){
           <div class="menu__p">
             <button class="menu__i" type="button" id="exemple" data-i18n="e.exemple">Charger un exemple</button>
             <button class="menu__i" type="button" id="rapport-btn" data-i18n="e.rap.bouton">Rapport mensuel</button>
+            <button class="menu__i" type="button" id="relais-btn" data-i18n="e.rel.bouton">Relais pour la bourse…</button>
             <button class="menu__i" type="button" id="exporter" data-i18n="e.exporter">Exporter</button>
             <button class="menu__i" type="button" id="importer" data-i18n="e.importer">Importer</button>
             <div class="menu__sep" id="menu-pf">
@@ -6981,6 +6992,33 @@ window.PC = (function(){
     dire(PC.t('e.pf.ok.renomme', {x:nom}));
   });
 
+  /* Le relais se règle ici plutôt que dans le code : c'est une adresse
+     personnelle, qui n'a pas à être republiée à chaque changement. Une
+     invite suffit — on colle une adresse, on efface pour la retirer. */
+  document.getElementById('relais-btn').addEventListener('click', function(){
+    const actuel = (function(){
+      try { return localStorage.getItem('pierrelco.relais.v1') || ''; }
+      catch (e){ return ''; }
+    })();
+    const q = PC.t('e.rel.titre') + '\n\n' + PC.t('e.rel.quoi') +
+              '\n\n' + PC.t('e.rel.aide') + '\n\n' + PC.t('e.rel.champ') + ' :';
+    const rep = window.prompt(q, actuel);
+    if (rep === null) return;              /* annulé : on ne touche à rien */
+    const u = rep.trim();
+    if (!u){
+      try { localStorage.removeItem('pierrelco.relais.v1'); } catch (e){}
+      dire(PC.t('e.rel.ote'));
+      majEtatCours();
+      return;
+    }
+    /* Une adresse incomplète échouerait en silence à chaque appel : on
+       la refuse tout de suite, et on dit pourquoi. */
+    if (!/^https:\/\/[^\s]+$/.test(u)){ dire(PC.t('e.rel.err')); return; }
+    try { localStorage.setItem('pierrelco.relais.v1', u); } catch (e){}
+    dire(PC.t('e.rel.ok'));
+    chercheCours(true).then(function(r){ dire(motCours(r)); });
+  });
+
   document.getElementById('pf-supprime').addEventListener('click', function(){
     if (portefeuilles.length < 2){ dire(PC.t('e.pf.dernier')); return; }
     const p = portefeuilleCourant();
@@ -7713,10 +7751,27 @@ window.PC = (function(){
     }
   ];
 
-  /* Le relais maison, quand il y en a un, passe devant les trois. */
+  /* ===== Le relais =====
+     Il tient une clé de compte que la page ne peut pas porter : une
+     clé dans une page web est publique. Son adresse se règle depuis le
+     menu et vit dans le navigateur ; `PC_COURS_SOURCE` reste prioritaire,
+     pour les tests et pour qui préfère la poser dans le code.
+
+     Il passe devant, mais il ne remplace personne : la chaîne continue
+     après lui pour tout ce qu'il ne connaît pas. */
+  const CLE_RELAIS = 'pierrelco.relais.v1';
+  function adresseRelais(){
+    if (window.PC_COURS_SOURCE) return window.PC_COURS_SOURCE;
+    try { return localStorage.getItem(CLE_RELAIS) || ''; } catch (e){ return ''; }
+  }
+  /* Ce que le relais dit du retard de ses cours : « differe », « cloture »,
+     ou rien. On le garde pour le répéter au lecteur — un cours différé
+     présenté comme du direct est un chiffre faux. */
+  let coursRetard = null;
+
   function fournisseurs(){
-    if (!window.PC_COURS_SOURCE) return FOURNISSEURS;
-    const u = window.PC_COURS_SOURCE;
+    const u = adresseRelais();
+    if (!u) return FOURNISSEURS;
     return [{
       nom:'Relais',
       cherche:function(ids, dev){
@@ -7729,6 +7784,7 @@ window.PC = (function(){
               const e = o && o[i];
               if (e && typeof e[dev] === 'number' && e[dev] > 0) p[i] = e[dev];
             });
+            if (Object.keys(p).length) coursRetard = (o && o.retard) || null;
             return p;
           });
       }
@@ -7792,7 +7848,6 @@ window.PC = (function(){
   function chercheCours(force){
     const ids = symbolesSuivis();
     if (!ids.length) return Promise.resolve({code:'aucun', n:0});
-    const demandes = codesADemander(ids);
     const dev = String(PC.devise).toLowerCase();
     const cache = litCacheCours();
     /* Le cache ne vaut que pour la devise dans laquelle il a été pris :
@@ -7808,19 +7863,33 @@ window.PC = (function(){
     }
     if (coursEnVol) return Promise.resolve({code:'envol', n:0});
     coursEnVol = true;
+    coursRetard = null;
     const liste = fournisseurs();
     let limite = false, repondu = false;
-    /* On descend la chaîne : le premier qui rend au moins un prix
-       gagne. L'échec d'un fournisseur n'est pas une panne tant qu'il en
-       reste un derrière — c'est tout l'intérêt d'en avoir trois. */
+    const recolte = {};   /* les prix trouvés, d'où qu'ils viennent */
+    const sources = [];   /* et qui les a fournis */
+    /* On ne s'arrête plus au premier qui répond. Chacun ne connaît
+       qu'une partie du portefeuille : un relais boursier ignore les
+       cryptos, et CoinGecko ignore les actions. S'arrêter au premier
+       reviendrait à choisir laquelle des deux moitiés on abandonne.
+       On descend donc toute la chaîne, en ne redemandant à chacun que
+       ce qui manque encore — ce qui ne coûte rien de plus quand le
+       premier a tout trouvé. */
     function essaie(k){
-      if (k >= liste.length) return Promise.resolve(null);
-      return liste[k].cherche(demandes, dev).then(function(p){
-        if (p && Object.keys(p).length) return {nom:liste[k].nom, p:p};
-        /* Il a répondu, mais ne connaît aucun de ces codes. Ce n'est pas
-           la même chose qu'un fournisseur injoignable, et ça n'appelle
-           pas le même conseil : là il faut vérifier l'orthographe. */
-        repondu = true;
+      if (k >= liste.length) return Promise.resolve();
+      const manque = ids.filter(function(i){ return prixDe(recolte, i) === null; });
+      if (!manque.length) return Promise.resolve();
+      return liste[k].cherche(codesADemander(manque), dev).then(function(p){
+        if (p && Object.keys(p).length){
+          Object.keys(p).forEach(function(c){ recolte[c] = p[c]; });
+          sources.push(liste[k].nom);
+        } else {
+          /* Il a répondu, mais ne connaît aucun de ces codes. Ce n'est
+             pas la même chose qu'un fournisseur injoignable, et ça
+             n'appelle pas le même conseil : là il faut vérifier
+             l'orthographe. */
+          repondu = true;
+        }
         return essaie(k + 1);
       }, function(e){
         /* 429 : on retient qu'on a été limité, mais on continue la
@@ -7830,14 +7899,15 @@ window.PC = (function(){
       });
     }
     return essaie(0)
-      .then(function(r){
-        if (!r) return {code:repondu ? 'inconnu' : (limite ? 'limite' : 'ko'),
-                        n:0, absents:repondu ? ids : []};
-        const absents = ids.filter(function(i){ return prixDe(r.p, i) === null; });
-        const n = poseCours(r.p);
-        coursSource = r.nom; coursQuand = Date.now();
-        ecritCacheCours({t:coursQuand, dev:dev, p:r.p, src:r.nom});
-        return {code:absents.length ? 'inconnu' : 'ok', n:n, absents:absents, src:r.nom};
+      .then(function(){
+        if (!sources.length) return {code:repondu ? 'inconnu' : (limite ? 'limite' : 'ko'),
+                                     n:0, absents:repondu ? ids : []};
+        const absents = ids.filter(function(i){ return prixDe(recolte, i) === null; });
+        const n = poseCours(recolte);
+        coursSource = sources.join(' + '); coursQuand = Date.now();
+        ecritCacheCours({t:coursQuand, dev:dev, p:recolte, src:coursSource});
+        return {code:absents.length ? 'inconnu' : 'ok', n:n,
+                absents:absents, src:coursSource};
       })
       .catch(function(){ return {code:'ko', n:0}; })
       .then(function(r){
@@ -7957,7 +8027,12 @@ window.PC = (function(){
     }
     el.removeAttribute('data-vif');
     if (!coursSource){ el.textContent = PC.t('e.src.rien'); return; }
-    el.textContent = PC.t('e.src.pose', {s:coursSource, h:heureCourte(coursQuand)});
+    /* Le relais nous a dit d'où vient son chiffre : on le répète. Un
+       cours de clôture annoncé comme le cours du moment est un
+       mensonge par omission, et il porte sur de l'argent. */
+    const cle = coursRetard === 'cloture' ? 'e.src.cloture'
+              : coursRetard === 'differe' ? 'e.src.differe' : 'e.src.pose';
+    el.textContent = PC.t(cle, {s:coursSource, h:heureCourte(coursQuand)});
   }
 
   /* ============================================================
