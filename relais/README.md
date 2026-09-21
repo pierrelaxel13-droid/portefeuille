@@ -127,12 +127,15 @@ https://relais-cours.VOTRE-NOM.workers.dev/?ids=tw:CW8:XPAR&vs_currencies=eur
 Vous devez lire quelque chose comme :
 
 ```
-{"yh:CW8.PA":{"eur":512.3},"retard":"differe","relais":"2026-09-21.4"}
+{"yh:CW8.PA":{"eur":512.3},"retard":"differe","relais":"2026-09-21.5"}
 ```
 
 Le champ **`relais`** dit quelle version du code a répondu. Si vous
 venez de coller une nouvelle version et que ce numéro ne change pas,
-c'est que **Déployer** n'a pas été cliqué — la seule cause possible.
+c'est que **Déployer** n'a pas été cliqué, ou que le navigateur vous
+sert sa copie. Pour écarter le second cas, ajoutez n'importe quoi à la
+fin de l'adresse — `&t=2` — ce qui en fait une adresse neuve, qu'aucun
+cache ne connaît.
 
 Si c'est le cas, le relais fonctionne. Sinon, voyez le tableau des
 pannes plus bas — le message vous dit lequel des quatre points a été

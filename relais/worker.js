@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-21.4';
+const VERSION = '2026-09-21.5';
 
 const AMONT = 'https://api.twelvedata.com';
 const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
@@ -64,12 +64,26 @@ function json(corps, etat, origine){
   if (corps && typeof corps === 'object' && !Array.isArray(corps)){
     corps = Object.assign({}, corps, {relais:VERSION});
   }
+  const code = etat || 200;
+  /* UNE ERREUR NE SE MET PAS EN CACHE.
+
+     Elle l'etait, dix minutes durant, comme les cours. Consequence :
+     apres correction et redeploiement, le navigateur re-servait la
+     vieille erreur sans meme appeler le relais -- et on cherchait un
+     defaut deja repare. C'est exactement ce qui vient d'arriver, deux
+     fois.
+
+     Un cours a une duree de vie ; un message d'echec, non : il dit
+     l'etat d'un instant, et cet instant est passe. */
+  const cache = code >= 400
+    ? 'no-store'
+    : 'public, max-age=60';
   return new Response(JSON.stringify(corps), {
-    status: etat || 200,
+    status: code,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Access-Control-Allow-Origin': origine || '*',
-      'Cache-Control': 'public, max-age=' + FRAICHE
+      'Cache-Control': cache
     }
   });
 }

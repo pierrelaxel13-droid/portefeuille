@@ -326,5 +326,18 @@ r = await worker.fetch(new Request('https://relais.test/?ids=tw:AAPL',
 o = await r.json();
 dit('sur une erreur aussi', typeof o.relais === 'string', o.relais);
 
+// [26] une erreur ne doit JAMAIS etre mise en cache : sinon le
+//      navigateur re-sert le vieux message apres la correction, et
+//      l'on cherche un defaut deja repare.
+console.log('[26] ce qui se garde, et ce qui ne se garde pas');
+r = await worker.fetch(new Request('https://relais.test/?ids=tw:AAPL',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+dit('une erreur n est pas gardee', r.headers.get('Cache-Control') === 'no-store',
+    r.headers.get('Cache-Control'));
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+dit('un cours l est, brievement', /max-age=60/.test(r.headers.get('Cache-Control') || ''),
+    r.headers.get('Cache-Control'));
+
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);
