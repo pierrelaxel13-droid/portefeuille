@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260921.1928";</script>
+<script>window.PC_VERSION = "260921.2126";</script>
 </head>
 <body>
 
@@ -3164,6 +3164,7 @@ window.PC = (function(){
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
   'm.surplage':         ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
+  'm.paschart':         ["Le fournisseur de courbes gratuit ne couvre que les cryptos. Le cours de cette ligne est suivi, mais son historique n'est pas trac\u00e9.","The free chart provider only covers crypto. This line's price is tracked, but its history is not charted.","El proveedor gratuito de gr\u00e1ficos solo cubre criptomonedas. La cotizaci\u00f3n de esta l\u00ednea se sigue, pero su historial no se traza.","Der kostenlose Chart-Anbieter deckt nur Kryptos ab. Der Kurs dieser Position wird verfolgt, ihr Verlauf aber nicht gezeichnet."],
   'e.rel.bouton':       ["Relais pour la bourse\u2026","Stock market relay\u2026","Rel\u00e9 para la bolsa\u2026","Relais f\u00fcr die B\u00f6rse\u2026"],
   'e.rel.titre':        ["Relais pour la bourse","Stock market relay","Rel\u00e9 para la bolsa","Relais f\u00fcr die B\u00f6rse"],
   'e.rel.quoi':         ["Le cours d'une action ou d'un ETF n'est pas une donn\u00e9e libre\u00a0: il faut une cl\u00e9 de compte, et une cl\u00e9 pos\u00e9e dans une page web est lisible par tous. Un relais la garde de son c\u00f4t\u00e9. Collez ici son adresse\u00a0; laissez vide si vous n'en avez pas.","The price of a share or an ETF is not free data: it takes an account key, and a key placed in a web page is readable by anyone. A relay keeps it on its own side. Paste its address here; leave empty if you have none.","La cotizaci\u00f3n de una acci\u00f3n o un ETF no es un dato libre: hace falta una clave de cuenta, y una clave puesta en una p\u00e1gina web la lee cualquiera. Un rel\u00e9 la guarda de su lado. Pegue aqu\u00ed su direcci\u00f3n; d\u00e9jelo vac\u00edo si no tiene."," Der Kurs einer Aktie oder eines ETF ist kein freies Datum: Es braucht einen Kontoschl\u00fcssel, und ein Schl\u00fcssel in einer Webseite ist f\u00fcr alle lesbar. Ein Relais beh\u00e4lt ihn auf seiner Seite. F\u00fcgen Sie hier seine Adresse ein; leer lassen, wenn Sie keines haben."],
@@ -6823,12 +6824,14 @@ window.PC = (function(){
       (a.sym && window.PC_MARCHES ? '<section class="pa__sect">' +
         '<h4 class="pa__h">' + PC.t('m.courbe') + '</h4>' +
         '<div class="carte"><div class="carte__c">' +
-          '<div class="fiche-m__plages">' +
+          (coursDeBourse(a.sym)
+            ? '<p class="fiche-m__mot">' + echap(PC.t('m.paschart')) + '</p>'
+            : '<div class="fiche-m__plages">' +
             PC_MARCHES.plages.map(function(p, i){
               return '<button class="fiche-m__plage" type="button" data-paplage="' + i +
                 '" aria-pressed="' + (i === plageActif) + '">' + echap(p) + '</button>';
             }).join('') +
-          '</div>' +
+          '</div>') +
           /* On garde ce qui est dejà dessiné : la fiche se refait dès
              qu'un cours arrive, et repartir d'un cadre vide faisait
              clignoter la courbe — ou la laissait blanche le temps d'un
@@ -6872,7 +6875,7 @@ window.PC = (function(){
 
     /* Le cours du marché arrive du réseau : la fiche est déjà lisible
        sans lui, il s'ajoute quand il est là. */
-    if (a.sym && window.PC_MARCHES){
+    if (a.sym && window.PC_MARCHES && !coursDeBourse(a.sym)){
       PC_MARCHES.trace('pa-graphe-m', a.sym, plageActif);
     }
 
@@ -7577,6 +7580,13 @@ window.PC = (function(){
      cours d'hier, et les inventer donnerait une courbe fausse. Les
      points antérieurs restent ceux des relevés réellement enregistrés
      — c'est la même règle que pour une ligne saisie à la main. */
+  /* Un code porte par un relais s'ecrit « source:symbole ». Le
+     fournisseur de courbes, lui, ne connait que ses propres
+     identifiants de crypto : lui demander « yh:cw8.pa » ne peut que
+     rater. On le sait d'avance, donc on ne le tente pas -- et on le
+     dit, au lieu de laisser un cadre en echec. */
+  function coursDeBourse(sym){ return /^[a-z]{2}:/i.test(String(sym || '')); }
+
   function valeurCours(a){
     if (typeof a.q !== 'number' || typeof a.pu !== 'number') return null;
     if (!(a.q > 0) || !(a.pu > 0)) return null;
