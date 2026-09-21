@@ -84,16 +84,55 @@ function cleAmont(env){
   return env.TWELVEDATA || env.CLE || '';
 }
 
+/* Rien de ce qui sort d'ici ne doit contenir la cle. Elle voyage dans
+   l'URL qu'on construit, et un message d'erreur qui la recopierait la
+   publierait aussitot -- y compris dans la capture d'ecran que
+   quelqu'un enverra pour demander de l'aide. */
+function sansCle(texte, env){
+  const c = cleAmont(env);
+  if (!c) return texte;
+  return String(texte).split(c).join('***');
+}
+
 async function amont(chemin, params, env){
   const u = new URL(AMONT + chemin);
   Object.keys(params).forEach(function(k){
     if (params[k]) u.searchParams.set(k, params[k]);
   });
   u.searchParams.set('apikey', cleAmont(env));
-  const r = await fetch(u.toString(), {cf:{cacheTtl:FRAICHE, cacheEverything:true}});
-  if (r.status === 429){ const e = new Error('limite'); e.limite = true; throw e; }
-  if (!r.ok) throw new Error('amont ' + r.status);
-  return r.json();
+
+  let r, texte;
+  try {
+    r = await fetch(u.toString(), {cf:{cacheTtl:FRAICHE, cacheEverything:true}});
+    texte = await r.text();
+  } catch (e){
+    /* La seule vraie « injoignable » : le reseau n'a pas abouti. */
+    const err = new Error('reseau');
+    err.amont = {statut:0, message:'le fournisseur n a pas repondu du tout'};
+    throw err;
+  }
+
+  let o = null;
+  try { o = JSON.parse(texte); } catch (e){}
+
+  /* Twelve Data signale ses refus de deux facons : par le code HTTP,
+     ou par un corps « status: error » rendu avec un 200. Les deux
+     comptent, sinon une cle refusee passerait pour une reponse vide. */
+  if (r.status === 429 || (o && o.code === 429)){
+    const e = new Error('limite'); e.limite = true; throw e;
+  }
+  if (!r.ok || (o && o.status === 'error')){
+    const e = new Error('amont');
+    /* On repete ce que le fournisseur a dit, mot pour mot. Un message
+       vague fait chercher au hasard ; celui-ci nomme la cause. */
+    e.amont = {
+      statut: r.status,
+      code: (o && o.code) || null,
+      message: sansCle((o && o.message) || texte.slice(0, 300) || '(reponse vide)', env)
+    };
+    throw e;
+  }
+  return o;
 }
 
 /* Le taux de change, quand l'instrument n'est pas coté dans la devise
@@ -122,17 +161,40 @@ async function prix(codes, devise, env){
   });
 
   const par = {};
+  /* Un groupe qui échoue ne doit pas emporter les autres : un symbole
+     mal orthographié ne rend pas le reste du portefeuille illisible.
+     Mais une clé refusée, elle, condamne tout — la taire ferait
+     chercher du côté des symboles pendant des heures. On distingue
+     donc les deux, au lieu de traiter toute erreur pareil. */
+  const soucis = [];
+  function fatale(e){
+    if (e && e.limite) return true;
+    const d = (e && e.amont) || {};
+    return d.statut === 0 || d.statut === 401 || d.statut === 403 ||
+           d.code === 401 || d.code === 403;
+  }
   for (const place of Object.keys(groupes)){
     const g = groupes[place];
-    const rep = await amont('/quote', {
-      symbol: g.map(function(x){ return x.symbole; }).join(','),
-      mic_code: place || null
-    }, env);
+    let rep;
+    try {
+      rep = await amont('/quote', {
+        symbol: g.map(function(x){ return x.symbole; }).join(','),
+        mic_code: place || null
+      }, env);
+    } catch (e){
+      if (fatale(e)) throw e;
+      soucis.push(e);
+      continue;
+    }
     /* Un seul symbole : l'amont rend l'objet nu. Plusieurs : un objet
        indexé par symbole. On ramène les deux à la même forme. */
     if (g.length === 1) par[g[0].code] = rep;
     else g.forEach(function(x){ par[x.code] = rep && rep[x.symbole]; });
   }
+  /* Rien trouvé du tout, et une raison sous la main : on la donne. Une
+     réponse vide laisserait croire que les symboles sont justes et que
+     le fournisseur n'a rien. */
+  if (!Object.keys(par).length && soucis.length) throw soucis[0];
 
   const sortie = {};
   let retard = null;
@@ -206,8 +268,20 @@ export default {
       if (r.retard) corps.retard = r.retard;
       return json(corps, 200, origine);
     } catch (e){
-      if (e && e.limite) return json({erreur:'limite'}, 429, origine);
-      return json({erreur:'amont injoignable'}, 502, origine);
+      if (e && e.limite) return json({
+        erreur:'limite',
+        quoi:'Le fournisseur refuse pour trop d appels. Attendez une minute.'
+      }, 429, origine);
+      const d = (e && e.amont) || {message:String((e && e.message) || e)};
+      return json({
+        erreur:'le fournisseur a refuse',
+        /* Ce que LUI a dit, sans interpretation de ma part. */
+        amont:d,
+        quoi: d.code === 401 || /api ?key|apikey/i.test(d.message || '')
+          ? 'La cle est refusee. Verifiez la variable TWELVEDATA : sa valeur ' +
+            'doit etre la cle actuelle de twelvedata.com, sans espace autour.'
+          : 'Regardez le message ci-dessus : il vient du fournisseur, pas du relais.'
+      }, 502, origine);
     }
   }
 };

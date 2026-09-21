@@ -146,5 +146,43 @@ dit('la ligne est absente plutot que fausse', !o['tw:XXX'], JSON.stringify(Objec
 dit('les autres passent quand meme', !!o['tw:CW8:XPAR']);
 delete COURS['XXX'];
 
+// [13] une cle refusee doit se NOMMER, pas se cacher derriere
+//      « injoignable ». Twelve Data repond 401, et parfois un 200
+//      portant « status: error » -- les deux doivent etre compris.
+console.log('[13] cle refusee');
+const vraiFetch = globalThis.fetch;
+globalThis.fetch = async () => new Response(JSON.stringify({
+  code:401, message:'Invalid API key', status:'error'}), {status:401});
+r = await appel('ids=tw:CW8:XPAR&vs_currencies=eur', BON);
+o = await r.json();
+dit('statut 502', r.status === 502, 'statut ' + r.status);
+dit('le message du fournisseur est repete', (o.amont||{}).message === 'Invalid API key',
+    JSON.stringify(o.amont));
+dit('et on dit quoi faire', (o.quoi||'').includes('TWELVEDATA'), o.quoi);
+
+globalThis.fetch = async () => new Response(JSON.stringify({
+  code:401, message:'Invalid API key', status:'error'}), {status:200});
+r = await appel('ids=tw:CW8:XPAR&vs_currencies=eur', BON);
+o = await r.json();
+dit('un 200 portant une erreur compte aussi', r.status === 502, 'statut ' + r.status);
+
+// [14] la cle ne doit jamais ressortir dans un message d'erreur :
+//      ces reponses finissent en capture d'ecran.
+globalThis.fetch = async () => new Response(
+  'refus pour apikey=SECRET-QUI-NE-DOIT-PAS-SORTIR', {status:400});
+r = await appel('ids=tw:CW8:XPAR&vs_currencies=eur', BON);
+o = await r.json();
+console.log('[14] la cle ne fuit pas par les erreurs');
+dit('absente du message', JSON.stringify(o).indexOf('SECRET') === -1, JSON.stringify(o.amont));
+dit('remplacee par des etoiles', JSON.stringify(o).includes('***'));
+
+// [15] reseau vraiment mort
+globalThis.fetch = async () => { throw new Error('boom'); };
+r = await appel('ids=tw:CW8:XPAR&vs_currencies=eur', BON);
+o = await r.json();
+dit('un reseau mort se distingue d un refus', r.status === 502 &&
+    (o.amont||{}).statut === 0, JSON.stringify(o.amont));
+globalThis.fetch = vraiFetch;
+
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

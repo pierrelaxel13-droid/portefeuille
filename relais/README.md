@@ -183,7 +183,7 @@ la page veut le prix. Tout le reste ne quitte pas votre navigateur.
 | `{"erreur":"cle absente"}` | L'étape 4 n'a pas été faite, ou le nom n'est pas exactement `TWELVEDATA`. La réponse dit quoi faire. |
 | `{"erreur":"origine non autorisee"}` | `ORIGINES` ne contient pas l'adresse de votre site. Depuis la barre d'adresse du navigateur, cette erreur ne doit PAS apparaître — si elle apparaît, `ORIGINES` est vide ou mal recopié. |
 | `{"erreur":"limite"}` | Le quota du fournisseur est atteint. Attendez une minute. |
-| `{"erreur":"amont injoignable"}` | La clé est refusée par le fournisseur, ou son service est en panne. Reprenez l'étape 1. |
+| `{"erreur":"le fournisseur a refuse", ...}` | La réponse contient `amont.message` : c'est le fournisseur qui parle, mot pour mot, et `quoi` dit la suite. Un message parlant de `API key` signifie que `TWELVEDATA` est absente, périmée ou mal recopiée. |
 | `{}` tout court | Le symbole n'est pas reconnu. Vérifiez le code : symbole et place, tels que le fournisseur les nomme. |
 | « Hello World » | L'étape 3 s'est arrêtée avant le collage du code. |
 | Dans la page : aucun fournisseur n'a répondu | L'adresse collée à l'étape 6 n'est pas celle de l'étape 3. |
