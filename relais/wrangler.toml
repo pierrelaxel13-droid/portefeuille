@@ -1,0 +1,11 @@
+name = "relais-cours"
+main = "worker.js"
+compatibility_date = "2026-09-21"
+
+[vars]
+# Les sites autorises a appeler ce relais, separes par des virgules.
+# Vide = ouvert a tous : votre quota devient celui de tout le monde.
+ORIGINES = "https://pierrelaxel13-droid.github.io"
+
+# La cle du fournisseur ne se met PAS ici : ce fichier est versionne.
+#   wrangler secret put CLE
