@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260922.1757";</script>
+<script>window.PC_VERSION = "260922.1825";</script>
 </head>
 <body>
 
@@ -2026,6 +2026,26 @@ body.detaille .bascule-vue__s{opacity:1;}
   .ligne-b{grid-template-columns:minmax(0,1fr) minmax(0,auto) auto auto;}
   .ligne-b__c{order:2;} .ligne-b__p{order:3;} .ligne-b__v{order:4;}
 }
+/* Les deux marches sous un meme toit. Deux onglets de premier niveau
+   pour « crypto » et « bourse » faisaient deux entrees pour une seule
+   idee : regarder les cours. */
+.sous-onglets{display:flex; gap:4px; margin:0 0 24px; border-bottom:1px solid var(--rule);}
+.sous-onglet{
+  background:none; border:none; cursor:pointer; position:relative;
+  font-family:inherit; font-size:15.5px; font-weight:600; color:var(--ink-3);
+  padding:11px 18px 13px; transition:color .2s;
+}
+.sous-onglet::after{
+  content:""; position:absolute; left:12px; right:12px; bottom:-1px; height:2.5px;
+  background:var(--accent); transform:scaleX(0); transform-origin:50% 50%;
+  transition:transform .28s cubic-bezier(.2,.7,.2,1);
+}
+.sous-onglet:hover{color:var(--ink);}
+.sous-onglet[aria-selected="true"]{color:var(--ink);}
+.sous-onglet[aria-selected="true"]::after{transform:scaleX(1);}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .sous-onglet::after{transition:none;}
+}
 .genres{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
 .genre{
   background:var(--paper); border:1.5px solid var(--rule-strong); border-radius:14px;
@@ -3277,8 +3297,12 @@ window.PC = (function(){
   'b.encours':          ["\u2026"," \u2026","\u2026","\u2026"],
   'b.sanscours':        ["Cours indisponible","Price unavailable","Cotizaci\u00f3n no disponible","Kurs nicht verf\u00fcgbar"],
   'b.sansrelais':       ["La bourse passe par un relais, qu'il faut indiquer une fois\u00a0: menu, puis \u00ab\u00a0Relais pour la bourse\u00a0\u00bb. Sans lui, cette page reste vide \u2014 les cryptos, elles, fonctionnent sans rien installer.","Market data goes through a relay, which you set once: menu, then \u00ab Stock market relay \u00bb. Without it this page stays empty \u2014 crypto works with nothing installed.","La bolsa pasa por un rel\u00e9 que hay que indicar una vez: men\u00fa, luego \u00ab Rel\u00e9 para la bolsa \u00bb. Sin \u00e9l esta p\u00e1gina queda vac\u00eda; las criptos funcionan sin instalar nada.","B\u00f6rsendaten laufen \u00fcber ein Relais, das Sie einmal angeben: Men\u00fc, dann \u00bbRelais f\u00fcr die B\u00f6rse\u00ab. Ohne es bleibt diese Seite leer \u2014 Kryptos funktionieren ohne Installation."],
+  'b.sous.crypto':      ["Cryptos","Crypto","Criptos","Kryptos"],
+  'b.sous.bourse':      ["Bourse","Stocks","Bolsa","B\u00f6rse"],
+  'b.suivies':          ["Valeurs suivies","Tracked securities","Valores seguidos","Beobachtete Werte"],
+  'b.suivies.n':        ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse. Cherchez un titre pour en consulter d'autres.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets. Search for a security to look up others.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa. Busque un t\u00edtulo para consultar otros.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse. Suchen Sie einen Titel, um andere nachzuschlagen."],
   'b.note':             ["Pas de classement ici\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse. Ce sont vos lignes, et une recherche.","No ranking here: no free provider serves one for stock markets. These are your own lines, plus a search.","Aqu\u00ed no hay ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa. Son sus l\u00edneas, m\u00e1s una b\u00fasqueda.","Kein Ranking hier: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse. Dies sind Ihre Positionen und eine Suche."],
-  'm.paschart':         ["Le fournisseur de courbes gratuit ne couvre que les cryptos. Le cours de cette ligne est suivi, mais son historique n'est pas trac\u00e9.","The free chart provider only covers crypto. This line's price is tracked, but its history is not charted.","El proveedor gratuito de gr\u00e1ficos solo cubre criptomonedas. La cotizaci\u00f3n de esta l\u00ednea se sigue, pero su historial no se traza.","Der kostenlose Chart-Anbieter deckt nur Kryptos ab. Der Kurs dieser Position wird verfolgt, ihr Verlauf aber nicht gezeichnet."],
+  'm.pasrelais':        ["L'historique d'un titre de bourse passe par le relais, qu'il faut indiquer une fois\u00a0: menu, puis \u00ab\u00a0Relais pour la bourse\u00a0\u00bb.","A security's history goes through the relay, which you set once: menu, then \u00ab Stock market relay \u00bb.","El historial de un t\u00edtulo pasa por el rel\u00e9, que hay que indicar una vez: men\u00fa, luego \u00ab Rel\u00e9 para la bolsa \u00bb.","Der Verlauf eines Titels l\u00e4uft \u00fcber das Relais, das Sie einmal angeben: Men\u00fc, dann \u00bbRelais f\u00fcr die B\u00f6rse\u00ab."],
   'e.rel.bouton':       ["Relais pour la bourse\u2026","Stock market relay\u2026","Rel\u00e9 para la bolsa\u2026","Relais f\u00fcr die B\u00f6rse\u2026"],
   'e.rel.titre':        ["Relais pour la bourse","Stock market relay","Rel\u00e9 para la bolsa","Relais f\u00fcr die B\u00f6rse"],
   'e.rel.quoi':         ["Le cours d'une action ou d'un ETF n'est pas une donn\u00e9e libre\u00a0: il faut une cl\u00e9 de compte, et une cl\u00e9 pos\u00e9e dans une page web est lisible par tous. Un relais la garde de son c\u00f4t\u00e9. Collez ici son adresse\u00a0; laissez vide si vous n'en avez pas.","The price of a share or an ETF is not free data: it takes an account key, and a key placed in a web page is readable by anyone. A relay keeps it on its own side. Paste its address here; leave empty if you have none.","La cotizaci\u00f3n de una acci\u00f3n o un ETF no es un dato libre: hace falta una clave de cuenta, y una clave puesta en una p\u00e1gina web la lee cualquiera. Un rel\u00e9 la guarda de su lado. Pegue aqu\u00ed su direcci\u00f3n; d\u00e9jelo vac\u00edo si no tiene."," Der Kurs einer Aktie oder eines ETF ist kein freies Datum: Es braucht einen Kontoschl\u00fcssel, und ein Schl\u00fcssel in einer Webseite ist f\u00fcr alle lesbar. Ein Relais beh\u00e4lt ihn auf seiner Seite. F\u00fcgen Sie hier seine Adresse ein; leer lassen, wenn Sie keines haben."],
@@ -4645,10 +4669,22 @@ window.PC = (function(){
 
     <!-- Les marchés vivent du côté connexion : ce sont les cours qui
          font bouger un portefeuille, pas un argument de devanture. -->
-    <div class="pan" id="pan-bourse" role="tabpanel" aria-labelledby="ong-bourse" tabindex="0" hidden>
+    <div class="sous-onglets" id="sous-marches" role="tablist" hidden>
+      <button class="sous-onglet" type="button" role="tab" data-sous="crypto"
+              aria-selected="true" data-i18n="b.sous.crypto">Cryptos</button>
+      <button class="sous-onglet" type="button" role="tab" data-sous="bourse"
+              aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
+    </div>
+
+    <div class="pan" id="pan-bourse" role="tabpanel" tabindex="0" hidden>
       <div class="carte" style="margin-bottom:30px">
         <div class="carte__t"><h3 data-i18n="b.t">Vos lignes de bourse</h3><span id="b-info">—</span></div>
         <div class="carte__c" id="b-lignes"></div>
+      </div>
+      <div class="carte" style="margin-bottom:30px">
+        <div class="carte__t"><h3 data-i18n="b.suivies">Valeurs suivies</h3><span id="b-vinfo">—</span></div>
+        <div class="carte__c" id="b-veille"></div>
+        <p class="champ__note" data-i18n="b.suivies.n">Une poignée de valeurs connues, pas un classement.</p>
       </div>
       <div class="carte">
         <div class="carte__t"><h3 data-i18n="b.ch.t">Consulter un autre titre</h3></div>
@@ -6988,8 +7024,8 @@ window.PC = (function(){
       (a.sym && window.PC_MARCHES ? '<section class="pa__sect">' +
         '<h4 class="pa__h">' + PC.t('m.courbe') + '</h4>' +
         '<div class="carte"><div class="carte__c">' +
-          (coursDeBourse(a.sym)
-            ? '<p class="fiche-m__mot">' + echap(PC.t('m.paschart')) + '</p>'
+          ((coursDeBourse(a.sym) && !adresseRelais())
+            ? '<p class="fiche-m__mot">' + echap(PC.t('m.pasrelais')) + '</p>'
             : '<div class="fiche-m__plages">' +
             PC_MARCHES.plages.map(function(p, i){
               return '<button class="fiche-m__plage" type="button" data-paplage="' + i +
@@ -7039,7 +7075,7 @@ window.PC = (function(){
 
     /* Le cours du marché arrive du réseau : la fiche est déjà lisible
        sans lui, il s'ajoute quand il est là. */
-    if (a.sym && window.PC_MARCHES && !coursDeBourse(a.sym)){
+    if (a.sym && window.PC_MARCHES && !(coursDeBourse(a.sym) && !adresseRelais())){
       PC_MARCHES.trace('pa-graphe-m', a.sym, plageActif);
     }
 
@@ -7426,7 +7462,6 @@ window.PC = (function(){
                   ton:res > 0 ? 'up' : (res < 0 ? 'down' : 'flat')});
     });
     liste.push({cle:'marches', id:'ong-marches', nom:PC.t('m.onglet')});
-    liste.push({cle:'bourse', id:'ong-bourse', nom:PC.t('b.onglet')});
     liste.push({cle:'ajout', id:'ong-ajout', nom:PC.t('e.ong.ajout'), ajout:true});
 
     barreOnglets.innerHTML = liste.map(function(o){
@@ -7460,8 +7495,6 @@ window.PC = (function(){
     /* Un panneau masqué n'a pas de boîte de mise en page : l'observateur
        du module ne le verrait jamais approcher. C'est l'ouverture de la
        vue qui déclenche le chargement. */
-    if (vueCourante === 'marches' && window.PC_MARCHES) PC_MARCHES.ouvre();
-    if (vueCourante === 'bourse') dessineBourse();
     Object.keys(panneaux).forEach(function(k){
       panneaux[k].hidden = k !== vueCourante;
       panneaux[k].classList.remove('entre');
@@ -7469,6 +7502,11 @@ window.PC = (function(){
     const v = panneaux[vueCourante];
     void v.offsetWidth;                 // redémarre la cascade
     v.classList.add('entre');
+    /* Apres la boucle, qui ne connait qu'un panneau par vue : sous
+       « marches » il y en a deux, et c'est le sous-onglet qui tranche. */
+    const barre = document.getElementById('sous-marches');
+    if (barre) barre.hidden = vueCourante !== 'marches';
+    if (vueCourante === 'marches') poseSousMarche(sousMarche);
     rendre();
     majBarreApp();
     if (!sansDefilement){
@@ -7513,7 +7551,6 @@ window.PC = (function(){
                     pastille:(a.nom.trim().charAt(0) || '?').toUpperCase()});
     });
     entrees.push({dest:'marches', nom:PC.t('m.onglet'), icone:ICONE_MARCHES});
-    entrees.push({dest:'bourse', nom:PC.t('b.onglet'), icone:ICONE_BOURSE});
     entrees.push({dest:'ajout', nom:PC.t('e.bar.ajouter'), icone:ICONE_AJOUT});
 
     barreApp.innerHTML = entrees.map(function(e){
@@ -7954,6 +7991,10 @@ window.PC = (function(){
     if (window.PC_COURS_SOURCE) return window.PC_COURS_SOURCE;
     try { return localStorage.getItem(CLE_RELAIS) || ''; } catch (e){ return ''; }
   }
+  /* Le module des marches est un autre script : il ne voit pas cette
+     variable. On lui donne la seule chose dont il a besoin, plutot que
+     de fusionner les deux ou de relire le stockage de son cote. */
+  window.PC_RELAIS_ADRESSE = adresseRelais;
   /* Ce que le relais dit du retard de ses cours : « differe », « cloture »,
      ou rien. On le garde pour le répéter au lecteur — un cours différé
      présenté comme du direct est un chiffre faux. */
@@ -8800,9 +8841,91 @@ window.PC = (function(){
      Ce qu'on a, et qui sert vraiment : ses propres lignes avec leur
      cours, et de quoi consulter un titre qu'on ne detient pas encore.
      ============================================================ */
+  /* Une poignee de valeurs connues, ecrite en dur.
+
+     Ce n'est PAS un classement, et la page le dit : aucun fournisseur
+     gratuit n'en sert un pour la bourse. Une liste fixe assumee vaut
+     mieux qu'un faux palmares -- et ces dix-la sont celles qu'on
+     regarde en premier depuis la France : trois grands ETF, puis des
+     valeurs du CAC et quelques americaines. */
+  const VEILLE = [
+    ['yh:CW8.PA',   'Amundi MSCI World',   'Paris'],
+    ['yh:ESE.PA',   'BNPP S&P 500',        'Paris'],
+    ['yh:IWDA.AS',  'iShares Core World',  'Amsterdam'],
+    ['yh:MC.PA',    'LVMH',                'Paris'],
+    ['yh:OR.PA',    'L\u2019Or\u00e9al',           'Paris'],
+    ['yh:AIR.PA',   'Airbus',              'Paris'],
+    ['yh:TTE.PA',   'TotalEnergies',       'Paris'],
+    ['yh:AAPL',     'Apple',               'Nasdaq'],
+    ['yh:MSFT',     'Microsoft',           'Nasdaq'],
+    ['yh:NVDA',     'NVIDIA',              'Nasdaq']
+  ];
+  /* Les cours de la veille, gardes le temps d'une visite. */
+  const coursVeille = {};
+  let veilleEnVol = false;
+
+  function dessineVeille(){
+    const hote = document.getElementById('b-veille');
+    const info = document.getElementById('b-vinfo');
+    if (!hote) return;
+    if (!adresseRelais()){ hote.innerHTML = ''; if (info) info.textContent = '\u2014'; return; }
+    hote.innerHTML = VEILLE.map(function(v){
+      const p = coursVeille[v[0]];
+      return '<div class="ligne-b" data-veille="' + echapAttr(v[0]) + '">' +
+        '<span class="ligne-b__n">' + echap(v[1]) + '</span>' +
+        '<span class="ligne-b__c">' + echap(v[2]) + '</span>' +
+        '<span class="ligne-b__p"></span>' +
+        '<span class="ligne-b__v">' +
+          (p === undefined ? '\u2026' : p === null ? '\u2014' : echap(eur.format(p))) +
+        '</span></div>';
+    }).join('');
+    if (info) info.textContent = String(VEILLE.length);
+
+    if (veilleEnVol) return;
+    const manque = VEILLE.filter(function(v){ return coursVeille[v[0]] === undefined; });
+    if (!manque.length) return;
+    veilleEnVol = true;
+    /* Un seul appel pour les dix : le relais les groupe par place. */
+    const u = adresseRelais();
+    litJSON(u + (u.indexOf('?') === -1 ? '?' : '&') +
+        'ids=' + encodeURIComponent(manque.map(function(v){ return v[0]; }).join(',')) +
+        '&vs_currencies=' + encodeURIComponent(String(PC.devise).toLowerCase()))
+      .then(function(o){
+        const d = String(PC.devise).toLowerCase();
+        manque.forEach(function(v){
+          const e = o && o[v[0]];
+          coursVeille[v[0]] = (e && typeof e[d] === 'number') ? e[d] : null;
+        });
+      }, function(){
+        /* Un echec se marque, sinon on redemanderait sans fin. */
+        manque.forEach(function(v){ coursVeille[v[0]] = null; });
+      })
+      .then(function(){ veilleEnVol = false; dessineVeille(); });
+  }
+
   function lignesDeBourse(){
     return actifs.filter(function(a){ return a.sym && coursDeBourse(a.sym); });
   }
+
+  /* Le sous-onglet retenu : on revient ou l'on etait, plutot que de
+     repartir des cryptos a chaque passage. */
+  let sousMarche = 'crypto';
+  function poseSousMarche(q){
+    sousMarche = (q === 'bourse') ? 'bourse' : 'crypto';
+    const barre = document.getElementById('sous-marches');
+    if (barre) barre.querySelectorAll('[data-sous]').forEach(function(b){
+      b.setAttribute('aria-selected', String(b.getAttribute('data-sous') === sousMarche));
+    });
+    const pm = panneaux.marches, pb = panneaux.bourse;
+    if (pm) pm.hidden = sousMarche !== 'crypto';
+    if (pb) pb.hidden = sousMarche !== 'bourse';
+    if (sousMarche === 'crypto'){ if (window.PC_MARCHES) PC_MARCHES.ouvre(); }
+    else dessineBourse();
+  }
+  document.addEventListener('click', function(e){
+    const b = e.target && e.target.closest && e.target.closest('[data-sous]');
+    if (b) poseSousMarche(b.getAttribute('data-sous'));
+  });
 
   function dessineBourse(){
     const hote = document.getElementById('b-lignes');
@@ -8811,6 +8934,7 @@ window.PC = (function(){
     const q = document.getElementById('b-q');
     if (q && !q.placeholder) q.placeholder = PC.t('b.ch.ph');
 
+    dessineVeille();
     const l = lignesDeBourse();
     if (info) info.textContent = l.length ? String(l.length) : '\u2014';
 
@@ -10188,8 +10312,24 @@ window.PC = (function(){
     if (garde && Date.now() - garde.t < FRAICHE) return Promise.resolve(fini(garde.p));
     /* Deux demandes pour la même série n'en font qu'une. */
     if (!enVolCourbe[cle]){
-      enVolCourbe[cle] = json(BASE + '/coins/' + encodeURIComponent(id) +
-          '/market_chart?vs_currency=' + dev() + '&days=' + jours)
+      /* Deux sources d'historique, une seule forme. Une crypto va chez
+         le fournisseur de courbes ; un titre de bourse passe par le
+         relais, qui rend exactement la meme chose. Le reste du module
+         n'a pas a savoir lequel des deux a repondu. */
+      const ou = /^[a-z]{2}:/i.test(id)
+        ? (function(){
+            const u = window.PC_RELAIS_ADRESSE && window.PC_RELAIS_ADRESSE();
+            if (!u) return null;
+            return u + (u.indexOf('?') === -1 ? '?' : '&') +
+                   'courbe=' + encodeURIComponent(id) + '&jours=' + jours;
+          })()
+        : BASE + '/coins/' + encodeURIComponent(id) +
+          '/market_chart?vs_currency=' + dev() + '&days=' + jours;
+      if (!ou){
+        const e = new Error('sans relais');
+        return Promise.reject(e);
+      }
+      enVolCourbe[cle] = json(ou)
         .then(function(o){
           const pts = (o && o.prices) || [];
           memoire[cle] = {t:Date.now(), p:pts};
