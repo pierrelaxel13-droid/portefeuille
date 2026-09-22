@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260921.2126";</script>
+<script>window.PC_VERSION = "260922.0638";</script>
 </head>
 <body>
 
@@ -1116,6 +1116,36 @@ body.flux-vif .cours__vif::before{
   line-height:1; letter-spacing:-.04em; font-variant-numeric:tabular-nums;
   margin:14px 0 10px;
 }
+/* ===== Propositions de titres =====
+   Une liste de boutons, pas un menu deroulant : la place de cotation
+   doit se lire EN MEME TEMPS que le nom. Le meme fonds est cote a
+   Paris, a Milan et a Amsterdam ; un menu qui n'affiche que le nom
+   ferait choisir a l'aveugle. */
+.sug{
+  grid-column:1 / -1; margin-top:-4px;
+  border:1px solid var(--rule); border-radius:12px; background:var(--paper-2);
+  overflow:hidden;
+}
+.sug__t{
+  padding:9px 14px; font-family:'IBM Plex Mono', monospace; font-size:11px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3);
+  border-bottom:1px solid var(--rule);
+}
+.sug__i{
+  display:block; width:100%; text-align:left; background:none; border:none;
+  border-top:1px solid var(--rule); padding:11px 14px; cursor:pointer;
+  font-family:inherit; font-size:14.5px; color:var(--ink); line-height:1.35;
+  transition:background .15s;
+}
+.sug__i:first-of-type{border-top:none;}
+.sug__i:hover{background:var(--accent-soft);}
+.sug__i:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+.sug__n{display:block; font-weight:600;}
+.sug__m{
+  display:block; margin-top:2px; font-family:'IBM Plex Mono', monospace;
+  font-size:11.5px; color:var(--ink-3);
+}
+.sug__mot{padding:12px 14px; font-size:13.5px; color:var(--ink-2); line-height:1.55; text-wrap:pretty;}
 .fiche-m__plages{display:flex; flex-wrap:wrap; gap:6px; margin:22px 0 16px;}
 .fiche-m__plage{
   background:none; border:1px solid var(--rule); color:var(--ink-2); cursor:pointer;
@@ -3164,6 +3194,12 @@ window.PC = (function(){
   'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
   'm.surplage':         ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
+  'e.sug.t':            ["Titres trouv\u00e9s \u2014 choisissez la bonne place de cotation","Securities found \u2014 pick the right listing","T\u00edtulos encontrados \u2014 elija la plaza correcta","Gefundene Titel \u2014 w\u00e4hlen Sie den richtigen Handelsplatz"],
+  'e.sug.cherche':      ["Recherche en cours\u2026","Searching\u2026","Buscando\u2026","Suche l\u00e4uft\u2026"],
+  'e.sug.rien':         ["Aucun titre \u00e0 ce nom. Essayez le nom officiel du fonds, ou saisissez le code \u00e0 la main.","No security under that name. Try the fund's official name, or type the code by hand.","Ning\u00fan t\u00edtulo con ese nombre. Pruebe el nombre oficial del fondo, o escriba el c\u00f3digo a mano.","Kein Titel unter diesem Namen. Versuchen Sie den offiziellen Fondsnamen, oder geben Sie den Code von Hand ein."],
+  'e.sug.horsrelais':   ["Pour chercher une action ou un ETF, indiquez d'abord un relais\u00a0: menu, puis \u00ab\u00a0Relais pour la bourse\u00a0\u00bb. Les cryptos, elles, se trouvent sans rien installer.","To search a share or an ETF, first set a relay: menu, then \u00ab Stock market relay \u00bb. Crypto is found without installing anything.","Para buscar una acci\u00f3n o un ETF, indique antes un rel\u00e9: men\u00fa, luego \u00ab Rel\u00e9 para la bolsa \u00bb. Las criptos se encuentran sin instalar nada.","Um eine Aktie oder einen ETF zu suchen, geben Sie zuerst ein Relais an: Men\u00fc, dann \u00bbRelais f\u00fcr die B\u00f6rse\u00ab. Kryptos werden ohne Installation gefunden."],
+  'e.sug.pose':         ["Code pos\u00e9\u00a0: {{n}}. Le cours arrivera tout seul.","Code set: {{n}}. The price will come on its own.","C\u00f3digo puesto: {{n}}. La cotizaci\u00f3n llegar\u00e1 sola.","Code gesetzt: {{n}}. Der Kurs kommt von selbst."],
+  'e.sug.crypto':       ["Crypto","Crypto","Cripto","Krypto"],
   'm.paschart':         ["Le fournisseur de courbes gratuit ne couvre que les cryptos. Le cours de cette ligne est suivi, mais son historique n'est pas trac\u00e9.","The free chart provider only covers crypto. This line's price is tracked, but its history is not charted.","El proveedor gratuito de gr\u00e1ficos solo cubre criptomonedas. La cotizaci\u00f3n de esta l\u00ednea se sigue, pero su historial no se traza.","Der kostenlose Chart-Anbieter deckt nur Kryptos ab. Der Kurs dieser Position wird verfolgt, ihr Verlauf aber nicht gezeichnet."],
   'e.rel.bouton':       ["Relais pour la bourse\u2026","Stock market relay\u2026","Rel\u00e9 para la bolsa\u2026","Relais f\u00fcr die B\u00f6rse\u2026"],
   'e.rel.titre':        ["Relais pour la bourse","Stock market relay","Rel\u00e9 para la bolsa","Relais f\u00fcr die B\u00f6rse"],
@@ -4469,6 +4505,7 @@ window.PC = (function(){
                detient « 8 onces » dans sa tete : on detient 250 grammes
                ou un lingot. Le champ n'apparait que pour un metal, et
                la conversion se fait toute seule. -->
+          <div class="sug" id="sug-a" hidden></div>
           <div class="champ" id="champ-unite" hidden><label for="a-unite" data-i18n="e.me.unite">Unité</label>
             <select id="a-unite">
               <option value="g" data-i18n="e.me.u.g">Grammes</option>
@@ -6566,6 +6603,7 @@ window.PC = (function(){
           '<input id="co-sym" type="text" list="liste-cours" placeholder="bitcoin" ' +
           'autocomplete="off" spellcheck="false" value="' +
           (a.sym ? echapAttr(a.sym) : '') + '"></div>' +
+        '<div class="sug" id="sug-co" hidden></div>' +
         '<div class="champ" id="co-champ-unite"' + (estMetal(a.sym) ? '' : ' hidden') + '>' +
           '<label for="co-unite">' + PC.t('e.me.unite') + '</label>' +
           '<select id="co-unite">' +
@@ -6634,6 +6672,18 @@ window.PC = (function(){
        sélectionné, pour le remplacer sans l'effacer d'abord. */
     const champ = document.getElementById('co-pu');
     if (champ){ champ.focus(); champ.select(); }
+    /* Une ligne sans code est la raison numero un pour laquelle un
+       cours n'arrive pas. On cherche donc d'office, sur le nom de la
+       ligne : c'est ici que se repare une ligne creee sans code, et
+       personne n'ira le deviner tout seul. */
+    const a = actifs[ouvert];
+    if (a && !a.sym) propose('sug-co', a.nom, function(x){
+      const cs = document.getElementById('co-sym');
+      if (cs) cs.value = x.code;
+      const cu = document.getElementById('co-champ-unite');
+      if (cu) cu.hidden = !estMetal(x.code);
+      dire(PC.t('e.sug.pose', {n:x.nom}));
+    });
   }
 
   function enregistreCours(){
@@ -7932,6 +7982,100 @@ window.PC = (function(){
       });
   }
 
+  /* ============================================================
+     CHERCHER UN TITRE PAR SON NOM
+     ------------------------------------------------------------
+     Le code de marché était la derniere chose qu'il fallait savoir
+     d'avance. « bitcoin » se devine, « CW8.PA » non : il y a des
+     dizaines de milliers de titres, et « ETF Monde » n'est le nom
+     officiel d'aucun.
+
+     On cherche donc, aux deux endroits possibles : le relais pour la
+     bourse, CoinGecko pour les cryptos. Et on PROPOSE, sans choisir.
+     Le même fonds est coté à Paris, à Milan et à Amsterdam, en deux
+     devises : prendre le premier résultat attacherait un jour la
+     cotation de Milan à un portefeuille parisien, et rien ne le
+     dirait — le capital serait faux de quelques pourcents, en
+     permanence, sans symptôme.
+     ============================================================ */
+  function sourceMarche(){
+    return window.PC_MARCHE_SOURCE || 'https://api.coingecko.com/api/v3';
+  }
+  /* Les cryptos, chez le même fournisseur que les cours. */
+  function chercheCryptos(q){
+    return litJSON(sourceMarche() + '/search?query=' + encodeURIComponent(q))
+      .then(function(o){
+        return ((o && o.coins) || []).slice(0, 5).map(function(c){
+          return {code:c.id, nom:c.name, place:PC.t('e.sug.crypto'),
+                  genre:String(c.symbol || '').toUpperCase()};
+        });
+      }, function(){ return []; });
+  }
+  /* La bourse, par le relais — s'il y en a un. */
+  function chercheBourse(q){
+    const u = adresseRelais();
+    if (!u) return Promise.resolve(null);   /* null : pas « rien trouvé » */
+    return litJSON(u + (u.indexOf('?') === -1 ? '?' : '&') +
+        'cherche=' + encodeURIComponent(q))
+      .then(function(o){ return (o && o.resultats) || []; }, function(){ return []; });
+  }
+  function chercheTitres(q){
+    return Promise.all([chercheBourse(q), chercheCryptos(q)])
+      .then(function(r){
+        return {bourse:r[0], liste:(r[0] || []).concat(r[1])};
+      });
+  }
+
+  /* Peint les propositions dans un conteneur, et rend le code choisi
+     par un appel en retour. */
+  let sugJeton = 0;
+  function propose(hoteId, q, choisi){
+    const hote = document.getElementById(hoteId);
+    if (!hote) return;
+    const t = String(q || '').trim();
+    if (t.length < 2){ hote.hidden = true; hote.innerHTML = ''; return; }
+    /* Une frappe plus récente a pu partir : seule la dernière écrit. */
+    const jeton = ++sugJeton;
+    hote.hidden = false;
+    hote.innerHTML = '<p class="sug__mot">' + echap(PC.t('e.sug.cherche')) + '</p>';
+    chercheTitres(t).then(function(r){
+      const h = document.getElementById(hoteId);
+      if (!h || jeton !== sugJeton) return;
+      if (!r.liste.length){
+        /* Sans relais, on ne peut pas chercher d'action : le dire vaut
+           mieux que de laisser croire que le titre n'existe pas. */
+        h.innerHTML = '<p class="sug__mot">' +
+          echap(PC.t(r.bourse === null ? 'e.sug.horsrelais' : 'e.sug.rien')) + '</p>';
+        return;
+      }
+      h.innerHTML = '<div class="sug__t">' + echap(PC.t('e.sug.t')) + '</div>' +
+        r.liste.map(function(x, i){
+          return '<button class="sug__i" type="button" data-sug="' + i + '">' +
+            '<span class="sug__n">' + echap(x.nom) + '</span>' +
+            '<span class="sug__m">' + echap(x.code) +
+              (x.place ? ' \u00b7 ' + echap(x.place) : '') +
+              (x.genre ? ' \u00b7 ' + echap(x.genre) : '') + '</span></button>';
+        }).join('');
+      h.querySelectorAll('[data-sug]').forEach(function(b){
+        b.addEventListener('click', function(){
+          const x = r.liste[+b.getAttribute('data-sug')];
+          if (x) choisi(x);
+          h.hidden = true; h.innerHTML = '';
+        });
+      });
+    });
+  }
+
+  /* On ne part pas au réseau à chaque lettre. */
+  function retarde(fn, ms){
+    let t = null;
+    return function(){
+      const a = arguments, ce = this;
+      clearTimeout(t);
+      t = setTimeout(function(){ fn.apply(ce, a); }, ms || 450);
+    };
+  }
+
   /* ===== Reconnaître une crypto à son nom =====
      Le code de marché était un champ de plus, qu'il fallait avoir vu
      pour le remplir. Une ligne nommée « Bitcoin » n'a aucune raison
@@ -8902,6 +9046,24 @@ window.PC = (function(){
     const ch = document.getElementById(id);
     if (ch) ch.addEventListener('input', majUnite);
   });
+
+  /* Le nom tape cherche le titre. On ne propose rien tant que la case
+     « liee a un cours » n'est pas cochee : ailleurs, ces propositions
+     n'auraient aucun sens. */
+  const chercheDepuisNom = retarde(function(){
+    if (!(caseCours && caseCours.checked)){
+      const h = document.getElementById('sug-a');
+      if (h){ h.hidden = true; h.innerHTML = ''; }
+      return;
+    }
+    propose('sug-a', document.getElementById('a-nom').value, function(x){
+      document.getElementById('a-sym').value = x.code;
+      majUnite();
+      dire(PC.t('e.sug.pose', {n:x.nom}));
+    });
+  });
+  const champNom = document.getElementById('a-nom');
+  if (champNom) champNom.addEventListener('input', chercheDepuisNom);
   if (caseTaux) caseTaux.addEventListener('change', function(){
     montreTaux(caseTaux.checked);
     if (caseTaux.checked && caseCours && caseCours.checked){ caseCours.checked = false; montreCours(false); }
@@ -8909,6 +9071,7 @@ window.PC = (function(){
   if (caseCours) caseCours.addEventListener('change', function(){
     montreCours(caseCours.checked);
     majUnite();
+    chercheDepuisNom();
     if (caseCours.checked && caseTaux && caseTaux.checked){ caseTaux.checked = false; montreTaux(false); }
   });
 
@@ -8989,6 +9152,8 @@ window.PC = (function(){
     montreTaux(false);
     montreCours(false);
     majUnite();
+    const sa = document.getElementById('sug-a');
+    if (sa){ sa.hidden = true; sa.innerHTML = ''; }
     champCat.value = 'immo';
     boitePuces.querySelectorAll('.puce-cat').forEach(function(x, k){ x.setAttribute('aria-pressed', String(k === 0)); });
     apercu.classList.remove('on');
