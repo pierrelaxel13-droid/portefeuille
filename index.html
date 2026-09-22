@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260922.1734";</script>
+<script>window.PC_VERSION = "260922.1757";</script>
 </head>
 <body>
 
@@ -2004,6 +2004,28 @@ body.detaille .bascule-vue__s{opacity:1;}
    cocher -- « valeur liee a un cours », « taux connu d'avance » --
    pour savoir quoi remplir. C'est un vocabulaire de banquier pose
    devant quelqu'un qui veut juste inscrire son livret. */
+/* Les lignes de bourse : nom, code, cours, valeur. Quatre colonnes
+   sur large, deux rangees sur telephone -- un tableau ne se replie
+   pas, une grille si. */
+.ligne-b{
+  display:grid; grid-template-columns:minmax(0,1fr) auto;
+  gap:2px 14px; padding:13px 0; border-bottom:1px solid var(--rule);
+  align-items:baseline;
+}
+.ligne-b:last-child{border-bottom:none;}
+.ligne-b__n{font-weight:600; font-size:15.5px;}
+.ligne-b__v{
+  font-family:'IBM Plex Mono', monospace; font-variant-numeric:tabular-nums;
+  font-size:15.5px; text-align:right; white-space:nowrap;
+}
+.ligne-b__c, .ligne-b__p{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-3);
+}
+.ligne-b__p{text-align:right; white-space:nowrap;}
+@media (min-width:720px){
+  .ligne-b{grid-template-columns:minmax(0,1fr) minmax(0,auto) auto auto;}
+  .ligne-b__c{order:2;} .ligne-b__p{order:3;} .ligne-b__v{order:4;}
+}
 .genres{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
 .genre{
   background:var(--paper); border:1.5px solid var(--rule-strong); border-radius:14px;
@@ -3246,6 +3268,16 @@ window.PC = (function(){
   'e.g.aide.taux':      ["Indiquez le taux annuel et la date de d\u00e9part\u00a0: la valeur se recalcule toute seule, jour apr\u00e8s jour.","Give the annual rate and the start date: the value recomputes on its own, day after day.","Indique el tipo anual y la fecha de inicio: el valor se recalcula solo, d\u00eda tras d\u00eda.","Geben Sie Jahreszins und Startdatum an: Der Wert berechnet sich t\u00e4glich von selbst."],
   'e.g.aide.bien':      ["Un bien, une part de soci\u00e9t\u00e9, un objet\u00a0: sa valeur ne bouge que si vous la changez.","Property, company shares, an object: its value only moves when you change it.","Un bien, una participaci\u00f3n, un objeto: su valor solo cambia si usted lo cambia.","Eine Immobilie, ein Anteil, ein Gegenstand: Der Wert \u00e4ndert sich nur, wenn Sie ihn \u00e4ndern."],
   'e.g.manuel':         ["R\u00e9glage manuel","Manual setting","Ajuste manual","Manuelle Einstellung"],
+  'b.onglet':           ["Bourse","Stocks","Bolsa","B\u00f6rse"],
+  'b.t':                ["Vos lignes de bourse","Your market lines","Sus l\u00edneas de bolsa","Ihre B\u00f6rsenpositionen"],
+  'b.vide':             ["Aucune ligne de bourse pour l'instant. Ajoutez une action ou un ETF, et son cours appara\u00eetra ici.","No market line yet. Add a share or an ETF, and its price will show up here.","A\u00fan no hay l\u00edneas de bolsa. A\u00f1ada una acci\u00f3n o un ETF y su cotizaci\u00f3n aparecer\u00e1 aqu\u00ed.","Noch keine B\u00f6rsenposition. F\u00fcgen Sie eine Aktie oder einen ETF hinzu, und der Kurs erscheint hier."],
+  'b.ch.t':             ["Consulter un autre titre","Look up another security","Consultar otro t\u00edtulo","Einen anderen Titel nachschlagen"],
+  'b.ch.ph':            ["Nom d'une action, d'un ETF\u2026","Name of a share, an ETF\u2026","Nombre de una acci\u00f3n, un ETF\u2026","Name einer Aktie, eines ETF\u2026"],
+  'b.cours':            ["Voir le cours","See the price","Ver la cotizaci\u00f3n","Kurs ansehen"],
+  'b.encours':          ["\u2026"," \u2026","\u2026","\u2026"],
+  'b.sanscours':        ["Cours indisponible","Price unavailable","Cotizaci\u00f3n no disponible","Kurs nicht verf\u00fcgbar"],
+  'b.sansrelais':       ["La bourse passe par un relais, qu'il faut indiquer une fois\u00a0: menu, puis \u00ab\u00a0Relais pour la bourse\u00a0\u00bb. Sans lui, cette page reste vide \u2014 les cryptos, elles, fonctionnent sans rien installer.","Market data goes through a relay, which you set once: menu, then \u00ab Stock market relay \u00bb. Without it this page stays empty \u2014 crypto works with nothing installed.","La bolsa pasa por un rel\u00e9 que hay que indicar una vez: men\u00fa, luego \u00ab Rel\u00e9 para la bolsa \u00bb. Sin \u00e9l esta p\u00e1gina queda vac\u00eda; las criptos funcionan sin instalar nada.","B\u00f6rsendaten laufen \u00fcber ein Relais, das Sie einmal angeben: Men\u00fc, dann \u00bbRelais f\u00fcr die B\u00f6rse\u00ab. Ohne es bleibt diese Seite leer \u2014 Kryptos funktionieren ohne Installation."],
+  'b.note':             ["Pas de classement ici\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse. Ce sont vos lignes, et une recherche.","No ranking here: no free provider serves one for stock markets. These are your own lines, plus a search.","Aqu\u00ed no hay ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa. Son sus l\u00edneas, m\u00e1s una b\u00fasqueda.","Kein Ranking hier: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse. Dies sind Ihre Positionen und eine Suche."],
   'm.paschart':         ["Le fournisseur de courbes gratuit ne couvre que les cryptos. Le cours de cette ligne est suivi, mais son historique n'est pas trac\u00e9.","The free chart provider only covers crypto. This line's price is tracked, but its history is not charted.","El proveedor gratuito de gr\u00e1ficos solo cubre criptomonedas. La cotizaci\u00f3n de esta l\u00ednea se sigue, pero su historial no se traza.","Der kostenlose Chart-Anbieter deckt nur Kryptos ab. Der Kurs dieser Position wird verfolgt, ihr Verlauf aber nicht gezeichnet."],
   'e.rel.bouton':       ["Relais pour la bourse\u2026","Stock market relay\u2026","Rel\u00e9 para la bolsa\u2026","Relais f\u00fcr die B\u00f6rse\u2026"],
   'e.rel.titre':        ["Relais pour la bourse","Stock market relay","Rel\u00e9 para la bolsa","Relais f\u00fcr die B\u00f6rse"],
@@ -4613,6 +4645,21 @@ window.PC = (function(){
 
     <!-- Les marchés vivent du côté connexion : ce sont les cours qui
          font bouger un portefeuille, pas un argument de devanture. -->
+    <div class="pan" id="pan-bourse" role="tabpanel" aria-labelledby="ong-bourse" tabindex="0" hidden>
+      <div class="carte" style="margin-bottom:30px">
+        <div class="carte__t"><h3 data-i18n="b.t">Vos lignes de bourse</h3><span id="b-info">—</span></div>
+        <div class="carte__c" id="b-lignes"></div>
+      </div>
+      <div class="carte">
+        <div class="carte__t"><h3 data-i18n="b.ch.t">Consulter un autre titre</h3></div>
+        <div class="carte__c">
+          <div class="champ"><input id="b-q" type="search" autocomplete="off" spellcheck="false"></div>
+          <div class="sug" id="sug-b" hidden></div>
+          <p class="champ__note" data-i18n="b.note">Pas de classement ici&nbsp;: aucun fournisseur gratuit n'en sert un pour la bourse. Ce sont vos lignes, et une recherche.</p>
+        </div>
+      </div>
+    </div>
+
     <div class="pan marches" id="pan-marches" role="tabpanel" aria-labelledby="ong-marches" tabindex="0" data-etat="attente" hidden>
       <div class="section__head">
         <h2 data-i18n="m.h2">Les marchés, en direct.</h2>
@@ -7359,7 +7406,8 @@ window.PC = (function(){
     general: document.getElementById('pan-general'),
     ajout:   document.getElementById('pan-ajout'),
     actif:   document.getElementById('pan-actif'),
-    marches: document.getElementById('pan-marches')
+    marches: document.getElementById('pan-marches'),
+    bourse:  document.getElementById('pan-bourse')
   };
   let vueCourante = 'general';
   let plageActif = 2;   /* 7 jours : assez pour voir une tendance */
@@ -7378,6 +7426,7 @@ window.PC = (function(){
                   ton:res > 0 ? 'up' : (res < 0 ? 'down' : 'flat')});
     });
     liste.push({cle:'marches', id:'ong-marches', nom:PC.t('m.onglet')});
+    liste.push({cle:'bourse', id:'ong-bourse', nom:PC.t('b.onglet')});
     liste.push({cle:'ajout', id:'ong-ajout', nom:PC.t('e.ong.ajout'), ajout:true});
 
     barreOnglets.innerHTML = liste.map(function(o){
@@ -7405,12 +7454,14 @@ window.PC = (function(){
   }
 
   function poseVue(cible, sansDefilement){
-    vueCourante = (cible === 'actif' || cible === 'ajout' || cible === 'marches')
+    vueCourante = (cible === 'actif' || cible === 'ajout' ||
+                   cible === 'marches' || cible === 'bourse')
       ? cible : 'general';
     /* Un panneau masqué n'a pas de boîte de mise en page : l'observateur
        du module ne le verrait jamais approcher. C'est l'ouverture de la
        vue qui déclenche le chargement. */
     if (vueCourante === 'marches' && window.PC_MARCHES) PC_MARCHES.ouvre();
+    if (vueCourante === 'bourse') dessineBourse();
     Object.keys(panneaux).forEach(function(k){
       panneaux[k].hidden = k !== vueCourante;
       panneaux[k].classList.remove('entre');
@@ -7446,6 +7497,14 @@ window.PC = (function(){
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<path d="M3 17l5-6 4 4 5-8"/><path d="M17 7h4v4"/></svg>';
 
+  /* Un immeuble de colonnes : la bourse, par opposition a la courbe
+     de marche des cryptos. Deux dessins distincts valent mieux que le
+     meme repete, qui ferait croire a un doublon. */
+  const ICONE_BOURSE =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M4 20V10M10 20V5M16 20v-8M22 20H2"/></svg>';
+
   function construitBarreApp(){
     if (!barreApp) return;
     const entrees = [{dest:'accueil', nom:PC.t('e.bar.accueil'), icone:ICONE_ACCUEIL}];
@@ -7454,6 +7513,7 @@ window.PC = (function(){
                     pastille:(a.nom.trim().charAt(0) || '?').toUpperCase()});
     });
     entrees.push({dest:'marches', nom:PC.t('m.onglet'), icone:ICONE_MARCHES});
+    entrees.push({dest:'bourse', nom:PC.t('b.onglet'), icone:ICONE_BOURSE});
     entrees.push({dest:'ajout', nom:PC.t('e.bar.ajouter'), icone:ICONE_AJOUT});
 
     barreApp.innerHTML = entrees.map(function(e){
@@ -7470,6 +7530,7 @@ window.PC = (function(){
     if (!barreApp) return;
     const courant = dest ||
       (vueCourante === 'marches' ? 'marches'
+       : vueCourante === 'bourse' ? 'bourse'
        : vueCourante === 'ajout' ? 'ajout'
        : (vueCourante === 'actif' && ouvert !== null ? 'actif:' + ouvert : 'accueil'));
     let vu = null;
@@ -7504,6 +7565,7 @@ window.PC = (function(){
     const d = b.dataset.dest;
     if (d === 'accueil'){ ouvert = null; poseVue('general'); }
     else if (d === 'marches'){ ouvert = null; poseVue('marches'); }
+    else if (d === 'bourse'){ ouvert = null; poseVue('bourse'); }
     else if (d === 'ajout'){
       poseVue('ajout');
       setTimeout(function(){ const n = document.getElementById('a-nom'); if (n) n.focus(); }, 60);
@@ -7517,6 +7579,7 @@ window.PC = (function(){
     const c = b.dataset.cible;
     if (c === 'general'){ ouvert = null; poseVue('general'); }
     else if (c === 'marches'){ ouvert = null; poseVue('marches'); }
+    else if (c === 'bourse'){ ouvert = null; poseVue('bourse'); }
     else if (c === 'ajout'){ poseVue('ajout'); setTimeout(function(){ document.getElementById('a-nom').focus(); }, 60); }
     else ouvreActif(+c.split(':')[1]);
   });
@@ -8146,8 +8209,12 @@ window.PC = (function(){
       h.querySelectorAll('[data-sug]').forEach(function(b){
         b.addEventListener('click', function(){
           const x = r.liste[+b.getAttribute('data-sug')];
-          if (x) choisi(x);
+          /* On referme AVANT d'appeler : un appelant qui veut ecrire
+             dans ce meme cadre -- l'onglet Bourse montre le cours a la
+             place de la liste -- verrait sinon son texte efface juste
+             apres l'avoir pose. */
           h.hidden = true; h.innerHTML = '';
+          if (x) choisi(x);
         });
       });
     });
@@ -8721,6 +8788,73 @@ window.PC = (function(){
       ? '<b>' + PC.t('e.seul.b') + '</b> ' + PC.t('e.seul')
       : '<b>' + PC.t('e.aucunreleve.b') + '</b> ' + PC.t('e.aucunreleve');
   }
+
+  /* ============================================================
+     L'ONGLET BOURSE
+     ------------------------------------------------------------
+     Pas de classement : aucun fournisseur gratuit n'en sert un pour
+     la bourse, contrairement aux cryptos. Promettre les « 50
+     premieres valeurs d'Euronext » supposerait une source qui
+     n'existe pas a ce prix-la.
+
+     Ce qu'on a, et qui sert vraiment : ses propres lignes avec leur
+     cours, et de quoi consulter un titre qu'on ne detient pas encore.
+     ============================================================ */
+  function lignesDeBourse(){
+    return actifs.filter(function(a){ return a.sym && coursDeBourse(a.sym); });
+  }
+
+  function dessineBourse(){
+    const hote = document.getElementById('b-lignes');
+    const info = document.getElementById('b-info');
+    if (!hote) return;
+    const q = document.getElementById('b-q');
+    if (q && !q.placeholder) q.placeholder = PC.t('b.ch.ph');
+
+    const l = lignesDeBourse();
+    if (info) info.textContent = l.length ? String(l.length) : '\u2014';
+
+    if (!l.length){
+      /* Sans relais, une page vide se lit « c'est casse ». On dit
+         laquelle des deux situations on est. */
+      hote.innerHTML = '<p class="rel__vide">' +
+        echap(PC.t(adresseRelais() ? 'b.vide' : 'b.sansrelais')) + '</p>';
+      return;
+    }
+    hote.innerHTML = l.map(function(a){
+      const v = valeurCours(a);
+      return '<div class="ligne-b">' +
+        '<span class="ligne-b__n">' + echap(a.nom) + '</span>' +
+        '<span class="ligne-b__c">' + echap(a.sym) + '</span>' +
+        '<span class="ligne-b__p">' + echap(eur.format(a.pu)) + '</span>' +
+        '<span class="ligne-b__v">' + echap(v === null ? '\u2014' : eur.format(v)) + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* La recherche de l'onglet ne cree rien : elle montre un cours.
+     C'est la difference avec celle du formulaire, qui pose un code sur
+     une ligne qu'on est en train d'ecrire. */
+  const chercheBourseOnglet = retarde(function(){
+    const q = document.getElementById('b-q');
+    if (!q) return;
+    propose('sug-b', q.value, function(x){
+      const h = document.getElementById('sug-b');
+      if (!h) return;
+      h.hidden = false;
+      h.innerHTML = '<div class="sug__t">' + echap(x.nom) + '</div>' +
+        '<p class="sug__mot" id="b-vu">' + echap(PC.t('e.sug.encours')) + '</p>';
+      coursDUnCode(x.code).then(function(v){
+        const c = document.getElementById('b-vu');
+        if (!c) return;
+        c.textContent = v === null ? PC.t('b.sanscours')
+          : eur.format(v) + '  \u00b7  ' + x.code + (x.place ? '  \u00b7  ' + x.place : '');
+      });
+    });
+  });
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.id === 'b-q') chercheBourseOnglet();
+  });
 
   /* ===== La performance sur une période choisie =====
      Le grand chiffre du haut de page compare le total d'aujourd'hui à
