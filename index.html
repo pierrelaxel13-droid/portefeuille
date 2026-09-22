@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260922.0638";</script>
+<script>window.PC_VERSION = "260922.1734";</script>
 </head>
 <body>
 
@@ -1998,6 +1998,40 @@ body.detaille .bascule-vue__s{opacity:1;}
    Les catégories deviennent des pastilles cliquables plutôt qu'une liste
    déroulante, un aperçu du résultat se calcule pendant la frappe, et la
    ligne qui vient d'être ajoutée s'illumine brièvement. */
+/* ===== Ce qu'on ajoute =====
+   La premiere question, et la seule qui compte : le reste du
+   formulaire en decoule. Avant, il fallait comprendre deux cases a
+   cocher -- « valeur liee a un cours », « taux connu d'avance » --
+   pour savoir quoi remplir. C'est un vocabulaire de banquier pose
+   devant quelqu'un qui veut juste inscrire son livret. */
+.genres{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+.genre{
+  background:var(--paper); border:1.5px solid var(--rule-strong); border-radius:14px;
+  padding:13px 18px; cursor:pointer; font-family:inherit; font-size:15px;
+  font-weight:600; color:var(--ink-2); line-height:1.2;
+  transition:border-color .18s, color .18s, background .18s, transform .18s;
+}
+.genre:hover{border-color:var(--accent); color:var(--ink); transform:translateY(-1.5px);}
+.genre[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff;}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .genre:hover{transform:none;}
+}
+.genre__aide{
+  grid-column:1 / -1; margin:2px 0 0; font-size:14px; line-height:1.55;
+  color:var(--ink-2); text-wrap:pretty; max-width:64ch;
+}
+/* Les deux cases d'origine restent accessibles, repliees : elles
+   servent aux cas que les cinq choix ne couvrent pas. */
+.manuel{grid-column:1 / -1; border-top:1px solid var(--rule); padding-top:12px;}
+.manuel > summary{
+  cursor:pointer; list-style:none; font-family:'IBM Plex Mono', monospace;
+  font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3);
+}
+.manuel > summary::-webkit-details-marker{display:none;}
+.manuel > summary::before{content:"+ "; color:var(--accent);}
+.manuel[open] > summary::before{content:"\2013 ";}
+.manuel > summary:hover{color:var(--ink);}
+.manuel__c{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:12px;}
 .puces-cat{display:flex; flex-wrap:wrap; gap:7px;}
 .puce-cat{
   font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.06em;
@@ -3198,8 +3232,20 @@ window.PC = (function(){
   'e.sug.cherche':      ["Recherche en cours\u2026","Searching\u2026","Buscando\u2026","Suche l\u00e4uft\u2026"],
   'e.sug.rien':         ["Aucun titre \u00e0 ce nom. Essayez le nom officiel du fonds, ou saisissez le code \u00e0 la main.","No security under that name. Try the fund's official name, or type the code by hand.","Ning\u00fan t\u00edtulo con ese nombre. Pruebe el nombre oficial del fondo, o escriba el c\u00f3digo a mano.","Kein Titel unter diesem Namen. Versuchen Sie den offiziellen Fondsnamen, oder geben Sie den Code von Hand ein."],
   'e.sug.horsrelais':   ["Pour chercher une action ou un ETF, indiquez d'abord un relais\u00a0: menu, puis \u00ab\u00a0Relais pour la bourse\u00a0\u00bb. Les cryptos, elles, se trouvent sans rien installer.","To search a share or an ETF, first set a relay: menu, then \u00ab Stock market relay \u00bb. Crypto is found without installing anything.","Para buscar una acci\u00f3n o un ETF, indique antes un rel\u00e9: men\u00fa, luego \u00ab Rel\u00e9 para la bolsa \u00bb. Las criptos se encuentran sin instalar nada.","Um eine Aktie oder einen ETF zu suchen, geben Sie zuerst ein Relais an: Men\u00fc, dann \u00bbRelais f\u00fcr die B\u00f6rse\u00ab. Kryptos werden ohne Installation gefunden."],
-  'e.sug.pose':         ["Code pos\u00e9\u00a0: {{n}}. Le cours arrivera tout seul.","Code set: {{n}}. The price will come on its own.","C\u00f3digo puesto: {{n}}. La cotizaci\u00f3n llegar\u00e1 sola.","Code gesetzt: {{n}}. Der Kurs kommt von selbst."],
+  'e.sug.pose':         ["{{n}}\u00a0: cours r\u00e9cup\u00e9r\u00e9, {{v}}. Il se mettra \u00e0 jour tout seul.","{{n}}: price fetched, {{v}}. It will update on its own.","{{n}}: cotizaci\u00f3n obtenida, {{v}}. Se actualizar\u00e1 sola.","{{n}}: Kurs abgerufen, {{v}}. Er aktualisiert sich von selbst."],
+  'e.sug.posesans':     ["{{n}}\u00a0: code pos\u00e9. Le cours n'a pas pu \u00eatre r\u00e9cup\u00e9r\u00e9 maintenant\u00a0\u2014 indiquez-le \u00e0 la main, il se corrigera au prochain rafra\u00eechissement.","{{n}}: code set. The price could not be fetched right now \u2014 enter it by hand, it will correct itself on the next refresh.","{{n}}: c\u00f3digo puesto. La cotizaci\u00f3n no se pudo obtener ahora \u2014 ind\u00edquela a mano, se corregir\u00e1 en la pr\u00f3xima actualizaci\u00f3n.","{{n}}: Code gesetzt. Der Kurs konnte jetzt nicht abgerufen werden \u2014 geben Sie ihn von Hand ein, er korrigiert sich beim n\u00e4chsten Abruf."],
+  'e.sug.encours':      ["Recherche du cours\u2026","Fetching the price\u2026","Obteniendo la cotizaci\u00f3n\u2026","Kurs wird abgerufen\u2026"],
   'e.sug.crypto':       ["Crypto","Crypto","Cripto","Krypto"],
+  'e.g.lbl':            ["Qu'est-ce que vous ajoutez\u00a0?","What are you adding?","\u00bfQu\u00e9 a\u00f1ade?","Was f\u00fcgen Sie hinzu?"],
+  'e.g.crypto':         ["Une crypto","Crypto","Una cripto","Eine Krypto"],
+  'e.g.bourse':         ["Une action ou un ETF","A share or an ETF","Una acci\u00f3n o un ETF","Eine Aktie oder ein ETF"],
+  'e.g.metal':          ["De l'or ou de l'argent","Gold or silver","Oro o plata","Gold oder Silber"],
+  'e.g.taux':           ["Un placement \u00e0 taux garanti","A guaranteed-rate savings account","Un dep\u00f3sito a tipo garantizado","Eine Anlage mit garantiertem Zins"],
+  'e.g.bien':           ["Autre chose","Something else","Otra cosa","Etwas anderes"],
+  'e.g.aide.cours':     ["Tapez le nom, choisissez le titre dans la liste\u00a0: le cours arrive tout seul et se mettra \u00e0 jour sans vous.","Type the name, pick the security from the list: the price arrives on its own and will keep updating without you.","Escriba el nombre y elija el t\u00edtulo en la lista: la cotizaci\u00f3n llega sola y se actualizar\u00e1 sin usted.","Namen eintippen, Titel aus der Liste w\u00e4hlen: Der Kurs kommt von selbst und aktualisiert sich ohne Sie."],
+  'e.g.aide.taux':      ["Indiquez le taux annuel et la date de d\u00e9part\u00a0: la valeur se recalcule toute seule, jour apr\u00e8s jour.","Give the annual rate and the start date: the value recomputes on its own, day after day.","Indique el tipo anual y la fecha de inicio: el valor se recalcula solo, d\u00eda tras d\u00eda.","Geben Sie Jahreszins und Startdatum an: Der Wert berechnet sich t\u00e4glich von selbst."],
+  'e.g.aide.bien':      ["Un bien, une part de soci\u00e9t\u00e9, un objet\u00a0: sa valeur ne bouge que si vous la changez.","Property, company shares, an object: its value only moves when you change it.","Un bien, una participaci\u00f3n, un objeto: su valor solo cambia si usted lo cambia.","Eine Immobilie, ein Anteil, ein Gegenstand: Der Wert \u00e4ndert sich nur, wenn Sie ihn \u00e4ndern."],
+  'e.g.manuel':         ["R\u00e9glage manuel","Manual setting","Ajuste manual","Manuelle Einstellung"],
   'm.paschart':         ["Le fournisseur de courbes gratuit ne couvre que les cryptos. Le cours de cette ligne est suivi, mais son historique n'est pas trac\u00e9.","The free chart provider only covers crypto. This line's price is tracked, but its history is not charted.","El proveedor gratuito de gr\u00e1ficos solo cubre criptomonedas. La cotizaci\u00f3n de esta l\u00ednea se sigue, pero su historial no se traza.","Der kostenlose Chart-Anbieter deckt nur Kryptos ab. Der Kurs dieser Position wird verfolgt, ihr Verlauf aber nicht gezeichnet."],
   'e.rel.bouton':       ["Relais pour la bourse\u2026","Stock market relay\u2026","Rel\u00e9 para la bolsa\u2026","Relais f\u00fcr die B\u00f6rse\u2026"],
   'e.rel.titre':        ["Relais pour la bourse","Stock market relay","Rel\u00e9 para la bolsa","Relais f\u00fcr die B\u00f6rse"],
@@ -4477,23 +4523,37 @@ window.PC = (function(){
       <div class="carte__t"><h3 data-i18n="e.ajouter.t">Ajouter un actif</h3><span id="sub-devise">Les montants sont en euro</span></div>
       <div class="carte__c">
         <form class="form-actif" id="form-actif" novalidate>
+          <div class="champ" style="grid-column:1 / -1">
+            <span class="champ__l" id="lbl-genre" data-i18n="e.g.lbl">Qu'est-ce que vous ajoutez&nbsp;?</span>
+            <div class="genres" id="genres" role="group" aria-labelledby="lbl-genre"></div>
+          </div>
+          <p class="genre__aide" id="genre-aide"></p>
           <div class="champ"><label for="a-nom" data-i18n="e.f.nom">Nom</label><input id="a-nom" type="text" placeholder="Livret A" required></div>
           <div class="champ" style="grid-column:1 / -1">
             <span class="champ__l" id="lbl-cat" data-i18n="e.f.catlbl">Catégorie</span>
             <div class="puces-cat" id="puces-cat" role="group" aria-labelledby="lbl-cat"></div>
             <input type="hidden" id="a-cat" value="Immobilier">
           </div>
-          <div class="champ"><label for="a-qte" data-i18n="e.f.qte">Quantité</label><input id="a-qte" type="text" placeholder="1"></div>
+          <div class="champ" id="champ-qte"><label for="a-qte" data-i18n="e.f.qte">Quantité</label><input id="a-qte" type="text" placeholder="1"></div>
           <div class="champ"><label for="a-inv" data-i18n="e.f.inv">Investi</label><input id="a-inv" type="text" inputmode="decimal" placeholder="10 000" required></div>
           <div class="champ" id="champ-val"><label for="a-val" data-i18n="e.f.val">Valeur actuelle</label><input id="a-val" type="text" inputmode="decimal" placeholder="11 500"></div>
           <div class="champ"><label for="a-liq" data-i18n="e.f.liq">Mobilisable</label>
             <select id="a-liq"><option value="1" data-i18n="e.f.liq.1">Rapidement</option><option value="0" data-i18n="e.f.liq.0">Difficilement</option></select>
           </div>
-          <div class="champ champ--case"><label class="case"><input type="checkbox" id="a-taux-on"><span data-i18n="e.tx.opt">Taux connu d'avance</span></label></div>
           <!-- Les deux cases s'excluent : une valeur se calcule d'un taux
                OU d'un cours, jamais des deux à la fois. Le script décoche
-               l'autre plutôt que de refuser la saisie après coup. -->
-          <div class="champ champ--case"><label class="case"><input type="checkbox" id="a-cours-on"><span data-i18n="e.co.opt">Valeur liée à un cours</span></label></div>
+               l'autre plutôt que de refuser la saisie après coup.
+
+               Elles sont repliées : le choix du haut les pose pour vous.
+               Elles restent là pour les cas que les cinq choix ne
+               couvrent pas — une SCPI à rendement connu, par exemple. -->
+          <details class="manuel" id="manuel">
+            <summary data-i18n="e.g.manuel">Réglage manuel</summary>
+            <div class="manuel__c">
+              <label class="case"><input type="checkbox" id="a-taux-on"><span data-i18n="e.tx.opt">Taux connu d'avance</span></label>
+              <label class="case"><input type="checkbox" id="a-cours-on"><span data-i18n="e.co.opt">Valeur liée à un cours</span></label>
+            </div>
+          </details>
           <div class="champ" id="champ-taux" hidden><label for="a-taux" data-i18n="e.tx.champ">Taux annuel garanti (%)</label><input id="a-taux" type="text" inputmode="decimal" placeholder="3" autocomplete="off"></div>
           <div class="champ" id="champ-depuis" hidden><label for="a-depuis" data-i18n="e.tx.depuis">Depuis le</label><input id="a-depuis" type="date"></div>
           <div class="champ" id="champ-pu" hidden><label for="a-pu" data-i18n="e.co.pu">Cours unitaire</label><input id="a-pu" type="text" inputmode="decimal" placeholder="95 000" autocomplete="off"></div>
@@ -6230,6 +6290,7 @@ window.PC = (function(){
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'puce-cat';
+      b.setAttribute('data-cat', c);
       b.textContent = nomCat(c);
       b.setAttribute('aria-pressed', String(c === choisie));
       b.addEventListener('click', function(){
@@ -6682,7 +6743,13 @@ window.PC = (function(){
       if (cs) cs.value = x.code;
       const cu = document.getElementById('co-champ-unite');
       if (cu) cu.hidden = !estMetal(x.code);
-      dire(PC.t('e.sug.pose', {n:x.nom}));
+      dire(PC.t('e.sug.encours'));
+      coursDUnCode(x.code).then(function(v){
+        if (v === null){ dire(PC.t('e.sug.posesans', {n:x.nom})); return; }
+        const cp = document.getElementById('co-pu');
+        if (cp) cp.value = String(v);
+        dire(PC.t('e.sug.pose', {n:x.nom, v:eur.format(v)}));
+      });
     });
   }
 
@@ -7905,6 +7972,26 @@ window.PC = (function(){
     });
     return n;
   }
+  /* Le cours d'un code isole. `chercheCours` ne sait travailler que sur
+     les lignes deja creees ; ici on interroge pour une ligne qui
+     n'existe pas encore -- c'est ce qui permet de remplir le champ du
+     cours au moment ou l'on choisit le titre, plutot que de demander a
+     quelqu'un d'aller chercher un chiffre qu'on sait obtenir. */
+  function coursDUnCode(code){
+    const c = String(code || '').trim().toLowerCase();
+    if (!c) return Promise.resolve(null);
+    const dev = String(PC.devise).toLowerCase();
+    const liste = fournisseurs();
+    function essaie(k){
+      if (k >= liste.length) return Promise.resolve(null);
+      return liste[k].cherche(codesADemander([c]), dev).then(function(p){
+        const v = prixDe(p || {}, c);
+        return (typeof v === 'number' && v > 0) ? v : essaie(k + 1);
+      }, function(){ return essaie(k + 1); });
+    }
+    return essaie(0);
+  }
+
   function chercheCours(force){
     const ids = symbolesSuivis();
     if (!ids.length) return Promise.resolve({code:'aucun', n:0});
@@ -9025,6 +9112,68 @@ window.PC = (function(){
     else { document.getElementById('a-pu').value = ''; document.getElementById('a-sym').value = ''; }
   }
   const caseCours = document.getElementById('a-cours-on');
+
+  /* ===== Ce qu'on ajoute =====
+     Cinq reponses a une question, plutot que deux cases a cocher dont
+     il fallait comprendre le vocabulaire avant de commencer. Le choix
+     pose la categorie, le mode de calcul et ce qu'on demande ensuite.
+     Rien de tout cela ne disparait : le repli « reglage manuel » garde
+     les deux cases pour les cas que ces cinq-la ne couvrent pas. */
+  const GENRES = [
+    ['crypto', 'crypto',  'cours',  'Bitcoin'],
+    ['bourse', 'actions', 'cours',  'Amundi MSCI World'],
+    ['metal',  'or',      'cours',  'Or'],
+    ['taux',   'av',      'taux',   'Livret A'],
+    ['bien',   'immo',    'simple', 'Appartement T3']
+  ];
+  let genreChoisi = null;
+
+  function construitGenres(){
+    const hote = document.getElementById('genres');
+    if (!hote) return;
+    hote.innerHTML = GENRES.map(function(g){
+      return '<button class="genre" type="button" data-genre="' + g[0] +
+        '" aria-pressed="' + (g[0] === genreChoisi) + '">' +
+        echap(PC.t('e.g.' + g[0])) + '</button>';
+    }).join('');
+  }
+
+  function poseGenre(cle){
+    const g = GENRES.filter(function(x){ return x[0] === cle; })[0];
+    if (!g) return;
+    genreChoisi = cle;
+    document.querySelectorAll('[data-genre]').forEach(function(b){
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-genre') === cle));
+    });
+    /* La categorie n'est qu'un point de depart : les puces restent la,
+       et quelqu'un qui range son ETF dans « Minage » a ses raisons. */
+    champCat.value = g[1];
+    construitPuces();
+
+    const surCours = g[2] === 'cours', surTaux = g[2] === 'taux';
+    if (caseCours){ caseCours.checked = surCours; montreCours(surCours); }
+    if (caseTaux){ caseTaux.checked = surTaux; montreTaux(surTaux); }
+
+    /* Une quantite n'a de sens que sur ce qui se compte en parts. */
+    const cq = document.getElementById('champ-qte');
+    if (cq) cq.hidden = !surCours;
+
+    const nom = document.getElementById('a-nom');
+    if (nom) nom.placeholder = g[3];
+
+    const aide = document.getElementById('genre-aide');
+    if (aide) aide.textContent = PC.t('e.g.aide.' +
+      (surCours ? 'cours' : surTaux ? 'taux' : 'bien'));
+
+    majUnite();
+    chercheDepuisNom();
+  }
+
+  document.addEventListener('click', function(e){
+    const b = e.target && e.target.closest && e.target.closest('[data-genre]');
+    if (b) poseGenre(b.getAttribute('data-genre'));
+  });
+  construitGenres();
   /* Le formulaire devine le metal comme il devine le reste : au nom
      tape, ou au code s'il est donne. Rien a choisir dans une liste de
      categories -- on ecrit « Or », le champ d'unite apparait. */
@@ -9058,8 +9207,26 @@ window.PC = (function(){
     }
     propose('sug-a', document.getElementById('a-nom').value, function(x){
       document.getElementById('a-sym').value = x.code;
+      /* Ce qu'on a tape etait une recherche, pas un nom : « msci world »
+         cherche le fonds, il ne le nomme pas. On pose le nom officiel,
+         qui reste modifiable juste apres pour qui prefere le sien. */
+      const nom = document.getElementById('a-nom');
+      if (nom && x.nom) nom.value = x.nom;
       majUnite();
-      dire(PC.t('e.sug.pose', {n:x.nom}));
+      /* On va chercher le cours tout de suite. Le demander a la
+         personne alors qu'on sait l'obtenir, c'est lui faire faire le
+         travail de la machine -- et l'exposer a se tromper. */
+      dire(PC.t('e.sug.encours'));
+      const pu = document.getElementById('a-pu');
+      if (pu) pu.value = '';
+      coursDUnCode(x.code).then(function(v){
+        if (v === null){ dire(PC.t('e.sug.posesans', {n:x.nom})); return; }
+        const champ = document.getElementById('a-pu');
+        /* Le champ a pu etre rempli a la main pendant la requete : on
+           ne recouvre pas une saisie. */
+        if (champ && !champ.value.trim()) champ.value = String(v);
+        dire(PC.t('e.sug.pose', {n:x.nom, v:eur.format(v)}));
+      });
     });
   });
   const champNom = document.getElementById('a-nom');
@@ -9154,6 +9321,17 @@ window.PC = (function(){
     majUnite();
     const sa = document.getElementById('sug-a');
     if (sa){ sa.hidden = true; sa.innerHTML = ''; }
+    /* On repose la question plutot que de garder le dernier choix :
+       deux lignes qui se suivent sont rarement de meme nature, et un
+       choix deja fait se re-clique moins vite qu'il ne se remarque. */
+    genreChoisi = null;
+    construitGenres();
+    const cq = document.getElementById('champ-qte');
+    if (cq) cq.hidden = false;
+    const ga = document.getElementById('genre-aide');
+    if (ga) ga.textContent = '';
+    const md = document.getElementById('manuel');
+    if (md) md.open = false;
     champCat.value = 'immo';
     boitePuces.querySelectorAll('.puce-cat').forEach(function(x, k){ x.setAttribute('aria-pressed', String(k === 0)); });
     apercu.classList.remove('on');
