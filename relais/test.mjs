@@ -544,5 +544,28 @@ dit('une variation inconnue vaut null, pas zero',
     sans.price_change_percentage_24h === null,
     JSON.stringify(sans.price_change_percentage_24h));
 
+// [39] Une recherche regardee dans l'ecran des marches : meme forme,
+//      et un vrai nom plutot que le code.
+console.log('[39] une recherche en forme de marche');
+YH['AAPL'].shortName = 'Apple Inc.';
+r = await worker.fetch(new Request(
+  'https://relais.test/?ids=yh:AAPL,yh:CW8.PA&forme=marche&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('un tableau est rendu', Array.isArray(o) && o.length === 2,
+    Array.isArray(o) ? o.length + ' ligne(s)' : typeof o);
+dit('le nom vient du fournisseur, pas le code',
+    (o[0]||{}).name === 'Apple Inc.', JSON.stringify((o[0]||{}).name));
+dit('l id reste celui qu on a demande', (o[0]||{}).id === 'yh:AAPL',
+    JSON.stringify((o[0]||{}).id));
+delete YH['AAPL'].shortName;
+
+// [40] Sans nom connu, on rend le symbole -- jamais rien.
+r = await worker.fetch(new Request(
+  'https://relais.test/?ids=yh:AAPL&forme=marche&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('a defaut, le symbole', (o[0]||{}).name === 'AAPL', JSON.stringify((o[0]||{}).name));
+
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-22.10';
+const VERSION = '2026-09-22.11';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
    traitent differemment un navigateur et un programme. Un appel sans
@@ -287,7 +287,8 @@ async function chezYahoo(symbole){
     const brut = String(m.currency) === 'GBp' ? pc / 100 : pc;
     var24 = (v - brut) / brut * 100;
   }
-  return {valeur:v, dev:dev, var24:var24, ouvert:m.marketState === 'REGULAR'};
+  return {valeur:v, dev:dev, var24:var24, nom:(m.shortName || m.longName || ''),
+          ouvert:m.marketState === 'REGULAR'};
 }
 
 /* ===== Stooq, la source de secours =====
@@ -557,12 +558,19 @@ const VEILLE = [
   ['NVDA',    'NVIDIA']
 ];
 
-async function marche(devise, env){
+async function marche(devise, env, codes){
   const cible = String(devise).toUpperCase();
   const taux_ = {};
   const out = [];
-  for (let i = 0; i < VEILLE.length; i++){
-    const sym = VEILLE[i][0];
+  /* Soit la liste suivie, soit les codes demandes -- une recherche
+     regardee dans l'ecran des marches. Meme forme rendue, pour que la
+     page n'ait toujours qu'une seule maniere de peindre. */
+  const source = codes && codes.length
+    ? codes.map(function(c){ const l = lit(c); return l ? [l.symbole, ''] : null; })
+           .filter(Boolean)
+    : VEILLE;
+  for (let i = 0; i < source.length; i++){
+    const sym = source[i][0];
     let q;
     try { q = await chezYahoo(sym); }
     catch (e){ if (e && e.limite) throw e; continue; }
@@ -575,7 +583,10 @@ async function marche(devise, env){
     out.push({
       id: 'yh:' + sym,
       symbol: sym.toLowerCase(),
-      name: VEILLE[i][1],
+      /* Le nom donne par la liste suivie prime : il est ecrit pour
+         etre lu. Sinon celui que rend le fournisseur, et a defaut le
+         symbole -- jamais rien. */
+      name: source[i][1] || q.nom || sym,
       image: '',
       current_price: Math.round(q.valeur * t * 1e6) / 1e6,
       /* On ne connait pas la capitalisation : on rend null, et la page
@@ -678,11 +689,15 @@ export default {
 
     const u = new URL(req.url);
 
-    /* La liste suivie : « ?marche=1&vs_currencies=eur ». */
-    if (u.searchParams.get('marche')){
+    /* La liste suivie : « ?marche=1&vs_currencies=eur », ou une
+       recherche mise en forme : « ?ids=…&forme=marche ». */
+    if (u.searchParams.get('marche') || u.searchParams.get('forme') === 'marche'){
+      const demandes = (u.searchParams.get('ids') || '').split(',')
+        .map(function(x){ return x.trim(); }).filter(Boolean);
+      if (demandes.length > 40) return json({erreur:'trop de codes'}, 400, origine);
       try {
-        return json(await marche(u.searchParams.get('vs_currencies') || 'eur', env),
-                    200, origine);
+        return json(await marche(u.searchParams.get('vs_currencies') || 'eur',
+                                 env, demandes), 200, origine);
       } catch (e){
         if (e && e.limite) return json({erreur:'limite'}, 429, origine);
         return json({erreur:'marche indisponible',

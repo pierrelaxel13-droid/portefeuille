@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260922.1825";</script>
+<script>window.PC_VERSION = "260922.1929";</script>
 </head>
 <body>
 
@@ -4676,26 +4676,6 @@ window.PC = (function(){
               aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
     </div>
 
-    <div class="pan" id="pan-bourse" role="tabpanel" tabindex="0" hidden>
-      <div class="carte" style="margin-bottom:30px">
-        <div class="carte__t"><h3 data-i18n="b.t">Vos lignes de bourse</h3><span id="b-info">—</span></div>
-        <div class="carte__c" id="b-lignes"></div>
-      </div>
-      <div class="carte" style="margin-bottom:30px">
-        <div class="carte__t"><h3 data-i18n="b.suivies">Valeurs suivies</h3><span id="b-vinfo">—</span></div>
-        <div class="carte__c" id="b-veille"></div>
-        <p class="champ__note" data-i18n="b.suivies.n">Une poignée de valeurs connues, pas un classement.</p>
-      </div>
-      <div class="carte">
-        <div class="carte__t"><h3 data-i18n="b.ch.t">Consulter un autre titre</h3></div>
-        <div class="carte__c">
-          <div class="champ"><input id="b-q" type="search" autocomplete="off" spellcheck="false"></div>
-          <div class="sug" id="sug-b" hidden></div>
-          <p class="champ__note" data-i18n="b.note">Pas de classement ici&nbsp;: aucun fournisseur gratuit n'en sert un pour la bourse. Ce sont vos lignes, et une recherche.</p>
-        </div>
-      </div>
-    </div>
-
     <div class="pan marches" id="pan-marches" role="tabpanel" aria-labelledby="ong-marches" tabindex="0" data-etat="attente" hidden>
       <div class="section__head">
         <h2 data-i18n="m.h2">Les marchés, en direct.</h2>
@@ -7442,8 +7422,7 @@ window.PC = (function(){
     general: document.getElementById('pan-general'),
     ajout:   document.getElementById('pan-ajout'),
     actif:   document.getElementById('pan-actif'),
-    marches: document.getElementById('pan-marches'),
-    bourse:  document.getElementById('pan-bourse')
+    marches: document.getElementById('pan-marches')
   };
   let vueCourante = 'general';
   let plageActif = 2;   /* 7 jours : assez pour voir une tendance */
@@ -8841,72 +8820,6 @@ window.PC = (function(){
      Ce qu'on a, et qui sert vraiment : ses propres lignes avec leur
      cours, et de quoi consulter un titre qu'on ne detient pas encore.
      ============================================================ */
-  /* Une poignee de valeurs connues, ecrite en dur.
-
-     Ce n'est PAS un classement, et la page le dit : aucun fournisseur
-     gratuit n'en sert un pour la bourse. Une liste fixe assumee vaut
-     mieux qu'un faux palmares -- et ces dix-la sont celles qu'on
-     regarde en premier depuis la France : trois grands ETF, puis des
-     valeurs du CAC et quelques americaines. */
-  const VEILLE = [
-    ['yh:CW8.PA',   'Amundi MSCI World',   'Paris'],
-    ['yh:ESE.PA',   'BNPP S&P 500',        'Paris'],
-    ['yh:IWDA.AS',  'iShares Core World',  'Amsterdam'],
-    ['yh:MC.PA',    'LVMH',                'Paris'],
-    ['yh:OR.PA',    'L\u2019Or\u00e9al',           'Paris'],
-    ['yh:AIR.PA',   'Airbus',              'Paris'],
-    ['yh:TTE.PA',   'TotalEnergies',       'Paris'],
-    ['yh:AAPL',     'Apple',               'Nasdaq'],
-    ['yh:MSFT',     'Microsoft',           'Nasdaq'],
-    ['yh:NVDA',     'NVIDIA',              'Nasdaq']
-  ];
-  /* Les cours de la veille, gardes le temps d'une visite. */
-  const coursVeille = {};
-  let veilleEnVol = false;
-
-  function dessineVeille(){
-    const hote = document.getElementById('b-veille');
-    const info = document.getElementById('b-vinfo');
-    if (!hote) return;
-    if (!adresseRelais()){ hote.innerHTML = ''; if (info) info.textContent = '\u2014'; return; }
-    hote.innerHTML = VEILLE.map(function(v){
-      const p = coursVeille[v[0]];
-      return '<div class="ligne-b" data-veille="' + echapAttr(v[0]) + '">' +
-        '<span class="ligne-b__n">' + echap(v[1]) + '</span>' +
-        '<span class="ligne-b__c">' + echap(v[2]) + '</span>' +
-        '<span class="ligne-b__p"></span>' +
-        '<span class="ligne-b__v">' +
-          (p === undefined ? '\u2026' : p === null ? '\u2014' : echap(eur.format(p))) +
-        '</span></div>';
-    }).join('');
-    if (info) info.textContent = String(VEILLE.length);
-
-    if (veilleEnVol) return;
-    const manque = VEILLE.filter(function(v){ return coursVeille[v[0]] === undefined; });
-    if (!manque.length) return;
-    veilleEnVol = true;
-    /* Un seul appel pour les dix : le relais les groupe par place. */
-    const u = adresseRelais();
-    litJSON(u + (u.indexOf('?') === -1 ? '?' : '&') +
-        'ids=' + encodeURIComponent(manque.map(function(v){ return v[0]; }).join(',')) +
-        '&vs_currencies=' + encodeURIComponent(String(PC.devise).toLowerCase()))
-      .then(function(o){
-        const d = String(PC.devise).toLowerCase();
-        manque.forEach(function(v){
-          const e = o && o[v[0]];
-          coursVeille[v[0]] = (e && typeof e[d] === 'number') ? e[d] : null;
-        });
-      }, function(){
-        /* Un echec se marque, sinon on redemanderait sans fin. */
-        manque.forEach(function(v){ coursVeille[v[0]] = null; });
-      })
-      .then(function(){ veilleEnVol = false; dessineVeille(); });
-  }
-
-  function lignesDeBourse(){
-    return actifs.filter(function(a){ return a.sym && coursDeBourse(a.sym); });
-  }
-
   /* Le sous-onglet retenu : on revient ou l'on etait, plutot que de
      repartir des cryptos a chaque passage. */
   let sousMarche = 'crypto';
@@ -8916,68 +8829,17 @@ window.PC = (function(){
     if (barre) barre.querySelectorAll('[data-sous]').forEach(function(b){
       b.setAttribute('aria-selected', String(b.getAttribute('data-sous') === sousMarche));
     });
-    const pm = panneaux.marches, pb = panneaux.bourse;
-    if (pm) pm.hidden = sousMarche !== 'crypto';
-    if (pb) pb.hidden = sousMarche !== 'bourse';
-    if (sousMarche === 'crypto'){ if (window.PC_MARCHES) PC_MARCHES.ouvre(); }
-    else dessineBourse();
+    /* Un seul ecran, deux sources : le module peint la bourse avec le
+       code qui peignait les cryptos. C'est ce qui fait que « comme les
+       cryptos » est vrai, et non ressemblant. */
+    if (window.PC_MARCHES){
+      PC_MARCHES.ouvre();
+      if (PC_MARCHES.source) PC_MARCHES.source(sousMarche);
+    }
   }
   document.addEventListener('click', function(e){
     const b = e.target && e.target.closest && e.target.closest('[data-sous]');
     if (b) poseSousMarche(b.getAttribute('data-sous'));
-  });
-
-  function dessineBourse(){
-    const hote = document.getElementById('b-lignes');
-    const info = document.getElementById('b-info');
-    if (!hote) return;
-    const q = document.getElementById('b-q');
-    if (q && !q.placeholder) q.placeholder = PC.t('b.ch.ph');
-
-    dessineVeille();
-    const l = lignesDeBourse();
-    if (info) info.textContent = l.length ? String(l.length) : '\u2014';
-
-    if (!l.length){
-      /* Sans relais, une page vide se lit « c'est casse ». On dit
-         laquelle des deux situations on est. */
-      hote.innerHTML = '<p class="rel__vide">' +
-        echap(PC.t(adresseRelais() ? 'b.vide' : 'b.sansrelais')) + '</p>';
-      return;
-    }
-    hote.innerHTML = l.map(function(a){
-      const v = valeurCours(a);
-      return '<div class="ligne-b">' +
-        '<span class="ligne-b__n">' + echap(a.nom) + '</span>' +
-        '<span class="ligne-b__c">' + echap(a.sym) + '</span>' +
-        '<span class="ligne-b__p">' + echap(eur.format(a.pu)) + '</span>' +
-        '<span class="ligne-b__v">' + echap(v === null ? '\u2014' : eur.format(v)) + '</span>' +
-      '</div>';
-    }).join('');
-  }
-
-  /* La recherche de l'onglet ne cree rien : elle montre un cours.
-     C'est la difference avec celle du formulaire, qui pose un code sur
-     une ligne qu'on est en train d'ecrire. */
-  const chercheBourseOnglet = retarde(function(){
-    const q = document.getElementById('b-q');
-    if (!q) return;
-    propose('sug-b', q.value, function(x){
-      const h = document.getElementById('sug-b');
-      if (!h) return;
-      h.hidden = false;
-      h.innerHTML = '<div class="sug__t">' + echap(x.nom) + '</div>' +
-        '<p class="sug__mot" id="b-vu">' + echap(PC.t('e.sug.encours')) + '</p>';
-      coursDUnCode(x.code).then(function(v){
-        const c = document.getElementById('b-vu');
-        if (!c) return;
-        c.textContent = v === null ? PC.t('b.sanscours')
-          : eur.format(v) + '  \u00b7  ' + x.code + (x.place ? '  \u00b7  ' + x.place : '');
-      });
-    });
-  });
-  document.addEventListener('input', function(e){
-    if (e.target && e.target.id === 'b-q') chercheBourseOnglet();
   });
 
   /* ===== La performance sur une période choisie =====
@@ -10080,7 +9942,30 @@ window.PC = (function(){
     });
   }
 
+  /* ===== Deux marches, un seul ecran =====
+     La bourse et les cryptos se regardent de la meme facon : un
+     classement, un prix, une variation, et une fiche derriere chaque
+     ligne. Ecrire deux fois cet ecran, c'etait promettre « comme les
+     cryptos » et livrer une ressemblance.
+
+     Le relais rend donc la forme exacte du fournisseur de cryptos. Il
+     ne reste plus qu'a choisir a qui l'on parle. */
+  let marcheSource = 'crypto';
+  function relais(){
+    return (window.PC_RELAIS_ADRESSE && window.PC_RELAIS_ADRESSE()) || '';
+  }
+  function avecQ(u, q){ return u + (u.indexOf('?') === -1 ? '?' : '&') + q; }
+
   function urlListe(){
+    if (marcheSource === 'bourse'){
+      const u = relais();
+      if (!u) return null;
+      /* Une recherche montre ce qu'on a trouve ; sans elle, la liste
+         suivie. Le relais ne classe pas : il n'y a pas de page deux. */
+      if (recherche) return avecQ(u, 'ids=' + encodeURIComponent(recherche.join(',')) +
+                                     '&vs_currencies=' + dev() + '&forme=marche');
+      return avecQ(u, 'marche=1&vs_currencies=' + dev());
+    }
     if (recherche){
       return BASE + '/coins/markets?vs_currency=' + dev() +
         '&ids=' + encodeURIComponent(recherche.join(',')) +
@@ -10119,8 +10004,9 @@ window.PC = (function(){
         peint(rangs);
         dit(PC.t('m.maj', {h:heure(dernier)}), true);
         refus = 0; repos = 0;
-        btnMoins.disabled = !!recherche || page <= 1;
-        btnPlus.disabled = !!recherche || rangs.length < PAR_PAGE;
+        const sansPages = marcheSource === 'bourse';
+        btnMoins.disabled = sansPages || !!recherche || page <= 1;
+        btnPlus.disabled = sansPages || !!recherche || rangs.length < PAR_PAGE;
         numPage.textContent = PC.t('m.page', {n:String(page)});
         if (ouverte) rafraichitFiche();
       })
@@ -10440,10 +10326,20 @@ window.PC = (function(){
     const t = champ.value.trim();
     attente = setTimeout(function(){
       if (!t){ recherche = ''; page = 1; dernier = 0; charge(true); return; }
-      json(BASE + '/search?query=' + encodeURIComponent(t))
+      /* On cherche chez celui dont on regarde le marche : demander une
+         action a CoinGecko ne rendrait rien, et ce rien se lirait
+         « ce titre n'existe pas ». */
+      const ou = marcheSource === 'bourse'
+        ? (relais() ? avecQ(relais(), 'cherche=' + encodeURIComponent(t)) : null)
+        : BASE + '/search?query=' + encodeURIComponent(t);
+      if (!ou){ dit(PC.t('b.sansrelais'), false); return; }
+      json(ou)
         .then(function(o){
-          const ids = ((o && o.coins) || []).slice(0, 25)
-            .map(function(c){ return c.id; }).filter(Boolean);
+          const ids = marcheSource === 'bourse'
+            ? ((o && o.resultats) || []).slice(0, 25)
+                .map(function(c){ return c.code; }).filter(Boolean)
+            : ((o && o.coins) || []).slice(0, 25)
+                .map(function(c){ return c.id; }).filter(Boolean);
           if (!ids.length){ rangs = []; peint([]); return; }
           recherche = ids; dernier = 0; return charge(true);
         })
@@ -10456,6 +10352,25 @@ window.PC = (function(){
   /* On ne charge rien tant que la section n'a pas été approchée : une
      page d'accueil ne doit pas appeler un marché pour un visiteur qui
      ne descendra jamais jusqu'ici. */
+  /* Passer d'un marche a l'autre : on repart de zero plutot que de
+     laisser les cryptos une seconde a l'ecran sous le titre « bourse ».
+     Un chiffre juste au mauvais endroit reste un chiffre faux. */
+  function poseSource(q){
+    const neuf = (q === 'bourse') ? 'bourse' : 'crypto';
+    if (neuf === marcheSource && rangs.length){ return; }
+    marcheSource = neuf;
+    rangs = []; recherche = ''; page = 1; dernier = 0; ouverte = null;
+    if (champ) champ.value = '';
+    vueFiche.hidden = true; vueListe.hidden = false;
+    if (!urlListe()){
+      hote.setAttribute('data-etat', 'ko');
+      boite.innerHTML = '<p class="marches__panne">' + ech(PC.t('b.sansrelais')) + '</p>';
+      return;
+    }
+    peint([]);
+    charge(true);
+  }
+
   function eveille(){
     if (vu) return;
     vu = true;
@@ -10474,6 +10389,7 @@ window.PC = (function(){
   }
   window.PC_MARCHES = {
     ouvre: eveille,
+    source: poseSource,
     plages: PLAGES.map(function(p){ return p[0]; }),
     /* Trace la courbe d'une crypto dans un conteneur désigné par son
        identifiant — jamais par une référence. Entre le départ de la
