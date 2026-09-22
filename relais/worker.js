@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-22.9';
+const VERSION = '2026-09-22.10';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
    traitent differemment un navigateur et un programme. Un appel sans
@@ -277,7 +277,17 @@ async function chezYahoo(symbole){
                message:'aucun cours pour ' + symbole};
     throw e;
   }
-  return {valeur:v, dev:dev, ouvert:m.marketState === 'REGULAR'};
+  /* La veille sert de reference : « previousClose » est la cloture
+     precedente, et la difference avec le cours du moment est la
+     variation que tout le monde lit. On ne l'invente pas si elle
+     manque -- null se distingue de zero. */
+  let var24 = null;
+  const pc = parseFloat(m.chartPreviousClose != null ? m.chartPreviousClose : m.previousClose);
+  if (isFinite(pc) && pc > 0){
+    const brut = String(m.currency) === 'GBp' ? pc / 100 : pc;
+    var24 = (v - brut) / brut * 100;
+  }
+  return {valeur:v, dev:dev, var24:var24, ouvert:m.marketState === 'REGULAR'};
 }
 
 /* ===== Stooq, la source de secours =====
@@ -527,6 +537,64 @@ async function cherche(q){
     });
 }
 
+/* ===== La liste suivie =====
+   Une poignee de valeurs connues. Ce n'est pas un classement -- aucun
+   fournisseur gratuit n'en sert un pour la bourse -- et la page le
+   dit. Mais la FORME rendue est exactement celle des marches crypto :
+   la page n'a alors qu'une seule maniere de peindre une liste, et
+   « comme les cryptos » cesse d'etre une imitation pour devenir le
+   meme code. */
+const VEILLE = [
+  ['CW8.PA',  'Amundi MSCI World UCITS ETF'],
+  ['ESE.PA',  'BNP Paribas S&P 500 UCITS ETF'],
+  ['IWDA.AS', 'iShares Core MSCI World UCITS ETF'],
+  ['MC.PA',   'LVMH'],
+  ['OR.PA',   'L\u2019Or\u00e9al'],
+  ['AIR.PA',  'Airbus'],
+  ['TTE.PA',  'TotalEnergies'],
+  ['AAPL',    'Apple'],
+  ['MSFT',    'Microsoft'],
+  ['NVDA',    'NVIDIA']
+];
+
+async function marche(devise, env){
+  const cible = String(devise).toUpperCase();
+  const taux_ = {};
+  const out = [];
+  for (let i = 0; i < VEILLE.length; i++){
+    const sym = VEILLE[i][0];
+    let q;
+    try { q = await chezYahoo(sym); }
+    catch (e){ if (e && e.limite) throw e; continue; }
+    if (taux_[q.dev] === undefined){
+      try { taux_[q.dev] = await tauxYahoo(q.dev, cible); }
+      catch (e){ taux_[q.dev] = null; }
+    }
+    const t = taux_[q.dev];
+    if (t === null) continue;
+    out.push({
+      id: 'yh:' + sym,
+      symbol: sym.toLowerCase(),
+      name: VEILLE[i][1],
+      image: '',
+      current_price: Math.round(q.valeur * t * 1e6) / 1e6,
+      /* On ne connait pas la capitalisation : on rend null, et la page
+         ecrit un tiret. Un zero se lirait comme une valeur. */
+      market_cap: null,
+      /* Le rang est celui de la ligne RENDUE, pas de la ligne
+         demandee : une valeur qui n'a pas repondu laisserait sinon un
+         trou dans la numerotation, et un trou se lit comme une ligne
+         manquante plutot que comme une absence. */
+      market_cap_rank: out.length + 1,
+      fully_diluted_valuation: null,
+      total_volume: null,
+      price_change_percentage_24h: q.var24,
+      last_updated: new Date().toISOString()
+    });
+  }
+  return out;
+}
+
 /* ===== L'historique d'un titre =====
    La meme adresse que le cours sert aussi la courbe : elle rend les
    horodatages et les cloture. On la demande donc une seconde fois,
@@ -609,6 +677,18 @@ export default {
     if (req.method !== 'GET') return json({erreur:'methode'}, 405, origine);
 
     const u = new URL(req.url);
+
+    /* La liste suivie : « ?marche=1&vs_currencies=eur ». */
+    if (u.searchParams.get('marche')){
+      try {
+        return json(await marche(u.searchParams.get('vs_currencies') || 'eur', env),
+                    200, origine);
+      } catch (e){
+        if (e && e.limite) return json({erreur:'limite'}, 429, origine);
+        return json({erreur:'marche indisponible',
+                     amont:(e && e.amont) || null}, 502, origine);
+      }
+    }
 
     /* Historique : « ?courbe=yh:CW8.PA&jours=30 ». */
     const cb = (u.searchParams.get('courbe') || '').trim();

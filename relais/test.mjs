@@ -504,5 +504,45 @@ o = await r.json();
 dit('« tw: » est refuse clairement', r.status === 400 && /yh:/.test(o.quoi || ''),
     JSON.stringify(o).slice(0, 90));
 
+// [36] La liste suivie doit avoir EXACTEMENT la forme des marches
+//      crypto : c'est ce qui permet a la page de la peindre avec le
+//      meme code, au lieu d'imiter.
+console.log('[36] la liste suivie, en forme de marche');
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('un tableau, pas un objet', Array.isArray(o), typeof o);
+const un = (o || [])[0] || {};
+dit('les champs attendus sont la',
+    ['id','symbol','name','current_price','market_cap_rank',
+     'price_change_percentage_24h'].every(k => k in un),
+    JSON.stringify(Object.keys(un)));
+dit('le prix est converti', un.current_price > 0, String(un.current_price));
+dit('la capitalisation inconnue vaut null, pas zero', un.market_cap === null,
+    JSON.stringify(un.market_cap));
+dit('les rangs se suivent', (o||[]).every((x,i) => x.market_cap_rank === i+1),
+    (o||[]).map(x=>x.market_cap_rank).join(','));
+
+// [37] La variation du jour vient de la cloture precedente.
+YH['CW8.PA'].chartPreviousClose = 500;
+r = await worker.fetch(new Request('https://relais.test/?ids=yh:CW8.PA&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+const cw = ((await r.json()) || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
+console.log('[37] la variation du jour');
+dit('512,30 depuis 500 fait +2,46 %',
+    Math.abs(cw.price_change_percentage_24h - 2.46) < 0.01,
+    String(cw.price_change_percentage_24h));
+delete YH['CW8.PA'].chartPreviousClose;
+
+// [38] Sans cloture precedente, on ne l'invente pas.
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+const sans = ((await r.json()) || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
+dit('une variation inconnue vaut null, pas zero',
+    sans.price_change_percentage_24h === null,
+    JSON.stringify(sans.price_change_percentage_24h));
+
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);
