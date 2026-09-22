@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-21.8';
+const VERSION = '2026-09-22.9';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
    traitent differemment un navigateur et un programme. Un appel sans
@@ -527,6 +527,73 @@ async function cherche(q){
     });
 }
 
+/* ===== L'historique d'un titre =====
+   La meme adresse que le cours sert aussi la courbe : elle rend les
+   horodatages et les cloture. On la demande donc une seconde fois,
+   avec une fenetre et un pas -- et on rend la forme que la page
+   attend deja de son fournisseur de courbes, pour qu'elle n'ait rien
+   a apprendre de nouveau.
+
+   Les paliers : « range » est la profondeur, « interval » le pas. Les
+   deux vont ensemble -- demander un an au pas de cinq minutes rend
+   une erreur, pas une courbe fine. */
+const PALIERS = {
+  '1':   {range:'1d',  interval:'5m'},
+  '7':   {range:'5d',  interval:'15m'},
+  '30':  {range:'1mo', interval:'1d'},
+  '90':  {range:'3mo', interval:'1d'},
+  '365': {range:'1y',  interval:'1d'}
+};
+
+async function courbe(symbole, jours){
+  const p = PALIERS[String(jours)] || PALIERS['30'];
+  let r, texte;
+  try {
+    r = await fetch(YAHOO + encodeURIComponent(String(symbole).toUpperCase()) +
+                    '?interval=' + p.interval + '&range=' + p.range,
+                    {headers:Object.assign({'Accept':'application/json'}, ENTETES),
+                     cf:{cacheTtl:FRAICHE, cacheEverything:true}});
+    texte = await r.text();
+  } catch (e){
+    const err = new Error('reseau');
+    err.amont = {statut:0, source:'Yahoo', message:'la courbe n a pas repondu'};
+    throw err;
+  }
+  if (r.status === 429){
+    const e = new Error('limite'); e.limite = true;
+    e.amont = {statut:429, source:'Yahoo', message:'Yahoo limite les appels'};
+    throw e;
+  }
+  let o = null;
+  try { o = JSON.parse(texte); } catch (e){}
+  const res = o && o.chart && o.chart.result && o.chart.result[0];
+  const t = res && res.timestamp;
+  const q = res && res.indicators && res.indicators.quote && res.indicators.quote[0];
+  if (!Array.isArray(t) || !q || !Array.isArray(q.close)){
+    const e = new Error('amont');
+    e.amont = {statut:r.status, source:'Yahoo',
+               message:(o && o.chart && o.chart.error && o.chart.error.description) ||
+                       texteNu(texte, 160) || 'aucune courbe pour ' + symbole};
+    throw e;
+  }
+  /* Les seances fermees laissent des trous : une valeur nulle au
+     milieu d'une courbe la fait plonger a zero. On les retire plutot
+     que de les combler -- un point invente vaut moins qu'un point
+     absent, et la courbe garde sa forme. */
+  const pts = [];
+  for (let i = 0; i < t.length; i++){
+    const v = q.close[i];
+    if (typeof v === 'number' && isFinite(v) && v > 0) pts.push([t[i] * 1000, v]);
+  }
+  if (pts.length < 2){
+    const e = new Error('amont');
+    e.amont = {statut:r.status, source:'Yahoo',
+               message:'pas assez de points pour ' + symbole};
+    throw e;
+  }
+  return pts;
+}
+
 export default {
   async fetch(req, env){
     const origine = origineAutorisee(req, env);
@@ -542,6 +609,24 @@ export default {
     if (req.method !== 'GET') return json({erreur:'methode'}, 405, origine);
 
     const u = new URL(req.url);
+
+    /* Historique : « ?courbe=yh:CW8.PA&jours=30 ». */
+    const cb = (u.searchParams.get('courbe') || '').trim();
+    if (cb){
+      const lu = lit(cb);
+      if (!lu || lu.source === 'tw'){
+        return json({erreur:'courbe indisponible',
+                     quoi:'Seuls les codes « yh: » ont un historique.'}, 400, origine);
+      }
+      try {
+        return json({prices: await courbe(lu.symbole,
+                       u.searchParams.get('jours') || '30')}, 200, origine);
+      } catch (e){
+        if (e && e.limite) return json({erreur:'limite'}, 429, origine);
+        return json({erreur:'courbe indisponible',
+                     amont:(e && e.amont) || null}, 502, origine);
+      }
+    }
 
     /* Recherche par nom : « ?cherche=amundi msci world ». */
     const q = (u.searchParams.get('cherche') || '').trim();

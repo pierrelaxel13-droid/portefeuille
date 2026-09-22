@@ -66,6 +66,19 @@ globalThis.fetch = async (url, opts) => {
   }
   if (u.hostname === 'query1.finance.yahoo.com'){
     if (mode === 'yahoo429') return new Response('Too Many Requests', {status:429});
+    /* Une demande d'historique porte un « range » : on rend alors des
+       points, dont quelques trous, comme le vrai. */
+    if (u.searchParams.get('range') && u.searchParams.get('range') !== '1d'){
+      const n = {'5d':40, '1mo':30, '3mo':90, '1y':365}[u.searchParams.get('range')] || 30;
+      const t = [], c = [];
+      for (let i = 0; i < n; i++){
+        t.push(Math.floor(Date.now()/1000) - (n-1-i)*86400);
+        /* Un trou tous les dix points : seance fermee. */
+        c.push(i % 10 === 4 ? null : 500 + i);
+      }
+      return new Response(JSON.stringify({chart:{result:[{timestamp:t,
+        indicators:{quote:[{close:c}]}, meta:{currency:'EUR'}}], error:null}}), {status:200});
+    }
     const sym = decodeURIComponent(u.pathname.split('/chart/')[1] || '');
     const m = YH[sym];
     if (!m) return new Response(JSON.stringify({chart:{result:null,
@@ -457,6 +470,39 @@ o = await r.json();
 dit('une limite se distingue d un resultat vide', r.status === 429 && !!o.erreur,
     JSON.stringify(o).slice(0, 80));
 mode = 'ok';
+
+// [33] L'historique d'un titre : sans lui, aucune courbe de bourse
+//      n'est possible, et l'onglet reste une liste de chiffres.
+console.log('[33] la courbe d un titre');
+r = await worker.fetch(new Request('https://relais.test/?courbe=yh:CW8.PA&jours=30',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('des points sont rendus', Array.isArray(o.prices) && o.prices.length > 10,
+    (o.prices || []).length + ' point(s)');
+dit('la forme est celle que la page attend',
+    Array.isArray((o.prices||[])[0]) && (o.prices[0]||[]).length === 2,
+    JSON.stringify((o.prices||[])[0]));
+dit('les seances fermees sont retirees, pas comblees',
+    (o.prices || []).every(x => typeof x[1] === 'number' && x[1] > 0),
+    'aucun trou a zero');
+dit('sans cle', r.status === 200, 'statut ' + r.status);
+
+// [34] la profondeur demandee change la courbe
+r = await worker.fetch(new Request('https://relais.test/?courbe=yh:CW8.PA&jours=365',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+const an = (await r.json()).prices || [];
+r = await worker.fetch(new Request('https://relais.test/?courbe=yh:CW8.PA&jours=30',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+const mois = (await r.json()).prices || [];
+dit('un an porte plus de points qu un mois', an.length > mois.length,
+    an.length + ' contre ' + mois.length);
+
+// [35] un code Twelve Data n'a pas d'historique : on le dit
+r = await worker.fetch(new Request('https://relais.test/?courbe=tw:AAPL&jours=30',
+  {headers:{Origin:BON}}), ENV);
+o = await r.json();
+dit('« tw: » est refuse clairement', r.status === 400 && /yh:/.test(o.quoi || ''),
+    JSON.stringify(o).slice(0, 90));
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);
