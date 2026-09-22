@@ -567,5 +567,28 @@ r = await worker.fetch(new Request(
 o = await r.json();
 dit('a defaut, le symbole', (o[0]||{}).name === 'AAPL', JSON.stringify((o[0]||{}).name));
 
+// [41] Volume et capitalisation : ce que la source porte, et rien de
+//      plus. Un nombre plausible et faux serait pire qu'un tiret.
+console.log('[41] volume et capitalisation');
+YH['CW8.PA'].regularMarketVolume = 1000;
+YH['CW8.PA'].marketCap = 2500000000;
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+let cw2 = (o || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
+dit('le volume est rendu en monnaie', cw2.total_volume === 512300,
+    '1000 titres a 512,30 -> ' + cw2.total_volume);
+dit('la capitalisation est rendue', cw2.market_cap === 2500000000,
+    String(cw2.market_cap));
+delete YH['CW8.PA'].regularMarketVolume;
+delete YH['CW8.PA'].marketCap;
+
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+cw2 = ((await r.json()) || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
+dit('absents, ils valent null et non zero',
+    cw2.total_volume === null && cw2.market_cap === null,
+    JSON.stringify([cw2.total_volume, cw2.market_cap]));
+
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);

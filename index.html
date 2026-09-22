@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260922.1929";</script>
+<script>window.PC_VERSION = "260922.2004";</script>
 </head>
 <body>
 
@@ -2029,6 +2029,13 @@ body.detaille .bascule-vue__s{opacity:1;}
 /* Les deux marches sous un meme toit. Deux onglets de premier niveau
    pour « crypto » et « bourse » faisaient deux entrees pour une seule
    idee : regarder les cours. */
+/* Le monogramme qui remplace un logo absent. Rond, comme les vrais,
+   pour qu'une liste melant les deux garde son alignement. */
+.mono-logo{
+  display:inline-grid; place-items:center; border-radius:50%; flex:none;
+  color:#fff; font-family:'Archivo Black', system-ui, sans-serif;
+  letter-spacing:-.02em; line-height:1; user-select:none;
+}
 .sous-onglets{display:flex; gap:4px; margin:0 0 24px; border-bottom:1px solid var(--rule);}
 .sous-onglet{
   background:none; border:none; cursor:pointer; position:relative;
@@ -2064,6 +2071,21 @@ body.detaille .bascule-vue__s{opacity:1;}
 }
 /* Les deux cases d'origine restent accessibles, repliees : elles
    servent aux cas que les cinq choix ne couvrent pas. */
+/* Le repli qui porte tout ce qui se remplit seul. */
+.plus{grid-column:1 / -1; border-top:1px solid var(--rule); padding-top:14px; margin-top:4px;}
+.plus > summary{
+  cursor:pointer; list-style:none; font-size:14.5px; font-weight:600; color:var(--ink-2);
+}
+.plus > summary::-webkit-details-marker{display:none;}
+.plus > summary::before{content:"+ "; color:var(--accent); font-weight:400;}
+.plus[open] > summary::before{content:"\2013 ";}
+.plus > summary:hover{color:var(--ink);}
+.plus > summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+.plus__n{margin:8px 0 0; font-size:13.5px; line-height:1.55; color:var(--ink-3); max-width:60ch; text-wrap:pretty;}
+.plus__c{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));
+  gap:18px 22px; margin-top:18px;
+}
 .manuel{grid-column:1 / -1; border-top:1px solid var(--rule); padding-top:12px;}
 .manuel > summary{
   cursor:pointer; list-style:none; font-family:'IBM Plex Mono', monospace;
@@ -3288,6 +3310,8 @@ window.PC = (function(){
   'e.g.aide.taux':      ["Indiquez le taux annuel et la date de d\u00e9part\u00a0: la valeur se recalcule toute seule, jour apr\u00e8s jour.","Give the annual rate and the start date: the value recomputes on its own, day after day.","Indique el tipo anual y la fecha de inicio: el valor se recalcula solo, d\u00eda tras d\u00eda.","Geben Sie Jahreszins und Startdatum an: Der Wert berechnet sich t\u00e4glich von selbst."],
   'e.g.aide.bien':      ["Un bien, une part de soci\u00e9t\u00e9, un objet\u00a0: sa valeur ne bouge que si vous la changez.","Property, company shares, an object: its value only moves when you change it.","Un bien, una participaci\u00f3n, un objeto: su valor solo cambia si usted lo cambia.","Eine Immobilie, ein Anteil, ein Gegenstand: Der Wert \u00e4ndert sich nur, wenn Sie ihn \u00e4ndern."],
   'e.g.manuel':         ["R\u00e9glage manuel","Manual setting","Ajuste manual","Manuelle Einstellung"],
+  'e.plus':             ["Le reste \u2014 cat\u00e9gorie, cours, code\u2026","The rest \u2014 category, price, code\u2026","El resto \u2014 categor\u00eda, cotizaci\u00f3n, c\u00f3digo\u2026","Der Rest \u2014 Kategorie, Kurs, Code\u2026"],
+  'e.plus.n':           ["Tout est rempli pour vous quand vous choisissez un titre dans la liste. \u00c0 ouvrir seulement si quelque chose manque.","Everything is filled in for you when you pick a security from the list. Open this only if something is missing.","Todo se rellena solo al elegir un t\u00edtulo de la lista. \u00c1bralo solo si falta algo.","Alles wird ausgef\u00fcllt, wenn Sie einen Titel aus der Liste w\u00e4hlen. Nur \u00f6ffnen, wenn etwas fehlt."],
   'b.onglet':           ["Bourse","Stocks","Bolsa","B\u00f6rse"],
   'b.t':                ["Vos lignes de bourse","Your market lines","Sus l\u00edneas de bolsa","Ihre B\u00f6rsenpositionen"],
   'b.vide':             ["Aucune ligne de bourse pour l'instant. Ajoutez une action ou un ETF, et son cours appara\u00eetra ici.","No market line yet. Add a share or an ETF, and its price will show up here.","A\u00fan no hay l\u00edneas de bolsa. A\u00f1ada una acci\u00f3n o un ETF y su cotizaci\u00f3n aparecer\u00e1 aqu\u00ed.","Noch keine B\u00f6rsenposition. F\u00fcgen Sie eine Aktie oder einen ETF hinzu, und der Kurs erscheint hier."],
@@ -4585,14 +4609,28 @@ window.PC = (function(){
           </div>
           <p class="genre__aide" id="genre-aide"></p>
           <div class="champ"><label for="a-nom" data-i18n="e.f.nom">Nom</label><input id="a-nom" type="text" placeholder="Livret A" required></div>
-          <div class="champ" style="grid-column:1 / -1">
-            <span class="champ__l" id="lbl-cat" data-i18n="e.f.catlbl">Catégorie</span>
-            <div class="puces-cat" id="puces-cat" role="group" aria-labelledby="lbl-cat"></div>
-            <input type="hidden" id="a-cat" value="Immobilier">
-          </div>
+          <input type="hidden" id="a-cat" value="Immobilier">
           <div class="champ" id="champ-qte"><label for="a-qte" data-i18n="e.f.qte">Quantité</label><input id="a-qte" type="text" placeholder="1"></div>
           <div class="champ"><label for="a-inv" data-i18n="e.f.inv">Investi</label><input id="a-inv" type="text" inputmode="decimal" placeholder="10 000" required></div>
           <div class="champ" id="champ-val"><label for="a-val" data-i18n="e.f.val">Valeur actuelle</label><input id="a-val" type="text" inputmode="decimal" placeholder="11 500"></div>
+          <div class="sug" id="sug-a" hidden></div>
+          <!-- ===== Le reste =====
+               Ce qui se remplit tout seul n'a pas a occuper l'ecran.
+               Choisir un titre dans la liste pose le nom, le code et le
+               cours ; la categorie vient du choix du haut. Il ne reste
+               donc, a l'ecran, que ce que la machine ne peut pas
+               savoir : combien on en detient, et combien on a mis.
+
+               Tout est la-dessous, a un clic, et le repli s'ouvre de
+               lui-meme quand quelque chose manque vraiment. -->
+          <details class="plus" id="plus">
+            <summary data-i18n="e.plus">Le reste — catégorie, cours, code…</summary>
+            <p class="plus__n" data-i18n="e.plus.n">Tout est rempli pour vous quand vous choisissez un titre dans la liste.</p>
+            <div class="plus__c">
+          <div class="champ" style="grid-column:1 / -1">
+            <span class="champ__l" id="lbl-cat" data-i18n="e.f.catlbl">Catégorie</span>
+            <div class="puces-cat" id="puces-cat" role="group" aria-labelledby="lbl-cat"></div>
+          </div>
           <div class="champ"><label for="a-liq" data-i18n="e.f.liq">Mobilisable</label>
             <select id="a-liq"><option value="1" data-i18n="e.f.liq.1">Rapidement</option><option value="0" data-i18n="e.f.liq.0">Difficilement</option></select>
           </div>
@@ -4621,7 +4659,6 @@ window.PC = (function(){
                detient « 8 onces » dans sa tete : on detient 250 grammes
                ou un lingot. Le champ n'apparait que pour un metal, et
                la conversion se fait toute seule. -->
-          <div class="sug" id="sug-a" hidden></div>
           <div class="champ" id="champ-unite" hidden><label for="a-unite" data-i18n="e.me.unite">Unité</label>
             <select id="a-unite">
               <option value="g" data-i18n="e.me.u.g">Grammes</option>
@@ -4638,6 +4675,8 @@ window.PC = (function(){
               <option value="an" data-i18n="e.rev.p.an">Par an</option>
             </select>
           </div>
+            </div>
+          </details>
           <button class="btn" type="submit" data-i18n="e.f.ajouter">Ajouter</button>
         </form>
         <datalist id="liste-cours">
@@ -9258,6 +9297,13 @@ window.PC = (function(){
     }).join('');
   }
 
+  /* Le repli ne s'ouvre pas pour rien : seulement quand il porte le
+     champ qui manque, ou quand l'utilisateur le demande. */
+  function ouvrePlus(){
+    const d = document.getElementById('plus');
+    if (d) d.open = true;
+  }
+
   function poseGenre(cle){
     const g = GENRES.filter(function(x){ return x[0] === cle; })[0];
     if (!g) return;
@@ -9340,7 +9386,14 @@ window.PC = (function(){
       const pu = document.getElementById('a-pu');
       if (pu) pu.value = '';
       coursDUnCode(x.code).then(function(v){
-        if (v === null){ dire(PC.t('e.sug.posesans', {n:x.nom})); return; }
+        if (v === null){
+          /* Le cours n'est pas venu : c'est le seul cas ou il faut
+             vraiment ouvrir le repli, et on l'ouvre plutot que
+             d'attendre qu'on le trouve. */
+          ouvrePlus();
+          dire(PC.t('e.sug.posesans', {n:x.nom}));
+          return;
+        }
         const champ = document.getElementById('a-pu');
         /* Le champ a pu etre rempli a la main pendant la requete : on
            ne recouvre pas une saisie. */
@@ -9384,8 +9437,8 @@ window.PC = (function(){
     const taux = brutTaux ? nombre(brutTaux) : null;
     /* Case cochée mais champ vide : on réclame le taux plutôt que de
        passer outre en silence, sinon la case cocherait sans rien faire. */
-    if (avecTaux && (taux === null || taux < 0 || taux > 100)){ err.textContent = PC.t('e.tx.err.taux'); return; }
-    if (taux !== null && (!depuis || depuis > jourISO(Date.now()))){ err.textContent = PC.t('e.tx.err.depuis'); return; }
+    if (avecTaux && (taux === null || taux < 0 || taux > 100)){ err.textContent = PC.t('e.tx.err.taux'); ouvrePlus(); return; }
+    if (taux !== null && (!depuis || depuis > jourISO(Date.now()))){ err.textContent = PC.t('e.tx.err.depuis'); ouvrePlus(); return; }
     /* Une ligne liée à un cours n'a pas de valeur à saisir : elle est le
        produit des deux champs qui la remplacent. */
     const avecCours = !!(caseCours && caseCours.checked);
@@ -9394,7 +9447,7 @@ window.PC = (function(){
       qDet = nombre(document.getElementById('a-qte').value);
       puSaisi = nombre(document.getElementById('a-pu').value);
       if (qDet === null || !(qDet > 0)){ err.textContent = PC.t('e.co.err.qte'); return; }
-      if (puSaisi === null || !(puSaisi > 0)){ err.textContent = PC.t('e.co.err.pu'); return; }
+      if (puSaisi === null || !(puSaisi > 0)){ err.textContent = PC.t('e.co.err.pu'); ouvrePlus(); return; }
     }
     if (taux === null && !avecCours && (val === null || val < 0)){ err.textContent = PC.t('e.err.val'); return; }
     err.textContent = '';
@@ -9446,6 +9499,8 @@ window.PC = (function(){
        choix deja fait se re-clique moins vite qu'il ne se remarque. */
     genreChoisi = null;
     construitGenres();
+    const dp = document.getElementById('plus');
+    if (dp) dp.open = false;
     const cq = document.getElementById('champ-qte');
     if (cq) cq.hidden = false;
     const ga = document.getElementById('genre-aide');
@@ -9889,8 +9944,7 @@ window.PC = (function(){
     return '<button class="marches__l" type="button" data-piece="' + ech(c.id) + '">' +
       '<span class="marches__rang">' + (c.market_cap_rank || '—') + '</span>' +
       '<span class="marches__nom">' +
-        '<img src="' + ech(c.image) + '" alt="" width="26" height="26" loading="lazy" ' +
-        'onerror="this.style.visibility=\'hidden\'">' +
+        logo(c, 26) +
         '<b>' + ech(c.name) + '</b>' +
         '<span class="marches__tic">' + ech(c.symbol) + '</span>' +
       '</span>' +
@@ -9955,6 +10009,39 @@ window.PC = (function(){
     return (window.PC_RELAIS_ADRESSE && window.PC_RELAIS_ADRESSE()) || '';
   }
   function avecQ(u, q){ return u + (u.indexOf('?') === -1 ? '?' : '&') + q; }
+
+  /* ===== Le logo d'une ligne =====
+     CoinGecko fournit celui des cryptos. Pour la bourse, aucune
+     source gratuite et fiable n'existe -- et le logo d'un ETF serait
+     de toute facon celui de son emetteur, le meme visuel pour quinze
+     fonds differents, ce qui n'aide pas a les distinguer.
+
+     On dessine donc un monogramme : les premieres lettres du titre,
+     sur une teinte tiree du symbole. Toujours la, jamais floue, et
+     deux lignes differentes n'ont pas la meme couleur. */
+  function teinte(cle){
+    let h = 0;
+    const t = String(cle || '');
+    for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 360;
+    return h;
+  }
+  function initiales(nom){
+    const mots = String(nom || '').trim().split(/[\s\u2019'-]+/).filter(Boolean);
+    if (!mots.length) return '?';
+    if (mots.length === 1) return mots[0].slice(0, 2).toUpperCase();
+    return (mots[0].charAt(0) + mots[1].charAt(0)).toUpperCase();
+  }
+  function logo(c, taille){
+    if (c.image){
+      return '<img src="' + ech(c.image) + '" alt="" width="' + taille +
+        '" height="' + taille + '" loading="lazy" ' +
+        'onerror="this.style.visibility=\'hidden\'">';
+    }
+    const h = teinte(c.id || c.symbol || c.name);
+    return '<span class="mono-logo" aria-hidden="true" style="width:' + taille +
+      'px;height:' + taille + 'px;font-size:' + Math.round(taille * 0.38) + 'px;' +
+      'background:hsl(' + h + ' 62% 42%)">' + ech(initiales(c.name)) + '</span>';
+  }
 
   function urlListe(){
     if (marcheSource === 'bourse'){
@@ -10077,8 +10164,7 @@ window.PC = (function(){
       '<button class="btn-ghost" type="button" id="mar-retour" style="margin-bottom:22px">' +
         ech(PC.t('m.retour')) + '</button>' +
       '<div class="fiche-m__tete">' +
-        '<img src="' + ech(c.image) + '" alt="" width="44" height="44" ' +
-        'onerror="this.style.visibility=\'hidden\'">' +
+        logo(c, 44) +
         '<span class="fiche-m__nom">' + ech(c.name) + '</span>' +
         '<span class="marches__tic">' + ech(c.symbol) + '</span>' +
         (c.market_cap_rank ? '<span class="fiche-m__rang">#' + c.market_cap_rank + '</span>' : '') +

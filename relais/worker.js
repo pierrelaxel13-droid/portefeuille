@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-22.11';
+const VERSION = '2026-09-22.12';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
    traitent differemment un navigateur et un programme. Un appel sans
@@ -287,7 +287,19 @@ async function chezYahoo(symbole){
     const brut = String(m.currency) === 'GBp' ? pc / 100 : pc;
     var24 = (v - brut) / brut * 100;
   }
+  /* Volume et capitalisation : on prend ce que la reponse porte, et
+     rien de plus. Les deux manquent souvent -- notamment pour un ETF,
+     qui n'a pas de capitalisation mais un encours. On rend alors null,
+     que la page ecrit « — ». Calculer une capitalisation a partir de
+     ce qu'on a sous la main donnerait un nombre plausible et faux, ce
+     qui est le pire des deux. */
+  const vol = parseFloat(m.regularMarketVolume);
+  const cap = parseFloat(m.marketCap);
   return {valeur:v, dev:dev, var24:var24, nom:(m.shortName || m.longName || ''),
+          /* Le volume est un nombre de titres : en monnaie, il se
+             compare a celui des autres lignes. */
+          volume:(isFinite(vol) && vol > 0) ? vol * v : null,
+          cap:(isFinite(cap) && cap > 0) ? cap : null,
           ouvert:m.marketState === 'REGULAR'};
 }
 
@@ -591,14 +603,14 @@ async function marche(devise, env, codes){
       current_price: Math.round(q.valeur * t * 1e6) / 1e6,
       /* On ne connait pas la capitalisation : on rend null, et la page
          ecrit un tiret. Un zero se lirait comme une valeur. */
-      market_cap: null,
+      market_cap: q.cap === null ? null : Math.round(q.cap * t),
       /* Le rang est celui de la ligne RENDUE, pas de la ligne
          demandee : une valeur qui n'a pas repondu laisserait sinon un
          trou dans la numerotation, et un trou se lit comme une ligne
          manquante plutot que comme une absence. */
       market_cap_rank: out.length + 1,
       fully_diluted_valuation: null,
-      total_volume: null,
+      total_volume: q.volume === null ? null : Math.round(q.volume * t),
       price_change_percentage_24h: q.var24,
       last_updated: new Date().toISOString()
     });
