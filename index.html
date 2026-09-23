@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.2036";</script>
+<script>window.PC_VERSION = "260923.2103";</script>
 </head>
 <body>
 
@@ -3219,6 +3219,11 @@ window.PC = (function(){
   /* --- Revenus (Max) --- */
   'e.rev.champ':        ["Revenu","Income","Ingreso","Ertrag"],
   'e.rev.aide':         ["Un loyer, un dividende, une production : ce que cette ligne vous verse. Il s'ajoute au capital au fil du temps, sans rien avoir à ressaisir.","A rent, a dividend, an output: what this line pays you. It is added to your capital as time passes, with nothing to re-enter.","Un alquiler, un dividendo, una producción: lo que esta línea le paga. Se suma al capital con el paso del tiempo, sin volver a introducir nada.","Eine Miete, eine Dividende, ein Ertrag: was diese Position auszahlt. Sie wird im Lauf der Zeit dem Kapital zugerechnet, ohne erneute Eingabe."],
+  'e.vie.t':            ["Depuis quand vous l'avez","How long you have held it","Desde cu\u00e1ndo lo tiene","Seit wann Sie sie halten"],
+  'e.vie.t.rev':        ["Depuis quand, et ce qu'elle verse","Since when, and what it pays","Desde cu\u00e1ndo, y lo que paga","Seit wann, und was sie zahlt"],
+  'e.vie.achat.n':      ["C'est cette date qui fait exister la courbe\u00a0: avant elle, la ligne n'\u00e9tait pas dans le portefeuille, et rien n'est reconstitu\u00e9.","This date is what makes the curve exist: before it, the line was not in the portfolio, and nothing is rebuilt.","Esta fecha es la que hace existir la curva: antes de ella, la l\u00ednea no estaba en la cartera y no se reconstruye nada.","Dieses Datum l\u00e4sst die Kurve entstehen: davor war die Position nicht im Portfolio, und es wird nichts rekonstruiert."],
+  'e.vie.enreg':        ["Enregistrer","Save","Guardar","Speichern"],
+  'e.vie.ok':           ["{{x}}\u00a0: c'est enregistr\u00e9. La courbe se refait.","{{x}}: saved. The curve is being rebuilt.","{{x}}: guardado. La curva se rehace.","{{x}}: gespeichert. Die Kurve wird neu aufgebaut."],
   'e.co.achat':         ["Acquis le","Acquired on","Adquirido el","Erworben am"],
   'e.co.achat.n':       ["Laissez vide si vous venez de l'acheter. Cette date sert \u00e0 reconstituer la courbe : avant elle, la ligne n'\u00e9tait pas dans le portefeuille.","Leave empty if you have just bought it. This date is used to rebuild the curve: before it, the line was not in the portfolio.","D\u00e9jelo vac\u00edo si acaba de comprarlo. Esta fecha sirve para reconstruir la curva: antes de ella, la l\u00ednea no estaba en la cartera.","Leer lassen, wenn Sie gerade gekauft haben. Dieses Datum dient dem Aufbau der Kurve: davor war die Position nicht im Portfolio."],
   'e.evo.attente':      ["On cherche l'historique de march\u00e9 de vos lignes cot\u00e9es\u00a0: la courbe appara\u00eetra dans quelques secondes.","Fetching the market history of your quoted lines: the curve will appear in a few seconds.","Se est\u00e1 buscando el historial de mercado de sus l\u00edneas cotizadas: la curva aparecer\u00e1 en unos segundos.","Die Markthistorie Ihrer notierten Positionen wird geholt: die Kurve erscheint in wenigen Sekunden."],
@@ -7060,6 +7065,78 @@ window.PC = (function(){
     '</div></div>';
   }
 
+  /* ===== Depuis quand, et ce qu'elle verse =====
+     Deux choses qu'on ne pouvait dire qu'au moment de creer la ligne,
+     et qui commandent pourtant toute la courbe : la date
+     d'acquisition, qui borne la reconstitution, et le loyer, qui fait
+     monter le capital mois apres mois.
+
+     Une ligne entree avant que ces champs existent n'avait aucun
+     moyen de les recevoir. Sa courbe ne pouvait donc pas apparaitre,
+     et rien ne disait pourquoi. */
+  function blocVie(a){
+    const auj = jourISO(Date.now());
+    const avecRev = !!REVENU_CAT[a.cat];
+    const rev = (typeof a.rev === 'number' && a.rev > 0) ? String(a.rev) : '';
+    return '<div class="carte"><div class="carte__c">' +
+      '<div class="champ"><label for="vi-achat">' + PC.t('e.co.achat') + '</label>' +
+        '<input id="vi-achat" type="date" max="' + auj + '" value="' +
+          echapAttr(a.achat || '') + '">' +
+        '<p class="champ__note">' + PC.t('e.vie.achat.n') + '</p></div>' +
+      (avecRev
+        ? '<div class="champ"><label for="vi-rev">' + PC.t('e.rev.champ') + '</label>' +
+            '<input id="vi-rev" type="text" inputmode="decimal" placeholder="780" value="' +
+              echapAttr(rev) + '">' +
+            '<p class="champ__note">' + PC.t('e.rev.aide') + '</p></div>' +
+          '<div class="champ"><label for="vi-revp">' + PC.t('e.rev.periode') + '</label>' +
+            '<select id="vi-revp">' +
+              ['mois', 'trim', 'an'].map(function(k){
+                return '<option value="' + k + '"' +
+                  ((a.revP || 'mois') === k ? ' selected' : '') + '>' +
+                  PC.t('e.rev.p.' + k) + '</option>';
+              }).join('') +
+            '</select></div>' +
+          '<div class="champ"><label for="vi-revd">' + PC.t('e.rev.debut') + '</label>' +
+            '<input id="vi-revd" type="date" max="' + auj + '" value="' +
+              echapAttr(a.revDepuis || '') + '"></div>'
+        : '') +
+      '<button class="btn" type="button" id="vi-enreg">' + PC.t('e.vie.enreg') + '</button>' +
+      '<p class="err" id="vi-err" role="alert"></p>' +
+    '</div></div>';
+  }
+
+  function enregistreVie(){
+    const a = actifs[ouvert];
+    if (!a) return;
+    const err = document.getElementById('vi-err');
+    if (err) err.textContent = '';
+    const ac = document.getElementById('vi-achat');
+    poseAchat(a, ac ? ac.value : null);
+
+    const cr = document.getElementById('vi-rev');
+    if (cr){
+      const v = nombre(cr.value);
+      /* Le cumul deja credite est dans la valeur de la ligne. Changer
+         le loyer ou sa date de depart refait ce cumul : on retire
+         d'abord l'ancien, sinon on compterait deux fois les memes
+         mois. */
+      const ancien = a.revCum || 0;
+      if (ancien) a.val = Math.round((a.val - ancien) * 100) / 100;
+      if (v !== null && v > 0){
+        a.rev = v;
+        a.revP = document.getElementById('vi-revp').value;
+        const d = document.getElementById('vi-revd');
+        a.revCum = 0;
+        poseDebutRevenu(a, (d && d.value) ? d.value : (a.revDepuis || null));
+      } else {
+        delete a.rev; delete a.revP; delete a.revDepuis;
+        delete a.revVu; delete a.revCum;
+      }
+    }
+    ecrire(); rendre();
+    dire(PC.t('e.vie.ok', {x:a.nom}));
+  }
+
   /* Le pendant du bloc précédent, pour une valeur qui suit un cours.
      Le bouton porte « mettre à jour » et non « modifier » : sur une
      ligne liée à un cours, y revenir est la routine, pas l'exception. */
@@ -7378,6 +7455,11 @@ window.PC = (function(){
         blocRevenu(a) +
       '</section>' : '') +
 
+      '<section class="pa__sect">' +
+        '<h4 class="pa__h">' + PC.t(REVENU_CAT[a.cat] ? 'e.vie.t.rev' : 'e.vie.t') + '</h4>' +
+        blocVie(a) +
+      '</section>' +
+
       /* Les deux blocs s'excluent : une ligne qui suit un cours n'a pas
          à se voir proposer un taux garanti, et l'inverse. Une ligne qui
          n'a ni l'un ni l'autre voit les deux, et choisit. */
@@ -7386,7 +7468,10 @@ window.PC = (function(){
         blocTaux(a) +
       '</section>') +
 
-      (a.taux ? '' : '<section class="pa__sect">' +
+      /* Un appartement n'a pas de cours de bourse. Lui proposer d'en
+         lier un a chaque ouverture de sa fiche n'offre rien : ca
+         encombre, et ca laisse croire qu'il manque quelque chose. */
+      ((a.taux || !coursPossible(a)) ? '' : '<section class="pa__sect">' +
         '<h4 class="pa__h">' + PC.t('e.co.t') + '</h4>' +
         blocCours(a) +
       '</section>') +
@@ -7415,6 +7500,7 @@ window.PC = (function(){
         '<div class="carte">' +
           '<div class="courbe" id="courbe-actif" hidden><div class="courbe__bulle" id="bulle-actif" role="status" aria-live="polite"></div></div>' +
           '<p class="courbe__seul" id="courbe-actif-vide" hidden></p>' +
+          '<p class="champ__note" id="courbe-actif-note" hidden></p>' +
         '</div>' +
       '</section>' +
 
@@ -7443,6 +7529,16 @@ window.PC = (function(){
     vide.hidden = trace;
     if (!trace) vide.innerHTML = serieEnAttente() ? PC.t('e.evo.attente')
       : (serie.length === 1 ? motCourbeVide(1) : PC.t('e.pa.courbe.vide'));
+    /* La meme franchise que sur la courbe du capital : dire quelle
+       partie du trait est reconstituee, et sur quelle hypothese. */
+    const noteA = document.getElementById('courbe-actif-note');
+    if (noteA){
+      const rec = trace && histoVisible().some(function(p){
+        return p.calc && p.lignes && typeof p.lignes[a.id] === 'number';
+      });
+      noteA.hidden = !rec;
+      if (rec) noteA.textContent = PC.t('e.evo.reconstitue');
+    }
 
     /* Le cours du marché arrive du réseau : la fiche est déjà lisible
        sans lui, il s'ajoute quand il est là. */
@@ -8175,6 +8271,16 @@ window.PC = (function(){
      rater. On le sait d'avance, donc on ne le tente pas -- et on le
      dit, au lieu de laisser un cadre en echec. */
   function coursDeBourse(sym){ return /^[a-z]{2}:/i.test(String(sym || '')); }
+
+  /* Les categories qui ont un marche derriere elles. Une ligne qui
+     porte deja un code ou un prix en a un par construction, quelle que
+     soit sa categorie : on ne lui retire pas ce qu'elle utilise. */
+  function coursPossible(a){
+    if (!a) return false;
+    if (a.sym || typeof a.pu === 'number') return true;
+    const t = TUILES[a.cat];
+    return !!(t && t.marche);
+  }
 
   function valeurCours(a){
     if (typeof a.q !== 'number' || typeof a.pu !== 'number') return null;
@@ -9531,6 +9637,7 @@ window.PC = (function(){
     else if (c.id === 'co-ouvrir') ouvreCours();
     else if (c.id === 'co-enreg') enregistreCours();
     else if (c.id === 'co-oter') oteCours();
+    else if (c.id === 'vi-enreg') enregistreVie();
     const pl = c.closest('[data-paplage]');
     if (pl){
       plageActif = +pl.getAttribute('data-paplage');
