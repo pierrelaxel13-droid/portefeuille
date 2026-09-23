@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.1305";</script>
+<script>window.PC_VERSION = "260923.1327";</script>
 </head>
 <body>
 
@@ -3373,7 +3373,8 @@ window.PC = (function(){
   'm.limite':             ["Le fournisseur limite les appels. Les cours reviendront dans une minute.","The provider is rate-limiting. Prices will come back in a minute.","El proveedor limita las llamadas. Las cotizaciones volver\u00e1n en un minuto.","Der Anbieter drosselt die Aufrufe. Die Kurse kommen in einer Minute zur\u00fcck."],
   'm.vide':               ["Aucune crypto ne correspond \u00e0 cette recherche.","No coin matches this search.","Ninguna cripto coincide con esta b\u00fasqueda.","Keine Krypto passt zu dieser Suche."],
   'm.maj':                ["Cours de CoinGecko, relev\u00e9s \u00e0 {{h}}","Prices from CoinGecko, taken at {{h}}","Cotizaciones de CoinGecko, tomadas a las {{h}}","Kurse von CoinGecko, erfasst um {{h}}"],
-  'm.suivre':             ["Suivre dans mon espace","Track in my space","Seguir en mi espacio","In meinem Bereich verfolgen"],
+  'm.suivre':             ["Ajouter \u00e0 mon portefeuille","Add to my portfolio","A\u00f1adir a mi cartera","Zu meinem Portfolio hinzuf\u00fcgen"],
+  'e.pre.pret':           ["{{n}} est pr\u00eat\u00a0: il ne reste que la quantit\u00e9 et le montant investi.","{{n}} is ready: only the quantity and the amount invested are left.","{{n}} est\u00e1 listo: solo faltan la cantidad y el importe invertido.","{{n}} ist bereit: Es fehlen nur Menge und investierter Betrag."],
   'e.src.vif':          ["Cours en direct \u2014 {{s}}","Live prices \u2014 {{s}}","Cotizaciones en directo \u2014 {{s}}","Kurse live \u2014 {{s}}"],
   'e.src.pose':         ["Cours de {{s}}, relev\u00e9 \u00e0 {{h}}","Prices from {{s}}, taken at {{h}}","Cotizaciones de {{s}}, tomadas a las {{h}}","Kurse von {{s}}, erfasst um {{h}}"],
   'e.src.rien':         ["Aucun fournisseur de cours n'a r\u00e9pondu. Vos montants restent ceux que vous avez saisis.","No price provider answered. Your amounts stay as you entered them.","Ning\u00fan proveedor de cotizaciones ha respondido. Sus importes siguen siendo los que introdujo.","Kein Kursanbieter hat geantwortet. Ihre Betr\u00e4ge bleiben, wie Sie sie eingetragen haben."],
@@ -9342,6 +9343,30 @@ window.PC = (function(){
     if (b) poseGenre(b.getAttribute('data-genre'));
   });
   construitGenres();
+
+  /* Ajouter depuis le marche : on arrive avec le nom, le code et le
+     cours deja connus. Les redemander serait faire recopier a la main
+     ce qui est sous les yeux de la personne. */
+  window.PC_AJOUT_PRE = function(o){
+    if (!o || !o.code) return;
+    sugCoupe = true;
+    poseVue('ajout');
+    poseGenre(o.genre === 'bourse' ? 'bourse' : 'crypto');
+    const nom = document.getElementById('a-nom');
+    const sym = document.getElementById('a-sym');
+    const pu  = document.getElementById('a-pu');
+    if (nom) nom.value = o.nom || '';
+    if (sym) sym.value = o.code;
+    if (pu && typeof o.cours === 'number') pu.value = String(o.cours);
+    majUnite();
+    /* La liste des propositions n'a plus lieu d'etre : le titre est
+       choisi. La laisser ouverte inviterait a le rechoisir. */
+    const sa = document.getElementById('sug-a');
+    if (sa){ sa.hidden = true; sa.innerHTML = ''; }
+    const q = document.getElementById('a-qte');
+    if (q){ q.focus(); }
+    dire(PC.t('e.pre.pret', {n:o.nom || o.code}));
+  };
   /* Le formulaire devine le metal comme il devine le reste : au nom
      tape, ou au code s'il est donne. Rien a choisir dans une liste de
      categories -- on ecrit « Or », le champ d'unite apparait. */
@@ -9367,7 +9392,17 @@ window.PC = (function(){
   /* Le nom tape cherche le titre. On ne propose rien tant que la case
      « liee a un cours » n'est pas cochee : ailleurs, ces propositions
      n'auraient aucun sens. */
+  /* Un remplissage automatique ne doit rien proposer : le titre est
+     deja choisi, et rouvrir la liste inviterait a le rechoisir. Une
+     frappe humaine, elle, cherche. Le drapeau tombe au premier
+     caractere tape. */
+  let sugCoupe = false;
   const chercheDepuisNom = retarde(function(){
+    if (sugCoupe){
+      const h = document.getElementById('sug-a');
+      if (h){ h.hidden = true; h.innerHTML = ''; }
+      return;
+    }
     if (!(caseCours && caseCours.checked)){
       const h = document.getElementById('sug-a');
       if (h){ h.hidden = true; h.innerHTML = ''; }
@@ -9405,7 +9440,10 @@ window.PC = (function(){
     });
   });
   const champNom = document.getElementById('a-nom');
-  if (champNom) champNom.addEventListener('input', chercheDepuisNom);
+  if (champNom) champNom.addEventListener('input', function(){
+    sugCoupe = false;
+    chercheDepuisNom();
+  });
   if (caseTaux) caseTaux.addEventListener('change', function(){
     montreTaux(caseTaux.checked);
     if (caseTaux.checked && caseCours && caseCours.checked){ caseCours.checked = false; montreCours(false); }
@@ -9500,6 +9538,7 @@ window.PC = (function(){
        deux lignes qui se suivent sont rarement de meme nature, et un
        choix deja fait se re-clique moins vite qu'il ne se remarque. */
     genreChoisi = null;
+    sugCoupe = false;
     construitGenres();
     const dp = document.getElementById('plus');
     if (dp) dp.open = false;
@@ -10204,8 +10243,12 @@ window.PC = (function(){
       (marcheSource === 'bourse'
         ? '<p class="fiche-m__mot">' + ech(PC.t('m.capabs')) + '</p>' : '') +
       '<div class="fiche-m__actions">' +
-        '<a class="pill" href="#espace-client" data-formule="normal">' +
-          ech(PC.t('m.suivre')) + '</a>' +
+        /* Un bouton, pas un lien : on ne renvoie plus quelqu'un
+           recopier a la main un nom et un code qui sont sous ses yeux.
+           Le formulaire s'ouvre rempli, il ne reste que ce que la
+           machine ne peut pas savoir. */
+        '<button class="pill" type="button" id="mar-ajouter">' +
+          ech(PC.t('m.suivre')) + '</button>' +
       '</div>';
   }
 
@@ -10402,6 +10445,16 @@ window.PC = (function(){
   vueFiche.addEventListener('click', function(e){
     const r = e.target.closest('#mar-retour');
     if (r){ ferme(); return; }
+    if (e.target.closest('#mar-ajouter')){
+      const c = rangs.filter(function(x){ return x.id === ouverte; })[0];
+      /* L'espace tient le formulaire ; ce module tient la donnee. On
+         lui passe ce qu'on sait, il fait le reste. */
+      if (c && window.PC_AJOUT_PRE){
+        window.PC_AJOUT_PRE({code:c.id, nom:c.name, cours:c.current_price,
+                             genre:marcheSource === 'bourse' ? 'bourse' : 'crypto'});
+      }
+      return;
+    }
     const p = e.target.closest('[data-plage]');
     if (p){
       plage = +p.getAttribute('data-plage');

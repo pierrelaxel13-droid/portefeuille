@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-23.14';
+const VERSION = '2026-09-23.15';
 const FICHE = 'https://query1.finance.yahoo.com/v7/finance/quote';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
@@ -584,6 +584,31 @@ async function cherche(q){
    la page n'a alors qu'une seule maniere de peindre une liste, et
    « comme les cryptos » cesse d'etre une imitation pour devenir le
    meme code. */
+/* ===== Les logos =====
+   Aucun fournisseur de cours gratuit ne sert de logo pour la bourse.
+   Ce qui existe, c'est le favicon du site officiel : une vraie image
+   de marque, servie par Google a partir d'un nom de domaine.
+
+   On ne connait le domaine que des valeurs suivies -- il est ecrit
+   ici, a la main. Pour un titre cherche, on n'en a pas, et la page
+   dessine alors un monogramme. Deviner un domaine a partir d'un nom
+   donnerait un jour le logo d'une autre societe, ce qui est pire que
+   pas de logo du tout.
+
+   A savoir : c'est Google qui sert ces images, et il voit donc quels
+   domaines sont demandes. Rien d'autre ne sort -- ni vos montants, ni
+   vos lignes. */
+const DOMAINES = {
+  'CW8.PA':'amundietf.fr', 'ESE.PA':'bnpparibas-am.com',
+  'IWDA.AS':'ishares.com', 'MC.PA':'lvmh.fr', 'OR.PA':'loreal.com',
+  'AIR.PA':'airbus.com', 'TTE.PA':'totalenergies.fr',
+  'AAPL':'apple.com', 'MSFT':'microsoft.com', 'NVDA':'nvidia.com'
+};
+function logoDe(sym){
+  const d = DOMAINES[String(sym).toUpperCase()];
+  return d ? 'https://www.google.com/s2/favicons?domain=' + d + '&sz=64' : '';
+}
+
 const VEILLE = [
   ['CW8.PA',  'Amundi MSCI World UCITS ETF'],
   ['ESE.PA',  'BNP Paribas S&P 500 UCITS ETF'],
@@ -627,7 +652,7 @@ async function marche(devise, env, codes){
          etre lu. Sinon celui que rend le fournisseur, et a defaut le
          symbole -- jamais rien. */
       name: source[i][1] || q.nom || sym,
-      image: '',
+      image: logoDe(sym),
       current_price: Math.round(q.valeur * t * 1e6) / 1e6,
       /* On ne connait pas la capitalisation : on rend null, et la page
          ecrit un tiret. Un zero se lirait comme une valeur. */

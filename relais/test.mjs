@@ -644,5 +644,22 @@ dit('elle dit si la capitalisation est absente',
 dit('et ce que porte la fiche', typeof o.fiche.cap === 'number',
     JSON.stringify(o.fiche.cap));
 
+// [45] Les logos : une vraie image pour les valeurs suivies, rien du
+//      tout ailleurs -- un domaine devine donnerait un jour le logo
+//      d'une autre societe.
+console.log('[45] les logos');
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+const ap = (o || []).filter(x => x.id === 'yh:AAPL')[0] || {};
+dit('une valeur suivie a son logo', /apple\.com/.test(ap.image || ''),
+    JSON.stringify(ap.image));
+r = await worker.fetch(new Request(
+  'https://relais.test/?ids=yh:VUSA.L&forme=marche&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+const inc = ((await r.json()) || [])[0] || {};
+dit('un titre inconnu n a pas de logo invente', inc.image === '',
+    JSON.stringify(inc.image));
+
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);
