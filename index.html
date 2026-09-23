@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.1846";</script>
+<script>window.PC_VERSION = "260923.2005";</script>
 </head>
 <body>
 
@@ -3219,6 +3219,9 @@ window.PC = (function(){
   /* --- Revenus (Max) --- */
   'e.rev.champ':        ["Revenu","Income","Ingreso","Ertrag"],
   'e.rev.aide':         ["Un loyer, un dividende, une production : ce que cette ligne vous verse. Il s'ajoute au capital au fil du temps, sans rien avoir à ressaisir.","A rent, a dividend, an output: what this line pays you. It is added to your capital as time passes, with nothing to re-enter.","Un alquiler, un dividendo, una producción: lo que esta línea le paga. Se suma al capital con el paso del tiempo, sin volver a introducir nada.","Eine Miete, eine Dividende, ein Ertrag: was diese Position auszahlt. Sie wird im Lauf der Zeit dem Kapital zugerechnet, ohne erneute Eingabe."],
+  'e.co.achat':         ["Acquis le","Acquired on","Adquirido el","Erworben am"],
+  'e.co.achat.n':       ["Laissez vide si vous venez de l'acheter. Cette date sert \u00e0 reconstituer la courbe : avant elle, la ligne n'\u00e9tait pas dans le portefeuille.","Leave empty if you have just bought it. This date is used to rebuild the curve: before it, the line was not in the portfolio.","D\u00e9jelo vac\u00edo si acaba de comprarlo. Esta fecha sirve para reconstruir la curva: antes de ella, la l\u00ednea no estaba en la cartera.","Leer lassen, wenn Sie gerade gekauft haben. Dieses Datum dient dem Aufbau der Kurve: davor war die Position nicht im Portfolio."],
+  'e.evo.reconstitue':  ["Avant votre premier relev\u00e9, la courbe est reconstitu\u00e9e\u00a0: cours r\u00e9els du march\u00e9 \u00e0 la quantit\u00e9 d\u00e9tenue aujourd'hui, et montant investi pour ce qui n'a pas de cours.","Before your first statement, the curve is rebuilt: real market prices at the quantity held today, and the amount invested for whatever has no price.","Antes de su primer informe, la curva se reconstruye: cotizaciones reales del mercado a la cantidad que posee hoy, y el importe invertido para lo que no tiene cotizaci\u00f3n.","Vor Ihrem ersten Auszug wird die Kurve rekonstruiert: echte Marktkurse mit der heute gehaltenen Menge, und der investierte Betrag f\u00fcr alles ohne Kurs."],
   'e.rev.debut':        ["Perçu depuis le","Received since","Percibido desde el","Erhalten seit"],
   'e.rev.percu':        ["Revenus perçus","Income collected","Ingresos percibidos","Erhaltene Erträge"],
   'e.pa.c5':            ["Cette ligne vous a versé {x} depuis le {d} : c'est autant que le capital a gagné, sans que la valeur du bien ait bougé.","This holding has paid you {x} since {d}: that is capital gained without the asset's own value moving at all.","Esta línea le ha pagado {x} desde el {d}: es capital ganado sin que el valor del bien se haya movido.","Diese Position hat Ihnen seit dem {d} {x} ausgezahlt: genau so viel Kapital ist hinzugekommen, ohne dass sich der Wert selbst bewegt hat."],
@@ -4601,6 +4604,10 @@ window.PC = (function(){
       <div class="fiche-m__plages" id="hist-plages"></div>
       <div class="courbe" id="courbe"><div class="courbe__bulle" id="bulle" role="status" aria-live="polite"></div></div>
       <p class="fiche-m__perf" id="hist-perf" hidden></p>
+      <!-- D'ou sort la partie de la courbe anterieure au premier
+           relevé : on le dit, sinon elle passe pour de l'historique
+           enregistre. -->
+      <p class="champ__note" id="hist-note" hidden></p>
       <p class="courbe__seul" id="courbe-seul" hidden></p>
     </div>
 
@@ -4766,6 +4773,13 @@ window.PC = (function(){
               <option value="kg" data-i18n="e.me.u.kg">Kilos</option>
             </select>
             <p class="champ__note" data-i18n="e.me.aide">Ce cours est donné à l'once troy (31,1035 g). Comptez en grammes ou en kilos si c'est ainsi que vous détenez : la conversion se fait toute seule.</p>
+          </div>
+          <!-- La date d'acquisition n'est pas un detail d'archive :
+               c'est elle qui borne la reconstitution de la courbe. Sans
+               elle, on ferait remonter le capital a une epoque ou la
+               ligne n'existait pas. -->
+          <div class="champ" id="champ-achat" hidden><label for="a-achat" data-i18n="e.co.achat">Acquis le</label><input id="a-achat" type="date">
+            <p class="champ__note" data-i18n="e.co.achat.n">Laissez vide si vous venez de l'acheter. Cette date sert à reconstituer la courbe&nbsp;: avant elle, la ligne n'était pas dans le portefeuille.</p>
           </div>
           <!-- ===== Le reste =====
                Ce qui se remplit tout seul n'a pas a occuper l'ecran.
@@ -6646,6 +6660,93 @@ window.PC = (function(){
     return actifs.reduce(function(s2, a){ return s2 + revenuAnnuel(a); }, 0);
   }
 
+  /* ============================================================
+     RECONSTITUER LE PASSE, SANS L'INVENTER
+     ------------------------------------------------------------
+     Une ligne liee a un cours sait ce qu'elle valait il y a un mois :
+     c'est sa quantite multipliee par le cours d'il y a un mois, et ce
+     cours-la est une mesure, pas une estimation. On la reconstitue
+     donc, exactement comme on reconstitue depuis toujours une ligne a
+     taux garanti a partir de son taux.
+
+     Sans ca, la courbe n'existait pas avant le deuxieme jour : un
+     relevé par jour, un seul jour d'anciennete, donc un seul point.
+     La page annoncait « la courbe apparaitra des la deuxieme mise a
+     jour » — ce qui est vrai, et inutile a quelqu'un qui vient
+     d'entrer son portefeuille.
+
+     Deux limites, tenues strictement :
+     - JAMAIS avant la date d'acquisition. Avant elle la ligne n'etait
+       pas la, et lui preter une valeur gonflerait un capital qui
+       n'existait pas ;
+     - la quantite est celle d'aujourd'hui. Si elle change, la
+       reconstitution d'avant ne vaut plus : la date d'acquisition est
+       donc remise a aujourd'hui des qu'on touche a la quantite.
+     Une ligne sans cours ne se reconstitue pas : elle entre dans la
+     courbe au premier relevé qui la mentionne, et pas avant. */
+  const SERIES = {};
+  const seriesEnVol = {};
+
+  function chargeSeries(){
+    if (!window.PC_MARCHES || !PC_MARCHES.serie) return;
+    actifs.forEach(function(a){
+      const c = a.sym && String(a.sym).trim().toLowerCase();
+      if (!c || typeof a.q !== 'number' || !(a.q > 0)) return;
+      if (SERIES[c] || seriesEnVol[c]) return;
+      /* Un code de bourse sans relais n'a aucune source d'historique :
+         demander pour rien ferait clignoter la courbe. */
+      if (coursDeBourse(c) && !adresseRelais()) return;
+      seriesEnVol[c] = true;
+      PC_MARCHES.serie(c).then(function(pts){
+        delete seriesEnVol[c];
+        if (pts && pts.length > 1){ SERIES[c] = pts; rendre(); }
+      }, function(){ delete seriesEnVol[c]; });
+    });
+  }
+
+  function finDeJour(iso){ return new Date(iso + 'T23:59:59').getTime(); }
+
+  function prixAu(sym, iso){
+    const pts = SERIES[String(sym || '').trim().toLowerCase()];
+    if (!pts || !pts.length) return null;
+    const fin = finDeJour(iso);
+    /* La serie commence apres la date demandee : on ne sait pas, et on
+       le dit en rendant null plutot qu'en prenant le premier point. */
+    if (pts[0][0] > fin) return null;
+    let v = null;
+    for (let i = 0; i < pts.length; i++){
+      if (pts[i][0] > fin) break;
+      v = pts[i][1];
+    }
+    return (typeof v === 'number' && v > 0) ? v : null;
+  }
+
+  function poseAchat(a, iso){
+    const auj = jourISO(Date.now());
+    a.achat = (iso && iso <= auj) ? iso : auj;
+  }
+
+  function valeurMarche(a, iso){
+    if (!a.sym || typeof a.q !== 'number' || !(a.q > 0)) return null;
+    if (a.achat && iso < a.achat) return null;
+    const p = prixAu(a.sym, iso);
+    if (p === null) return null;
+    return Math.round(a.q * facteurUnite(a) * p * 100) / 100;
+  }
+
+  /* Ce qu'une ligne avait deja verse a cette date-la. Meme calcul que
+     le cumul d'aujourd'hui, arrete plus tot : sans lui, la courbe
+     reconstituee sauterait au dernier point pour rattraper les loyers. */
+  function revenuPercuAu(a, iso){
+    const an = revenuAnnuel(a);
+    if (!an || !a.revDepuis) return 0;
+    const d = Date.parse(a.revDepuis + 'T00:00:00');
+    if (!isFinite(d)) return 0;
+    const t = Math.min(finDeJour(iso), Date.now());
+    if (t <= d) return 0;
+    return Math.round(an * ((t - d) / AN_MS) * 100) / 100;
+  }
+
   /* Gain et perte : glyphe et signe systématiques, jamais la couleur seule. */
   function marque(v, texte){
     const dir = v > 0.05 ? 'up' : (v < -0.05 ? 'down' : 'flat');
@@ -6684,7 +6785,7 @@ window.PC = (function(){
   }
 
   function rendre(){
-    majTaux(); majCours(); majRevenus();
+    majTaux(); majCours(); majRevenus(); chargeSeries();
     const t = totaux();
 
     /* La valeur totale a sa propre surface en tête : la laisser aussi
@@ -7055,6 +7156,10 @@ window.PC = (function(){
     if (q === null || !(q > 0)){ err.textContent = PC.t('e.co.err.qte'); return; }
     if (p === null || !(p > 0)){ err.textContent = PC.t('e.co.err.pu'); return; }
     if (iv === null || iv < 0){ err.textContent = PC.t('e.err.inv'); return; }
+    /* La reconstitution du passe suppose la quantite constante : la
+       changer rend faux tout ce qui precede. On repart donc
+       d'aujourd'hui plutot que de tracer une courbe qui ment. */
+    if (a.q !== q) poseAchat(a, null);
     a.q = q; a.pu = p; a.inv = iv; a.puMaj = jourISO(Date.now());
     if (fluxVoulu) setTimeout(ouvreFlux, 0);
     /* Un prix tapé à la main n'est plus un prix reçu : le dire, sinon
@@ -8860,15 +8965,47 @@ window.PC = (function(){
      240 : au-delà de vingt ans la courbe ne gagne plus rien et le
      tracé coûte. */
   function grilleCalculee(){
-    const debuts = actifs.filter(function(a){ return a.taux && a.depuis; })
-                         .map(function(a){ return a.depuis; }).sort();
-    if (!debuts.length) return [];
     const auj = jourISO(Date.now());
+    const taux = actifs.filter(function(a){ return a.taux && a.depuis; })
+                       .map(function(a){ return a.depuis; });
+    /* Une ligne de marche ne compte que si l'on tient vraiment sa
+       serie : sans points, il n'y a rien a reconstituer. */
+    const marche = actifs.filter(function(a){
+      return a.sym && SERIES[String(a.sym).trim().toLowerCase()] &&
+             typeof a.q === 'number' && a.q > 0;
+    }).map(function(a){ return a.achat || auj; });
+    /* Un bien loue avance lui aussi tout seul : chaque mois de loyer
+       s'ajoute au capital, donc il a une trajectoire a tracer. */
+    const loues = actifs.filter(function(a){ return revenuAnnuel(a) && a.revDepuis; })
+                        .map(function(a){ return a.revDepuis; });
+    const debuts = taux.concat(marche).concat(loues).sort();
+    if (!debuts.length) return [];
     const dates = [];
     const d = new Date(debuts[0] + 'T12:00:00');
-    while (jourISO(d) < auj && dates.length < 240){
+    if (!marche.length && !loues.length){
+      /* Un taux garanti avance de quelques centimes par jour : un
+         point par mois suffit, et dix ans tiennent en cent points. */
+      while (jourISO(d) < auj && dates.length < 240){
+        dates.push(jourISO(d));
+        d.setMonth(d.getMonth() + 1);
+      }
+      dates.push(auj);
+      return dates;
+    }
+    /* Un cours bouge tous les jours : sur la derniere annee on releve
+       tous les jours, et au mois avant, sinon dix ans de detention
+       feraient quatre mille points pour une courbe large de mille
+       pixels. */
+    const bord = new Date(); bord.setDate(bord.getDate() - 365);
+    const borne = jourISO(bord);
+    while (jourISO(d) < borne && jourISO(d) < auj && dates.length < 240){
       dates.push(jourISO(d));
       d.setMonth(d.getMonth() + 1);
+    }
+    const j = new Date(Math.max(d.getTime(), bord.getTime()));
+    while (jourISO(j) < auj && dates.length < 620){
+      dates.push(jourISO(j));
+      j.setDate(j.getDate() + 1);
     }
     dates.push(auj);
     return dates;
@@ -8878,8 +9015,25 @@ window.PC = (function(){
     const lignes = {};
     let val = 0, inv = 0;
     actifs.forEach(function(a){
-      const v = (a.taux && a.depuis) ? valeurCalculee(a, iso) : valeurConnue(a.id, iso);
+      /* Trois facons de savoir, dans cet ordre : le taux garanti, le
+         cours reel de ce jour-la, et a defaut le dernier relevé qui
+         mentionne la ligne. Aucune des trois n'invente : la quatrieme
+         possibilite, c'est de ne pas compter la ligne. */
+      let v = (a.taux && a.depuis) ? valeurCalculee(a, iso) : null;
+      let calcule = v !== null;
+      if (v === null){ v = valeurMarche(a, iso); calcule = v !== null; }
+      if (v === null) v = valeurConnue(a.id, iso);
+      /* Rien de connu, mais la ligne etait deja la : elle vaut ce
+         qu'on y a mis. Sinon elle surgirait a sa pleine valeur au
+         dernier point, et la courbe lirait « +500 % » la ou il ne
+         s'est rien passe. */
+      if (v === null && a.achat && iso >= a.achat && typeof a.inv === 'number'){
+        v = a.inv; calcule = true;
+      }
       if (v === null) return;
+      /* Un relevé porte deja les loyers encaisses a sa date ; un point
+         calcule, non — on les y ajoute. */
+      if (calcule) v = Math.round((v + revenuPercuAu(a, iso)) * 100) / 100;
       lignes[a.id] = v; val += v; inv += a.inv;
     });
     return {d:iso, val:val, inv:inv, lignes:lignes, calc:true};
@@ -9168,6 +9322,15 @@ window.PC = (function(){
         (tous.length < historique.length ? ' · ' + droit('moisHisto') + ' ' + PC.t('e.rap.mois') : '')
       : '—';
 
+    /* Dire ce qui est mesure et ce qui est reconstitue : une courbe
+       qui commence avant le premier relevé doit expliquer d'ou elle
+       sort, sinon elle passe pour de l'historique enregistre. */
+    const note = document.getElementById('hist-note');
+    if (note){
+      const recons = vus.some(function(p){ return p.calc; });
+      note.hidden = !recons;
+      if (recons) note.textContent = PC.t('e.evo.reconstitue');
+    }
     const trace = traceCourbe(hote, document.getElementById('bulle'), vus, 'c');
     hote.hidden = !trace;
     seul.hidden = trace;
@@ -9696,6 +9859,10 @@ window.PC = (function(){
     if (caseTaux){ caseTaux.checked = surTaux; montreTaux(surTaux); }
     const cq = document.getElementById('champ-qte');
     if (cq) cq.hidden = !surCours;
+    /* « Acquis le » vaut pour tout le monde : un appartement a une
+       date d'achat comme une action. C'est elle qui borne la courbe. */
+    const ca = document.getElementById('champ-achat');
+    if (ca) ca.hidden = false;
     const surRev = !!REVENU_CAT[cat];
     ['champ-rev','champ-revp','champ-revd'].forEach(function(id){
       const e = document.getElementById(id);
@@ -9749,7 +9916,7 @@ window.PC = (function(){
   }
 
   function videChamps(){
-    ['a-nom','a-qte','a-inv','a-val','a-pu','a-sym','a-taux','a-depuis','a-rev','a-revd'].forEach(function(id){
+    ['a-nom','a-qte','a-inv','a-val','a-pu','a-sym','a-taux','a-depuis','a-rev','a-revd','a-achat'].forEach(function(id){
       const e = document.getElementById(id);
       if (e) e.value = '';
     });
@@ -9971,6 +10138,7 @@ window.PC = (function(){
       }
       ligne.val = valeurCours(ligne);
     }
+    poseAchat(ligne, document.getElementById('a-achat').value);
     if (rev !== null && rev > 0){
       ligne.rev = rev;
       ligne.revP = document.getElementById('a-revp').value;
@@ -10265,6 +10433,25 @@ window.PC = (function(){
      l'affichage de chiffres qu'on a déjà. */
   /* Avant la première recherche : les lignes existantes reçoivent leur
      code, sinon elles resteraient muettes jusqu'à ce qu'on les rouvre. */
+  /* Les lignes enregistrees avant que la date d'acquisition existe :
+     on la deduit du premier relevé qui les mentionne, et a defaut on
+     part d'aujourd'hui. Jamais plus tot : personne ne peut affirmer
+     qu'elles etaient la avant. */
+  (function(){
+    let bouge = false;
+    actifs.forEach(function(a){
+      if (a.achat) return;
+      let vu = null;
+      for (let i = 0; i < historique.length; i++){
+        const h = historique[i];
+        if (h.lignes && h.lignes[a.id] !== undefined){ vu = h.d; break; }
+      }
+      poseAchat(a, vu);
+      bouge = true;
+    });
+    if (bouge) ecrire(true);
+  })();
+
   if (devineCodes()) ecrire();
 
   setTimeout(function(){
@@ -11129,6 +11316,14 @@ window.PC = (function(){
       return json(u).then(function(o){
         return Array.isArray(o) ? o.slice(0, 12) : [];
       }, function(e){ noteRefus(e); return []; });
+    },
+    /* La serie la plus profonde qu'on sache obtenir, brute. L'espace
+       s'en sert pour reconstituer ce qu'une ligne valait aux dates
+       passees : les memes points, le meme cache, la meme source que la
+       courbe affichee. */
+    serie: function(id){
+      return pointsPlage(id, '1a').then(function(r){ return (r && r.pts) || []; },
+                                        function(){ return []; });
     },
     trace: traceDans,
     /* Vider la memoire des courbes. Sert aux tests, et a la bascule de
