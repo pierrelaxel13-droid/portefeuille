@@ -48,7 +48,8 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-22.12';
+const VERSION = '2026-09-23.13';
+const FICHE = 'https://query1.finance.yahoo.com/v7/finance/quote';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
    traitent differemment un navigateur et un programme. Un appel sans
@@ -550,6 +551,42 @@ async function cherche(q){
     });
 }
 
+/* ===== Capitalisation et volume =====
+   L'adresse qui sert les cours ne les porte pas toujours : elle est
+   faite pour tracer une courbe, pas pour decrire une societe. Une
+   autre adresse les donne -- quand elle repond, car elle est parfois
+   fermee aux programmes.
+
+   On l'essaie donc EN PLUS, jamais A LA PLACE : si elle refuse, les
+   prix arrivent quand meme et les deux colonnes restent vides. Un
+   enrichissement qui peut casser ce qui marchait deja n'en est pas un.
+
+   Un seul appel pour toute la liste, et le resultat sert a tout le
+   monde. */
+async function fiches(symboles){
+  if (!symboles.length) return {};
+  try {
+    const r = await fetch(FICHE + '?symbols=' + encodeURIComponent(symboles.join(',')),
+      {headers:Object.assign({'Accept':'application/json'}, ENTETES),
+       cf:{cacheTtl:FRAICHE, cacheEverything:true}});
+    if (!r.ok) return {};
+    const o = JSON.parse(await r.text());
+    const l = o && o.quoteResponse && o.quoteResponse.result;
+    if (!Array.isArray(l)) return {};
+    const par = {};
+    l.forEach(function(x){
+      if (!x || !x.symbol) return;
+      par[String(x.symbol).toUpperCase()] = {
+        cap: (typeof x.marketCap === 'number' && x.marketCap > 0) ? x.marketCap : null,
+        vol: (typeof x.regularMarketVolume === 'number' && x.regularMarketVolume > 0)
+               ? x.regularMarketVolume : null,
+        nom: x.longName || x.shortName || ''
+      };
+    });
+    return par;
+  } catch (e){ return {}; }
+}
+
 /* ===== La liste suivie =====
    Une poignee de valeurs connues. Ce n'est pas un classement -- aucun
    fournisseur gratuit n'en sert un pour la bourse -- et la page le
@@ -570,6 +607,20 @@ const VEILLE = [
   ['NVDA',    'NVIDIA']
 ];
 
+/* Ce que porte la fiche prime : c'est la source faite pour ca. Sinon
+   ce que la courbe portait. Sinon rien -- jamais un calcul de
+   circonstance. */
+function capDe(q, sup, sym, t){
+  const s = sup[String(sym).toUpperCase()] || {};
+  const brut = (s.cap !== null && s.cap !== undefined) ? s.cap : q.cap;
+  return (brut === null || brut === undefined) ? null : Math.round(brut * t);
+}
+function volDe(q, sup, sym, t, prix){
+  const s = sup[String(sym).toUpperCase()] || {};
+  if (s.vol !== null && s.vol !== undefined) return Math.round(s.vol * prix * t);
+  return q.volume === null ? null : Math.round(q.volume * t);
+}
+
 async function marche(devise, env, codes){
   const cible = String(devise).toUpperCase();
   const taux_ = {};
@@ -581,6 +632,8 @@ async function marche(devise, env, codes){
     ? codes.map(function(c){ const l = lit(c); return l ? [l.symbole, ''] : null; })
            .filter(Boolean)
     : VEILLE;
+  /* Un seul appel pour toute la liste, avant la boucle. */
+  const sup = await fiches(source.map(function(x){ return x[0]; }));
   for (let i = 0; i < source.length; i++){
     const sym = source[i][0];
     let q;
@@ -598,19 +651,19 @@ async function marche(devise, env, codes){
       /* Le nom donne par la liste suivie prime : il est ecrit pour
          etre lu. Sinon celui que rend le fournisseur, et a defaut le
          symbole -- jamais rien. */
-      name: source[i][1] || q.nom || sym,
+      name: source[i][1] || (sup[sym.toUpperCase()] || {}).nom || q.nom || sym,
       image: '',
       current_price: Math.round(q.valeur * t * 1e6) / 1e6,
       /* On ne connait pas la capitalisation : on rend null, et la page
          ecrit un tiret. Un zero se lirait comme une valeur. */
-      market_cap: q.cap === null ? null : Math.round(q.cap * t),
+      market_cap: capDe(q, sup, sym, t),
       /* Le rang est celui de la ligne RENDUE, pas de la ligne
          demandee : une valeur qui n'a pas repondu laisserait sinon un
          trou dans la numerotation, et un trou se lit comme une ligne
          manquante plutot que comme une absence. */
       market_cap_rank: out.length + 1,
       fully_diluted_valuation: null,
-      total_volume: q.volume === null ? null : Math.round(q.volume * t),
+      total_volume: volDe(q, sup, sym, t, q.valeur),
       price_change_percentage_24h: q.var24,
       last_updated: new Date().toISOString()
     });
@@ -701,6 +754,39 @@ export default {
 
     const u = new URL(req.url);
 
+    /* Une sonde, pour arreter de supposer. « ?brut=AAPL » rend les
+       CLES que chaque adresse porte, et les deux valeurs qui nous
+       manquent. Aucune donnee personnelle, aucun secret : de quoi dire
+       en dix secondes si une colonne est vide parce que le code est
+       faux, ou parce que la source ne la sert pas. */
+    const br = (u.searchParams.get('brut') || '').trim().toUpperCase();
+    if (br){
+      const out = {symbole:br};
+      try {
+        const r1 = await fetch(YAHOO + encodeURIComponent(br) + '?interval=1d&range=1d',
+          {headers:Object.assign({'Accept':'application/json'}, ENTETES)});
+        const o1 = JSON.parse(await r1.text());
+        const m = o1 && o1.chart && o1.chart.result && o1.chart.result[0] &&
+                  o1.chart.result[0].meta;
+        out.courbe = {statut:r1.status, cles:m ? Object.keys(m) : null,
+                      cap:m ? (m.marketCap === undefined ? 'absent' : m.marketCap) : null,
+                      vol:m ? (m.regularMarketVolume === undefined ? 'absent' : m.regularMarketVolume) : null};
+      } catch (e){ out.courbe = {erreur:String(e && e.message)}; }
+      try {
+        const r2 = await fetch(FICHE + '?symbols=' + encodeURIComponent(br),
+          {headers:Object.assign({'Accept':'application/json'}, ENTETES)});
+        const t2 = await r2.text();
+        let o2 = null; try { o2 = JSON.parse(t2); } catch (e){}
+        const x = o2 && o2.quoteResponse && o2.quoteResponse.result &&
+                  o2.quoteResponse.result[0];
+        out.fiche = {statut:r2.status, cles:x ? Object.keys(x).slice(0, 40) : null,
+                     cap:x ? (x.marketCap === undefined ? 'absent' : x.marketCap) : null,
+                     vol:x ? (x.regularMarketVolume === undefined ? 'absent' : x.regularMarketVolume) : null,
+                     dit:x ? null : texteNu(t2, 140)};
+      } catch (e){ out.fiche = {erreur:String(e && e.message)}; }
+      return json(out, 200, origine);
+    }
+
     /* La liste suivie : « ?marche=1&vs_currencies=eur », ou une
        recherche mise en forme : « ?ids=…&forme=marche ». */
     if (u.searchParams.get('marche') || u.searchParams.get('forme') === 'marche'){
@@ -713,7 +799,11 @@ export default {
       } catch (e){
         if (e && e.limite) return json({erreur:'limite'}, 429, origine);
         return json({erreur:'marche indisponible',
-                     amont:(e && e.amont) || null}, 502, origine);
+                     amont:(e && e.amont) || null,
+                     /* Le message brut, quand l'erreur n'en porte pas :
+                        sans lui on ne sait pas si la source a refuse ou
+                        si le relais s'est trompe tout seul. */
+                     dit:String((e && e.message) || e)}, 502, origine);
       }
     }
 

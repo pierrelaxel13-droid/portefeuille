@@ -51,6 +51,15 @@ globalThis.fetch = async (url, opts) => {
       sy + ',2026-09-21,22:00:00,' + p + ',' + p + ',' + p + ',' + p + ',1000',
       {status:200});
   }
+  /* La fiche : elle porte la capitalisation, quand elle repond. */
+  if (u.pathname === '/v7/finance/quote'){
+    if (mode === 'ficheKo') return new Response('Invalid Crumb', {status:401});
+    const syms = (u.searchParams.get('symbols') || '').split(',');
+    return new Response(JSON.stringify({quoteResponse:{result: syms
+      .filter(x => YH[x])
+      .map(x => ({symbol:x, marketCap: 3.1e12, regularMarketVolume: 40000000,
+                  longName: x === 'AAPL' ? 'Apple Inc.' : ''}))}}), {status:200});
+  }
   if (u.pathname === '/v1/finance/search'){
     if (mode === 'recherche429') return new Response('Too Many Requests', {status:429});
     return new Response(JSON.stringify({quotes:[
@@ -518,8 +527,15 @@ dit('les champs attendus sont la',
      'price_change_percentage_24h'].every(k => k in un),
     JSON.stringify(Object.keys(un)));
 dit('le prix est converti', un.current_price > 0, String(un.current_price));
-dit('la capitalisation inconnue vaut null, pas zero', un.market_cap === null,
-    JSON.stringify(un.market_cap));
+/* Sans la fiche, plus personne ne porte la capitalisation : elle doit
+   valoir null et non zero. On coupe donc la fiche pour l'eprouver. */
+mode = 'ficheKo';
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+const sansFiche = ((await r.json()) || [])[0] || {};
+dit('la capitalisation inconnue vaut null, pas zero', sansFiche.market_cap === null,
+    JSON.stringify(sansFiche.market_cap));
+mode = 'ok';
 dit('les rangs se suivent', (o||[]).every((x,i) => x.market_cap_rank === i+1),
     (o||[]).map(x=>x.market_cap_rank).join(','));
 
@@ -560,16 +576,21 @@ dit('l id reste celui qu on a demande', (o[0]||{}).id === 'yh:AAPL',
     JSON.stringify((o[0]||{}).id));
 delete YH['AAPL'].shortName;
 
-// [40] Sans nom connu, on rend le symbole -- jamais rien.
+// [40] Sans nom connu nulle part, on rend le symbole -- jamais rien.
+mode = 'ficheKo';
 r = await worker.fetch(new Request(
   'https://relais.test/?ids=yh:AAPL&forme=marche&vs_currencies=eur',
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 o = await r.json();
 dit('a defaut, le symbole', (o[0]||{}).name === 'AAPL', JSON.stringify((o[0]||{}).name));
+mode = 'ok';
 
 // [41] Volume et capitalisation : ce que la source porte, et rien de
 //      plus. Un nombre plausible et faux serait pire qu'un tiret.
-console.log('[41] volume et capitalisation');
+/* Ici on eprouve le REPLI : ce que la courbe porte quand la fiche ne
+   repond pas. La fiche est donc coupee. */
+console.log('[41] volume et capitalisation, par la courbe seule');
+mode = 'ficheKo';
 YH['CW8.PA'].regularMarketVolume = 1000;
 YH['CW8.PA'].marketCap = 2500000000;
 r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
@@ -589,6 +610,42 @@ cw2 = ((await r.json()) || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
 dit('absents, ils valent null et non zero',
     cw2.total_volume === null && cw2.market_cap === null,
     JSON.stringify([cw2.total_volume, cw2.market_cap]));
+mode = 'ok';
+
+// [42] La capitalisation vient de la fiche, quand elle repond.
+console.log('[42] capitalisation et volume par la fiche');
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+let li = (o || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
+dit('la capitalisation arrive', li.market_cap === 3.1e12, String(li.market_cap));
+dit('le volume arrive, en monnaie',
+    li.total_volume === Math.round(40000000 * 512.3), String(li.total_volume));
+
+// [43] La fiche refuse : les prix passent quand meme.
+console.log('[43] la fiche refuse');
+mode = 'ficheKo';
+r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+li = (o || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
+dit('les prix sont la malgre tout', li.current_price === 512.3, String(li.current_price));
+dit('les deux colonnes restent vides', li.market_cap === null && li.total_volume === null,
+    JSON.stringify([li.market_cap, li.total_volume]));
+mode = 'ok';
+
+// [44] La sonde dit ce que chaque adresse porte vraiment.
+console.log('[44] la sonde');
+r = await worker.fetch(new Request('https://relais.test/?brut=AAPL',
+  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
+o = await r.json();
+dit('les deux adresses sont interrogees', !!o.courbe && !!o.fiche,
+    JSON.stringify(Object.keys(o)));
+dit('elle dit si la capitalisation est absente',
+    o.courbe.cap === 'absent' || typeof o.courbe.cap === 'number',
+    JSON.stringify(o.courbe.cap));
+dit('et ce que porte la fiche', typeof o.fiche.cap === 'number',
+    JSON.stringify(o.fiche.cap));
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);
