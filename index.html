@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.1327";</script>
+<script>window.PC_VERSION = "260923.1427";</script>
 </head>
 <body>
 
@@ -2053,6 +2053,53 @@ body.detaille .bascule-vue__s{opacity:1;}
 @media (prefers-reduced-motion: reduce){
   html:not([data-anim="force"]) .sous-onglet::after{transition:none;}
 }
+/* ===== Les tuiles de categorie =====
+   Carrees, toutes visibles d'un coup. On choisit dans quoi on
+   investit avant de choisir quoi : c'est l'ordre dans lequel les gens
+   y pensent, et c'est ce qui permet de n'ouvrir ensuite que le marche
+   qui correspond. */
+.tuiles{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(136px,1fr));
+  gap:12px; margin-top:16px;
+}
+.tuile{
+  aspect-ratio:1; display:flex; flex-direction:column; justify-content:flex-end;
+  gap:6px; padding:14px; cursor:pointer; text-align:left;
+  background:var(--paper); border:1.5px solid var(--rule-strong); border-radius:16px;
+  font-family:inherit; color:var(--ink); transition:border-color .18s, transform .18s, background .18s;
+}
+.tuile:hover{border-color:var(--accent); background:var(--accent-soft); transform:translateY(-2px);}
+.tuile:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+.tuile__i{font-size:26px; line-height:1;}
+.tuile__n{font-size:15px; font-weight:600; line-height:1.2;}
+.tuile__d{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-3); line-height:1.3;}
+@media (prefers-reduced-motion: reduce){ html:not([data-anim="force"]) .tuile:hover{transform:none;} }
+
+/* L'etape en cours, et de quoi revenir sur ses pas. */
+.etape__t{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+.etape__r{
+  background:none; border:none; padding:0; cursor:pointer;
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-3);
+  text-decoration:underline; text-underline-offset:3px;
+}
+.etape__r:hover{color:var(--accent);}
+
+/* Le marche de la categorie, reduit a ce qu'il faut pour choisir. */
+.choix{display:flex; flex-direction:column; gap:1px; margin-top:16px;
+  background:var(--rule); border:1px solid var(--rule); border-radius:14px; overflow:hidden;}
+.choix__l{
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px;
+  align-items:center; padding:12px 14px; background:var(--paper);
+  border:none; cursor:pointer; font-family:inherit; text-align:left;
+  transition:background .15s;
+}
+.choix__l:hover{background:var(--accent-soft);}
+.choix__n{font-size:15px; font-weight:600;}
+.choix__s{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-3);}
+.choix__p{
+  font-family:'IBM Plex Mono', monospace; font-size:14.5px;
+  font-variant-numeric:tabular-nums; white-space:nowrap;
+}
 .genres{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
 .genre{
   background:var(--paper); border:1.5px solid var(--rule-strong); border-radius:14px;
@@ -3310,6 +3357,14 @@ window.PC = (function(){
   'e.g.aide.taux':      ["Indiquez le taux annuel et la date de d\u00e9part\u00a0: la valeur se recalcule toute seule, jour apr\u00e8s jour.","Give the annual rate and the start date: the value recomputes on its own, day after day.","Indique el tipo anual y la fecha de inicio: el valor se recalcula solo, d\u00eda tras d\u00eda.","Geben Sie Jahreszins und Startdatum an: Der Wert berechnet sich t\u00e4glich von selbst."],
   'e.g.aide.bien':      ["Un bien, une part de soci\u00e9t\u00e9, un objet\u00a0: sa valeur ne bouge que si vous la changez.","Property, company shares, an object: its value only moves when you change it.","Un bien, una participaci\u00f3n, un objeto: su valor solo cambia si usted lo cambia.","Eine Immobilie, ein Anteil, ein Gegenstand: Der Wert \u00e4ndert sich nur, wenn Sie ihn \u00e4ndern."],
   'e.g.manuel':         ["R\u00e9glage manuel","Manual setting","Ajuste manual","Manuelle Einstellung"],
+  'e.et1':              ["Que voulez-vous ajouter\u00a0?","What do you want to add?","\u00bfQu\u00e9 quiere a\u00f1adir?","Was m\u00f6chten Sie hinzuf\u00fcgen?"],
+  'e.et2':              ["Choisissez dans la liste, ou cherchez","Pick from the list, or search","Elija en la lista, o busque","W\u00e4hlen Sie aus der Liste, oder suchen Sie"],
+  'e.et2.ph':           ["Chercher un nom\u2026","Search a name\u2026","Buscar un nombre\u2026","Einen Namen suchen\u2026"],
+  'e.et3':              ["Combien en avez-vous\u00a0?","How much do you hold?","\u00bfCu\u00e1nto tiene?","Wie viel halten Sie?"],
+  'e.et.retour':        ["Revenir","Back","Volver","Zur\u00fcck"],
+  'e.et2.rien':         ["Rien \u00e0 proposer ici pour l'instant. Cherchez par le nom, ou passez directement \u00e0 la saisie.","Nothing to suggest here for now. Search by name, or go straight to entering it.","Nada que proponer aqu\u00ed por ahora. Busque por nombre, o pase directamente a la introducci\u00f3n.","Hier gibt es vorerst nichts vorzuschlagen. Suchen Sie nach Namen, oder geben Sie es direkt ein."],
+  'e.et2.saisir':       ["Le saisir moi-m\u00eame","Enter it myself","Introducirlo yo mismo","Selbst eingeben"],
+  'e.et2.sansrelais':   ["Les actions et les ETF passent par un relais, \u00e0 indiquer une fois dans le menu. Sans lui, saisissez le titre \u00e0 la main\u00a0: sa valeur ne bougera que si vous la changez.","Shares and ETFs go through a relay, set once in the menu. Without it, enter the security by hand: its value will only move when you change it.","Las acciones y los ETF pasan por un rel\u00e9, a indicar una vez en el men\u00fa. Sin \u00e9l, introduzca el t\u00edtulo a mano: su valor solo cambiar\u00e1 si lo cambia.","Aktien und ETFs laufen \u00fcber ein Relais, einmal im Men\u00fc anzugeben. Ohne es geben Sie den Titel von Hand ein: Sein Wert bewegt sich nur, wenn Sie ihn \u00e4ndern."],
   'e.plus':             ["Le reste \u2014 cat\u00e9gorie, cours, code\u2026","The rest \u2014 category, price, code\u2026","El resto \u2014 categor\u00eda, cotizaci\u00f3n, c\u00f3digo\u2026","Der Rest \u2014 Kategorie, Kurs, Code\u2026"],
   'e.plus.n':           ["Tout est rempli pour vous quand vous choisissez un titre dans la liste. \u00c0 ouvrir seulement si quelque chose manque.","Everything is filled in for you when you pick a security from the list. Open this only if something is missing.","Todo se rellena solo al elegir un t\u00edtulo de la lista. \u00c1bralo solo si falta algo.","Alles wird ausgef\u00fcllt, wenn Sie einen Titel aus der Liste w\u00e4hlen. Nur \u00f6ffnen, wenn etwas fehlt."],
   'b.onglet':           ["Bourse","Stocks","Bolsa","B\u00f6rse"],
@@ -4605,10 +4660,33 @@ window.PC = (function(){
     <div class="carte" style="margin-bottom:30px">
       <div class="carte__t"><h3 data-i18n="e.ajouter.t">Ajouter un actif</h3><span id="sub-devise">Les montants sont en euro</span></div>
       <div class="carte__c">
-        <form class="form-actif" id="form-actif" novalidate>
-          <div class="champ" style="grid-column:1 / -1">
-            <span class="champ__l" id="lbl-genre" data-i18n="e.g.lbl">Qu'est-ce que vous ajoutez&nbsp;?</span>
-            <div class="genres" id="genres" role="group" aria-labelledby="lbl-genre"></div>
+        <!-- Trois etapes. On choisit dans QUOI on investit, puis
+             QUOI precisement, puis COMBIEN. C'est l'ordre dans lequel
+             on y pense, et il permet de n'ouvrir que le marche qui
+             correspond a la categorie. -->
+        <div id="etape-cat">
+          <span class="champ__l" id="lbl-tuiles" data-i18n="e.et1">Que voulez-vous ajouter&nbsp;?</span>
+          <div class="tuiles" id="tuiles" role="group" aria-labelledby="lbl-tuiles"></div>
+        </div>
+
+        <div id="etape-choix" hidden>
+          <div class="etape__t">
+            <span class="champ__l" id="lbl-choix" data-i18n="e.et2">Choisissez dans la liste, ou cherchez</span>
+            <button class="etape__r" type="button" data-retour="cat" data-i18n="e.et.retour">Revenir</button>
+          </div>
+          <div class="champ" style="margin-top:12px">
+            <input id="c-q" type="search" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="sug" id="sug-c" hidden></div>
+          <div class="choix" id="choix-liste"></div>
+          <p class="plus__n" id="choix-mot"></p>
+          <button class="btn btn--ghost" type="button" id="choix-main" style="margin-top:14px" data-i18n="e.et2.saisir">Le saisir moi-même</button>
+        </div>
+
+        <form class="form-actif" id="form-actif" novalidate hidden>
+          <div class="etape__t" style="grid-column:1 / -1">
+            <span class="champ__l" data-i18n="e.et3">Combien en avez-vous&nbsp;?</span>
+            <button class="etape__r" type="button" data-retour="choix" data-i18n="e.et.retour">Revenir</button>
           </div>
           <p class="genre__aide" id="genre-aide"></p>
           <div class="champ"><label for="a-nom" data-i18n="e.f.nom">Nom</label><input id="a-nom" type="text" placeholder="Livret A" required></div>
@@ -7528,6 +7606,10 @@ window.PC = (function(){
     const barre = document.getElementById('sous-marches');
     if (barre) barre.hidden = vueCourante !== 'marches';
     if (vueCourante === 'marches') poseSousMarche(sousMarche);
+    /* Entrer dans « Ajouter » repose toujours la premiere question :
+       un formulaire a moitie rempli par une visite precedente est un
+       piege, et on ne se souvient pas de ce qu'on y avait mis. */
+    if (vueCourante === 'ajout' && !sauteEtapes){ catChoisie = null; montreEtape('cat'); }
     rendre();
     majBarreApp();
     if (!sansDefilement){
@@ -9275,29 +9357,140 @@ window.PC = (function(){
   }
   const caseCours = document.getElementById('a-cours-on');
 
-  /* ===== Ce qu'on ajoute =====
-     Cinq reponses a une question, plutot que deux cases a cocher dont
-     il fallait comprendre le vocabulaire avant de commencer. Le choix
-     pose la categorie, le mode de calcul et ce qu'on demande ensuite.
-     Rien de tout cela ne disparait : le repli « reglage manuel » garde
-     les deux cases pour les cas que ces cinq-la ne couvrent pas. */
-  const GENRES = [
-    ['crypto', 'crypto',  'cours',  'Bitcoin'],
-    ['bourse', 'actions', 'cours',  'Amundi MSCI World'],
-    ['metal',  'or',      'cours',  'Or'],
-    ['taux',   'av',      'taux',   'Livret A'],
-    ['bien',   'immo',    'simple', 'Appartement T3']
-  ];
-  let genreChoisi = null;
+  /* ============================================================
+     AJOUTER EN TROIS ETAPES
+     ------------------------------------------------------------
+     Dans quoi, puis quoi, puis combien. C'est l'ordre dans lequel on
+     y pense, et il a une consequence pratique : une fois la categorie
+     connue, on sait quel marche ouvrir, et l'on peut proposer au lieu
+     de demander.
 
-  function construitGenres(){
-    const hote = document.getElementById('genres');
+     Les categories qui ont un marche (cryptos, actions, ETF, metaux)
+     menent a une liste ou l'on clique. Les autres -- un appartement,
+     une SCPI, un livret -- menent directement a la saisie, parce
+     qu'aucune liste ne peut contenir VOTRE appartement.
+     ============================================================ */
+  const TUILES = {
+    crypto:  {icone:'\u20bf',       marche:'crypto'},
+    actions: {icone:'\ud83d\udcc8', marche:'bourse'},
+    etf:     {icone:'\ud83e\uddfa', marche:'bourse'},
+    or:      {icone:'\ud83e\udd47', marche:'metal'},
+    immo:    {icone:'\ud83c\udfe0', marche:null},
+    scpi:    {icone:'\ud83c\udfe2', marche:null},
+    av:      {icone:'\ud83d\udee1', marche:null, taux:true},
+    liquid:  {icone:'\ud83c\udfe6', marche:null, taux:true},
+    obligations:{icone:'\ud83d\udcdc', marche:null, taux:true},
+    minage:  {icone:'\u26cf',       marche:null},
+    trading: {icone:'\u26a1',       marche:null},
+    noncote: {icone:'\ud83e\udd1d', marche:null},
+    autre:   {icone:'\u2026',       marche:null}
+  };
+  /* L'or et l'argent : deux lignes, pas un marche entier. */
+  const METAUX_CHOIX = [
+    {code:'pax-gold', nom:'Or', place:'\u00a0'},
+    {code:'kinesis-silver', nom:'Argent', place:'\u00a0'}
+  ];
+
+  let catChoisie = null;
+  /* Vrai le temps d'un aller depuis le marche, ou le titre est deja
+     choisi et ou reposer la question serait un pas en arriere. */
+  let sauteEtapes = false;
+
+  function montreEtape(q){
+    const c = document.getElementById('etape-cat');
+    const ch = document.getElementById('etape-choix');
+    const f = document.getElementById('form-actif');
+    if (c) c.hidden = q !== 'cat';
+    if (ch) ch.hidden = q !== 'choix';
+    if (f) f.hidden = q !== 'form';
+  }
+
+  function construitTuiles(){
+    const hote = document.getElementById('tuiles');
     if (!hote) return;
-    hote.innerHTML = GENRES.map(function(g){
-      return '<button class="genre" type="button" data-genre="' + g[0] +
-        '" aria-pressed="' + (g[0] === genreChoisi) + '">' +
-        echap(PC.t('e.g.' + g[0])) + '</button>';
+    hote.innerHTML = CATEGORIES.filter(function(c){ return TUILES[c]; })
+      .map(function(c){
+        return '<button class="tuile" type="button" data-tuile="' + c + '">' +
+          '<span class="tuile__i" aria-hidden="true">' + TUILES[c].icone + '</span>' +
+          '<span class="tuile__n">' + echap(nomCat(c)) + '</span>' +
+        '</button>';
+      }).join('');
+  }
+
+  /* Peint la liste de l'etape 2. */
+  function peintChoix(l){
+    const hote = document.getElementById('choix-liste');
+    const mot = document.getElementById('choix-mot');
+    if (!hote) return;
+    if (!l || !l.length){
+      hote.innerHTML = '';
+      if (mot) mot.textContent = PC.t('e.et2.rien');
+      return;
+    }
+    if (mot) mot.textContent = '';
+    hote.innerHTML = l.map(function(x, i){
+      return '<button class="choix__l" type="button" data-choix="' + i + '">' +
+        logoPetit(x) +
+        '<span><span class="choix__n">' + echap(x.nom) + '</span>' +
+          (x.place ? '<br><span class="choix__s">' + echap(x.place) + '</span>' : '') +
+        '</span>' +
+        '<span class="choix__p">' + (typeof x.cours === 'number' ? echap(eur.format(x.cours)) : '') + '</span>' +
+      '</button>';
     }).join('');
+    hote.querySelectorAll('[data-choix]').forEach(function(b){
+      b.addEventListener('click', function(){
+        prendChoix(l[+b.getAttribute('data-choix')]);
+      });
+    });
+  }
+
+  /* Le meme monogramme que dans les marches, en petit. */
+  function logoPetit(x){
+    if (x.image){
+      return '<img src="' + echapAttr(x.image) + '" alt="" width="26" height="26" ' +
+        'loading="lazy" style="border-radius:50%" ' +
+        'onerror="this.style.visibility=\'hidden\'">';
+    }
+    let h = 0;
+    const t = String(x.code || x.nom || '');
+    for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 360;
+    const mots = String(x.nom || '?').trim().split(/[\s\u2019'-]+/).filter(Boolean);
+    const ini = mots.length > 1
+      ? (mots[0].charAt(0) + mots[1].charAt(0)).toUpperCase()
+      : mots[0].slice(0, 2).toUpperCase();
+    return '<span class="mono-logo" aria-hidden="true" style="width:26px;height:26px;' +
+      'font-size:10px;background:hsl(' + h + ' 62% 42%)">' + echap(ini) + '</span>';
+  }
+
+  /* Un choix fait : on passe a la saisie, deja remplie. */
+  function prendChoix(x){
+    if (!x) return;
+    montreEtape('form');
+    poseCategorie(catChoisie);
+    const nom = document.getElementById('a-nom');
+    const sym = document.getElementById('a-sym');
+    const pu  = document.getElementById('a-pu');
+    if (nom) nom.value = x.nom || '';
+    if (sym) sym.value = x.code || '';
+    if (pu && typeof x.cours === 'number') pu.value = String(x.cours);
+    sugCoupe = true;
+    majUnite();
+    const sa = document.getElementById('sug-a');
+    if (sa){ sa.hidden = true; sa.innerHTML = ''; }
+    const q = document.getElementById('a-qte');
+    if (q) q.focus();
+    /* Le cours manquait dans la liste : on va le chercher. */
+    if (x.code && (!pu || !pu.value)){
+      dire(PC.t('e.sug.encours'));
+      coursDUnCode(x.code).then(function(v){
+        if (v === null){ ouvrePlus(); dire(PC.t('e.sug.posesans', {n:x.nom})); return; }
+        const c2 = document.getElementById('a-pu');
+        if (c2 && !c2.value.trim()) c2.value = String(v);
+        dire(PC.t('e.sug.pose', {n:x.nom, v:eur.format(v)}));
+      });
+    } else if (x.nom){
+      dire(PC.t('e.pre.pret', {n:x.nom}));
+    }
   }
 
   /* Le repli ne s'ouvre pas pour rien : seulement quand il porte le
@@ -9307,42 +9500,97 @@ window.PC = (function(){
     if (d) d.open = true;
   }
 
-  function poseGenre(cle){
-    const g = GENRES.filter(function(x){ return x[0] === cle; })[0];
-    if (!g) return;
-    genreChoisi = cle;
-    document.querySelectorAll('[data-genre]').forEach(function(b){
-      b.setAttribute('aria-pressed', String(b.getAttribute('data-genre') === cle));
-    });
-    /* La categorie n'est qu'un point de depart : les puces restent la,
-       et quelqu'un qui range son ETF dans « Minage » a ses raisons. */
-    champCat.value = g[1];
+  /* La categorie pose le mode de calcul : un livret se recalcule d'un
+     taux, une crypto d'un cours, un appartement ne bouge que si on le
+     change. Personne n'a a cocher quoi que ce soit pour ca. */
+  function poseCategorie(cat){
+    const t = TUILES[cat];
+    if (!t) return;
+    catChoisie = cat;
+    champCat.value = cat;
     construitPuces();
-
-    const surCours = g[2] === 'cours', surTaux = g[2] === 'taux';
+    const surCours = !!t.marche, surTaux = !!t.taux;
     if (caseCours){ caseCours.checked = surCours; montreCours(surCours); }
     if (caseTaux){ caseTaux.checked = surTaux; montreTaux(surTaux); }
-
-    /* Une quantite n'a de sens que sur ce qui se compte en parts. */
     const cq = document.getElementById('champ-qte');
     if (cq) cq.hidden = !surCours;
-
-    const nom = document.getElementById('a-nom');
-    if (nom) nom.placeholder = g[3];
-
     const aide = document.getElementById('genre-aide');
     if (aide) aide.textContent = PC.t('e.g.aide.' +
       (surCours ? 'cours' : surTaux ? 'taux' : 'bien'));
-
     majUnite();
-    chercheDepuisNom();
+  }
+
+  /* Une tuile : on ouvre le marche de cette categorie, ou la saisie
+     directement quand il n'y en a pas. */
+  function ouvreCategorie(cat){
+    const t = TUILES[cat];
+    if (!t) return;
+    catChoisie = cat;
+    if (!t.marche){ montreEtape('form'); poseCategorie(cat); videChamps();
+                    const nn = document.getElementById('a-nom'); if (nn) nn.focus();
+                    return; }
+    montreEtape('choix');
+    const q = document.getElementById('c-q');
+    if (q){ q.value = ''; q.placeholder = PC.t('e.et2.ph'); }
+    const sc = document.getElementById('sug-c');
+    if (sc){ sc.hidden = true; sc.innerHTML = ''; }
+    const mot = document.getElementById('choix-mot');
+    if (mot) mot.textContent = '';
+
+    if (t.marche === 'metal'){ peintChoix(METAUX_CHOIX); return; }
+    const hote = document.getElementById('choix-liste');
+    if (hote) hote.innerHTML = '';
+    if (mot) mot.textContent = PC.t('e.sug.cherche');
+    if (!window.PC_MARCHES || !PC_MARCHES.dix){ peintChoix([]); return; }
+    PC_MARCHES.dix(t.marche).then(function(l){
+      if (l === null){ if (mot) mot.textContent = PC.t('e.et2.sansrelais'); return; }
+      peintChoix((l || []).map(function(c){
+        return {code:c.id, nom:c.name, place:String(c.symbol || '').toUpperCase(),
+                cours:c.current_price, image:c.image};
+      }));
+    });
+  }
+
+  function videChamps(){
+    ['a-nom','a-qte','a-inv','a-val','a-pu','a-sym','a-taux','a-depuis'].forEach(function(id){
+      const e = document.getElementById(id);
+      if (e) e.value = '';
+    });
   }
 
   document.addEventListener('click', function(e){
-    const b = e.target && e.target.closest && e.target.closest('[data-genre]');
-    if (b) poseGenre(b.getAttribute('data-genre'));
+    const t = e.target && e.target.closest && e.target.closest('[data-tuile]');
+    if (t){ ouvreCategorie(t.getAttribute('data-tuile')); return; }
+    const r = e.target && e.target.closest && e.target.closest('[data-retour]');
+    if (r){
+      const ou = r.getAttribute('data-retour');
+      /* Revenir depuis la saisie mene au marche quand il y en a un,
+         et aux tuiles sinon : on ne renvoie pas quelqu'un sur une
+         liste vide. */
+      montreEtape(ou === 'choix' && catChoisie && TUILES[catChoisie] &&
+                  TUILES[catChoisie].marche ? 'choix' : 'cat');
+      return;
+    }
+    if (e.target && e.target.closest && e.target.closest('#choix-main')){
+      montreEtape('form'); poseCategorie(catChoisie); videChamps();
+      const nn = document.getElementById('a-nom'); if (nn) nn.focus();
+    }
   });
-  construitGenres();
+
+  /* La recherche de l'etape 2 : le meme moteur que partout. */
+  const chercheEtape2 = retarde(function(){
+    const q = document.getElementById('c-q');
+    if (!q) return;
+    propose('sug-c', q.value, function(x){
+      prendChoix({code:x.code, nom:x.nom, place:x.place});
+    });
+  });
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.id === 'c-q') chercheEtape2();
+  });
+
+  construitTuiles();
+  montreEtape('cat');
 
   /* Ajouter depuis le marche : on arrive avec le nom, le code et le
      cours deja connus. Les redemander serait faire recopier a la main
@@ -9350,8 +9598,13 @@ window.PC = (function(){
   window.PC_AJOUT_PRE = function(o){
     if (!o || !o.code) return;
     sugCoupe = true;
+    /* On arrive avec le titre deja choisi : la vue ne doit pas
+       reposer la premiere question par-dessus. */
+    sauteEtapes = true;
     poseVue('ajout');
-    poseGenre(o.genre === 'bourse' ? 'bourse' : 'crypto');
+    sauteEtapes = false;
+    montreEtape('form');
+    poseCategorie(o.genre === 'bourse' ? 'actions' : 'crypto');
     const nom = document.getElementById('a-nom');
     const sym = document.getElementById('a-sym');
     const pu  = document.getElementById('a-pu');
@@ -9537,9 +9790,9 @@ window.PC = (function(){
     /* On repose la question plutot que de garder le dernier choix :
        deux lignes qui se suivent sont rarement de meme nature, et un
        choix deja fait se re-clique moins vite qu'il ne se remarque. */
-    genreChoisi = null;
     sugCoupe = false;
-    construitGenres();
+    catChoisie = null;
+    montreEtape('cat');
     const dp = document.getElementById('plus');
     if (dp) dp.open = false;
     const cq = document.getElementById('champ-qte');
@@ -10555,6 +10808,20 @@ window.PC = (function(){
        Les points sont gardés quelques minutes : revenir sur une plage
        déjà vue, ou un simple rendu, ne doit pas redemander au réseau ce
        qu'on a déjà. */
+    /* Une liste, rendue sans toucher a l'ecran. L'ajout s'en sert
+       pour proposer un choix sans ouvrir l'onglet des marches, et
+       sans deranger ce qui y est affiche. */
+    dix: function(src){
+      const bourse = src === 'bourse';
+      const u = bourse
+        ? (relais() ? avecQ(relais(), 'marche=1&vs_currencies=' + dev()) : null)
+        : BASE + '/coins/markets?vs_currency=' + dev() +
+          '&order=market_cap_desc&per_page=12&page=1&price_change_percentage=24h';
+      if (!u) return Promise.resolve(null);   /* null : pas de relais */
+      return json(u).then(function(o){
+        return Array.isArray(o) ? o.slice(0, 12) : [];
+      }, function(e){ noteRefus(e); return []; });
+    },
     trace: traceDans,
     /* Vider la memoire des courbes. Sert aux tests, et a la bascule de
        devise, ou les points gardes ne valent plus rien. */
