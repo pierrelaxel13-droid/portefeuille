@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.1427";</script>
+<script>window.PC_VERSION = "260923.1609";</script>
 </head>
 <body>
 
@@ -2058,22 +2058,37 @@ body.detaille .bascule-vue__s{opacity:1;}
    investit avant de choisir quoi : c'est l'ordre dans lequel les gens
    y pensent, et c'est ce qui permet de n'ouvrir ensuite que le marche
    qui correspond. */
-.tuiles{
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(136px,1fr));
-  gap:12px; margin-top:16px;
+.tuiles-cat{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+  /* « Matieres premieres » tient sur deux lignes la ou « SCPI » tient
+     sur une : sans cette ligne, une rangee serait plus haute que
+     l'autre et l'alignement sauterait a l'oeil. */
+  grid-auto-rows:1fr;
+  gap:10px; margin-top:16px;
 }
-.tuile{
-  aspect-ratio:1; display:flex; flex-direction:column; justify-content:flex-end;
-  gap:6px; padding:14px; cursor:pointer; text-align:left;
-  background:var(--paper); border:1.5px solid var(--rule-strong); border-radius:16px;
-  font-family:inherit; color:var(--ink); transition:border-color .18s, transform .18s, background .18s;
+/* Le nom compte : « tuile » tout court appartient aux deux grandes
+   portes de l'espace, plus bas dans cette feuille. Le reprendre ici
+   revenait a se faire repeindre par elles. */
+.tuile-cat{
+  display:flex; align-items:center; gap:10px;
+  padding:12px 18px; cursor:pointer; text-align:left;
+  background:color-mix(in srgb, var(--paper) 42%, transparent);
+  -webkit-backdrop-filter:blur(12px) saturate(1.4);
+  backdrop-filter:blur(12px) saturate(1.4);
+  border:1px solid var(--rule-strong); border-radius:999px;
+  font-family:inherit; font-size:14px; font-weight:600; line-height:1.2;
+  color:var(--ink);
+  transition:transform .18s cubic-bezier(.2,.7,.2,1),
+             background .18s, border-color .18s, color .18s;
 }
-.tuile:hover{border-color:var(--accent); background:var(--accent-soft); transform:translateY(-2px);}
-.tuile:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
-.tuile__i{font-size:26px; line-height:1;}
-.tuile__n{font-size:15px; font-weight:600; line-height:1.2;}
-.tuile__d{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-3); line-height:1.3;}
-@media (prefers-reduced-motion: reduce){ html:not([data-anim="force"]) .tuile:hover{transform:none;} }
+.tuile-cat:hover{
+  background:var(--accent); border-color:var(--accent); color:#fff;
+  transform:translateY(-2px);
+}
+.tuile-cat:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+.tuile-cat__i{font-size:19px; line-height:1; flex:none;}
+.tuile-cat__n{min-width:0;}
+@media (prefers-reduced-motion: reduce){ html:not([data-anim="force"]) .tuile-cat:hover{transform:none;} }
 
 /* L'etape en cours, et de quoi revenir sur ses pas. */
 .etape__t{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
@@ -2091,6 +2106,9 @@ body.detaille .bascule-vue__s{opacity:1;}
   display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px;
   align-items:center; padding:12px 14px; background:var(--paper);
   border:none; cursor:pointer; font-family:inherit; text-align:left;
+  /* Un bouton ne prend PAS la couleur du texte alentour : sans cette
+     ligne il herite du noir du systeme, illisible sur fond sombre. */
+  color:var(--ink);
   transition:background .15s;
 }
 .choix__l:hover{background:var(--accent-soft);}
@@ -3120,7 +3138,22 @@ window.PC = (function(){
   'e.c.scpi':           ["SCPI","Property funds","Fondos inmobiliarios","Immobilienfonds"],
   'e.c.av':             ["Assurance-vie","Life insurance","Seguro de vida","Lebensversicherung"],
   'e.c.obligations':    ["Obligations","Bonds","Bonos","Anleihen"],
-  'e.c.or':             ["Or & métaux","Gold & metals","Oro y metales","Gold & Metalle"],
+  'e.c.or':             ["Matières premières","Commodities","Materias primas","Rohstoffe"],
+  'e.mp.or':            ["Or","Gold","Oro","Gold"],
+  'e.mp.argent':        ["Argent","Silver","Plata","Silber"],
+  'e.mp.platine':       ["Platine","Platinum","Platino","Platin"],
+  'e.mp.palladium':     ["Palladium","Palladium","Paladio","Palladium"],
+  'e.mp.cuivre':        ["Cuivre","Copper","Cobre","Kupfer"],
+  'e.mp.wti':           ["Pétrole WTI","WTI crude oil","Petróleo WTI","WTI-Rohöl"],
+  'e.mp.brent':         ["Pétrole Brent","Brent crude oil","Petróleo Brent","Brent-Rohöl"],
+  'e.mp.gaz':           ["Gaz naturel","Natural gas","Gas natural","Erdgas"],
+  'e.mp.ble':           ["Blé","Wheat","Trigo","Weizen"],
+  'e.mp.mais':          ["Maïs","Corn","Maíz","Mais"],
+  'e.mp.u.oz':          ["l'once troy","per troy ounce","por onza troy","je Feinunze"],
+  'e.mp.u.lb':          ["la livre","per pound","por libra","je Pfund"],
+  'e.mp.u.baril':       ["le baril","per barrel","por barril","je Barrel"],
+  'e.mp.u.mmbtu':       ["le MMBtu","per MMBtu","por MMBtu","je MMBtu"],
+  'e.mp.u.boisseau':    ["le boisseau","per bushel","por búshel","je Scheffel"],
   'e.c.noncote':        ["Non coté","Unlisted","No cotizado","Nicht börsennotiert"],
   'e.c.liquid':         ["Liquidités","Cash","Liquidez","Liquidität"],
   'e.c.autre':          ["Autre","Other","Otro","Sonstiges"],
@@ -3185,6 +3218,10 @@ window.PC = (function(){
 
   /* --- Revenus (Max) --- */
   'e.rev.champ':        ["Revenu","Income","Ingreso","Ertrag"],
+  'e.rev.aide':         ["Un loyer, un dividende, une production : ce que cette ligne vous verse. Il s'ajoute au capital au fil du temps, sans rien avoir à ressaisir.","A rent, a dividend, an output: what this line pays you. It is added to your capital as time passes, with nothing to re-enter.","Un alquiler, un dividendo, una producción: lo que esta línea le paga. Se suma al capital con el paso del tiempo, sin volver a introducir nada.","Eine Miete, eine Dividende, ein Ertrag: was diese Position auszahlt. Sie wird im Lauf der Zeit dem Kapital zugerechnet, ohne erneute Eingabe."],
+  'e.rev.debut':        ["Perçu depuis le","Received since","Percibido desde el","Erhalten seit"],
+  'e.rev.percu':        ["Revenus perçus","Income collected","Ingresos percibidos","Erhaltene Erträge"],
+  'e.pa.c5':            ["Cette ligne vous a versé {x} depuis le {d} : c'est autant que le capital a gagné, sans que la valeur du bien ait bougé.","This holding has paid you {x} since {d}: that is capital gained without the asset's own value moving at all.","Esta línea le ha pagado {x} desde el {d}: es capital ganado sin que el valor del bien se haya movido.","Diese Position hat Ihnen seit dem {d} {x} ausgezahlt: genau so viel Kapital ist hinzugekommen, ohne dass sich der Wert selbst bewegt hat."],
   'e.rev.periode':      ["Périodicité","Frequency","Periodicidad","Häufigkeit"],
   'e.rev.p.mois':       ["Par mois","Per month","Al mes","Pro Monat"],
   'e.rev.p.trim':       ["Par trimestre","Per quarter","Por trimestre","Pro Quartal"],
@@ -3409,6 +3446,7 @@ window.PC = (function(){
   'm.h2':                 ["Les march\u00e9s, en direct.","The markets, live.","Los mercados, en directo.","Die M\u00e4rkte, live."],
   'm.intro':              ["Les cours ci-dessous viennent du march\u00e9, pas d'une capture d'\u00e9cran. Ils se rafra\u00eechissent pendant que vous lisez cette page.","The prices below come from the market, not from a screenshot. They refresh while you read this page.","Las cotizaciones de abajo vienen del mercado, no de una captura de pantalla. Se actualizan mientras lee esta p\u00e1gina.","Die Kurse unten kommen vom Markt, nicht aus einem Screenshot. Sie aktualisieren sich, w\u00e4hrend Sie diese Seite lesen."],
   'm.cherche':            ["Chercher une crypto","Search a coin","Buscar una cripto","Krypto suchen"],
+  'm.cherche.b':          ["Chercher une action, un ETF","Search a stock or ETF","Buscar una acci\u00f3n o un ETF","Aktie oder ETF suchen"],
   'm.rang':               ["Rang","Rank","Rango","Rang"],
   'm.nom':                ["Nom","Name","Nombre","Name"],
   'm.prix':               ["Prix","Price","Precio","Preis"],
@@ -3428,6 +3466,7 @@ window.PC = (function(){
   'm.limite':             ["Le fournisseur limite les appels. Les cours reviendront dans une minute.","The provider is rate-limiting. Prices will come back in a minute.","El proveedor limita las llamadas. Las cotizaciones volver\u00e1n en un minuto.","Der Anbieter drosselt die Aufrufe. Die Kurse kommen in einer Minute zur\u00fcck."],
   'm.vide':               ["Aucune crypto ne correspond \u00e0 cette recherche.","No coin matches this search.","Ninguna cripto coincide con esta b\u00fasqueda.","Keine Krypto passt zu dieser Suche."],
   'm.maj':                ["Cours de CoinGecko, relev\u00e9s \u00e0 {{h}}","Prices from CoinGecko, taken at {{h}}","Cotizaciones de CoinGecko, tomadas a las {{h}}","Kurse von CoinGecko, erfasst um {{h}}"],
+  'm.maj.b':              ["Cours de march\u00e9 via votre relais, relev\u00e9s \u00e0 {{h}}","Market prices via your relay, taken at {{h}}","Cotizaciones de mercado v\u00eda su rel\u00e9, tomadas a las {{h}}","Marktkurse \u00fcber Ihr Relais, erfasst um {{h}}"],
   'm.suivre':             ["Ajouter \u00e0 mon portefeuille","Add to my portfolio","A\u00f1adir a mi cartera","Zu meinem Portfolio hinzuf\u00fcgen"],
   'e.pre.pret':           ["{{n}} est pr\u00eat\u00a0: il ne reste que la quantit\u00e9 et le montant investi.","{{n}} is ready: only the quantity and the amount invested are left.","{{n}} est\u00e1 listo: solo faltan la cantidad y el importe invertido.","{{n}} ist bereit: Es fehlen nur Menge und investierter Betrag."],
   'e.src.vif':          ["Cours en direct \u2014 {{s}}","Live prices \u2014 {{s}}","Cotizaciones en directo \u2014 {{s}}","Kurse live \u2014 {{s}}"],
@@ -3455,7 +3494,7 @@ window.PC = (function(){
   'e.me.u.oz':          ["Onces troy","Troy ounces","Onzas troy","Feinunzen"],
   'e.me.u.g':           ["Grammes","Grams","Gramos","Gramm"],
   'e.me.u.kg':          ["Kilos","Kilos","Kilos","Kilo"],
-  'e.me.aide':          ["L'or et l'argent se cotent \u00e0 l'once troy (31,1035\u00a0g). Comptez en grammes ou en kilos si c'est ainsi que vous d\u00e9tenez\u00a0: la conversion se fait toute seule.","Gold and silver are quoted per troy ounce (31.1035 g). Count in grams or kilos if that is how you hold them: the conversion happens on its own.","El oro y la plata se cotizan por onza troy (31,1035\u00a0g). Cuente en gramos o kilos si as\u00ed los tiene: la conversi\u00f3n se hace sola.","Gold und Silber werden je Feinunze (31,1035\u00a0g) notiert. Rechnen Sie in Gramm oder Kilo, wenn Sie es so halten \u2014 die Umrechnung geschieht von selbst."],
+  'e.me.aide':          ["Ce cours est donn\u00e9 \u00e0 l'once troy (31,1035\u00a0g). Comptez en grammes ou en kilos si c'est ainsi que vous d\u00e9tenez\u00a0: la conversion se fait toute seule.","This price is quoted per troy ounce (31.1035 g). Enter grams or kilos if that is how you hold it: the conversion is done for you.","Esta cotizaci\u00f3n es por onza troy (31,1035\u00a0g). Indique gramos o kilos si as\u00ed lo posee: la conversi\u00f3n se hace sola.","Dieser Kurs gilt je Feinunze (31,1035\u00a0g). Rechnen Sie in Gramm oder Kilo, wenn Sie so halten: die Umrechnung erfolgt automatisch."],
   'e.me.jeton':         ["Le cours suit un jeton adoss\u00e9 au m\u00e9tal, une unit\u00e9 pour une once. Il colle au march\u00e9 de tr\u00e8s pr\u00e8s, mais ce n'est pas le fixing officiel de Londres\u00a0: comptez un \u00e9cart de quelques dixi\u00e8mes de pour cent.","The price follows a metal-backed token, one unit per ounce. It tracks the market closely, but it is not the official London fix: expect a gap of a few tenths of a percent.","La cotizaci\u00f3n sigue un token respaldado por el metal, una unidad por onza. Se ajusta mucho al mercado, pero no es el fixing oficial de Londres: cuente con unas d\u00e9cimas de diferencia.","Der Kurs folgt einem metallgedeckten Token, eine Einheit je Unze. Er liegt sehr nah am Markt, ist aber nicht das offizielle Londoner Fixing: Rechnen Sie mit einigen Zehntelprozent Abweichung."],
   'e.co.indiquer':      ["Lier \u00e0 un cours","Link to a price","Vincular a una cotizaci\u00f3n","Mit einem Kurs verkn\u00fcpfen"],
   'e.co.modifier':      ["Mettre le cours \u00e0 jour","Update the price","Actualizar la cotizaci\u00f3n","Kurs aktualisieren"],
@@ -4666,7 +4705,7 @@ window.PC = (function(){
              correspond a la categorie. -->
         <div id="etape-cat">
           <span class="champ__l" id="lbl-tuiles" data-i18n="e.et1">Que voulez-vous ajouter&nbsp;?</span>
-          <div class="tuiles" id="tuiles" role="group" aria-labelledby="lbl-tuiles"></div>
+          <div class="tuiles-cat" id="tuiles" role="group" aria-labelledby="lbl-tuiles"></div>
         </div>
 
         <div id="etape-choix" hidden>
@@ -4695,6 +4734,36 @@ window.PC = (function(){
           <div class="champ"><label for="a-inv" data-i18n="e.f.inv">Investi</label><input id="a-inv" type="text" inputmode="decimal" placeholder="10 000" required></div>
           <div class="champ" id="champ-val"><label for="a-val" data-i18n="e.f.val">Valeur actuelle</label><input id="a-val" type="text" inputmode="decimal" placeholder="11 500"></div>
           <div class="sug" id="sug-a" hidden></div>
+          <!-- Un loyer n'est pas « le reste » : c'est la raison d'etre
+               d'un bien locatif, et c'est lui qui fait monter le
+               capital mois apres mois. Il reste donc a l'ecran, pour
+               les categories qui en versent un. -->
+          <div class="champ" id="champ-rev" hidden><label for="a-rev" data-i18n="e.rev.champ">Revenu</label><input id="a-rev" type="text" inputmode="decimal" placeholder="780">
+            <p class="champ__note" data-i18n="e.rev.aide">Un loyer, un dividende, une production&nbsp;: ce que cette ligne vous verse. Il s'ajoute au capital au fil du temps, sans rien avoir à ressaisir.</p>
+          </div>
+          <div class="champ" id="champ-revp" hidden><label for="a-revp" data-i18n="e.rev.periode">Périodicité</label>
+            <select id="a-revp">
+              <option value="mois" data-i18n="e.rev.p.mois">Par mois</option>
+              <option value="trim" data-i18n="e.rev.p.trim">Par trimestre</option>
+              <option value="an" data-i18n="e.rev.p.an">Par an</option>
+            </select>
+          </div>
+          <div class="champ" id="champ-revd" hidden><label for="a-revd" data-i18n="e.rev.debut">Perçu depuis le</label><input id="a-revd" type="date"></div>
+          <!-- L'or, l'argent, le platine et le palladium se cotent a
+               l'once troy. Personne ne detient « 8 onces » dans sa
+               tete : on detient 250 grammes ou un lingot. Le champ
+               n'apparait que pour ces quatre-la, et la conversion se
+               fait toute seule. Il est ici, a l'ecran, et non dans le
+               repli : quelqu'un qui saisit 250 sans l'avoir vu
+               enregistrerait 250 ONCES. -->
+          <div class="champ" id="champ-unite" hidden><label for="a-unite" data-i18n="e.me.unite">Unité</label>
+            <select id="a-unite">
+              <option value="g" data-i18n="e.me.u.g">Grammes</option>
+              <option value="oz" data-i18n="e.me.u.oz">Onces troy</option>
+              <option value="kg" data-i18n="e.me.u.kg">Kilos</option>
+            </select>
+            <p class="champ__note" data-i18n="e.me.aide">Ce cours est donné à l'once troy (31,1035 g). Comptez en grammes ou en kilos si c'est ainsi que vous détenez : la conversion se fait toute seule.</p>
+          </div>
           <!-- ===== Le reste =====
                Ce qui se remplit tout seul n'a pas a occuper l'ecran.
                Choisir un titre dans la liste pose le nom, le code et le
@@ -4736,26 +4805,6 @@ window.PC = (function(){
                Vide, le cours reste saisi a la main : c'est le cas de la
                bourse, dont aucun fournisseur gratuit ne repond sans cle. -->
           <div class="champ" id="champ-sym" hidden><label for="a-sym" data-i18n="e.dir.code">Code du cours</label><input id="a-sym" type="text" list="liste-cours" placeholder="bitcoin" autocomplete="off" spellcheck="false"></div>
-          <!-- L'or et l'argent se cotent a l'once troy. Personne ne
-               detient « 8 onces » dans sa tete : on detient 250 grammes
-               ou un lingot. Le champ n'apparait que pour un metal, et
-               la conversion se fait toute seule. -->
-          <div class="champ" id="champ-unite" hidden><label for="a-unite" data-i18n="e.me.unite">Unité</label>
-            <select id="a-unite">
-              <option value="g" data-i18n="e.me.u.g">Grammes</option>
-              <option value="oz" data-i18n="e.me.u.oz">Onces troy</option>
-              <option value="kg" data-i18n="e.me.u.kg">Kilos</option>
-            </select>
-            <p class="champ__note" data-i18n="e.me.aide">L'or et l'argent se cotent à l'once troy (31,1035 g). Comptez en grammes ou en kilos si c'est ainsi que vous détenez : la conversion se fait toute seule.</p>
-          </div>
-          <div class="champ" id="champ-rev" hidden><label for="a-rev" data-i18n="e.rev.champ">Revenu</label><input id="a-rev" type="text" inputmode="decimal" placeholder="780"></div>
-          <div class="champ" id="champ-revp" hidden><label for="a-revp" data-i18n="e.rev.periode">Périodicité</label>
-            <select id="a-revp">
-              <option value="mois" data-i18n="e.rev.p.mois">Par mois</option>
-              <option value="trim" data-i18n="e.rev.p.trim">Par trimestre</option>
-              <option value="an" data-i18n="e.rev.p.an">Par an</option>
-            </select>
-          </div>
             </div>
           </details>
           <button class="btn" type="submit" data-i18n="e.f.ajouter">Ajouter</button>
@@ -4771,6 +4820,12 @@ window.PC = (function(){
                metal, seuls cours de l'or et de l'argent qu'un
                fournisseur gratuit serve depuis un navigateur. -->
           <option value="pax-gold"></option><option value="kinesis-silver"></option>
+          <!-- Les autres matieres premieres passent par le relais :
+               leur code s'ecrit « yh:<symbole a terme> ». -->
+          <option value="yh:PL=F"></option><option value="yh:PA=F"></option>
+          <option value="yh:HG=F"></option><option value="yh:CL=F"></option>
+          <option value="yh:BZ=F"></option><option value="yh:NG=F"></option>
+          <option value="yh:ZW=F"></option><option value="yh:ZC=F"></option>
         </datalist>
         <div class="apercu-calc" id="apercu-calc" aria-live="polite">
           <span><span class="apercu-calc__k" data-i18n="e.ap.res">Résultat</span> <span class="apercu-calc__v" id="ap-res">—</span></span>
@@ -4805,7 +4860,7 @@ window.PC = (function(){
       <div class="marches__vue" id="mar-vue-liste">
         <div class="marches__barre">
           <input class="marches__q" id="mar-q" type="search" autocomplete="off"
-                 spellcheck="false" data-i18n-titre="m.cherche" placeholder="Chercher une crypto">
+                 spellcheck="false" data-i18n-titre="m.cherche">
           <p class="marches__etat mono" id="mar-etat" role="status"></p>
         </div>
         <div class="marches__tete mono" aria-hidden="true">
@@ -6354,7 +6409,7 @@ window.PC = (function(){
      montant : supprimer un relevé puis le laisser se réinscrire dans la
      foulée ferait un bouton qui ne supprime rien. */
   function ecrire(sansReleve, auto){
-    majTaux(); majCours();
+    majTaux(); majCours(); majRevenus();
     if (!sansReleve) noteReleve(null, false, auto);
     rangePortefeuille();
     try {
@@ -6537,6 +6592,51 @@ window.PC = (function(){
     if (!a || typeof a.rev !== 'number' || a.rev <= 0) return 0;
     return a.rev * (PAR_AN[a.revP] || 1);
   }
+
+  /* ===== Le loyer fait monter le capital =====
+     Declarer un loyer et le voir seulement resume quelque part, c'est
+     la moitie du travail : l'argent est REELLEMENT arrive. On le
+     credite donc a la ligne, au fil du temps, sans rien demander de
+     plus apres la saisie.
+
+     `revDepuis` : le jour ou les versements commencent.
+     `revCum`    : ce qui a ete credite jusqu'ici.
+     `revVu`     : jusqu'a quand on a credite. On l'avance de ce qu'on
+                   a effectivement porte au compte, pas de l'heure
+                   qu'il est : sans ca, les arrondis au centime se
+                   perdraient un par un.
+
+     L'annee vaut 365,2425 jours — la duree moyenne d'une annee
+     gregorienne. Prendre 365 ferait deriver d'un jour tous les quatre
+     ans, ce qui finit par se voir sur un loyer. */
+  const AN_MS = 365.2425 * 24 * 3600 * 1000;
+
+  function poseDebutRevenu(a, iso){
+    const maintenant = Date.now();
+    let d = iso ? Date.parse(iso + 'T00:00:00') : NaN;
+    /* Une date a venir ne peut rien avoir verse : on part d'aujourd'hui
+       plutot que de crediter a rebours. */
+    if (!isFinite(d) || d > maintenant) d = maintenant;
+    a.revDepuis = jourISO(d);
+    a.revVu = d;
+    if (typeof a.revCum !== 'number') a.revCum = 0;
+  }
+
+  function majRevenus(){
+    const maintenant = Date.now();
+    actifs.forEach(function(a){
+      const an = revenuAnnuel(a);
+      if (!an) return;
+      if (typeof a.revVu !== 'number') poseDebutRevenu(a, a.revDepuis || null);
+      const gagne = Math.round(an * ((maintenant - a.revVu) / AN_MS) * 100) / 100;
+      /* Moins d'un centime : on attend. Crediter zero avancerait
+         `revVu` pour rien et mangerait le reste. */
+      if (!(gagne > 0)) return;
+      a.revCum = Math.round(((a.revCum || 0) + gagne) * 100) / 100;
+      a.revVu += gagne / an * AN_MS;
+      a.val = Math.round((a.val + gagne) * 100) / 100;
+    });
+  }
   function revenuTotal(){
     return actifs.reduce(function(s2, a){ return s2 + revenuAnnuel(a); }, 0);
   }
@@ -6579,7 +6679,7 @@ window.PC = (function(){
   }
 
   function rendre(){
-    majTaux(); majCours();
+    majTaux(); majCours(); majRevenus();
     const t = totaux();
 
     /* La valeur totale a sa propre surface en tête : la laisser aussi
@@ -6848,7 +6948,7 @@ window.PC = (function(){
           'autocomplete="off" spellcheck="false" value="' +
           (a.sym ? echapAttr(a.sym) : '') + '"></div>' +
         '<div class="sug" id="sug-co" hidden></div>' +
-        '<div class="champ" id="co-champ-unite"' + (estMetal(a.sym) ? '' : ' hidden') + '>' +
+        '<div class="champ" id="co-champ-unite"' + (seCoteALOnce(a.sym) ? '' : ' hidden') + '>' +
           '<label for="co-unite">' + PC.t('e.me.unite') + '</label>' +
           '<select id="co-unite">' +
             ['g', 'oz', 'kg'].map(function(u){
@@ -6925,7 +7025,7 @@ window.PC = (function(){
       const cs = document.getElementById('co-sym');
       if (cs) cs.value = x.code;
       const cu = document.getElementById('co-champ-unite');
-      if (cu) cu.hidden = !estMetal(x.code);
+      if (cu) cu.hidden = !seCoteALOnce(x.code);
       dire(PC.t('e.sug.encours'));
       coursDUnCode(x.code).then(function(v){
         if (v === null){ dire(PC.t('e.sug.posesans', {n:x.nom})); return; }
@@ -6957,7 +7057,7 @@ window.PC = (function(){
        l'est plus. */
     const sym = document.getElementById('co-sym').value.trim().toLowerCase();
     if (sym) a.sym = sym; else delete a.sym;
-    if (estMetal(sym)){
+    if (seCoteALOnce(sym)){
       const u = document.getElementById('co-unite');
       a.unite = (u && UNITES[u.value]) ? u.value : 'oz';
     } else delete a.unite;
@@ -6966,7 +7066,7 @@ window.PC = (function(){
        donneraient deux valeurs différentes pour la même ligne. Le
        dernier posé l'emporte. */
     delete a.taux; delete a.depuis;
-    a.val = valeurCours(a);
+    a.val = Math.round((valeurCours(a) + (a.revCum || 0)) * 100) / 100;
     ecrire(); rendre();
     dire(PC.t('e.co.ok', {x:a.nom, v:eur.format(a.val)}));
   }
@@ -6978,7 +7078,7 @@ window.PC = (function(){
     const c = e.target;
     if (!c || c.id !== 'co-sym') return;
     const ch = document.getElementById('co-champ-unite');
-    if (ch) ch.hidden = !estMetal(c.value.trim().toLowerCase());
+    if (ch) ch.hidden = !seCoteALOnce(c.value.trim().toLowerCase());
   });
 
   function oteCours(){
@@ -7020,12 +7120,16 @@ window.PC = (function(){
        l'étiquette libre : c'est elle qui entre dans le calcul. */
     const qte = (typeof a.q === 'number' && a.q > 0) ? a.q : premierNombre(a.qte);
 
-    const chiffres = [
+    const chiffresDe = [
       [PC.t('e.th.inv'), eur.format(a.inv)],
       [PC.t('e.th.val'), eur.format(a.val)],
       [PC.t('e.th.res'), marque(res, eur.format(Math.abs(res)))],
       [PC.t('e.ap.perf'), marque(perf, pourcent(perf))]
-    ].map(function(k, i){
+    ];
+    /* Un loyer encaissé n'est pas un détail à replier : c'est la
+       raison pour laquelle la valeur a monté sans que le bien bouge. */
+    if (a.revCum > 0) chiffresDe.push([PC.t('e.rev.percu'), eur.format(a.revCum)]);
+    const chiffres = chiffresDe.map(function(k, i){
       /* La valeur porte une ancre : c'est le seul de ces quatre chiffres
          qu'un tick fait bouger entre deux rendus complets. */
       return '<div class="kpi"><div class="kpi__k">' + k[0] + '</div><div class="kpi__v"' +
@@ -7055,6 +7159,11 @@ window.PC = (function(){
       detail.splice(2, 0, [PC.t('e.fi.pru'), eur.format(a.inv / qte)]);
       detail.splice(3, 0, [PC.t('e.fi.valunit'), eur.format(a.val / qte)]);
     }
+    /* Le capital a monte : il faut pouvoir voir d'ou. */
+    if (a.revCum > 0){
+      detail.push([PC.t('e.rev.percu'), eur.format(a.revCum)]);
+      if (a.revDepuis) detail.push([PC.t('e.rev.debut'), dateCourte(a.revDepuis)]);
+    }
     if (t.gain !== 0) detail.push([PC.t('e.fi.partres'), part0(res / t.gain * 100)]);
 
     /* Une phrase par idée, chacune tirée des chiffres du dessus : la
@@ -7066,7 +7175,11 @@ window.PC = (function(){
       PC.t('e.pa.c2', {x:part1(partTotal), y:part1(partCat)}),
       Math.abs(ecart) < 0.05 ? PC.t('e.pa.c3.egal')
         : PC.t(ecart > 0 ? 'e.pa.c3.plus' : 'e.pa.c3.moins', {x:PC.nombre(Math.abs(ecart), 1) + ' ' + PC.t('ui.pt')}),
-      PC.t(a.liq ? 'e.pa.c4.oui' : 'e.pa.c4.non')
+      PC.t(a.liq ? 'e.pa.c4.oui' : 'e.pa.c4.non'),
+      a.revCum > 0
+        ? PC.t('e.pa.c5', {x:eur.format(a.revCum),
+                           d:a.revDepuis ? dateCourte(a.revDepuis) : ''})
+        : ''
     ].filter(Boolean).map(function(x){ return '<p>' + x + '</p>'; }).join('');
 
     hote.innerHTML =
@@ -7200,8 +7313,6 @@ window.PC = (function(){
              PC.t('e.form.' + f) + '</option>';
     }).join('');
 
-    document.getElementById('champ-rev').hidden = !droit('revenus');
-    document.getElementById('champ-revp').hidden = !droit('revenus');
     /* Les portefeuilles séparés appartiennent à Max : hors de cette
        formule, le sélecteur et ses trois actions disparaissent plutôt
        que de rester grisés à côté d'un seul choix possible. */
@@ -7917,7 +8028,9 @@ window.PC = (function(){
   function majCours(){
     actifs.forEach(function(a){
       const v = valeurCours(a);
-      if (v !== null) a.val = v;
+      /* Meme raison que pour les taux : quantite x cours ne sait rien
+         des dividendes deja encaisses. */
+      if (v !== null) a.val = Math.round((v + (a.revCum || 0)) * 100) / 100;
     });
   }
   /* ============================================================
@@ -7981,6 +8094,12 @@ window.PC = (function(){
      action, et le facteur vaut 1. */
   const UNITES = {u:1, oz:1, g:1 / 31.1034768, kg:1000 / 31.1034768};
   function estMetal(sym){ return !!METAUX[String(sym || '').trim().toLowerCase()]; }
+  /* Cote a l'once troy : la conversion grammes/kilos a un sens. Deux
+     jetons de metal, et deux contrats a terme. */
+  const PAR_ONCE = {'pax-gold':1, 'kinesis-silver':1, 'yh:pl=f':1, 'yh:pa=f':1};
+  function seCoteALOnce(sym){
+    return !!PAR_ONCE[String(sym || '').trim().toLowerCase()];
+  }
   function facteurUnite(a){
     const f = UNITES[a && a.unite];
     return typeof f === 'number' ? f : 1;
@@ -8695,7 +8814,9 @@ window.PC = (function(){
     const auj = jourISO(Date.now());
     actifs.forEach(function(a){
       const v = valeurCalculee(a, auj);
-      if (v !== null) a.val = v;
+      /* Le recalcul repart du taux : il efface la valeur, donc aussi
+         ce que la ligne a verse. On le remet. */
+      if (v !== null) a.val = Math.round((v + (a.revCum || 0)) * 100) / 100;
     });
   }
 
@@ -9374,7 +9495,7 @@ window.PC = (function(){
     crypto:  {icone:'\u20bf',       marche:'crypto'},
     actions: {icone:'\ud83d\udcc8', marche:'bourse'},
     etf:     {icone:'\ud83e\uddfa', marche:'bourse'},
-    or:      {icone:'\ud83e\udd47', marche:'metal'},
+    or:      {icone:'\ud83d\udee2', marche:'metal'},
     immo:    {icone:'\ud83c\udfe0', marche:null},
     scpi:    {icone:'\ud83c\udfe2', marche:null},
     av:      {icone:'\ud83d\udee1', marche:null, taux:true},
@@ -9385,11 +9506,44 @@ window.PC = (function(){
     noncote: {icone:'\ud83e\udd1d', marche:null},
     autre:   {icone:'\u2026',       marche:null}
   };
-  /* L'or et l'argent : deux lignes, pas un marche entier. */
-  const METAUX_CHOIX = [
-    {code:'pax-gold', nom:'Or', place:'\u00a0'},
-    {code:'kinesis-silver', nom:'Argent', place:'\u00a0'}
+  /* ===== Les matieres premieres =====
+     Deux sources, pour une seule liste. L'or et l'argent se lisent
+     chez le fournisseur de cryptos, via les jetons adosses au metal :
+     c'est la seule cotation de ces deux metaux qu'un service gratuit
+     rende sans cle. Les huit autres passent par le relais, qui
+     interroge le marche a terme.
+
+     Chacune porte son unite de cotation. Un baril, une livre et une
+     once ne se comparent pas, et une ligne qui ne dirait pas laquelle
+     laisserait quelqu'un saisir 1 pour « un plein de fioul ».
+
+     Les huit codes a terme n'ont pas pu etre verifies contre le vrai
+     Yahoo depuis ici : le reseau sortant est ferme. S'il en manque un,
+     la page le dit et laisse saisir le cours a la main, plutot que de
+     poser un zero. */
+  const MATIERES = [
+    {code:'pax-gold',       nom:'e.mp.or',        u:'e.mp.u.oz'},
+    {code:'kinesis-silver', nom:'e.mp.argent',    u:'e.mp.u.oz'},
+    {code:'yh:PL=F',        nom:'e.mp.platine',   u:'e.mp.u.oz'},
+    {code:'yh:PA=F',        nom:'e.mp.palladium', u:'e.mp.u.oz'},
+    {code:'yh:HG=F',        nom:'e.mp.cuivre',    u:'e.mp.u.lb'},
+    {code:'yh:CL=F',        nom:'e.mp.wti',       u:'e.mp.u.baril'},
+    {code:'yh:BZ=F',        nom:'e.mp.brent',     u:'e.mp.u.baril'},
+    {code:'yh:NG=F',        nom:'e.mp.gaz',       u:'e.mp.u.mmbtu'},
+    {code:'yh:ZW=F',        nom:'e.mp.ble',       u:'e.mp.u.boisseau'},
+    {code:'yh:ZC=F',        nom:'e.mp.mais',      u:'e.mp.u.boisseau'}
   ];
+  function matieresChoix(){
+    return MATIERES.map(function(m){
+      return {code:m.code, nom:PC.t(m.nom), place:PC.t(m.u)};
+    });
+  }
+
+  /* Un appartement, une SCPI, une machine de minage versent. Une
+     crypto, un lingot, une position de trading, non : leur ligne
+     n'aurait rien a mettre dans ce champ. */
+  const REVENU_CAT = {immo:1, scpi:1, minage:1, obligations:1, av:1,
+                      liquid:1, actions:1, etf:1, noncote:1, autre:1};
 
   let catChoisie = null;
   /* Vrai le temps d'un aller depuis le marche, ou le titre est deja
@@ -9410,9 +9564,9 @@ window.PC = (function(){
     if (!hote) return;
     hote.innerHTML = CATEGORIES.filter(function(c){ return TUILES[c]; })
       .map(function(c){
-        return '<button class="tuile" type="button" data-tuile="' + c + '">' +
-          '<span class="tuile__i" aria-hidden="true">' + TUILES[c].icone + '</span>' +
-          '<span class="tuile__n">' + echap(nomCat(c)) + '</span>' +
+        return '<button class="tuile-cat" type="button" data-tuile="' + c + '">' +
+          '<span class="tuile-cat__i" aria-hidden="true">' + TUILES[c].icone + '</span>' +
+          '<span class="tuile-cat__n">' + echap(nomCat(c)) + '</span>' +
         '</button>';
       }).join('');
   }
@@ -9514,6 +9668,11 @@ window.PC = (function(){
     if (caseTaux){ caseTaux.checked = surTaux; montreTaux(surTaux); }
     const cq = document.getElementById('champ-qte');
     if (cq) cq.hidden = !surCours;
+    const surRev = !!REVENU_CAT[cat];
+    ['champ-rev','champ-revp','champ-revd'].forEach(function(id){
+      const e = document.getElementById(id);
+      if (e) e.hidden = !surRev;
+    });
     const aide = document.getElementById('genre-aide');
     if (aide) aide.textContent = PC.t('e.g.aide.' +
       (surCours ? 'cours' : surTaux ? 'taux' : 'bien'));
@@ -9537,7 +9696,7 @@ window.PC = (function(){
     const mot = document.getElementById('choix-mot');
     if (mot) mot.textContent = '';
 
-    if (t.marche === 'metal'){ peintChoix(METAUX_CHOIX); return; }
+    if (t.marche === 'metal'){ peintChoix(matieresChoix()); return; }
     const hote = document.getElementById('choix-liste');
     if (hote) hote.innerHTML = '';
     if (mot) mot.textContent = PC.t('e.sug.cherche');
@@ -9552,7 +9711,7 @@ window.PC = (function(){
   }
 
   function videChamps(){
-    ['a-nom','a-qte','a-inv','a-val','a-pu','a-sym','a-taux','a-depuis'].forEach(function(id){
+    ['a-nom','a-qte','a-inv','a-val','a-pu','a-sym','a-taux','a-depuis','a-rev','a-revd'].forEach(function(id){
       const e = document.getElementById(id);
       if (e) e.value = '';
     });
@@ -9632,7 +9791,7 @@ window.PC = (function(){
   function majUnite(){
     const ch = document.getElementById('champ-unite');
     if (!ch) return;
-    const on = !!(caseCours && caseCours.checked) && estMetal(codeVoulu());
+    const on = !!(caseCours && caseCours.checked) && seCoteALOnce(codeVoulu());
     ch.hidden = !on;
     const aide = document.getElementById('aide-unite');
     if (aide) aide.hidden = !on;
@@ -9744,10 +9903,11 @@ window.PC = (function(){
     }
     if (taux === null && !avecCours && (val === null || val < 0)){ err.textContent = PC.t('e.err.val'); return; }
     err.textContent = '';
-    /* Le revenu n'est demandé qu'en formule Max : ailleurs le champ est
-       masqué et la ligne se crée sans, plutôt qu'avec un zéro qui
-       laisserait croire à une saisie. */
-    const rev = droit('revenus') ? nombre(document.getElementById('a-rev').value) : null;
+    /* Le revenu se saisit dans toutes les formules : c'est lui qui
+       fait monter le capital, et un loyer n'est pas un indicateur
+       d'analyse. Ce qui reste a Max, c'est le tableau qui le
+       decortique — pas le fait de le percevoir. */
+    const rev = nombre(document.getElementById('a-rev').value);
     const ligne = {id:neufId(), nom:nom, cat:document.getElementById('a-cat').value,
       qte:document.getElementById('a-qte').value.trim(), inv:inv,
       val:val !== null ? val : inv,
@@ -9767,7 +9927,7 @@ window.PC = (function(){
       if (sym) ligne.sym = sym;
       /* L'unite n'existe que sur un metal : ailleurs elle serait une
          case de plus a comprendre pour rien. */
-      if (estMetal(sym)){
+      if (seCoteALOnce(sym)){
         const u = document.getElementById('a-unite');
         ligne.unite = (u && UNITES[u.value]) ? u.value : 'oz';
       }
@@ -9776,6 +9936,7 @@ window.PC = (function(){
     if (rev !== null && rev > 0){
       ligne.rev = rev;
       ligne.revP = document.getElementById('a-revp').value;
+      poseDebutRevenu(ligne, document.getElementById('a-revd').value);
     }
     actifs.push(ligne);
     ecrire(); rendre(); dire(PC.t('e.msg.ajoute', {x:nom}));
@@ -10388,7 +10549,7 @@ window.PC = (function(){
         /* Première réponse : la section peut se déployer. */
         hote.setAttribute('data-etat', 'ok');
         peint(rangs);
-        dit(PC.t('m.maj', {h:heure(dernier)}), true);
+        dit(PC.t(marcheSource === 'bourse' ? 'm.maj.b' : 'm.maj', {h:heure(dernier)}), true);
         refus = 0; repos = 0;
         const sansPages = marcheSource === 'bourse';
         btnMoins.disabled = sansPages || !!recherche || page <= 1;
@@ -10761,12 +10922,16 @@ window.PC = (function(){
   /* Passer d'un marche a l'autre : on repart de zero plutot que de
      laisser les cryptos une seconde a l'ecran sous le titre « bourse ».
      Un chiffre juste au mauvais endroit reste un chiffre faux. */
+  function poseInvite(){
+    if (champ) champ.placeholder = PC.t(marcheSource === 'bourse' ? 'm.cherche.b' : 'm.cherche');
+  }
   function poseSource(q){
     const neuf = (q === 'bourse') ? 'bourse' : 'crypto';
     if (neuf === marcheSource && rangs.length){ return; }
     marcheSource = neuf;
     const tc = document.getElementById('tete-cap');
     if (tc) tc.textContent = PC.t(neuf === 'bourse' ? 'm.vol' : 'm.cap');
+    poseInvite();
     rangs = []; recherche = ''; page = 1; dernier = 0; ouverte = null;
     if (champ) champ.value = '';
     vueFiche.hidden = true; vueListe.hidden = false;
@@ -10782,6 +10947,7 @@ window.PC = (function(){
   function eveille(){
     if (vu) return;
     vu = true;
+    poseInvite();
     charge(true);
     minuteur = setInterval(function(){
       if (document.hidden) return;
@@ -10856,6 +11022,10 @@ window.PC = (function(){
 
   /* Changer de devise ou de langue réécrit tous ces nombres. */
   PC.surChangement(function(){
+    /* L'invite du champ vit hors du balayage `data-i18n` : elle depend
+       aussi de la source affichee. On la repose a chaque changement de
+       langue, sinon elle resterait dans la precedente. */
+    poseInvite();
     if (!vu) return;
     dernier = 0;
     charge(true).then(function(){ if (ouverte) chargeCourbe(); });

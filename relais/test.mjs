@@ -23,7 +23,13 @@ const YH = {
   'AAPL':     {regularMarketPrice:198.74, currency:'USD', marketState:'CLOSED'},
   'VUSA.L':   {regularMarketPrice:8900,   currency:'GBp', marketState:'REGULAR'},
   'USDEUR=X': {regularMarketPrice:0.92,   currency:'EUR', marketState:'REGULAR'},
-  'GBPEUR=X': {regularMarketPrice:1.17,   currency:'EUR', marketState:'REGULAR'}
+  'GBPEUR=X': {regularMarketPrice:1.17,   currency:'EUR', marketState:'REGULAR'},
+  /* Les matieres premieres se cotent sur le marche a terme, dont les
+     symboles portent un « = ». Il traverse une URL, un « split(':') »
+     et un encodage : trois occasions de le perdre. */
+  'CL=F':     {regularMarketPrice:68.40,  currency:'USD', marketState:'REGULAR',
+               shortName:'Crude Oil Jan 26'},
+  'HG=F':     {regularMarketPrice:4.51,   currency:'USD', marketState:'REGULAR'}
 };
 
 const entetesVus = [];
@@ -660,6 +666,29 @@ r = await worker.fetch(new Request(
 const inc = ((await r.json()) || [])[0] || {};
 dit('un titre inconnu n a pas de logo invente', inc.image === '',
     JSON.stringify(inc.image));
+
+// [46] Les matieres premieres : un symbole a terme porte un « = ».
+//       Il doit arriver entier chez la source, et le cours revenir
+//       converti comme n'importe quel titre en dollars.
+console.log('[46] un symbole a terme (le « = » survit au trajet)');
+vus.length = 0;
+r = await appel('ids=yh:CL=F,yh:HG=F&vs_currencies=eur', BON);
+o = await r.json();
+dit('le petrole est converti en euros',
+    o['yh:CL=F'] && Math.abs(o['yh:CL=F'].eur - 68.40*0.92) < 0.01,
+    JSON.stringify(o['yh:CL=F']));
+dit('le cuivre aussi, sur sa propre ligne',
+    o['yh:HG=F'] && Math.abs(o['yh:HG=F'].eur - 4.51*0.92) < 0.01,
+    JSON.stringify(o['yh:HG=F']));
+dit('le symbole part encode, pas tronque',
+    vus.some(x => x.indexOf('/chart/CL%3DF') !== -1),
+    JSON.stringify(vus.filter(x => x.indexOf('/chart/') !== -1)));
+/* En minuscules, comme la page les envoie apres sa saisie. */
+r = await appel('ids=yh:cl=f&vs_currencies=eur', BON);
+o = await r.json();
+dit('la casse de la saisie ne le perd pas',
+    o['yh:cl=f'] && Math.abs(o['yh:cl=f'].eur - 68.40*0.92) < 0.01,
+    JSON.stringify(o['yh:cl=f']));
 
 console.log(ko ? '=> ' + ko + ' echec(s)' : '=> rien a signaler');
 process.exit(ko ? 1 : 0);
