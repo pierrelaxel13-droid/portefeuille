@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260922.2004";</script>
+<script>window.PC_VERSION = "260923.1305";</script>
 </head>
 <body>
 
@@ -3361,6 +3361,8 @@ window.PC = (function(){
   'm.cap':                ["Capitalisation","Market cap","Capitalizaci\u00f3n","Marktkapitalisierung"],
   'm.vol':                ["Volume 24\u00a0h","24h volume","Volumen 24\u00a0h","Volumen 24\u00a0Std."],
   'm.fdv':                ["Valorisation totale","Fully diluted","Valoraci\u00f3n total","Vollst\u00e4ndig verw\u00e4ssert"],
+  'm.52':                 ["Sur un an","Over one year","En un a\u00f1o","\u00dcber ein Jahr"],
+  'm.capabs':             ["La capitalisation d'une action n'est pas servie par le fournisseur gratuit. Le volume du jour et les extr\u00eames de l'ann\u00e9e, si.","Market cap for a share is not served by the free provider. Today's volume and the year's extremes are.","La capitalizaci\u00f3n de una acci\u00f3n no la sirve el proveedor gratuito. El volumen del d\u00eda y los extremos del a\u00f1o, s\u00ed.","Die Marktkapitalisierung einer Aktie liefert der kostenlose Anbieter nicht. Das Tagesvolumen und die Jahresextreme schon."],
   'm.7j':                 ["7\u00a0jours","7 days","7\u00a0d\u00edas","7\u00a0Tage"],
   'm.retour':             ["Retour aux march\u00e9s","Back to markets","Volver a los mercados","Zur\u00fcck zu den M\u00e4rkten"],
   'm.suivant':            ["Page suivante","Next page","P\u00e1gina siguiente","N\u00e4chste Seite"],
@@ -4732,7 +4734,7 @@ window.PC = (function(){
           <span data-i18n="m.nom">Nom</span>
           <span data-i18n="m.prix">Prix</span>
           <span data-i18n="m.var">24 h</span>
-          <span data-i18n="m.cap">Capitalisation</span>
+          <span id="tete-cap" data-i18n="m.cap">Capitalisation</span>
           <span data-i18n="m.7j">7 jours</span>
         </div>
         <div class="marches__liste" id="mar-liste"></div>
@@ -9951,7 +9953,11 @@ window.PC = (function(){
       '<span class="marches__prix">' + prix(c.current_price) + '</span>' +
       '<span class="marches__var" data-dir="' + (monte ? 'up' : 'down') + '">' +
         (monte ? '▲' : '▼') + ' ' + PC.pourcent(v || 0, 2) + '</span>' +
-      '<span class="marches__cap">' + gros(c.market_cap) + '</span>' +
+      /* En bourse la capitalisation n'est pas servie : on montre le
+         volume plutot qu'une colonne de tirets, et l'en-tete change
+         de nom pour ne pas mentir sur ce qu'on lit. */
+      '<span class="marches__cap">' +
+        gros(marcheSource === 'bourse' ? c.total_volume : c.market_cap) + '</span>' +
       (c.sparkline_in_7d ? sparkline(c.sparkline_in_7d.price, monte) : '<span></span>') +
     '</button>';
   }
@@ -9992,7 +9998,8 @@ window.PC = (function(){
         va.setAttribute('data-dir', monte ? 'up' : 'down');
         va.textContent = (monte ? '▲' : '▼') + ' ' + PC.pourcent(v || 0, 2);
       }
-      if (ca) ca.textContent = gros(c.market_cap);
+      if (ca) ca.textContent =
+        gros(marcheSource === 'bourse' ? c.total_volume : c.market_cap);
     });
   }
 
@@ -10186,9 +10193,16 @@ window.PC = (function(){
           '<div class="v">' + gros(c.market_cap) + '</div></div>' +
         '<div class="fiche-m__stat"><div class="k">' + ech(PC.t('m.vol')) + '</div>' +
           '<div class="v">' + gros(c.total_volume) + '</div></div>' +
-        '<div class="fiche-m__stat"><div class="k">' + ech(PC.t('m.fdv')) + '</div>' +
-          '<div class="v">' + gros(c.fully_diluted_valuation) + '</div></div>' +
+        '<div class="fiche-m__stat"><div class="k">' +
+          ech(PC.t(marcheSource === 'bourse' ? 'm.52' : 'm.fdv')) + '</div>' +
+          '<div class="v">' + (marcheSource === 'bourse'
+            ? (c.bas_52s && c.haut_52s
+                ? ech(prix(c.bas_52s)) + ' \u2013 ' + ech(prix(c.haut_52s))
+                : '\u2014')
+            : gros(c.fully_diluted_valuation)) + '</div></div>' +
       '</div>' +
+      (marcheSource === 'bourse'
+        ? '<p class="fiche-m__mot">' + ech(PC.t('m.capabs')) + '</p>' : '') +
       '<div class="fiche-m__actions">' +
         '<a class="pill" href="#espace-client" data-formule="normal">' +
           ech(PC.t('m.suivre')) + '</a>' +
@@ -10445,6 +10459,8 @@ window.PC = (function(){
     const neuf = (q === 'bourse') ? 'bourse' : 'crypto';
     if (neuf === marcheSource && rangs.length){ return; }
     marcheSource = neuf;
+    const tc = document.getElementById('tete-cap');
+    if (tc) tc.textContent = PC.t(neuf === 'bourse' ? 'm.vol' : 'm.cap');
     rangs = []; recherche = ''; page = 1; dernier = 0; ouverte = null;
     if (champ) champ.value = '';
     vueFiche.hidden = true; vueListe.hidden = false;

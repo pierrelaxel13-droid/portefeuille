@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-23.13';
+const VERSION = '2026-09-23.14';
 const FICHE = 'https://query1.finance.yahoo.com/v7/finance/quote';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
@@ -283,10 +283,18 @@ async function chezYahoo(symbole){
      variation que tout le monde lit. On ne l'invente pas si elle
      manque -- null se distingue de zero. */
   let var24 = null;
-  const pc = parseFloat(m.chartPreviousClose != null ? m.chartPreviousClose : m.previousClose);
-  if (isFinite(pc) && pc > 0){
-    const brut = String(m.currency) === 'GBp' ? pc / 100 : pc;
-    var24 = (v - brut) / brut * 100;
+  /* La source la calcule elle-meme : la reprendre vaut mieux que de
+     la refaire, car elle sait ce qui compte comme cloture precedente
+     un lendemain de detachement de dividende. */
+  const dit = parseFloat(m.regularMarketChangePercent);
+  if (isFinite(dit)){
+    var24 = dit;
+  } else {
+    const pc = parseFloat(m.chartPreviousClose != null ? m.chartPreviousClose : m.previousClose);
+    if (isFinite(pc) && pc > 0){
+      const brut = String(m.currency) === 'GBp' ? pc / 100 : pc;
+      var24 = (v - brut) / brut * 100;
+    }
   }
   /* Volume et capitalisation : on prend ce que la reponse porte, et
      rien de plus. Les deux manquent souvent -- notamment pour un ETF,
@@ -296,11 +304,14 @@ async function chezYahoo(symbole){
      qui est le pire des deux. */
   const vol = parseFloat(m.regularMarketVolume);
   const cap = parseFloat(m.marketCap);
+  const h52 = parseFloat(m.fiftyTwoWeekHigh), b52 = parseFloat(m.fiftyTwoWeekLow);
   return {valeur:v, dev:dev, var24:var24, nom:(m.shortName || m.longName || ''),
           /* Le volume est un nombre de titres : en monnaie, il se
              compare a celui des autres lignes. */
           volume:(isFinite(vol) && vol > 0) ? vol * v : null,
           cap:(isFinite(cap) && cap > 0) ? cap : null,
+          haut52:(isFinite(h52) && h52 > 0) ? h52 : null,
+          bas52:(isFinite(b52) && b52 > 0) ? b52 : null,
           ouvert:m.marketState === 'REGULAR'};
 }
 
@@ -551,43 +562,22 @@ async function cherche(q){
     });
 }
 
-/* ===== Capitalisation et volume =====
-   L'adresse qui sert les cours ne les porte pas toujours : elle est
-   faite pour tracer une courbe, pas pour decrire une societe. Une
-   autre adresse les donne -- quand elle repond, car elle est parfois
-   fermee aux programmes.
+/* ===== Ce que la source donne, et ce qu'elle ne donne pas =====
+   Mesure, pas supposition. La sonde « ?brut= » a montre que l'adresse
+   des cours porte : le prix, la variation du jour, le VOLUME, les
+   extremes sur un an et le jour, le nom long. Elle ne porte PAS la
+   capitalisation.
 
-   On l'essaie donc EN PLUS, jamais A LA PLACE : si elle refuse, les
-   prix arrivent quand meme et les deux colonnes restent vides. Un
-   enrichissement qui peut casser ce qui marchait deja n'en est pas un.
+   L'autre adresse, celle qui la porterait, repond 401 Unauthorized :
+   elle est fermee aux programmes. On ne l'appelle donc plus -- un
+   appel dont on sait qu'il echouera n'est pas un secours, c'est une
+   attente de plus a chaque chargement. La sonde reste, pour le cas ou
+   cela changerait.
 
-   Un seul appel pour toute la liste, et le resultat sert a tout le
-   monde. */
-async function fiches(symboles){
-  if (!symboles.length) return {};
-  try {
-    const r = await fetch(FICHE + '?symbols=' + encodeURIComponent(symboles.join(',')),
-      {headers:Object.assign({'Accept':'application/json'}, ENTETES),
-       cf:{cacheTtl:FRAICHE, cacheEverything:true}});
-    if (!r.ok) return {};
-    const o = JSON.parse(await r.text());
-    const l = o && o.quoteResponse && o.quoteResponse.result;
-    if (!Array.isArray(l)) return {};
-    const par = {};
-    l.forEach(function(x){
-      if (!x || !x.symbol) return;
-      par[String(x.symbol).toUpperCase()] = {
-        cap: (typeof x.marketCap === 'number' && x.marketCap > 0) ? x.marketCap : null,
-        vol: (typeof x.regularMarketVolume === 'number' && x.regularMarketVolume > 0)
-               ? x.regularMarketVolume : null,
-        nom: x.longName || x.shortName || ''
-      };
-    });
-    return par;
-  } catch (e){ return {}; }
-}
+   La capitalisation n'est donc pas disponible gratuitement, et la
+   page montre le volume a sa place plutot qu'une colonne de tirets.
 
-/* ===== La liste suivie =====
+   ===== La liste suivie =====
    Une poignee de valeurs connues. Ce n'est pas un classement -- aucun
    fournisseur gratuit n'en sert un pour la bourse -- et la page le
    dit. Mais la FORME rendue est exactement celle des marches crypto :
@@ -607,20 +597,6 @@ const VEILLE = [
   ['NVDA',    'NVIDIA']
 ];
 
-/* Ce que porte la fiche prime : c'est la source faite pour ca. Sinon
-   ce que la courbe portait. Sinon rien -- jamais un calcul de
-   circonstance. */
-function capDe(q, sup, sym, t){
-  const s = sup[String(sym).toUpperCase()] || {};
-  const brut = (s.cap !== null && s.cap !== undefined) ? s.cap : q.cap;
-  return (brut === null || brut === undefined) ? null : Math.round(brut * t);
-}
-function volDe(q, sup, sym, t, prix){
-  const s = sup[String(sym).toUpperCase()] || {};
-  if (s.vol !== null && s.vol !== undefined) return Math.round(s.vol * prix * t);
-  return q.volume === null ? null : Math.round(q.volume * t);
-}
-
 async function marche(devise, env, codes){
   const cible = String(devise).toUpperCase();
   const taux_ = {};
@@ -632,8 +608,7 @@ async function marche(devise, env, codes){
     ? codes.map(function(c){ const l = lit(c); return l ? [l.symbole, ''] : null; })
            .filter(Boolean)
     : VEILLE;
-  /* Un seul appel pour toute la liste, avant la boucle. */
-  const sup = await fiches(source.map(function(x){ return x[0]; }));
+
   for (let i = 0; i < source.length; i++){
     const sym = source[i][0];
     let q;
@@ -651,20 +626,25 @@ async function marche(devise, env, codes){
       /* Le nom donne par la liste suivie prime : il est ecrit pour
          etre lu. Sinon celui que rend le fournisseur, et a defaut le
          symbole -- jamais rien. */
-      name: source[i][1] || (sup[sym.toUpperCase()] || {}).nom || q.nom || sym,
+      name: source[i][1] || q.nom || sym,
       image: '',
       current_price: Math.round(q.valeur * t * 1e6) / 1e6,
       /* On ne connait pas la capitalisation : on rend null, et la page
          ecrit un tiret. Un zero se lirait comme une valeur. */
-      market_cap: capDe(q, sup, sym, t),
+      /* Absente de la source : null, et la page montre le volume. */
+      market_cap: null,
       /* Le rang est celui de la ligne RENDUE, pas de la ligne
          demandee : une valeur qui n'a pas repondu laisserait sinon un
          trou dans la numerotation, et un trou se lit comme une ligne
          manquante plutot que comme une absence. */
       market_cap_rank: out.length + 1,
       fully_diluted_valuation: null,
-      total_volume: volDe(q, sup, sym, t, q.valeur),
+      total_volume: q.volume === null ? null : Math.round(q.volume * t),
       price_change_percentage_24h: q.var24,
+      /* Les extremes de l'annee : la source les porte, et ils disent
+         quelque chose la ou la capitalisation manque. */
+      haut_52s: q.haut52 === null ? null : Math.round(q.haut52 * t * 1e4) / 1e4,
+      bas_52s: q.bas52 === null ? null : Math.round(q.bas52 * t * 1e4) / 1e4,
       last_updated: new Date().toISOString()
     });
   }

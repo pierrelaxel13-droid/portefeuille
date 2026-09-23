@@ -17,7 +17,8 @@ const COURS = {
 
 const ST = {'cw8.fr':511.90, 'aapl.us':198.10, 'vusa.uk':89.05};
 const YH = {
-  'CW8.PA':   {regularMarketPrice:512.30, currency:'EUR', marketState:'REGULAR'},
+  'CW8.PA':   {regularMarketPrice:512.30, currency:'EUR', marketState:'REGULAR',
+               regularMarketVolume:12000, fiftyTwoWeekHigh:540, fiftyTwoWeekLow:430},
   'IWDA.AS':  {regularMarketPrice:98.44,  currency:'EUR', marketState:'CLOSED'},
   'AAPL':     {regularMarketPrice:198.74, currency:'USD', marketState:'CLOSED'},
   'VUSA.L':   {regularMarketPrice:8900,   currency:'GBp', marketState:'REGULAR'},
@@ -527,15 +528,8 @@ dit('les champs attendus sont la',
      'price_change_percentage_24h'].every(k => k in un),
     JSON.stringify(Object.keys(un)));
 dit('le prix est converti', un.current_price > 0, String(un.current_price));
-/* Sans la fiche, plus personne ne porte la capitalisation : elle doit
-   valoir null et non zero. On coupe donc la fiche pour l'eprouver. */
-mode = 'ficheKo';
-r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
-  {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
-const sansFiche = ((await r.json()) || [])[0] || {};
-dit('la capitalisation inconnue vaut null, pas zero', sansFiche.market_cap === null,
-    JSON.stringify(sansFiche.market_cap));
-mode = 'ok';
+dit('la capitalisation vaut null, pas zero', un.market_cap === null,
+    JSON.stringify(un.market_cap));
 dit('les rangs se suivent', (o||[]).every((x,i) => x.market_cap_rank === i+1),
     (o||[]).map(x=>x.market_cap_rank).join(','));
 
@@ -576,21 +570,16 @@ dit('l id reste celui qu on a demande', (o[0]||{}).id === 'yh:AAPL',
     JSON.stringify((o[0]||{}).id));
 delete YH['AAPL'].shortName;
 
-// [40] Sans nom connu nulle part, on rend le symbole -- jamais rien.
-mode = 'ficheKo';
+// [40] Sans nom connu, on rend le symbole -- jamais rien.
 r = await worker.fetch(new Request(
   'https://relais.test/?ids=yh:AAPL&forme=marche&vs_currencies=eur',
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 o = await r.json();
 dit('a defaut, le symbole', (o[0]||{}).name === 'AAPL', JSON.stringify((o[0]||{}).name));
-mode = 'ok';
 
 // [41] Volume et capitalisation : ce que la source porte, et rien de
 //      plus. Un nombre plausible et faux serait pire qu'un tiret.
-/* Ici on eprouve le REPLI : ce que la courbe porte quand la fiche ne
-   repond pas. La fiche est donc coupee. */
-console.log('[41] volume et capitalisation, par la courbe seule');
-mode = 'ficheKo';
+console.log('[41] volume et capitalisation');
 YH['CW8.PA'].regularMarketVolume = 1000;
 YH['CW8.PA'].marketCap = 2500000000;
 r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
@@ -599,40 +588,48 @@ o = await r.json();
 let cw2 = (o || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
 dit('le volume est rendu en monnaie', cw2.total_volume === 512300,
     '1000 titres a 512,30 -> ' + cw2.total_volume);
-dit('la capitalisation est rendue', cw2.market_cap === 2500000000,
-    String(cw2.market_cap));
+/* Meme portee par la reponse, elle n'est pas rendue : la sonde a
+   montre qu'elle en est absente en vrai, et on ne construit pas une
+   colonne sur un champ qu'on ne recoit jamais. */
+dit('la capitalisation reste null', cw2.market_cap === null, String(cw2.market_cap));
 delete YH['CW8.PA'].regularMarketVolume;
 delete YH['CW8.PA'].marketCap;
 
 r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 cw2 = ((await r.json()) || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
-dit('absents, ils valent null et non zero',
-    cw2.total_volume === null && cw2.market_cap === null,
-    JSON.stringify([cw2.total_volume, cw2.market_cap]));
-mode = 'ok';
+dit('absent, le volume vaut null et non zero', cw2.total_volume === null,
+    JSON.stringify(cw2.total_volume));
 
-// [42] La capitalisation vient de la fiche, quand elle repond.
-console.log('[42] capitalisation et volume par la fiche');
+// [42] Ce que la source donne vraiment -- mesure par la sonde sur le
+//      vrai serveur : volume oui, extremes de l'annee oui,
+//      capitalisation NON.
+console.log('[42] ce que la source donne, et ce qu elle ne donne pas');
+/* Un test precedent nettoie ces champs : on les repose ici plutot que
+   de dependre de l'ordre d'execution. */
+YH['CW8.PA'].regularMarketVolume = 12000;
+YH['CW8.PA'].fiftyTwoWeekHigh = 540;
+YH['CW8.PA'].fiftyTwoWeekLow = 430;
 r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
 o = await r.json();
 let li = (o || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
-dit('la capitalisation arrive', li.market_cap === 3.1e12, String(li.market_cap));
 dit('le volume arrive, en monnaie',
-    li.total_volume === Math.round(40000000 * 512.3), String(li.total_volume));
+    li.total_volume === Math.round(12000 * 512.3), String(li.total_volume));
+dit('les extremes de l annee arrivent',
+    li.haut_52s === 540 && li.bas_52s === 430,
+    JSON.stringify([li.bas_52s, li.haut_52s]));
+dit('la capitalisation reste null -- la source ne la sert pas',
+    li.market_cap === null, JSON.stringify(li.market_cap));
 
-// [43] La fiche refuse : les prix passent quand meme.
-console.log('[43] la fiche refuse');
-mode = 'ficheKo';
+// [43] On n'appelle plus l'adresse qui repond 401 : un appel dont on
+//      sait qu'il echouera est une attente, pas un secours.
+console.log('[43] l adresse fermee n est plus appelee');
+vus.length = 0;
 r = await worker.fetch(new Request('https://relais.test/?marche=1&vs_currencies=eur',
   {headers:{Origin:BON}}), {ORIGINES:ENV.ORIGINES});
-o = await r.json();
-li = (o || []).filter(x => x.id === 'yh:CW8.PA')[0] || {};
-dit('les prix sont la malgre tout', li.current_price === 512.3, String(li.current_price));
-dit('les deux colonnes restent vides', li.market_cap === null && li.total_volume === null,
-    JSON.stringify([li.market_cap, li.total_volume]));
-mode = 'ok';
+dit('aucun appel a la fiche', !vus.some(x => x.includes('/v7/finance/quote')),
+    vus.filter(x => x.includes('/v7/')).length + ' appel(s)');
 
 // [44] La sonde dit ce que chaque adresse porte vraiment.
 console.log('[44] la sonde');
