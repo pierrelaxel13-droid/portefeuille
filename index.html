@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.1609";</script>
+<script>window.PC_VERSION = "260923.1846";</script>
 </head>
 <body>
 
@@ -3414,6 +3414,7 @@ window.PC = (function(){
   'b.sanscours':        ["Cours indisponible","Price unavailable","Cotizaci\u00f3n no disponible","Kurs nicht verf\u00fcgbar"],
   'b.sansrelais':       ["La bourse passe par un relais, qu'il faut indiquer une fois\u00a0: menu, puis \u00ab\u00a0Relais pour la bourse\u00a0\u00bb. Sans lui, cette page reste vide \u2014 les cryptos, elles, fonctionnent sans rien installer.","Market data goes through a relay, which you set once: menu, then \u00ab Stock market relay \u00bb. Without it this page stays empty \u2014 crypto works with nothing installed.","La bolsa pasa por un rel\u00e9 que hay que indicar una vez: men\u00fa, luego \u00ab Rel\u00e9 para la bolsa \u00bb. Sin \u00e9l esta p\u00e1gina queda vac\u00eda; las criptos funcionan sin instalar nada.","B\u00f6rsendaten laufen \u00fcber ein Relais, das Sie einmal angeben: Men\u00fc, dann \u00bbRelais f\u00fcr die B\u00f6rse\u00ab. Ohne es bleibt diese Seite leer \u2014 Kryptos funktionieren ohne Installation."],
   'b.sous.crypto':      ["Cryptos","Crypto","Criptos","Kryptos"],
+  'b.sous.matieres':      ["Mati\u00e8res premi\u00e8res","Commodities","Materias primas","Rohstoffe"],
   'b.sous.bourse':      ["Bourse","Stocks","Bolsa","B\u00f6rse"],
   'b.suivies':          ["Valeurs suivies","Tracked securities","Valores seguidos","Beobachtete Werte"],
   'b.suivies.n':        ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse. Cherchez un titre pour en consulter d'autres.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets. Search for a security to look up others.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa. Busque un t\u00edtulo para consultar otros.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse. Suchen Sie einen Titel, um andere nachzuschlagen."],
@@ -3447,6 +3448,7 @@ window.PC = (function(){
   'm.intro':              ["Les cours ci-dessous viennent du march\u00e9, pas d'une capture d'\u00e9cran. Ils se rafra\u00eechissent pendant que vous lisez cette page.","The prices below come from the market, not from a screenshot. They refresh while you read this page.","Las cotizaciones de abajo vienen del mercado, no de una captura de pantalla. Se actualizan mientras lee esta p\u00e1gina.","Die Kurse unten kommen vom Markt, nicht aus einem Screenshot. Sie aktualisieren sich, w\u00e4hrend Sie diese Seite lesen."],
   'm.cherche':            ["Chercher une crypto","Search a coin","Buscar una cripto","Krypto suchen"],
   'm.cherche.b':          ["Chercher une action, un ETF","Search a stock or ETF","Buscar una acci\u00f3n o un ETF","Aktie oder ETF suchen"],
+  'm.cherche.mp':         ["Chercher une mati\u00e8re premi\u00e8re","Search a commodity","Buscar una materia prima","Rohstoff suchen"],
   'm.rang':               ["Rang","Rank","Rango","Rang"],
   'm.nom':                ["Nom","Name","Nombre","Name"],
   'm.prix':               ["Prix","Price","Precio","Preis"],
@@ -3467,6 +3469,7 @@ window.PC = (function(){
   'm.vide':               ["Aucune crypto ne correspond \u00e0 cette recherche.","No coin matches this search.","Ninguna cripto coincide con esta b\u00fasqueda.","Keine Krypto passt zu dieser Suche."],
   'm.maj':                ["Cours de CoinGecko, relev\u00e9s \u00e0 {{h}}","Prices from CoinGecko, taken at {{h}}","Cotizaciones de CoinGecko, tomadas a las {{h}}","Kurse von CoinGecko, erfasst um {{h}}"],
   'm.maj.b':              ["Cours de march\u00e9 via votre relais, relev\u00e9s \u00e0 {{h}}","Market prices via your relay, taken at {{h}}","Cotizaciones de mercado v\u00eda su rel\u00e9, tomadas a las {{h}}","Marktkurse \u00fcber Ihr Relais, erfasst um {{h}}"],
+  'm.maj.mp':             ["Contrats \u00e0 terme (relais) et m\u00e9taux (CoinGecko), \u00e0 {{h}}","Futures (relay) and metals (CoinGecko), at {{h}}","Futuros (rel\u00e9) y metales (CoinGecko), a las {{h}}","Terminkontrakte (Relais) und Metalle (CoinGecko), um {{h}}"],
   'm.suivre':             ["Ajouter \u00e0 mon portefeuille","Add to my portfolio","A\u00f1adir a mi cartera","Zu meinem Portfolio hinzuf\u00fcgen"],
   'e.pre.pret':           ["{{n}} est pr\u00eat\u00a0: il ne reste que la quantit\u00e9 et le montant investi.","{{n}} is ready: only the quantity and the amount invested are left.","{{n}} est\u00e1 listo: solo faltan la cantidad y el importe invertido.","{{n}} ist bereit: Es fehlen nur Menge und investierter Betrag."],
   'e.src.vif':          ["Cours en direct \u2014 {{s}}","Live prices \u2014 {{s}}","Cotizaciones en directo \u2014 {{s}}","Kurse live \u2014 {{s}}"],
@@ -4849,6 +4852,8 @@ window.PC = (function(){
               aria-selected="true" data-i18n="b.sous.crypto">Cryptos</button>
       <button class="sous-onglet" type="button" role="tab" data-sous="bourse"
               aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
+      <button class="sous-onglet" type="button" role="tab" data-sous="matieres"
+              aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
     </div>
 
     <div class="pan marches" id="pan-marches" role="tabpanel" aria-labelledby="ong-marches" tabindex="0" data-etat="attente" hidden>
@@ -8244,6 +8249,14 @@ window.PC = (function(){
     }].concat(FOURNISSEURS);
   }
 
+  /* A qui ce code peut-il parler ? Un code de marche (« yh:… ») au
+     relais, tout le reste aux fournisseurs de cryptos. */
+  function concerne(f, ids){
+    const bourse = ids.some(coursDeBourse);
+    const autres = ids.some(function(i){ return !coursDeBourse(i); });
+    return f.nom === 'Relais' ? bourse : autres;
+  }
+
   function symbolesSuivis(){
     const vus = {};
     actifs.forEach(function(a){
@@ -8352,6 +8365,10 @@ window.PC = (function(){
       if (k >= liste.length) return Promise.resolve();
       const manque = ids.filter(function(i){ return prixDe(recolte, i) === null; });
       if (!manque.length) return Promise.resolve();
+      /* Passer son tour n'est pas echouer : on ne note ni refus ni
+         « code inconnu » pour un fournisseur a qui on n'a rien
+         demande. */
+      if (!concerne(liste[k], manque)) return essaie(k + 1);
       return liste[k].cherche(codesADemander(manque), dev).then(function(p){
         if (p && Object.keys(p).length){
           Object.keys(p).forEach(function(c){ recolte[c] = p[c]; });
@@ -8597,13 +8614,20 @@ window.PC = (function(){
       return;
     }
     el.removeAttribute('data-vif');
-    if (!coursSource){ el.textContent = PC.t('e.src.rien'); return; }
+    if (!coursSource){
+      el.textContent = motCours(coursEtat) || PC.t('e.src.rien');
+      return;
+    }
     /* Le relais nous a dit d'où vient son chiffre : on le répète. Un
        cours de clôture annoncé comme le cours du moment est un
        mensonge par omission, et il porte sur de l'argent. */
     const cle = coursRetard === 'cloture' ? 'e.src.cloture'
               : coursRetard === 'differe' ? 'e.src.differe' : 'e.src.pose';
-    el.textContent = PC.t(cle, {s:coursSource, h:heureCourte(coursQuand)});
+    /* Une reponse partielle est le pire cas a taire : les lignes
+       servies ont bouge, les autres non, et rien ne le disait. */
+    const absents = (coursEtat && coursEtat.absents) || [];
+    el.textContent = PC.t(cle, {s:coursSource, h:heureCourte(coursQuand)}) +
+      (absents.length ? ' \u2014 ' + PC.t('e.dir.inconnu', {s:absents.join(', ')}) : '');
   }
 
   /* ============================================================
@@ -9069,7 +9093,7 @@ window.PC = (function(){
      repartir des cryptos a chaque passage. */
   let sousMarche = 'crypto';
   function poseSousMarche(q){
-    sousMarche = (q === 'bourse') ? 'bourse' : 'crypto';
+    sousMarche = (q === 'bourse' || q === 'matieres') ? q : 'crypto';
     const barre = document.getElementById('sous-marches');
     if (barre) barre.querySelectorAll('[data-sous]').forEach(function(b){
       b.setAttribute('aria-selected', String(b.getAttribute('data-sous') === sousMarche));
@@ -9495,7 +9519,7 @@ window.PC = (function(){
     crypto:  {icone:'\u20bf',       marche:'crypto'},
     actions: {icone:'\ud83d\udcc8', marche:'bourse'},
     etf:     {icone:'\ud83e\uddfa', marche:'bourse'},
-    or:      {icone:'\ud83d\udee2', marche:'metal'},
+    or:      {icone:'\ud83d\udee2', marche:'matieres'},
     immo:    {icone:'\ud83c\udfe0', marche:null},
     scpi:    {icone:'\ud83c\udfe2', marche:null},
     av:      {icone:'\ud83d\udee1', marche:null, taux:true},
@@ -9538,6 +9562,10 @@ window.PC = (function(){
       return {code:m.code, nom:PC.t(m.nom), place:PC.t(m.u)};
     });
   }
+  /* Le module des marches en a besoin pour peindre le meme ecran :
+     une seule table, deux lecteurs, plutot que deux tables qui
+     divergeront au premier ajout. */
+  window.PC_MATIERES = MATIERES;
 
   /* Un appartement, une SCPI, une machine de minage versent. Une
      crypto, un lingot, une position de trading, non : leur ligne
@@ -9696,15 +9724,25 @@ window.PC = (function(){
     const mot = document.getElementById('choix-mot');
     if (mot) mot.textContent = '';
 
-    if (t.marche === 'metal'){ peintChoix(matieresChoix()); return; }
     const hote = document.getElementById('choix-liste');
     if (hote) hote.innerHTML = '';
     if (mot) mot.textContent = PC.t('e.sug.cherche');
     if (!window.PC_MARCHES || !PC_MARCHES.dix){ peintChoix([]); return; }
     PC_MARCHES.dix(t.marche).then(function(l){
-      if (l === null){ if (mot) mot.textContent = PC.t('e.et2.sansrelais'); return; }
+      /* Sans relais, les huit contrats a terme sont hors de portee —
+         mais l'or et l'argent, eux, se lisent chez le fournisseur de
+         cryptos. On rend donc la liste ecrite en dur plutot qu'un
+         ecran vide. */
+      if (l === null){
+        if (t.marche === 'matieres'){ peintChoix(matieresChoix()); return; }
+        if (mot) mot.textContent = PC.t('e.et2.sansrelais'); return;
+      }
+      if (t.marche === 'matieres' && !(l || []).length){
+        peintChoix(matieresChoix()); return;
+      }
       peintChoix((l || []).map(function(c){
-        return {code:c.id, nom:c.name, place:String(c.symbol || '').toUpperCase(),
+        return {code:c.id, nom:c.name,
+                place:c.unite || String(c.symbol || '').toUpperCase(),
                 cours:c.current_price, image:c.image};
       }));
     });
@@ -10239,6 +10277,29 @@ window.PC = (function(){
     });
   }, 1200);
 
+  /* ===== Le battement =====
+     Trois garde-fous, sans lesquels un rafraichissement automatique
+     coute plus qu'il ne rapporte :
+     - jamais plus souvent que le cache ne l'autorise. `chercheCours`
+       sans forcage rend le cache tant qu'il a moins de cinq minutes,
+       donc le reseau n'est appele qu'au vrai besoin ;
+     - rien quand l'onglet est en arriere-plan. Un portefeuille ouvert
+       au fond d'une poche ne doit ni consommer de quota ni vider une
+       batterie ;
+     - rien s'il n'y a aucun code a suivre.
+     Et au retour sur l'onglet, on redemande tout de suite : revenir
+     apres une heure et lire des chiffres d'il y a une heure, sans
+     rien qui le dise, c'est pire que de ne rien afficher. */
+  setInterval(function(){
+    if (document.hidden || !symbolesSuivis().length) return;
+    chercheCours(false);
+  }, COURS_FRAIS + 15000);
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden || !symbolesSuivis().length) return;
+    chercheCours(false);
+  });
+
   /* Un changement de langue ou de devise réécrit tout ce que ce script
      a produit : les puces de catégorie, les tableaux, les graphes et
      les dates des relevés. Les montants saisis, eux, ne bougent pas —
@@ -10401,7 +10462,7 @@ window.PC = (function(){
       '<span class="marches__nom">' +
         logo(c, 26) +
         '<b>' + ech(c.name) + '</b>' +
-        '<span class="marches__tic">' + ech(c.symbol) + '</span>' +
+        '<span class="marches__tic">' + ech(c.unite || c.symbol) + '</span>' +
       '</span>' +
       '<span class="marches__prix">' + prix(c.current_price) + '</span>' +
       '<span class="marches__var" data-dir="' + (monte ? 'up' : 'down') + '">' +
@@ -10410,7 +10471,7 @@ window.PC = (function(){
          volume plutot qu'une colonne de tirets, et l'en-tete change
          de nom pour ne pas mentir sur ce qu'on lit. */
       '<span class="marches__cap">' +
-        gros(marcheSource === 'bourse' ? c.total_volume : c.market_cap) + '</span>' +
+        gros(marcheSource === 'crypto' ? c.market_cap : c.total_volume) + '</span>' +
       (c.sparkline_in_7d ? sparkline(c.sparkline_in_7d.price, monte) : '<span></span>') +
     '</button>';
   }
@@ -10452,7 +10513,7 @@ window.PC = (function(){
         va.textContent = (monte ? '▲' : '▼') + ' ' + PC.pourcent(v || 0, 2);
       }
       if (ca) ca.textContent =
-        gros(marcheSource === 'bourse' ? c.total_volume : c.market_cap);
+        gros(marcheSource === 'crypto' ? c.market_cap : c.total_volume);
     });
   }
 
@@ -10503,6 +10564,62 @@ window.PC = (function(){
       'background:hsl(' + h + ' 62% 42%)">' + ech(initiales(c.name)) + '</span>';
   }
 
+  /* ===== Les matieres premieres =====
+     Deux fournisseurs pour une seule liste. Les contrats a terme
+     passent par le relais ; l'or et l'argent par le fournisseur de
+     cryptos, via les jetons adosses au metal — seule cotation de ces
+     deux metaux qu'un service gratuit rende sans cle. On les demande
+     donc en parallele, on recolle dans l'ordre de la table, et on
+     rehabille les noms : « Crude Oil Jan 26 » ne dit rien a personne.
+     Si l'une des deux sources manque, l'autre reste servie. */
+  function tableMP(){ return window.PC_MATIERES || []; }
+  function estCrypto(code){ return !/^[a-z]{2}:/i.test(String(code || '')); }
+
+  function listeMatieres(){
+    const t = tableMP();
+    if (!t.length) return Promise.resolve([]);
+    const gardes = recherche && recherche.length ? recherche : null;
+    const voulus = t.filter(function(m){
+      return !gardes || gardes.indexOf(m.code) !== -1;
+    });
+    if (!voulus.length) return Promise.resolve([]);
+    const ids = voulus.map(function(m){ return m.code; });
+    const cg = ids.filter(estCrypto);
+    const rl = ids.filter(function(c){ return !estCrypto(c); });
+    const u = relais();
+    const pCg = cg.length
+      ? json(BASE + '/coins/markets?vs_currency=' + dev() + '&ids=' +
+          encodeURIComponent(cg.join(',')) +
+          '&sparkline=true&price_change_percentage=24h').catch(function(){ return []; })
+      : Promise.resolve([]);
+    const pRl = (rl.length && u)
+      ? json(avecQ(u, 'ids=' + encodeURIComponent(rl.join(',')) +
+          '&vs_currencies=' + dev() + '&forme=marche')).catch(function(){ return []; })
+      : Promise.resolve([]);
+    return Promise.all([pCg, pRl]).then(function(r){
+      const par = {};
+      (r[0] || []).concat(r[1] || []).forEach(function(c){
+        if (c && c.id) par[String(c.id).toLowerCase()] = c;
+      });
+      return voulus.map(function(m, i){
+        const c = par[m.code.toLowerCase()];
+        if (!c) return null;
+        /* Le rang est celui de cette liste-ci, pas une capitalisation
+           mondiale : melanger le 312e de CoinGecko et le 3e du relais
+           donnerait une colonne qui ne veut rien dire. */
+        c.market_cap_rank = i + 1;
+        /* Le nom vient de nous, pas de la source : c'est le meme mot
+           que sur la tuile et dans la liste d'ajout. */
+        c.name = PC.t(m.nom);
+        /* Pas dans `symbol` : ce champ porte un ticker, que les deux
+           listes mettent en capitales. « L'ONCE TROY » n'est pas un
+           ticker, et se lisait comme un cri. */
+        c.unite = PC.t(m.u);
+        return c;
+      }).filter(Boolean);
+    });
+  }
+
   function urlListe(){
     if (marcheSource === 'bourse'){
       const u = relais();
@@ -10541,7 +10658,7 @@ window.PC = (function(){
     if (!force && Date.now() - dernier < FRAIS) return Promise.resolve();
     enVol = true;
     if (!rangs.length) dit(PC.t('m.charge'), true);
-    return json(urlListe())
+    return (marcheSource === 'matieres' ? listeMatieres() : json(urlListe()))
       .then(function(o){
         if (!Array.isArray(o)) throw new Error('forme');
         rangs = o;
@@ -10549,9 +10666,11 @@ window.PC = (function(){
         /* Première réponse : la section peut se déployer. */
         hote.setAttribute('data-etat', 'ok');
         peint(rangs);
-        dit(PC.t(marcheSource === 'bourse' ? 'm.maj.b' : 'm.maj', {h:heure(dernier)}), true);
+        dit(PC.t(marcheSource === 'bourse' ? 'm.maj.b'
+               : marcheSource === 'matieres' ? 'm.maj.mp' : 'm.maj',
+               {h:heure(dernier)}), true);
         refus = 0; repos = 0;
-        const sansPages = marcheSource === 'bourse';
+        const sansPages = marcheSource !== 'crypto';
         btnMoins.disabled = sansPages || !!recherche || page <= 1;
         btnPlus.disabled = sansPages || !!recherche || rangs.length < PAR_PAGE;
         numPage.textContent = PC.t('m.page', {n:String(page)});
@@ -10626,7 +10745,7 @@ window.PC = (function(){
       '<div class="fiche-m__tete">' +
         logo(c, 44) +
         '<span class="fiche-m__nom">' + ech(c.name) + '</span>' +
-        '<span class="marches__tic">' + ech(c.symbol) + '</span>' +
+        '<span class="marches__tic">' + ech(c.unite || c.symbol) + '</span>' +
         (c.market_cap_rank ? '<span class="fiche-m__rang">#' + c.market_cap_rank + '</span>' : '') +
       '</div>' +
       '<p class="fiche-m__prix" id="mf-prix">' + prix(c.current_price) + '</p>' +
@@ -10896,6 +11015,20 @@ window.PC = (function(){
       /* On cherche chez celui dont on regarde le marche : demander une
          action a CoinGecko ne rendrait rien, et ce rien se lirait
          « ce titre n'existe pas ». */
+      /* Dix matieres tiennent en memoire : chercher dedans n'a aucune
+         raison de passer par le reseau. */
+      if (marcheSource === 'matieres'){
+        const sansAccent = function(x){
+          return String(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        };
+        const q = sansAccent(t);
+        const ids = tableMP().filter(function(m){
+          return sansAccent(PC.t(m.nom)).indexOf(q) !== -1 ||
+                 sansAccent(m.code).indexOf(q) !== -1;
+        }).map(function(m){ return m.code; });
+        if (!ids.length){ rangs = []; peint([]); return; }
+        recherche = ids; dernier = 0; charge(true); return;
+      }
       const ou = marcheSource === 'bourse'
         ? (relais() ? avecQ(relais(), 'cherche=' + encodeURIComponent(t)) : null)
         : BASE + '/search?query=' + encodeURIComponent(t);
@@ -10923,19 +11056,21 @@ window.PC = (function(){
      laisser les cryptos une seconde a l'ecran sous le titre « bourse ».
      Un chiffre juste au mauvais endroit reste un chiffre faux. */
   function poseInvite(){
-    if (champ) champ.placeholder = PC.t(marcheSource === 'bourse' ? 'm.cherche.b' : 'm.cherche');
+    if (!champ) return;
+    champ.placeholder = PC.t(marcheSource === 'bourse' ? 'm.cherche.b'
+                           : marcheSource === 'matieres' ? 'm.cherche.mp' : 'm.cherche');
   }
   function poseSource(q){
-    const neuf = (q === 'bourse') ? 'bourse' : 'crypto';
+    const neuf = (q === 'bourse' || q === 'matieres') ? q : 'crypto';
     if (neuf === marcheSource && rangs.length){ return; }
     marcheSource = neuf;
     const tc = document.getElementById('tete-cap');
-    if (tc) tc.textContent = PC.t(neuf === 'bourse' ? 'm.vol' : 'm.cap');
+    if (tc) tc.textContent = PC.t(neuf === 'crypto' ? 'm.cap' : 'm.vol');
     poseInvite();
     rangs = []; recherche = ''; page = 1; dernier = 0; ouverte = null;
     if (champ) champ.value = '';
     vueFiche.hidden = true; vueListe.hidden = false;
-    if (!urlListe()){
+    if (neuf !== 'matieres' && !urlListe()){
       hote.setAttribute('data-etat', 'ko');
       boite.innerHTML = '<p class="marches__panne">' + ech(PC.t('b.sansrelais')) + '</p>';
       return;
@@ -10978,6 +11113,13 @@ window.PC = (function(){
        pour proposer un choix sans ouvrir l'onglet des marches, et
        sans deranger ce qui y est affiche. */
     dix: function(src){
+      if (src === 'matieres'){
+        /* Elle se sert des deux sources et se passe du relais pour
+           l'or et l'argent : elle ne rend jamais « pas de relais ». */
+        const garde = recherche; recherche = '';
+        return listeMatieres().then(function(l){ recherche = garde; return l; },
+                                    function(){ recherche = garde; return []; });
+      }
       const bourse = src === 'bourse';
       const u = bourse
         ? (relais() ? avecQ(relais(), 'marche=1&vs_currencies=' + dev()) : null)
