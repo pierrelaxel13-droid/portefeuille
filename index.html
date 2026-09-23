@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.2005";</script>
+<script>window.PC_VERSION = "260923.2036";</script>
 </head>
 <body>
 
@@ -3221,6 +3221,7 @@ window.PC = (function(){
   'e.rev.aide':         ["Un loyer, un dividende, une production : ce que cette ligne vous verse. Il s'ajoute au capital au fil du temps, sans rien avoir à ressaisir.","A rent, a dividend, an output: what this line pays you. It is added to your capital as time passes, with nothing to re-enter.","Un alquiler, un dividendo, una producción: lo que esta línea le paga. Se suma al capital con el paso del tiempo, sin volver a introducir nada.","Eine Miete, eine Dividende, ein Ertrag: was diese Position auszahlt. Sie wird im Lauf der Zeit dem Kapital zugerechnet, ohne erneute Eingabe."],
   'e.co.achat':         ["Acquis le","Acquired on","Adquirido el","Erworben am"],
   'e.co.achat.n':       ["Laissez vide si vous venez de l'acheter. Cette date sert \u00e0 reconstituer la courbe : avant elle, la ligne n'\u00e9tait pas dans le portefeuille.","Leave empty if you have just bought it. This date is used to rebuild the curve: before it, the line was not in the portfolio.","D\u00e9jelo vac\u00edo si acaba de comprarlo. Esta fecha sirve para reconstruir la curva: antes de ella, la l\u00ednea no estaba en la cartera.","Leer lassen, wenn Sie gerade gekauft haben. Dieses Datum dient dem Aufbau der Kurve: davor war die Position nicht im Portfolio."],
+  'e.evo.attente':      ["On cherche l'historique de march\u00e9 de vos lignes cot\u00e9es\u00a0: la courbe appara\u00eetra dans quelques secondes.","Fetching the market history of your quoted lines: the curve will appear in a few seconds.","Se est\u00e1 buscando el historial de mercado de sus l\u00edneas cotizadas: la curva aparecer\u00e1 en unos segundos.","Die Markthistorie Ihrer notierten Positionen wird geholt: die Kurve erscheint in wenigen Sekunden."],
   'e.evo.reconstitue':  ["Avant votre premier relev\u00e9, la courbe est reconstitu\u00e9e\u00a0: cours r\u00e9els du march\u00e9 \u00e0 la quantit\u00e9 d\u00e9tenue aujourd'hui, et montant investi pour ce qui n'a pas de cours.","Before your first statement, the curve is rebuilt: real market prices at the quantity held today, and the amount invested for whatever has no price.","Antes de su primer informe, la curva se reconstruye: cotizaciones reales del mercado a la cantidad que posee hoy, y el importe invertido para lo que no tiene cotizaci\u00f3n.","Vor Ihrem ersten Auszug wird die Kurve rekonstruiert: echte Marktkurse mit der heute gehaltenen Menge, und der investierte Betrag f\u00fcr alles ohne Kurs."],
   'e.rev.debut':        ["Perçu depuis le","Received since","Percibido desde el","Erhalten seit"],
   'e.rev.percu':        ["Revenus perçus","Income collected","Ingresos percibidos","Erhaltene Erträge"],
@@ -3402,6 +3403,7 @@ window.PC = (function(){
   'e.et2.ph':           ["Chercher un nom\u2026","Search a name\u2026","Buscar un nombre\u2026","Einen Namen suchen\u2026"],
   'e.et3':              ["Combien en avez-vous\u00a0?","How much do you hold?","\u00bfCu\u00e1nto tiene?","Wie viel halten Sie?"],
   'e.et.retour':        ["Revenir","Back","Volver","Zur\u00fcck"],
+  'e.et2.ko':           ["Le fournisseur n'a pas r\u00e9pondu. Cherchez par le nom, ou saisissez la ligne vous-m\u00eame.","The provider did not answer. Search by name, or enter the line yourself.","El proveedor no ha respondido. Busque por nombre, o introduzca la l\u00ednea usted mismo.","Der Anbieter hat nicht geantwortet. Suchen Sie nach Namen, oder geben Sie die Position selbst ein."],
   'e.et2.rien':         ["Rien \u00e0 proposer ici pour l'instant. Cherchez par le nom, ou passez directement \u00e0 la saisie.","Nothing to suggest here for now. Search by name, or go straight to entering it.","Nada que proponer aqu\u00ed por ahora. Busque por nombre, o pase directamente a la introducci\u00f3n.","Hier gibt es vorerst nichts vorzuschlagen. Suchen Sie nach Namen, oder geben Sie es direkt ein."],
   'e.et2.saisir':       ["Le saisir moi-m\u00eame","Enter it myself","Introducirlo yo mismo","Selbst eingeben"],
   'e.et2.sansrelais':   ["Les actions et les ETF passent par un relais, \u00e0 indiquer une fois dans le menu. Sans lui, saisissez le titre \u00e0 la main\u00a0: sa valeur ne bougera que si vous la changez.","Shares and ETFs go through a relay, set once in the menu. Without it, enter the security by hand: its value will only move when you change it.","Las acciones y los ETF pasan por un rel\u00e9, a indicar una vez en el men\u00fa. Sin \u00e9l, introduzca el t\u00edtulo a mano: su valor solo cambiar\u00e1 si lo cambia.","Aktien und ETFs laufen \u00fcber ein Relais, einmal im Men\u00fc anzugeben. Ohne es geben Sie den Titel von Hand ein: Sein Wert bewegt sich nur, wenn Sie ihn \u00e4ndern."],
@@ -6687,21 +6689,66 @@ window.PC = (function(){
   const SERIES = {};
   const seriesEnVol = {};
 
-  function chargeSeries(){
-    if (!window.PC_MARCHES || !PC_MARCHES.serie) return;
-    actifs.forEach(function(a){
+  let serieEnVol = false, serieMinuteur = null;
+  /* Un code dont la source ne rend rien d'exploitable : on l'a demande
+     une fois, c'est assez. Sans ce garde-fou on le redemanderait toutes
+     les secondes et demie, indefiniment. */
+  const seriesVaines = {};
+  /* Le dernier geste de l'utilisateur. Tant qu'il vient de cliquer, on
+     ne lance rien : son prochain clic a besoin du quota bien plus que
+     la courbe n'a besoin d'un point de plus. */
+  let dernierGeste = 0;
+  document.addEventListener('pointerdown', function(){ dernierGeste = Date.now(); }, true);
+  document.addEventListener('keydown', function(){ dernierGeste = Date.now(); }, true);
+  function codeAChercher(){
+    for (let i = 0; i < actifs.length; i++){
+      const a = actifs[i];
       const c = a.sym && String(a.sym).trim().toLowerCase();
-      if (!c || typeof a.q !== 'number' || !(a.q > 0)) return;
-      if (SERIES[c] || seriesEnVol[c]) return;
+      if (!c || typeof a.q !== 'number' || !(a.q > 0)) continue;
+      if (SERIES[c] || seriesEnVol[c] || seriesVaines[c]) continue;
       /* Un code de bourse sans relais n'a aucune source d'historique :
          demander pour rien ferait clignoter la courbe. */
-      if (coursDeBourse(c) && !adresseRelais()) return;
-      seriesEnVol[c] = true;
+      if (coursDeBourse(c) && !adresseRelais()) continue;
+      return c;
+    }
+    return null;
+  }
+  /* Une courbe qui va arriver ne se decrit pas comme une courbe qui
+     n'existe pas. */
+  function serieEnAttente(){
+    return !!(serieEnVol || serieMinuteur || codeAChercher());
+  }
+  function chargeSeries(){
+    if (serieEnVol || serieMinuteur) return;
+    if (!window.PC_MARCHES || !PC_MARCHES.serie) return;
+    /* Seulement la ou la courbe se voit. Depuis l'ecran d'ajout ou
+       celui des marches, ces appels ne serviraient a rien et
+       prendraient la place de ceux qu'on attend. */
+    if (vueCourante !== 'general' && vueCourante !== 'actif') return;
+    if (PC_MARCHES.occupe && PC_MARCHES.occupe()) return;
+    const c = codeAChercher();
+    if (!c) return;
+    if (Date.now() - dernierGeste < 2000){
+      serieMinuteur = setTimeout(function(){ serieMinuteur = null; chargeSeries(); }, 2000);
+      return;
+    }
+    /* Une ligne a la fois, et apres un silence : le premier appel du
+       chargement doit etre celui des cours, pas celui d'une courbe. */
+    serieMinuteur = setTimeout(function(){
+      serieMinuteur = null;
+      if (vueCourante !== 'general' && vueCourante !== 'actif') return;
+      if (PC_MARCHES.occupe && PC_MARCHES.occupe()) return;
+      seriesEnVol[c] = true; serieEnVol = true;
       PC_MARCHES.serie(c).then(function(pts){
-        delete seriesEnVol[c];
+        delete seriesEnVol[c]; serieEnVol = false;
         if (pts && pts.length > 1){ SERIES[c] = pts; rendre(); }
-      }, function(){ delete seriesEnVol[c]; });
-    });
+        else { seriesVaines[c] = 1; setTimeout(chargeSeries, 1500); }
+      }, function(){
+        delete seriesEnVol[c]; serieEnVol = false;
+        /* Refus : on ne reessaie pas tout de suite. Le module des
+           marches tient le temps d'attente, on s'y range. */
+      });
+    }, 1400);
   }
 
   function finDeJour(iso){ return new Date(iso + 'T23:59:59').getTime(); }
@@ -7394,7 +7441,8 @@ window.PC = (function(){
     const trace = traceCourbe(boite, document.getElementById('bulle-actif'), serie, 'ca');
     boite.hidden = !trace;
     vide.hidden = trace;
-    if (!trace) vide.innerHTML = serie.length === 1 ? motCourbeVide(1) : PC.t('e.pa.courbe.vide');
+    if (!trace) vide.innerHTML = serieEnAttente() ? PC.t('e.evo.attente')
+      : (serie.length === 1 ? motCourbeVide(1) : PC.t('e.pa.courbe.vide'));
 
     /* Le cours du marché arrive du réseau : la fiche est déjà lisible
        sans lui, il s'ajoute quand il est là. */
@@ -9339,7 +9387,8 @@ window.PC = (function(){
        s'il en a vingt, mais aucun ce mois-ci. */
     if (!trace){
       seul.innerHTML = (tous.length >= 2 && plageHisto !== 'tout')
-        ? PC.t('e.hp.court') : motCourbeVide(vus.length);
+        ? PC.t('e.hp.court')
+        : (serieEnAttente() ? PC.t('e.evo.attente') : motCourbeVide(vus.length));
     }
     /* Quand la courbe ne se trace pas, le message sous elle explique
        deja pourquoi : une deuxieme ligne disant la meme chose fait du
@@ -9906,6 +9955,11 @@ window.PC = (function(){
       }
       if (t.marche === 'matieres' && !(l || []).length){
         peintChoix(matieresChoix()); return;
+      }
+      if (l && l.refus && !l.length){
+        peintChoix([]);
+        if (mot) mot.textContent = PC.t(l.refus === 'limite' ? 'e.dir.limite' : 'e.et2.ko');
+        return;
       }
       peintChoix((l || []).map(function(c){
         return {code:c.id, nom:c.name,
@@ -11315,16 +11369,31 @@ window.PC = (function(){
       if (!u) return Promise.resolve(null);   /* null : pas de relais */
       return json(u).then(function(o){
         return Array.isArray(o) ? o.slice(0, 12) : [];
-      }, function(e){ noteRefus(e); return []; });
+      }, function(e){
+        noteRefus(e);
+        /* Une liste vide se lit « il n'y a rien ». Un refus n'est pas
+           un vide : on le dit, sinon on envoie chercher une crypto qui
+           existe parfaitement. */
+        const r = []; r.refus = (e && e.limite) ? 'limite' : 'ko';
+        return r;
+      });
     },
     /* La serie la plus profonde qu'on sache obtenir, brute. L'espace
        s'en sert pour reconstituer ce qu'une ligne valait aux dates
        passees : les memes points, le meme cache, la meme source que la
        courbe affichee. */
     serie: function(id){
-      return pointsPlage(id, '1a').then(function(r){ return (r && r.pts) || []; },
-                                        function(){ return []; });
+      /* Une serie journaliere sur un an ne change pas en dix minutes.
+         La redemander a ce rythme brulerait le quota du fournisseur
+         pour redessiner exactement le meme trait. */
+      const cle = id + '|365|' + dev();
+      const g = memoire[cle];
+      if (g && Date.now() - g.t < 6 * 3600e3) return Promise.resolve(g.p || []);
+      return pointsPlage(id, '1a').then(function(r){ return (r && r.pts) || []; });
     },
+    /* Vrai quand le fournisseur vient de refuser : on n'empile pas une
+       file d'appels par-dessus son refus. */
+    occupe: function(){ return Date.now() < repos; },
     trace: traceDans,
     /* Vider la memoire des courbes. Sert aux tests, et a la bascule de
        devise, ou les points gardes ne valent plus rien. */
