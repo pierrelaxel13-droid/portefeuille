@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1834";</script>
+<script>window.PC_VERSION = "260924.1906";</script>
 </head>
 <body>
 
@@ -755,6 +755,11 @@ body.flux-vif .cours__vif::before{
 .replimob > summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
 @media (max-width:700px){
   .replimob > summary{display:block;}
+}
+.replimob--sect{border-top:none; padding-top:0;}
+.replimob--sect > summary{
+  max-width:var(--maxw); margin-inline:auto; padding-inline:var(--pad);
+  border-top:1px solid var(--rule); padding-top:16px;
 }
 @media (min-width:701px){
   /* Hors telephone il n'est plus un repli du tout : ni bordure, ni
@@ -2814,6 +2819,7 @@ window.PC = (function(){
 
   /* --- Repères --- */
   'cit.eyebrow':        ["06 — Repères","06 — Principles","06 — Referencias","06 — Leitsätze"],
+  'ui.voir':            ["Voir le d\u00e9tail","See the detail","Ver el detalle","Details ansehen"],
   'ui.notes.plus':      ["Les notes","The notes","Las notas","Die Notizen"],
   'cit.h2':             ["Quelques rappels utiles.","A few useful reminders.","Algunos recordatorios útiles.","Ein paar nützliche Merksätze."],
   'cit.intro':          ["Rien de neuf sous le soleil&nbsp;: ceux qui ont traversé plusieurs cycles disent tous à peu près la même chose, et c'est rarement ce qu'on a envie d'entendre.","Nothing new under the sun: those who have lived through several cycles all say roughly the same thing, and it is rarely what one wants to hear.","Nada nuevo bajo el sol: quienes han atravesado varios ciclos dicen más o menos lo mismo, y rara vez es lo que uno quiere oír.","Nichts Neues unter der Sonne: wer mehrere Zyklen erlebt hat, sagt ungefähr dasselbe — und selten das, was man hören möchte."],
@@ -3261,6 +3267,10 @@ window.PC = (function(){
   'e.vie.t':            ["Depuis quand vous l'avez","How long you have held it","Desde cu\u00e1ndo lo tiene","Seit wann Sie sie halten"],
   'e.vie.t.rev':        ["Depuis quand, et ce qu'elle verse","Since when, and what it pays","Desde cu\u00e1ndo, y lo que paga","Seit wann, und was sie zahlt"],
   'e.vie.achat.n':      ["C'est cette date qui fait exister la courbe\u00a0: avant elle, la ligne n'\u00e9tait pas dans le portefeuille, et rien n'est reconstitu\u00e9.","This date is what makes the curve exist: before it, the line was not in the portfolio, and nothing is rebuilt.","Esta fecha es la que hace existir la curva: antes de ella, la l\u00ednea no estaba en la cartera y no se reconstruye nada.","Dieses Datum l\u00e4sst die Kurve entstehen: davor war die Position nicht im Portfolio, und es wird nichts rekonstruiert."],
+  'e.vie.depuis':       ["Dans votre portefeuille depuis le {{d}}.","In your portfolio since {{d}}.","En su cartera desde el {{d}}.","In Ihrem Portfolio seit dem {{d}}."],
+  'e.vie.sansdate':     ["Aucune date d'acquisition sur cette ligne\u00a0: sans elle, sa courbe ne peut pas remonter plus haut qu'aujourd'hui.","No acquisition date on this line: without it, its curve cannot reach back further than today.","Sin fecha de adquisici\u00f3n en esta l\u00ednea: sin ella, su curva no puede remontar m\u00e1s all\u00e1 de hoy.","Kein Erwerbsdatum f\u00fcr diese Position: ohne es kann ihre Kurve nicht weiter zur\u00fcckreichen als bis heute."],
+  'e.vie.verse':        ["Elle verse {{x}} {{p}}.","It pays {{x}} {{p}}.","Paga {{x}} {{p}}.","Sie zahlt {{x}} {{p}}."],
+  'e.vie.modifier':     ["Modifier","Change","Modificar","\u00c4ndern"],
   'e.vie.enreg':        ["Enregistrer","Save","Guardar","Speichern"],
   'e.vie.ok':           ["{{x}}\u00a0: c'est enregistr\u00e9. La courbe se refait.","{{x}}: saved. The curve is being rebuilt.","{{x}}: guardado. La curva se rehace.","{{x}}: gespeichert. Die Kurve wird neu aufgebaut."],
   'e.co.achat':         ["Acquis le","Acquired on","Adquirido el","Erworben am"],
@@ -7128,7 +7138,19 @@ window.PC = (function(){
     const auj = jourISO(Date.now());
     const avecRev = !!REVENU_CAT[a.cat];
     const rev = (typeof a.rev === 'number' && a.rev > 0) ? String(a.rev) : '';
-    return '<div class="carte"><div class="carte__c">' +
+    /* Ce qu'il en est, en une phrase, avant tout formulaire. */
+    const etat = '<p class="tx__etat">' +
+      (a.achat ? PC.t('e.vie.depuis', {d:echap(dateCourte(a.achat))})
+               : PC.t('e.vie.sansdate')) +
+      (revenuAnnuel(a)
+        ? ' ' + PC.t('e.vie.verse', {x:echap(eur.format(a.rev)),
+                                     p:echap(PC.t('e.rev.p.' + (a.revP || 'mois')).toLowerCase())})
+        : '') +
+      '</p>';
+    return '<div class="carte"><div class="carte__c">' + etat +
+      '<button class="btn btn--ghost" type="button" id="vi-ouvrir">' +
+        PC.t(a.achat ? 'e.vie.modifier' : 'e.vie.enreg') + '</button>' +
+      '<div class="tx__form" id="vi-bloc" hidden style="margin-top:16px">' +
       '<div class="champ"><label for="vi-achat">' + PC.t('e.co.achat') + '</label>' +
         '<input id="vi-achat" type="date" max="' + auj + '" value="' +
           echapAttr(a.achat || '') + '">' +
@@ -7151,8 +7173,21 @@ window.PC = (function(){
               echapAttr(a.revDepuis || '') + '"></div>'
         : '') +
       '<button class="btn" type="button" id="vi-enreg">' + PC.t('e.vie.enreg') + '</button>' +
+      '</div>' +
       '<p class="err" id="vi-err" role="alert"></p>' +
     '</div></div>';
+  }
+
+  function ouvreVie(){
+    const bloc = document.getElementById('vi-bloc');
+    const btn = document.getElementById('vi-ouvrir');
+    if (!bloc || !btn) return;
+    bloc.hidden = !bloc.hidden;
+    btn.setAttribute('aria-expanded', String(!bloc.hidden));
+    if (!bloc.hidden){
+      const c = document.getElementById('vi-achat');
+      if (c) c.focus();
+    }
   }
 
   function enregistreVie(){
@@ -9739,6 +9774,7 @@ window.PC = (function(){
     else if (c.id === 'co-ouvrir') ouvreCours();
     else if (c.id === 'co-enreg') enregistreCours();
     else if (c.id === 'co-oter') oteCours();
+    else if (c.id === 'vi-ouvrir') ouvreVie();
     else if (c.id === 'vi-enreg') enregistreVie();
     const pl = c.closest('[data-paplage]');
     if (pl){
@@ -10774,6 +10810,46 @@ window.PC = (function(){
   /* Les blocs marques « replimob » sont replies sur telephone et
      ouverts ailleurs. Des que quelqu'un y touche, on ne decide plus a
      sa place : son choix tient, meme s'il tourne son telephone. */
+  /* Les sections que le telephone replie. L'ordre n'a pas
+     d'importance : chacune garde sa place, seul son corps se range. */
+  const PLIABLES = ['apercu', 'repartition', 'activites', 'performance', 'faq'];
+  function plieSections(){
+    PLIABLES.forEach(function(id){
+      const sec = document.getElementById(id);
+      if (!sec || sec.dataset.plie) return;
+      const tete = sec.querySelector('.section__head');
+      if (!tete) return;
+      /* Le corps d'une section vit tantot dans le meme bloc que son
+         titre, tantot dans un ou plusieurs blocs qui suivent. On plie
+         les deux cas, en gardant a chacun sa marge laterale. */
+      const bloc = tete.closest('.wrap');
+      const d = document.createElement('details');
+      d.className = 'replimob replimob--sect';
+      const r = document.createElement('summary');
+      r.setAttribute('data-i18n', 'ui.voir');
+      r.textContent = PC.t('ui.voir');
+      d.appendChild(r);
+      if (tete.nextSibling){
+        const w = document.createElement('div');
+        w.className = 'wrap';
+        let x = tete.nextSibling;
+        while (x){ const suiv = x.nextSibling; w.appendChild(x); x = suiv; }
+        d.appendChild(w);
+      }
+      /* On DEPLACE les noeuds : ce sont les memes objets, donc les
+         graphiques deja dessines, les observateurs et les ecouteurs
+         accroches dessus continuent de fonctionner. */
+      if (bloc && bloc.parentNode === sec){
+        let b = bloc.nextSibling;
+        while (b){ const suiv = b.nextSibling; d.appendChild(b); b = suiv; }
+        sec.insertBefore(d, bloc.nextSibling);
+      } else {
+        (bloc || tete.parentNode).appendChild(d);
+      }
+      sec.dataset.plie = '1';
+    });
+  }
+
   function repliMobile(){
     const petit = window.matchMedia('(max-width:700px)').matches;
     document.querySelectorAll('details.replimob').forEach(function(d){
@@ -10784,6 +10860,7 @@ window.PC = (function(){
     const d = e.target;
     if (d && d.classList && d.classList.contains('replimob')) d.dataset.touche = '1';
   }, true);
+  plieSections();
   repliMobile();
   window.addEventListener('resize', repliMobile);
 
