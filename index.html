@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1732";</script>
+<script>window.PC_VERSION = "260924.1757";</script>
 </head>
 <body>
 
@@ -3437,6 +3437,7 @@ window.PC = (function(){
   'e.rel.aide':         ["Vos lignes de bourse portent alors un code de la forme tw:CW8:XPAR \u2014 le symbole, puis la place de cotation.","Your market lines then carry a code shaped like tw:CW8:XPAR \u2014 the symbol, then the trading venue.","Sus l\u00edneas de bolsa llevan entonces un c\u00f3digo con la forma tw:CW8:XPAR: el s\u00edmbolo y luego el mercado.","Ihre B\u00f6rsenpositionen tragen dann einen Code der Form tw:CW8:XPAR \u2014 Symbol, dann Handelsplatz."],
   'e.rel.ok':           ["Relais enregistr\u00e9. Les cours de bourse passeront par lui.","Relay saved. Market prices will go through it.","Rel\u00e9 guardado. Las cotizaciones pasar\u00e1n por \u00e9l.","Relais gespeichert. Die B\u00f6rsenkurse laufen dar\u00fcber."],
   'e.rel.ote':          ["Relais retir\u00e9. Les cours de bourse redeviennent manuels.","Relay removed. Market prices go back to manual.","Rel\u00e9 retirado. Las cotizaciones vuelven a ser manuales.","Relais entfernt. B\u00f6rsenkurse sind wieder manuell."],
+  'e.rel.err.adresse':  ["Cette adresse n'est pas appelable\u00a0: \u00ab\u00a0{{u}}\u00a0\u00bb ne d\u00e9signe aucun serveur. Collez l'adresse exacte de votre relais, celle qui s'ouvre dans un onglet.","That address cannot be called: \u00ab {{u}} \u00bb points to no server. Paste your relay's exact address, the one that opens in a tab.","Esa direcci\u00f3n no se puede llamar: \u00ab {{u}} \u00bb no designa ning\u00fan servidor. Pegue la direcci\u00f3n exacta de su rel\u00e9, la que se abre en una pesta\u00f1a.","Diese Adresse ist nicht aufrufbar: \u00bb{{u}}\u00ab bezeichnet keinen Server. F\u00fcgen Sie die genaue Adresse Ihres Relais ein, die sich in einem Tab \u00f6ffnet."],
   'e.rel.err':          ["Cette adresse n'est pas une adresse web compl\u00e8te (elle doit commencer par https://).","This is not a complete web address (it must start with https://).","Esta no es una direcci\u00f3n web completa (debe empezar por https://).","Das ist keine vollst\u00e4ndige Webadresse (sie muss mit https:// beginnen)."],
   'e.src.differe':      ["{{s}}, relev\u00e9 \u00e0 {{h}} \u2014 cours de bourse diff\u00e9r\u00e9, pas du direct.","{{s}}, taken at {{h}} \u2014 delayed market price, not live.","{{s}}, tomado a las {{h}} \u2014 cotizaci\u00f3n diferida, no en directo.","{{s}}, erfasst um {{h}} \u2014 verz\u00f6gerter B\u00f6rsenkurs, nicht live."],
   'e.src.cloture':      ["{{s}}, relev\u00e9 \u00e0 {{h}} \u2014 march\u00e9 ferm\u00e9\u00a0: c'est le cours de cl\u00f4ture.","{{s}}, taken at {{h}} \u2014 market closed: this is the closing price.","{{s}}, tomado a las {{h}} \u2014 mercado cerrado: es el precio de cierre.","{{s}}, erfasst um {{h}} \u2014 Markt geschlossen: das ist der Schlusskurs."],
@@ -7694,6 +7695,18 @@ window.PC = (function(){
     const bon = /^https:\/\/[^\s]+$/.test(u) ||
                 /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/.test(u);
     if (!bon){ dire(PC.t('e.rel.err')); return false; }
+    /* Et surtout : une adresse que le navigateur ne saura pas joindre.
+       Un exemple recopie tel quel commence par « https:// » et passe
+       la regle du dessus ; il ne designe pourtant aucun serveur. Le
+       refuser ici vaut mieux que de l'enregistrer et de constater
+       ensuite, a chaque appel, que rien ne part. */
+    let hote = '';
+    try { hote = new URL(u).hostname; } catch (e){ hote = ''; }
+    const local = hote === 'localhost' || hote === '127.0.0.1';
+    if (!hote || !/^[a-z0-9.-]+$/i.test(hote) || (!local && hote.indexOf('.') === -1)){
+      dire(PC.t('e.rel.err.adresse', {u:u}));
+      return false;
+    }
     try { localStorage.setItem('pierrelco.relais.v1', u); } catch (e){}
     dire(PC.t('e.rel.ok'));
     chercheCours(true).then(function(r){ dire(motCours(r)); });
