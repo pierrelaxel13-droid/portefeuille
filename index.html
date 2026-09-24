@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1634";</script>
+<script>window.PC_VERSION = "260924.1703";</script>
 </head>
 <body>
 
@@ -3474,6 +3474,8 @@ window.PC = (function(){
   'm.precedent':          ["Page pr\u00e9c\u00e9dente","Previous page","P\u00e1gina anterior","Vorherige Seite"],
   'm.page':               ["Page {{n}}","Page {{n}}","P\u00e1gina {{n}}","Seite {{n}}"],
   'm.charge':             ["Chargement des cours\u2026","Loading prices\u2026","Cargando cotizaciones\u2026","Kurse werden geladen\u2026"],
+  'm.cadre':              ["Cette page est affich\u00e9e dans un aper\u00e7u, et aucun appel n'en est sorti. Un aper\u00e7u interdit souvent les appels vers l'ext\u00e9rieur\u00a0: ouvrez la page dans un onglet \u00e0 elle, les cours reviendront.","This page is shown inside a preview, and no call left it. A preview often forbids outside calls: open the page in a tab of its own and prices will come back.","Esta p\u00e1gina se muestra en una vista previa y no sali\u00f3 ninguna llamada. Una vista previa suele prohibir las llamadas al exterior: \u00e1brala en una pesta\u00f1a propia y las cotizaciones volver\u00e1n.","Diese Seite wird in einer Vorschau angezeigt, und es ist kein Aufruf hinausgegangen. Eine Vorschau verbietet oft Aufrufe nach au\u00dfen: \u00f6ffnen Sie die Seite in einem eigenen Tab, dann kommen die Kurse zur\u00fcck."],
+  'm.cadre.lien':         ["Ouvrir dans un onglet","Open in a tab","Abrir en una pesta\u00f1a","In einem Tab \u00f6ffnen"],
   'm.muet':               ["Aucune r\u00e9ponse de {{h}}\u00a0: l'appel n'est jamais parti. Un aper\u00e7u ou une extension du navigateur peut interdire les appels sortants \u2014 essayez la page \u00e0 son adresse https, dans un autre navigateur.","No answer from {{h}}: the call never left. A preview frame or a browser extension can forbid outgoing calls \u2014 try the page at its https address, in another browser.","Sin respuesta de {{h}}: la llamada nunca sali\u00f3. Una vista previa o una extensi\u00f3n del navegador puede prohibir las llamadas salientes; pruebe la p\u00e1gina en su direcci\u00f3n https, en otro navegador.","Keine Antwort von {{h}}: der Aufruf ist nie hinausgegangen. Eine Vorschau oder eine Browser-Erweiterung kann ausgehende Aufrufe verbieten \u2014 versuchen Sie die Seite unter ihrer https-Adresse, in einem anderen Browser."],
   'm.statut':             ["{{h}} a r\u00e9pondu {{c}}. Les cours n'ont pas pu \u00eatre charg\u00e9s.","{{h}} answered {{c}}. Prices could not be loaded.","{{h}} respondi\u00f3 {{c}}. No se han podido cargar las cotizaciones.","{{h}} hat {{c}} geantwortet. Die Kurse konnten nicht geladen werden."],
   'm.fichier':            ["Cette page est ouverte depuis un fichier, pas depuis un site. Le navigateur y interdit tout appel ext\u00e9rieur\u00a0: ouvrez-la \u00e0 son adresse (https) pour voir les cours.","This page is open from a file, not from a website. The browser forbids any outside call there: open it at its https address to see prices.","Esta p\u00e1gina est\u00e1 abierta desde un archivo, no desde un sitio. El navegador proh\u00edbe ah\u00ed toda llamada externa: \u00e1brala en su direcci\u00f3n https para ver las cotizaciones.","Diese Seite ist aus einer Datei ge\u00f6ffnet, nicht von einer Website. Der Browser verbietet dort jeden externen Aufruf: \u00f6ffnen Sie sie unter ihrer https-Adresse, um Kurse zu sehen."],
@@ -9100,7 +9102,12 @@ window.PC = (function(){
       /* Nommer l'hote appele : savoir si c'est le fournisseur de
          cryptos ou son propre relais tranche a lui seul la moitie des
          questions. */
-      if (r.echec && r.echec.muet) return PC.t('m.muet', {h:r.echec.hote});
+      if (r.echec && r.echec.muet){
+        /* Depuis un cadre, « aucune reponse » a une cause unique et un
+           remede unique : on ne renvoie pas chercher ailleurs. */
+        try { if (window.top !== window.self) return PC.t('m.cadre'); } catch (x){}
+        return PC.t('m.muet', {h:r.echec.hote});
+      }
       if (r.echec && r.echec.statut)
         return PC.t('m.statut', {h:r.echec.hote, c:String(r.echec.statut)});
       return PC.t('e.dir.ko');
@@ -10101,6 +10108,7 @@ window.PC = (function(){
         peintChoix([]);
         if (mot) mot.textContent =
           location.protocol === 'file:' ? PC.t('m.fichier')
+          : l.refus === 'cadre' ? PC.t('m.cadre')
           : l.refus === 'origine' ? PC.t('m.origine', {o:location.origin})
           : l.refus === 'limite' ? PC.t('e.dir.limite')
           : PC.t('e.et2.ko');
@@ -10819,8 +10827,23 @@ window.PC = (function(){
     const r = relais();
     return !!r && String(u || '').indexOf(r) === 0;
   }
+  /* La page n'est pas la fenetre du haut : elle est dans un cadre. */
+  function dansUnCadre(){
+    try { return window.top !== window.self; } catch (e){ return true; }
+  }
+  /* Le seul geste qui debloque, offert la ou l'on constate la panne. */
+  function lienCadre(){
+    if (!dansUnCadre()) return '';
+    return '<p style="margin-top:12px"><a class="btn btn--ghost" target="_blank" ' +
+      'rel="noopener" href="' + ech(location.href) + '">' +
+      ech(PC.t('m.cadre.lien')) + '</a></p>';
+  }
   function motDEchecListe(e){
     if (location.protocol === 'file:') return PC.t('m.fichier');
+    /* Un appel qui n'est jamais parti, depuis un cadre : c'est le
+       cadre, et rien d'autre. Le dire evite d'aller changer de
+       navigateur ou de soupconner le fournisseur. */
+    if (e && e.muet && dansUnCadre()) return PC.t('m.cadre');
     if (e && e.origine) return PC.t('m.origine', {o:location.origin});
     if (e && e.limite) return PC.t('m.limite');
     if (e && e.muet) return PC.t('m.muet', {h:e.hote});
@@ -11101,7 +11124,7 @@ window.PC = (function(){
         if (!rangs.length){
           hote.setAttribute('data-etat', 'ko');
           boite.innerHTML = '<p class="marches__panne">' +
-            ech(motDEchecListe(e)) + '</p>';
+            ech(motDEchecListe(e)) + '</p>' + lienCadre();
           return;
         }
         dit(motDEchecListe(e), false);
@@ -11551,7 +11574,9 @@ window.PC = (function(){
            un vide : on le dit, sinon on envoie chercher une crypto qui
            existe parfaitement. */
         const r = [];
-        r.refus = (e && e.origine) ? 'origine' : ((e && e.limite) ? 'limite' : 'ko');
+        r.refus = (e && e.muet && dansUnCadre()) ? 'cadre'
+                : (e && e.origine) ? 'origine'
+                : (e && e.limite) ? 'limite' : 'ko';
         return r;
       });
     },
