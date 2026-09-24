@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1757";</script>
+<script>window.PC_VERSION = "260924.1834";</script>
 </head>
 <body>
 
@@ -728,11 +728,49 @@ body.flux-vif .cours__vif::before{
   position:absolute; pointer-events:none; user-select:none;
 }
 
+/* ===== Le telephone n'est pas un petit ecran large =====
+   Debout, dans les transports, on fait defiler au pouce : la page
+   faisait douze ecrans et demi. On ne coupe pas le fond — on reserre
+   l'air entre les blocs, on replie ce qui se lit en second, et on
+   retire ce qui ne servait qu'a meubler.
+   Les regles vivent ici, a cote de celles qu'elles corrigent, plutot
+   que dans un bloc « mobile » a la fin ou personne ne les retrouve. */
+@media (max-width:700px){
+  /* « Quelques rappels utiles » : une belle page sur grand ecran, un
+     ecran et demi de citations a faire defiler sur un telephone. */
+  #citations{display:none;}
+}
+/* Un bloc qui se replie sur telephone et reste ouvert ailleurs. Le
+   contenu ne bouge pas : seule sa presentation suit la largeur. */
+.replimob{border-top:1px solid var(--rule); padding-top:16px;}
+.replimob > summary{
+  cursor:pointer; list-style:none; display:none;
+  font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-2); padding:4px 0 14px;
+}
+.replimob > summary::-webkit-details-marker{display:none;}
+.replimob > summary::after{content:" +"; color:var(--accent);}
+.replimob[open] > summary::after{content:" \2013";}
+.replimob > summary:hover{color:var(--ink);}
+.replimob > summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+@media (max-width:700px){
+  .replimob > summary{display:block;}
+}
+@media (min-width:701px){
+  /* Hors telephone il n'est plus un repli du tout : ni bordure, ni
+     resume, et toujours ouvert. */
+  .replimob{border-top:none; padding-top:0;}
+}
+
 /* ===== Sections ===== */
 /* padding-block, surtout pas l'écriture raccourcie : `padding: X 0` sur
    un élément qui porte aussi .wrap remettait sa marge latérale à zéro et
    collait les blocs au bord de l'écran. */
 .section{position:relative; padding-block:clamp(64px,9vw,128px); z-index:var(--z-base);}
+@media (max-width:700px){
+  .section{padding-block:clamp(38px,8vw,64px);}
+  .section__head{margin-bottom:clamp(20px,5vw,32px);}
+}
 .section--rule{border-top:1px solid var(--rule);}
 .section__head{
   display:grid; grid-template-columns:1fr; gap:clamp(16px,2vw,22px);
@@ -2776,6 +2814,7 @@ window.PC = (function(){
 
   /* --- Repères --- */
   'cit.eyebrow':        ["06 — Repères","06 — Principles","06 — Referencias","06 — Leitsätze"],
+  'ui.notes.plus':      ["Les notes","The notes","Las notas","Die Notizen"],
   'cit.h2':             ["Quelques rappels utiles.","A few useful reminders.","Algunos recordatorios útiles.","Ein paar nützliche Merksätze."],
   'cit.intro':          ["Rien de neuf sous le soleil&nbsp;: ceux qui ont traversé plusieurs cycles disent tous à peu près la même chose, et c'est rarement ce qu'on a envie d'entendre.","Nothing new under the sun: those who have lived through several cycles all say roughly the same thing, and it is rarely what one wants to hear.","Nada nuevo bajo el sol: quienes han atravesado varios ciclos dicen más o menos lo mismo, y rara vez es lo que uno quiere oír.","Nichts Neues unter der Sonne: wer mehrere Zyklen erlebt hat, sagt ungefähr dasselbe — und selten das, was man hören möchte."],
   'cit.1':              ["Le prix, c'est ce que vous payez. La valeur, c'est ce que vous obtenez.","Price is what you pay. Value is what you get.","El precio es lo que paga. El valor es lo que obtiene.","Preis ist, was Sie zahlen. Wert ist, was Sie bekommen."],
@@ -4224,12 +4263,15 @@ window.PC = (function(){
         ce qui a coûté plus cher que prévu, et ce que je surveille.
       </p>
     </div>
+    <details class="replimob" open>
+      <summary data-i18n="ui.notes.plus">Les notes</summary>
     <div class="notes reveal" style="--rd:.16s">
       <article class="note"><div class="note__k mono" data-i18n="notes.1.k">Concentration</div><p data-i18n-html="notes.1.p">L'immobilier représente à lui seul la moitié du portefeuille. C'est le poste le plus stable, mais aussi le moins liquide&nbsp;: en cas de besoin rapide, il ne répond pas.</p></article>
       <article class="note"><div class="note__k mono" data-i18n="notes.2.k">Coût réel du minage</div><p data-i18n-html="notes.2.p">Le rendement brut ne veut rien dire sans l'électricité et l'usure du matériel. C'est la ligne où l'écart entre performance affichée et performance nette est le plus large.</p></article>
       <article class="note"><div class="note__k mono" data-i18n="notes.3.k">Volatilité assumée</div><p data-i18n-html="notes.3.p">Bitcoin et trading sont les deux postes qui bougent le plus. Ils sont dimensionnés pour pouvoir perdre la moitié de leur valeur sans que ça remette en cause le reste.</p></article>
       <article class="note"><div class="note__k mono" data-i18n="notes.4.k">Ce que je surveille</div><p data-i18n-html="notes.4.p">Le rapport entre ce qui est liquide et ce qui ne l'est pas. Tant qu'une part suffisante reste mobilisable en quelques jours, le déséquilibre du reste est tenable.</p></article>
     </div>
+    </details>
   </div>
 </section>
 
@@ -10729,6 +10771,22 @@ window.PC = (function(){
      a produit : les puces de catégorie, les tableaux, les graphes et
      les dates des relevés. Les montants saisis, eux, ne bougent pas —
      seule leur mise en forme suit. */
+  /* Les blocs marques « replimob » sont replies sur telephone et
+     ouverts ailleurs. Des que quelqu'un y touche, on ne decide plus a
+     sa place : son choix tient, meme s'il tourne son telephone. */
+  function repliMobile(){
+    const petit = window.matchMedia('(max-width:700px)').matches;
+    document.querySelectorAll('details.replimob').forEach(function(d){
+      if (!d.dataset.touche) d.open = !petit;
+    });
+  }
+  document.addEventListener('toggle', function(e){
+    const d = e.target;
+    if (d && d.classList && d.classList.contains('replimob')) d.dataset.touche = '1';
+  }, true);
+  repliMobile();
+  window.addEventListener('resize', repliMobile);
+
   PC.surChangement(function(){
     construitPuces();
     construitSelecteurs();
