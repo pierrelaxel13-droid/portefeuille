@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1607";</script>
+<script>window.PC_VERSION = "260924.1634";</script>
 </head>
 <body>
 
@@ -3474,6 +3474,8 @@ window.PC = (function(){
   'm.precedent':          ["Page pr\u00e9c\u00e9dente","Previous page","P\u00e1gina anterior","Vorherige Seite"],
   'm.page':               ["Page {{n}}","Page {{n}}","P\u00e1gina {{n}}","Seite {{n}}"],
   'm.charge':             ["Chargement des cours\u2026","Loading prices\u2026","Cargando cotizaciones\u2026","Kurse werden geladen\u2026"],
+  'm.muet':               ["Aucune r\u00e9ponse de {{h}}\u00a0: l'appel n'est jamais parti. Un aper\u00e7u ou une extension du navigateur peut interdire les appels sortants \u2014 essayez la page \u00e0 son adresse https, dans un autre navigateur.","No answer from {{h}}: the call never left. A preview frame or a browser extension can forbid outgoing calls \u2014 try the page at its https address, in another browser.","Sin respuesta de {{h}}: la llamada nunca sali\u00f3. Una vista previa o una extensi\u00f3n del navegador puede prohibir las llamadas salientes; pruebe la p\u00e1gina en su direcci\u00f3n https, en otro navegador.","Keine Antwort von {{h}}: der Aufruf ist nie hinausgegangen. Eine Vorschau oder eine Browser-Erweiterung kann ausgehende Aufrufe verbieten \u2014 versuchen Sie die Seite unter ihrer https-Adresse, in einem anderen Browser."],
+  'm.statut':             ["{{h}} a r\u00e9pondu {{c}}. Les cours n'ont pas pu \u00eatre charg\u00e9s.","{{h}} answered {{c}}. Prices could not be loaded.","{{h}} respondi\u00f3 {{c}}. No se han podido cargar las cotizaciones.","{{h}} hat {{c}} geantwortet. Die Kurse konnten nicht geladen werden."],
   'm.fichier':            ["Cette page est ouverte depuis un fichier, pas depuis un site. Le navigateur y interdit tout appel ext\u00e9rieur\u00a0: ouvrez-la \u00e0 son adresse (https) pour voir les cours.","This page is open from a file, not from a website. The browser forbids any outside call there: open it at its https address to see prices.","Esta p\u00e1gina est\u00e1 abierta desde un archivo, no desde un sitio. El navegador proh\u00edbe ah\u00ed toda llamada externa: \u00e1brala en su direcci\u00f3n https para ver las cotizaciones.","Diese Seite ist aus einer Datei ge\u00f6ffnet, nicht von einer Website. Der Browser verbietet dort jeden externen Aufruf: \u00f6ffnen Sie sie unter ihrer https-Adresse, um Kurse zu sehen."],
   'm.origine':            ["Votre relais refuse cette adresse. Ajoutez {{o}} \u00e0 sa variable ORIGINES, puis rechargez la page.","Your relay refuses this address. Add {{o}} to its ORIGINES variable, then reload the page.","Su rel\u00e9 rechaza esta direcci\u00f3n. A\u00f1ada {{o}} a su variable ORIGINES y recargue la p\u00e1gina.","Ihr Relais weist diese Adresse ab. F\u00fcgen Sie {{o}} zu seiner Variablen ORIGINES hinzu und laden Sie die Seite neu."],
   'm.ko':                 ["Les cours n'ont pas pu \u00eatre charg\u00e9s. Le fournisseur est peut-\u00eatre injoignable depuis votre r\u00e9seau.","Prices could not be loaded. The provider may be unreachable from your network.","No se han podido cargar las cotizaciones. El proveedor puede no ser accesible desde su red.","Die Kurse konnten nicht geladen werden. Der Anbieter ist von Ihrem Netz aus m\u00f6glicherweise nicht erreichbar."],
@@ -8380,12 +8382,23 @@ window.PC = (function(){
              function(e){ clearTimeout(t); ko(e); });
     });
   }
+  function hoteDe(u){
+    try { return new URL(u, location.href).host || String(u); }
+    catch (e){ return String(u); }
+  }
   function litJSON(u){
+    const h = hoteDe(u);
     return avecDelai(fetch(u, {headers:{'Accept':'application/json'}})
       .then(function(r){
-        if (r.status === 429){ const e = new Error('limite'); e.limite = true; throw e; }
-        if (!r.ok) throw new Error('http ' + r.status);
+        if (r.status === 429){ const e = new Error('limite'); e.limite = true; e.hote = h; throw e; }
+        if (!r.ok){
+          const e = new Error('http ' + r.status); e.statut = r.status; e.hote = h; throw e;
+        }
         return r.json();
+      }, function(e){
+        /* Rien n'est revenu : ce n'est pas le fournisseur qui a refuse,
+           c'est l'appel qui n'est pas parti. */
+        const x = new Error('muet'); x.muet = true; x.hote = h; throw x;
       }), 9000);
   }
 
@@ -8613,6 +8626,9 @@ window.PC = (function(){
     coursRetard = null;
     const liste = fournisseurs();
     let limite = false, repondu = false;
+    /* Le dernier echec utile : on le garde pour pouvoir dire QUI n'a
+       pas repondu, plutot que « un fournisseur ». */
+    let echec = null;
     const recolte = {};   /* les prix trouvés, d'où qu'ils viennent */
     const sources = [];   /* et qui les a fournis */
     /* On ne s'arrête plus au premier qui répond. Chacun ne connaît
@@ -8646,13 +8662,14 @@ window.PC = (function(){
         /* 429 : on retient qu'on a été limité, mais on continue la
            chaîne — un autre fournisseur n'a pas la même limite. */
         if (e && e.limite) limite = true;
+        else if (e && (e.muet || e.statut)) echec = e;
         return essaie(k + 1);
       });
     }
     return essaie(0)
       .then(function(){
         if (!sources.length) return {code:repondu ? 'inconnu' : (limite ? 'limite' : 'ko'),
-                                     n:0, absents:repondu ? ids : []};
+                                     n:0, absents:repondu ? ids : [], echec:echec};
         const absents = ids.filter(function(i){ return prixDe(recolte, i) === null; });
         const n = poseCours(recolte);
         coursSource = sources.join(' + '); coursQuand = Date.now();
@@ -9079,7 +9096,15 @@ window.PC = (function(){
   function motCours(r){
     if (!r) return '';
     if (r.code === 'limite') return PC.t('e.dir.limite');
-    if (r.code === 'ko') return PC.t('e.dir.ko');
+    if (r.code === 'ko'){
+      /* Nommer l'hote appele : savoir si c'est le fournisseur de
+         cryptos ou son propre relais tranche a lui seul la moitie des
+         questions. */
+      if (r.echec && r.echec.muet) return PC.t('m.muet', {h:r.echec.hote});
+      if (r.echec && r.echec.statut)
+        return PC.t('m.statut', {h:r.echec.hote, c:String(r.echec.statut)});
+      return PC.t('e.dir.ko');
+    }
     if (r.code === 'inconnu' && r.absents && r.absents.length)
       return PC.t('e.dir.inconnu', {s:r.absents.join(', ')});
     if (r.n) return PC.t('e.dir.ok', {n:String(r.n)});
@@ -10764,17 +10789,30 @@ window.PC = (function(){
 
   function dev(){ return String(PC.devise).toLowerCase(); }
 
+  function hoteDe(u){
+    try { return new URL(u, location.href).host || String(u); }
+    catch (e){ return String(u); }
+  }
   function json(u){
+    const h = hoteDe(u);
     return fetch(u, {headers:{'Accept':'application/json'}}).then(function(r){
-      if (r.status === 429){ const e = new Error('limite'); e.limite = true; throw e; }
+      if (r.status === 429){ const e = new Error('limite'); e.limite = true; e.hote = h; throw e; }
       /* 403 d'un relais : ce n'est pas une panne, c'est une adresse
          qu'il n'a pas dans sa liste. On le distingue, parce que le
          remede n'a rien a voir. */
       if (r.status === 403 && estRelais(u)){
-        const e = new Error('origine'); e.origine = true; throw e;
+        const e = new Error('origine'); e.origine = true; e.hote = h; throw e;
       }
-      if (!r.ok) throw new Error('http ' + r.status);
+      if (!r.ok){
+        const e = new Error('http ' + r.status); e.statut = r.status; e.hote = h; throw e;
+      }
       return r.json();
+    }, function(e){
+      /* `fetch` n'a pas rejete pour un code : il a rejete tout court.
+         Rien n'est revenu, et rien n'est peut-etre parti. */
+      const x = new Error('muet'); x.muet = true; x.hote = h;
+      x.cause = String((e && e.message) || e);
+      throw x;
     });
   }
   function estRelais(u){
@@ -10784,7 +10822,10 @@ window.PC = (function(){
   function motDEchecListe(e){
     if (location.protocol === 'file:') return PC.t('m.fichier');
     if (e && e.origine) return PC.t('m.origine', {o:location.origin});
-    return e && e.limite ? PC.t('m.limite') : PC.t('m.ko');
+    if (e && e.limite) return PC.t('m.limite');
+    if (e && e.muet) return PC.t('m.muet', {h:e.hote});
+    if (e && e.statut) return PC.t('m.statut', {h:e.hote, c:String(e.statut)});
+    return PC.t('m.ko');
   }
 
   /* Un prix de crypto va de 0,00002 € à 80 000 € : un nombre fixe de
