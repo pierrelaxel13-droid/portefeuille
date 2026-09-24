@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1703";</script>
+<script>window.PC_VERSION = "260924.1732";</script>
 </head>
 <body>
 
@@ -3474,6 +3474,7 @@ window.PC = (function(){
   'm.precedent':          ["Page pr\u00e9c\u00e9dente","Previous page","P\u00e1gina anterior","Vorherige Seite"],
   'm.page':               ["Page {{n}}","Page {{n}}","P\u00e1gina {{n}}","Seite {{n}}"],
   'm.charge':             ["Chargement des cours\u2026","Loading prices\u2026","Cargando cotizaciones\u2026","Kurse werden geladen\u2026"],
+  'm.mp.sansrelais':      ["L'or et l'argent arrivent sans rien installer. Le platine, le cuivre, le p\u00e9trole et les autres passent par un relais, qu'il faut indiquer une fois.","Gold and silver arrive with nothing installed. Platinum, copper, oil and the rest go through a relay, which you set once.","El oro y la plata llegan sin instalar nada. El platino, el cobre, el petr\u00f3leo y los dem\u00e1s pasan por un rel\u00e9 que hay que indicar una vez.","Gold und Silber kommen ohne Installation. Platin, Kupfer, \u00d6l und die \u00fcbrigen laufen \u00fcber ein Relais, das Sie einmal angeben."],
   'm.cadre':              ["Cette page est affich\u00e9e dans un aper\u00e7u, et aucun appel n'en est sorti. Un aper\u00e7u interdit souvent les appels vers l'ext\u00e9rieur\u00a0: ouvrez la page dans un onglet \u00e0 elle, les cours reviendront.","This page is shown inside a preview, and no call left it. A preview often forbids outside calls: open the page in a tab of its own and prices will come back.","Esta p\u00e1gina se muestra en una vista previa y no sali\u00f3 ninguna llamada. Una vista previa suele prohibir las llamadas al exterior: \u00e1brala en una pesta\u00f1a propia y las cotizaciones volver\u00e1n.","Diese Seite wird in einer Vorschau angezeigt, und es ist kein Aufruf hinausgegangen. Eine Vorschau verbietet oft Aufrufe nach au\u00dfen: \u00f6ffnen Sie die Seite in einem eigenen Tab, dann kommen die Kurse zur\u00fcck."],
   'm.cadre.lien':         ["Ouvrir dans un onglet","Open in a tab","Abrir en una pesta\u00f1a","In einem Tab \u00f6ffnen"],
   'm.muet':               ["Aucune r\u00e9ponse de {{h}}\u00a0: l'appel n'est jamais parti. Un aper\u00e7u ou une extension du navigateur peut interdire les appels sortants \u2014 essayez la page \u00e0 son adresse https, dans un autre navigateur.","No answer from {{h}}: the call never left. A preview frame or a browser extension can forbid outgoing calls \u2014 try the page at its https address, in another browser.","Sin respuesta de {{h}}: la llamada nunca sali\u00f3. Una vista previa o una extensi\u00f3n del navegador puede prohibir las llamadas salientes; pruebe la p\u00e1gina en su direcci\u00f3n https, en otro navegador.","Keine Antwort von {{h}}: der Aufruf ist nie hinausgegangen. Eine Vorschau oder eine Browser-Erweiterung kann ausgehende Aufrufe verbieten \u2014 versuchen Sie die Seite unter ihrer https-Adresse, in einem anderen Browser."],
@@ -7669,7 +7670,7 @@ window.PC = (function(){
   /* Le relais se règle ici plutôt que dans le code : c'est une adresse
      personnelle, qui n'a pas à être republiée à chaque changement. Une
      invite suffit — on colle une adresse, on efface pour la retirer. */
-  document.getElementById('relais-btn').addEventListener('click', function(){
+  function demandeRelais(){
     const actuel = (function(){
       try { return localStorage.getItem('pierrelco.relais.v1') || ''; }
       catch (e){ return ''; }
@@ -7683,15 +7684,25 @@ window.PC = (function(){
       try { localStorage.removeItem('pierrelco.relais.v1'); } catch (e){}
       dire(PC.t('e.rel.ote'));
       majEtatCours();
-      return;
+      return true;
     }
     /* Une adresse incomplète échouerait en silence à chaque appel : on
        la refuse tout de suite, et on dit pourquoi. */
-    if (!/^https:\/\/[^\s]+$/.test(u)){ dire(PC.t('e.rel.err')); return; }
+    /* https obligatoire, sauf en boucle locale : un relais qu'on fait
+       tourner sur sa propre machine ne sort pas du poste, et c'est la
+       seule facon d'essayer le reglage sans en deployer un. */
+    const bon = /^https:\/\/[^\s]+$/.test(u) ||
+                /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/.test(u);
+    if (!bon){ dire(PC.t('e.rel.err')); return false; }
     try { localStorage.setItem('pierrelco.relais.v1', u); } catch (e){}
     dire(PC.t('e.rel.ok'));
     chercheCours(true).then(function(r){ dire(motCours(r)); });
-  });
+    return true;
+  }
+  document.getElementById('relais-btn').addEventListener('click', demandeRelais);
+  /* Le module des marches est un autre script : il appelle le meme
+     reglage plutot que d'en ecrire un second. */
+  window.PC_RELAIS_DEMANDE = demandeRelais;
 
   document.getElementById('pf-supprime').addEventListener('click', function(){
     if (portefeuilles.length < 2){ dire(PC.t('e.pf.dernier')); return; }
@@ -10099,7 +10110,14 @@ window.PC = (function(){
          ecran vide. */
       if (l === null){
         if (t.marche === 'matieres'){ peintChoix(matieresChoix()); return; }
-        if (mot) mot.textContent = PC.t('e.et2.sansrelais'); return;
+        /* Le meme reglage que sur l'ecran des marches, au meme endroit
+           que le manque : on ne renvoie pas chercher dans un menu. */
+        if (mot){
+          mot.innerHTML = echap(PC.t('e.et2.sansrelais')) +
+            '<br><button class="btn" type="button" id="mar-relais-btn" ' +
+            'style="margin-top:12px">' + echap(PC.t('e.rel.bouton')) + '</button>';
+        }
+        return;
       }
       if (t.marche === 'matieres' && !(l || []).length){
         peintChoix(matieresChoix()); return;
@@ -11106,6 +11124,11 @@ window.PC = (function(){
         /* Première réponse : la section peut se déployer. */
         hote.setAttribute('data-etat', 'ok');
         peint(rangs);
+        if (marcheSource === 'matieres' && !relais()){
+          boite.insertAdjacentHTML('beforeend',
+            '<p class="marches__panne" style="margin-top:18px">' +
+            ech(PC.t('m.mp.sansrelais')) + '</p>' + boutonRelais());
+        }
         dit(PC.t(marcheSource === 'bourse' ? 'm.maj.b'
                : marcheSource === 'matieres' ? 'm.maj.mp' : 'm.maj',
                {h:heure(dernier)}), true);
@@ -11495,6 +11518,21 @@ window.PC = (function(){
   /* Passer d'un marche a l'autre : on repart de zero plutot que de
      laisser les cryptos une seconde a l'ecran sous le titre « bourse ».
      Un chiffre juste au mauvais endroit reste un chiffre faux. */
+  /* Le reglage, offert la ou son absence se voit — plutot qu'un
+     renvoi vers un menu que personne ne trouve deux fois. */
+  function boutonRelais(){
+    if (!window.PC_RELAIS_DEMANDE) return '';
+    return '<p style="margin-top:14px"><button class="btn" type="button" ' +
+      'id="mar-relais-btn">' + ech(PC.t('e.rel.bouton')) + '</button></p>';
+  }
+  document.addEventListener('click', function(ev){
+    const c = ev.target && ev.target.closest && ev.target.closest('#mar-relais-btn');
+    if (!c || !window.PC_RELAIS_DEMANDE) return;
+    if (!PC_RELAIS_DEMANDE()) return;
+    rangs = []; dernier = 0; repos = 0; refus = 0;
+    poseSource(marcheSource);
+  });
+
   function poseInvite(){
     if (!champ) return;
     champ.placeholder = PC.t(marcheSource === 'bourse' ? 'm.cherche.b'
@@ -11512,7 +11550,8 @@ window.PC = (function(){
     vueFiche.hidden = true; vueListe.hidden = false;
     if (neuf !== 'matieres' && !urlListe()){
       hote.setAttribute('data-etat', 'ko');
-      boite.innerHTML = '<p class="marches__panne">' + ech(PC.t('b.sansrelais')) + '</p>';
+      boite.innerHTML = '<p class="marches__panne">' + ech(PC.t('b.sansrelais')) + '</p>' +
+        boutonRelais();
       return;
     }
     peint([]);
