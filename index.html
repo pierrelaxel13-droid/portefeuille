@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1936";</script>
+<script>window.PC_VERSION = "260924.2020";</script>
 </head>
 <body>
 
@@ -787,8 +787,8 @@ body.flux-vif .cours__vif::before{
    collait les blocs au bord de l'écran. */
 .section{position:relative; padding-block:clamp(64px,9vw,128px); z-index:var(--z-base);}
 @media (max-width:700px){
-  .section{padding-block:clamp(38px,8vw,64px);}
-  .section__head{margin-bottom:clamp(20px,5vw,32px);}
+  .section{padding-block:clamp(56px,13vw,84px);}
+  .section__head{margin-bottom:clamp(26px,6vw,38px);}
 }
 .section--rule{border-top:1px solid var(--rule);}
 .section__head{
@@ -1275,9 +1275,21 @@ body.flux-vif .cours__vif::before{
     scrollbar-width:none; -webkit-overflow-scrolling:touch;
   }
   .offres::-webkit-scrollbar{display:none;}
+  /* Le prix restait dimensionne pour un grand ecran : a 390 px il
+     passait a la ligne au milieu de « sans limite de duree ». */
+  .offre__prix{font-size:26px;}
+  /* « Gratuit  sans limite de duree » sur une seule ligne coupait
+     « duree » et le laissait seul en dessous. La mention passe sous le
+     prix, ou elle a la place. */
+  .offre__prix small{display:block; margin-left:0; margin-top:3px; font-size:12px;}
+  .offre__nom{font-size:18px;}
+  .offre__liste li{font-size:13.5px; padding-left:19px;}
+  .offre__liste{gap:7px;}
+  .offre__tag{font-size:10px;}
   .offre{
     flex:0 0 84%; scroll-snap-align:center;
     border:1px solid var(--rule); border-radius:16px;
+    padding:20px 18px; gap:10px;
   }
 }
 .offre--phare{background:var(--paper-2);}
