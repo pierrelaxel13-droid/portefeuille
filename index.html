@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.2020";</script>
+<script>window.PC_VERSION = "260924.2050";</script>
 </head>
 <body>
 
@@ -1916,6 +1916,47 @@ body.vue-espace .field{opacity:.95;}
 .solde__n{font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-3);}
 .solde__actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:clamp(18px,2.4vw,24px);}
 
+/* Sur telephone, le total est ce qu'on vient voir : il passe devant,
+   en grand, et le reste s'efface un peu. Le gain prend la forme d'une
+   pastille — c'est ce que l'oeil cherche en premier apres le montant. */
+/* L'avertissement de demonstration doit rester lisible partout, mais
+   trois lignes de mono avant le moindre chiffre, sur un telephone,
+   c'est un ecran perdu. La version courte dit la meme chose. */
+.demo-bar__court{display:none;}
+@media (max-width:700px){
+  .demo-bar__long{display:none;}
+  .demo-bar__court{display:inline;}
+  .board__titre .eyebrow{display:none;}
+  .board__titre h2{font-size:26px;}
+  .board__barre{gap:12px;}
+  /* Trois reglages entre le titre et le chiffre : ils restent a
+     portee, mais cessent d'occuper une rangee pleine avant lui. */
+  .board__cmd .bascule-vue, .board__cmd .reglage{font-size:12.5px; height:36px; padding:0 14px;}
+  .board__cmd .reglage{padding-right:26px;}
+  .board__cmd .icon-btn{width:36px; height:36px;}
+  /* Un message d'etat n'est pas un titre : il se lit, il ne domine pas. */
+  .msg{font-size:12px; line-height:1.5; margin-bottom:10px;}
+
+  .solde{padding:26px 20px 24px; border-radius:22px;}
+  .solde__k{font-size:10.5px;}
+  .solde__v{font-size:clamp(40px,11.5vw,54px); margin-top:10px;}
+  .solde__d{margin-top:14px; font-size:15px; gap:10px;}
+  .solde__d .delta{
+    background:color-mix(in srgb, currentColor 15%, transparent);
+    padding:5px 11px; border-radius:999px; font-size:14px;
+  }
+  /* La phrase du fournisseur est un renseignement, pas un titre. */
+  .solde .cours-etat{font-size:11.5px; line-height:1.55;}
+
+  /* La liste des lignes est ce qu'on parcourt le plus : on lui donne
+     la place de se lire d'un coup d'oeil. */
+  .ligne{padding:18px; gap:16px;}
+  .ligne__p{width:46px; height:46px; font-size:17px;}
+  .ligne__n b{font-size:16px;}
+  .ligne__n span{font-size:13px;}
+  .ligne__m b{font-size:16px;}
+}
+
 /* ===== Lignes =====
    La pastille porte l'initiale de la ligne, jamais une couleur par
    classe : treize classes, c'est bien au-delà de ce qu'une palette
@@ -3143,6 +3184,7 @@ window.PC = (function(){
      ============================================================ */
   'e.demo.b':           ["Démonstration.","Demonstration.","Demostración.","Demonstration."],
   'e.demo':             ["Cette vue ne relie aucun compte&nbsp;: la connexion est simulée et vos chiffres restent dans ce navigateur.","This view connects to no account: the sign-in is simulated and your figures stay in this browser.","Esta vista no conecta con ninguna cuenta: el acceso es simulado y sus cifras se quedan en este navegador.","Diese Ansicht verbindet sich mit keinem Konto: die Anmeldung ist simuliert und Ihre Zahlen bleiben in diesem Browser."],
+  'e.demo.court':       ["Connexion simulée, chiffres gardés sur cet appareil.","Simulated sign-in, figures kept on this device.","Acceso simulado, cifras guardadas en este aparato.","Simulierte Anmeldung, Zahlen auf diesem Gerät."],
   'e.eyebrow':          ["Espace client","Client area","Área de cliente","Kundenbereich"],
   'e.titre':            ["Votre portefeuille.","Your portfolio.","Su cartera.","Ihr Portfolio."],
   'e.sous':             ["Saisissez vos actifs&nbsp;: l'espace calcule la répartition, la performance et la concentration.","Enter your assets: the space works out allocation, performance and concentration.","Introduzca sus activos: el espacio calcula la distribución, la rentabilidad y la concentración.","Tragen Sie Ihre Werte ein: der Bereich berechnet Aufteilung, Entwicklung und Konzentration."],
@@ -3585,6 +3627,8 @@ window.PC = (function(){
   'e.pre.pret':           ["{{n}} est pr\u00eat\u00a0: il ne reste que la quantit\u00e9 et le montant investi.","{{n}} is ready: only the quantity and the amount invested are left.","{{n}} est\u00e1 listo: solo faltan la cantidad y el importe invertido.","{{n}} ist bereit: Es fehlen nur Menge und investierter Betrag."],
   'e.src.vif':          ["Cours en direct \u2014 {{s}}","Live prices \u2014 {{s}}","Cotizaciones en directo \u2014 {{s}}","Kurse live \u2014 {{s}}"],
   'e.src.pose':         ["Cours de {{s}}, relev\u00e9 \u00e0 {{h}}","Prices from {{s}}, taken at {{h}}","Cotizaciones de {{s}}, tomadas a las {{h}}","Kurse von {{s}}, erfasst um {{h}}"],
+  'e.src.absent1':      ["{{n}} ligne sans cours","{{n}} line without a price","{{n}} l\u00ednea sin cotizaci\u00f3n","{{n}} Position ohne Kurs"],
+  'e.src.absentn':      ["{{n}} lignes sans cours","{{n}} lines without a price","{{n}} l\u00edneas sin cotizaci\u00f3n","{{n}} Positionen ohne Kurs"],
   'e.src.rien':         ["Aucun fournisseur de cours n'a r\u00e9pondu. Vos montants restent ceux que vous avez saisis.","No price provider answered. Your amounts stay as you entered them.","Ning\u00fan proveedor de cotizaciones ha respondido. Sus importes siguen siendo los que introdujo.","Kein Kursanbieter hat geantwortet. Ihre Betr\u00e4ge bleiben, wie Sie sie eingetragen haben."],
   'e.dir.code':         ["Code du cours","Price code","C\u00f3digo de cotizaci\u00f3n","Kurs-Code"],
   'e.dir.aide':         ["Bitcoin, Ethereum, Solana\u2026 laissez ce champ vide pour saisir le cours \u00e0 la main. Rempli, le cours se cherche tout seul \u00e0 chaque ouverture.","Bitcoin, Ethereum, Solana\u2026 leave this empty to type the price by hand. Filled in, the price fetches itself each time you open the page.","Bitcoin, Ethereum, Solana\u2026 deje este campo vac\u00edo para introducir la cotizaci\u00f3n a mano. Relleno, la cotizaci\u00f3n se busca sola en cada apertura.","Bitcoin, Ethereum, Solana\u2026 leer lassen, um den Kurs von Hand einzutragen. Ausgef\u00fcllt, holt sich der Kurs bei jedem \u00d6ffnen selbst."],
@@ -4557,8 +4601,8 @@ window.PC = (function(){
      Vue de la même page, affichée quand l'adresse porte #espace-client. -->
 <section class="espace wrap" id="espace" aria-labelledby="espace-titre">
   <p class="demo-bar">
-    <b data-i18n="e.demo.b">Démonstration.</b> <span data-i18n-html="e.demo">Cette vue ne relie aucun compte&nbsp;: la connexion est simulée
-    et vos chiffres restent dans ce navigateur.</span>
+    <b data-i18n="e.demo.b">Démonstration.</b> <span class="demo-bar__long" data-i18n-html="e.demo">Cette vue ne relie aucun compte&nbsp;: la connexion est simulée
+    et vos chiffres restent dans ce navigateur.</span><span class="demo-bar__court" data-i18n="e.demo.court">Connexion simulée, chiffres gardés sur cet appareil.</span>
   </p>
 
   <!-- Connexion -->
@@ -6576,7 +6620,20 @@ window.PC = (function(){
   /* Le premier portefeuille n'a pas de nom saisi : il prend celui de la
      langue courante, et suit donc la traduction. */
   function nomPortefeuille(p){ return p.nom || PC.t('e.pf.defaut'); }
-  function dire(t){ document.getElementById('msg').textContent = t || ''; }
+  function dire(t){
+    const el = document.getElementById('msg');
+    if (!el) return;
+    /* La barre d'etat des cours affiche deja certains de ces messages
+       en permanence. Le repeter juste au-dessus fait lire deux fois la
+       meme phrase, et chercher ce qui les distingue. */
+    const etat = document.getElementById('cours-etat');
+    const dit = String(t || '').trim();
+    if (dit && etat && !etat.hidden && etat.textContent.indexOf(dit) !== -1){
+      el.textContent = '';
+      return;
+    }
+    el.textContent = t || '';
+  }
 
   /* Identifiant stable d'un actif. L'historique s'y accroche : sans lui,
      renommer une ligne ou en retirer une autre décalerait sa courbe sur
@@ -9053,8 +9110,13 @@ window.PC = (function(){
     /* Une reponse partielle est le pire cas a taire : les lignes
        servies ont bouge, les autres non, et rien ne le disait. */
     const absents = (coursEtat && coursEtat.absents) || [];
+    /* Combien, pas lesquelles : le detail tient dans le message, la
+       barre d'etat n'a que la place d'un constat. */
     el.textContent = PC.t(cle, {s:coursSource, h:heureCourte(coursQuand)}) +
-      (absents.length ? ' \u2014 ' + PC.t('e.dir.inconnu', {s:absents.join(', ')}) : '');
+      (absents.length
+        ? ' \u2014 ' + PC.t(absents.length > 1 ? 'e.src.absentn' : 'e.src.absent1',
+                            {n:String(absents.length)})
+        : '');
   }
 
   /* ============================================================
