@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260923.2103";</script>
+<script>window.PC_VERSION = "260924.1607";</script>
 </head>
 <body>
 
@@ -3474,6 +3474,8 @@ window.PC = (function(){
   'm.precedent':          ["Page pr\u00e9c\u00e9dente","Previous page","P\u00e1gina anterior","Vorherige Seite"],
   'm.page':               ["Page {{n}}","Page {{n}}","P\u00e1gina {{n}}","Seite {{n}}"],
   'm.charge':             ["Chargement des cours\u2026","Loading prices\u2026","Cargando cotizaciones\u2026","Kurse werden geladen\u2026"],
+  'm.fichier':            ["Cette page est ouverte depuis un fichier, pas depuis un site. Le navigateur y interdit tout appel ext\u00e9rieur\u00a0: ouvrez-la \u00e0 son adresse (https) pour voir les cours.","This page is open from a file, not from a website. The browser forbids any outside call there: open it at its https address to see prices.","Esta p\u00e1gina est\u00e1 abierta desde un archivo, no desde un sitio. El navegador proh\u00edbe ah\u00ed toda llamada externa: \u00e1brala en su direcci\u00f3n https para ver las cotizaciones.","Diese Seite ist aus einer Datei ge\u00f6ffnet, nicht von einer Website. Der Browser verbietet dort jeden externen Aufruf: \u00f6ffnen Sie sie unter ihrer https-Adresse, um Kurse zu sehen."],
+  'm.origine':            ["Votre relais refuse cette adresse. Ajoutez {{o}} \u00e0 sa variable ORIGINES, puis rechargez la page.","Your relay refuses this address. Add {{o}} to its ORIGINES variable, then reload the page.","Su rel\u00e9 rechaza esta direcci\u00f3n. A\u00f1ada {{o}} a su variable ORIGINES y recargue la p\u00e1gina.","Ihr Relais weist diese Adresse ab. F\u00fcgen Sie {{o}} zu seiner Variablen ORIGINES hinzu und laden Sie die Seite neu."],
   'm.ko':                 ["Les cours n'ont pas pu \u00eatre charg\u00e9s. Le fournisseur est peut-\u00eatre injoignable depuis votre r\u00e9seau.","Prices could not be loaded. The provider may be unreachable from your network.","No se han podido cargar las cotizaciones. El proveedor puede no ser accesible desde su red.","Die Kurse konnten nicht geladen werden. Der Anbieter ist von Ihrem Netz aus m\u00f6glicherweise nicht erreichbar."],
   'm.limite':             ["Le fournisseur limite les appels. Les cours reviendront dans une minute.","The provider is rate-limiting. Prices will come back in a minute.","El proveedor limita las llamadas. Las cotizaciones volver\u00e1n en un minuto.","Der Anbieter drosselt die Aufrufe. Die Kurse kommen in einer Minute zur\u00fcck."],
   'm.vide':               ["Aucune crypto ne correspond \u00e0 cette recherche.","No coin matches this search.","Ninguna cripto coincide con esta b\u00fasqueda.","Keine Krypto passt zu dieser Suche."],
@@ -8874,7 +8876,9 @@ window.PC = (function(){
     }
     el.removeAttribute('data-vif');
     if (!coursSource){
-      el.textContent = motCours(coursEtat) || PC.t('e.src.rien');
+      el.textContent = location.protocol === 'file:'
+        ? PC.t('m.fichier')
+        : (motCours(coursEtat) || PC.t('e.src.rien'));
       return;
     }
     /* Le relais nous a dit d'où vient son chiffre : on le répète. Un
@@ -10051,6 +10055,11 @@ window.PC = (function(){
     if (hote) hote.innerHTML = '';
     if (mot) mot.textContent = PC.t('e.sug.cherche');
     if (!window.PC_MARCHES || !PC_MARCHES.dix){ peintChoix([]); return; }
+    if (location.protocol === 'file:'){
+      peintChoix([]);
+      if (mot) mot.textContent = PC.t('m.fichier');
+      return;
+    }
     PC_MARCHES.dix(t.marche).then(function(l){
       /* Sans relais, les huit contrats a terme sont hors de portee —
          mais l'or et l'argent, eux, se lisent chez le fournisseur de
@@ -10065,7 +10074,11 @@ window.PC = (function(){
       }
       if (l && l.refus && !l.length){
         peintChoix([]);
-        if (mot) mot.textContent = PC.t(l.refus === 'limite' ? 'e.dir.limite' : 'e.et2.ko');
+        if (mot) mot.textContent =
+          location.protocol === 'file:' ? PC.t('m.fichier')
+          : l.refus === 'origine' ? PC.t('m.origine', {o:location.origin})
+          : l.refus === 'limite' ? PC.t('e.dir.limite')
+          : PC.t('e.et2.ko');
         return;
       }
       peintChoix((l || []).map(function(c){
@@ -10754,9 +10767,24 @@ window.PC = (function(){
   function json(u){
     return fetch(u, {headers:{'Accept':'application/json'}}).then(function(r){
       if (r.status === 429){ const e = new Error('limite'); e.limite = true; throw e; }
+      /* 403 d'un relais : ce n'est pas une panne, c'est une adresse
+         qu'il n'a pas dans sa liste. On le distingue, parce que le
+         remede n'a rien a voir. */
+      if (r.status === 403 && estRelais(u)){
+        const e = new Error('origine'); e.origine = true; throw e;
+      }
       if (!r.ok) throw new Error('http ' + r.status);
       return r.json();
     });
+  }
+  function estRelais(u){
+    const r = relais();
+    return !!r && String(u || '').indexOf(r) === 0;
+  }
+  function motDEchecListe(e){
+    if (location.protocol === 'file:') return PC.t('m.fichier');
+    if (e && e.origine) return PC.t('m.origine', {o:location.origin});
+    return e && e.limite ? PC.t('m.limite') : PC.t('m.ko');
   }
 
   /* Un prix de crypto va de 0,00002 € à 80 000 € : un nombre fixe de
@@ -11032,10 +11060,10 @@ window.PC = (function(){
         if (!rangs.length){
           hote.setAttribute('data-etat', 'ko');
           boite.innerHTML = '<p class="marches__panne">' +
-            ech(e && e.limite ? PC.t('m.limite') : PC.t('m.ko')) + '</p>';
+            ech(motDEchecListe(e)) + '</p>';
           return;
         }
-        dit(e && e.limite ? PC.t('m.limite') : PC.t('m.ko'), false);
+        dit(motDEchecListe(e), false);
       })
       .then(function(){ enVol = false; });
   }
@@ -11392,7 +11420,7 @@ window.PC = (function(){
           recherche = ids; dernier = 0; return charge(true);
         })
         .catch(function(e){
-          dit(noteRefus(e) ? PC.t('m.limite') : PC.t('m.ko'), false);
+          noteRefus(e); dit(motDEchecListe(e), false);
         });
     }, 350);
   });
@@ -11481,7 +11509,8 @@ window.PC = (function(){
         /* Une liste vide se lit « il n'y a rien ». Un refus n'est pas
            un vide : on le dit, sinon on envoie chercher une crypto qui
            existe parfaitement. */
-        const r = []; r.refus = (e && e.limite) ? 'limite' : 'ko';
+        const r = [];
+        r.refus = (e && e.origine) ? 'origine' : ((e && e.limite) ? 'limite' : 'ko');
         return r;
       });
     },
