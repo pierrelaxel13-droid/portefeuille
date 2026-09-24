@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.1906";</script>
+<script>window.PC_VERSION = "260924.1936";</script>
 </head>
 <body>
 
@@ -736,9 +736,23 @@ body.flux-vif .cours__vif::before{
    Les regles vivent ici, a cote de celles qu'elles corrigent, plutot
    que dans un bloc « mobile » a la fin ou personne ne les retrouve. */
 @media (max-width:700px){
-  /* « Quelques rappels utiles » : une belle page sur grand ecran, un
-     ecran et demi de citations a faire defiler sur un telephone. */
-  #citations{display:none;}
+  /* ===== Ce que le telephone montre =====
+     Quatre choses, dans cet ordre : ce que c'est, une preuve
+     chiffree, ce que ca coute, et par ou entrer. C'est ce qu'on lit
+     debout, au pouce, en trois ou quatre ecrans.
+
+     Tout le reste est du materiel de grand ecran. Il n'est pas
+     supprime : il reste dans le document, donc trouvable par un
+     moteur de recherche, et il reapparait des que l'ecran s'elargit.
+     Retirer une ligne de cette liste suffit a le faire revenir. */
+  #apercu, #repartition, #activites, #performance,
+  #notes, #citations, #faq,
+  /* « Gratuit, sans compte… » : la barre du bas le dit deja, et elle
+     ne quitte jamais l'ecran. */
+  .preuve__note,
+  /* Six lignes de prose avant trois prix : sur un telephone, le titre
+     suffit et les cartes disent le reste. */
+  #offres .section__intro{display:none;}
 }
 /* Un bloc qui se replie sur telephone et reste ouvert ailleurs. Le
    contenu ne bouge pas : seule sa presentation suit la largeur. */
@@ -1248,6 +1262,24 @@ body.flux-vif .cours__vif::before{
   transition:background .25s;
 }
 .offre:hover{background:var(--paper-2);}
+/* Sur telephone, les formules ne s'empilent plus : trois cartes l'une
+   sous l'autre faisaient deux ecrans et demi de prix. On les fait
+   defiler du pouce, une par ecran. La regle est ici, juste apres
+   celles qu'elle corrige — c'est le seul endroit ou on la retrouve. */
+@media (max-width:700px){
+  .offres{
+    display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
+    background:none; border:none; gap:12px;
+    margin-inline:calc(-1 * var(--pad)); padding-inline:var(--pad);
+    scroll-padding-inline:var(--pad);
+    scrollbar-width:none; -webkit-overflow-scrolling:touch;
+  }
+  .offres::-webkit-scrollbar{display:none;}
+  .offre{
+    flex:0 0 84%; scroll-snap-align:center;
+    border:1px solid var(--rule); border-radius:16px;
+  }
+}
 .offre--phare{background:var(--paper-2);}
 .offre--phare:hover{background:var(--paper-3);}
 .offre__tag{
@@ -10812,7 +10844,11 @@ window.PC = (function(){
      sa place : son choix tient, meme s'il tourne son telephone. */
   /* Les sections que le telephone replie. L'ordre n'a pas
      d'importance : chacune garde sa place, seul son corps se range. */
-  const PLIABLES = ['apercu', 'repartition', 'activites', 'performance', 'faq'];
+  /* Plus rien a replier : sur telephone ces sections ne s'affichent
+     pas du tout, et sur grand ecran elles s'affichent en entier. Le
+     tableau reste, parce qu'y remettre un nom est le geste inverse
+     d'en retirer un dans la feuille de style. */
+  const PLIABLES = [];
   function plieSections(){
     PLIABLES.forEach(function(id){
       const sec = document.getElementById(id);
