@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260924.2050";</script>
+<script>window.PC_VERSION = "260925.0608";</script>
 </head>
 <body>
 
@@ -363,29 +363,6 @@ body.flux-vif .cours__vif::before{
   font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-3);
   margin-top:12px; text-wrap:pretty;
 }
-
-/* Barre d'action fixe, mobile seulement. Sur téléphone le bouton de
-   l'en-tête est masqué et le hero part très vite vers le haut : sans
-   elle, il n'existe plus aucun appel à l'action passé le premier
-   écran. Elle s'efface dans l'espace client, qui a les siens. */
-.barre-fixe{display:none;}
-@media (max-width:560px){
-  .barre-fixe{
-    position:fixed; left:0; right:0; bottom:0; z-index:var(--z-sticky);
-    display:flex; gap:10px; align-items:center; justify-content:space-between;
-    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
-    background:color-mix(in srgb, var(--paper) 92%, transparent);
-    backdrop-filter:blur(12px); border-top:1px solid var(--rule);
-    transform:translateY(110%); transition:transform .3s cubic-bezier(.2,.7,.2,1);
-  }
-  .barre-fixe[data-vue="1"]{transform:translateY(0);}
-  body.vue-espace .barre-fixe{display:none;}
-  .barre-fixe__t{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-3); line-height:1.35;}
-  .barre-fixe .pill{display:inline-flex; padding:11px 18px; font-size:14px; white-space:nowrap;}
-  /* La barre couvre le bas de page : on lui rend la place. */
-  .site-foot{padding-bottom:86px;}
-}
-@media (prefers-reduced-motion: reduce){ html:not([data-anim="force"]) .barre-fixe{transition:none;} }
 
 /* Confirmation d'envoi : un encadré, pas une ligne de texte qui passe
    inaperçue sous le bouton. */
@@ -2793,7 +2770,6 @@ window.PC = (function(){
   'hero.install.non':   ["Pour installer\u00a0: ouvrez cette page dans Chrome, ou touchez Partager puis \u00ab Sur l'\u00e9cran d'accueil \u00bb dans Safari.","To install: open this page in Chrome, or tap Share then \u201cAdd to Home Screen\u201d in Safari.","Para instalar: abra esta p\u00e1gina en Chrome, o toque Compartir y luego \u00abA\u00f1adir a pantalla de inicio\u00bb en Safari.","Zum Installieren: diese Seite in Chrome \u00f6ffnen, oder in Safari auf Teilen und dann \u201eZum Home-Bildschirm\u201c tippen."],
   'hero.oeuvre':        ["L'Ange d\u00e9chu, Alexandre Cabanel, 1847","The Fallen Angel, Alexandre Cabanel, 1847","El \u00e1ngel ca\u00eddo, Alexandre Cabanel, 1847","Der gefallene Engel, Alexandre Cabanel, 1847"],
   'hero.gratuit':       ["Gratuit, sans compte, vos chiffres restent sur votre appareil.","Free, no account, your figures stay on your device.","Gratis, sin cuenta, sus cifras se quedan en su dispositivo.","Kostenlos, ohne Konto, Ihre Zahlen bleiben auf Ihrem Gerät."],
-  'barre.cta':          ["Ouvrir l'espace","Open the space","Abrir el espacio","Bereich öffnen"],
   'ct.envoye':          ["Message prêt à partir.","Message ready to go.","Mensaje listo para enviar.","Nachricht bereit."],
   'ct.envoye.d':        ["Ce formulaire est une démonstration&nbsp;: rien n'est envoyé pour le moment. Écrivez directement à {{m}} et je vous réponds sous quelques jours.","This form is a demonstration: nothing is sent for now. Write directly to {{m}} and I will reply within a few days.","Este formulario es una demostración: por ahora no se envía nada. Escriba directamente a {{m}} y le responderé en unos días.","Dieses Formular ist eine Demonstration: es wird vorerst nichts versendet. Schreiben Sie direkt an {{m}}, ich antworte binnen weniger Tage."],
   'ct.autre':           ["Écrire un autre message","Write another message","Escribir otro mensaje","Weitere Nachricht schreiben"],
@@ -3965,15 +3941,6 @@ window.PC = (function(){
   /* La barre fixe n'apparaît qu'une fois le hero sorti de l'écran :
      tant qu'il est visible, son propre bouton fait le travail et
      doubler l'appel à l'action n'ajoute rien. */
-  function brancheBarreFixe(){
-    const barre = document.getElementById('barre-fixe');
-    const hero = document.getElementById('top');
-    if (!barre || !hero || !window.IntersectionObserver) return;
-    new IntersectionObserver(function(entrees){
-      barre.setAttribute('data-vue', entrees[0].isIntersecting ? '0' : '1');
-    }, {threshold:0}).observe(hero);
-  }
-
   /* La hauteur de l'en-tête est une mesure, pas une constante : elle
      change avec la langue, la taille de police du système et la
      largeur. Le héros remonte d'autant. */
@@ -4100,7 +4067,7 @@ window.PC = (function(){
     nomDevise: nomDevise,
     surChangement: function(fn){ abonnes.push(fn); },
     init: function(){
-      brancheSelecteurs(); brancheAncres(); brancheMenu(); brancheBarreFixe(); brancheTete();
+      brancheSelecteurs(); brancheAncres(); brancheMenu(); brancheTete();
       appliqueStatique();
     }
   };
@@ -5073,11 +5040,6 @@ window.PC = (function(){
 
 
 <!-- Barre d'action fixe, affichée sur téléphone une fois le hero passé -->
-<div class="barre-fixe" id="barre-fixe" data-vue="0">
-  <span class="barre-fixe__t" data-i18n="hero.gratuit"></span>
-  <a class="pill" href="#espace-client" data-formule="normal" data-i18n="barre.cta">Ouvrir l'espace</a>
-</div>
-
 <!-- Paiement, hors du flux : il doit couvrir la page entière. -->
 <div class="paiement" id="paiement" role="dialog" aria-modal="true" aria-labelledby="pay-titre" hidden>
   <form class="paiement__carte" id="pay-form" novalidate>
