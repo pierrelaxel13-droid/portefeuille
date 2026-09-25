@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260925.0608";</script>
+<script>window.PC_VERSION = "260925.2212";</script>
 </head>
 <body>
 
@@ -133,6 +133,19 @@ h1,h2,h3{font-family:'Archivo Black', system-ui, sans-serif; font-weight:400; te
    hauteur d'écran pour qu'un portable de 720 px ne le voie pas déborder
    sous la ligne de flottaison. */
 h1{font-size:clamp(52px, min(13vw, 19vh), 216px); line-height:0.84; letter-spacing:-0.05em;}
+/* Le plancher de 52 px est calibre sur le francais. L'espagnol dit
+   « actividades, » : a 52 px ce mot reclame 316 px, et un ecran de
+   320 px n'en offre que 280 — il poussait la page et ouvrait une barre
+   de defilement horizontale. Sous 380 px le titre suit donc la largeur
+   au lieu d'un plancher fixe. Au-dessus, rien ne change. */
+@media (max-width:379px){
+  h1{font-size:clamp(38px, 12.5vw, 216px);}
+}
+/* Filet de securite : une traduction plus longue que prevu doit couper
+   le mot, jamais deborder — les mots du titre sont dans des boites a
+   `overflow:hidden`, ou le debordement serait purement et simplement
+   invisible. Inerte tant que tout tient. */
+.hero h1{overflow-wrap:break-word;}
 h2{font-size:clamp(30px,5.2vw,68px); line-height:0.94; letter-spacing:-0.035em;}
 h3{font-size:clamp(21px,2.4vw,30px); line-height:1.08; letter-spacing:-0.022em;}
 p{margin:0;}
@@ -488,8 +501,11 @@ body.flux-vif .cours__vif::before{
   .head-tools .pill{padding:10px 14px; font-size:13px; white-space:nowrap;}
   .icon-btn{width:38px; height:38px;}
 }
+.install__court{display:none;}
 @media (max-width:400px){
   .head-tools .pill{padding:9px 11px; font-size:12px;}
+  .install__long{display:none;}
+  .install__court{display:inline;}
 }
 
 /* ===== Héros ===== */
@@ -677,13 +693,20 @@ body.flux-vif .cours__vif::before{
 /* Marque de statut — jamais la couleur seule : glyphe + signe + libellé */
 .delta{
   display:inline-flex; align-items:baseline; gap:6px; white-space:nowrap;
+  /* Le glyphe et le chiffre ne se coupent jamais — c'est le sens du
+     nowrap. Mais la note qui suit est une phrase : collee a eux sur
+     une seule ligne insecable, elle reclamait 340 px et poussait la
+     page entiere a 360 px sur un ecran de 320 (iPhone SE), d'ou une
+     barre de defilement horizontale. Elle a le droit de passer a la
+     ligne ; eux non. */
+  flex-wrap:wrap;
   font-family:'IBM Plex Mono', monospace; font-weight:500;
   font-variant-numeric:tabular-nums; font-size:15px;
 }
 .delta[data-dir="up"]{color:var(--gain);}
 .delta[data-dir="down"]{color:var(--loss);}
 .delta__glyph{font-size:0.82em;}
-.delta__note{color:var(--ink-3); font-weight:400;}
+.delta__note{color:var(--ink-3); font-weight:400; white-space:normal;}
 
 /* Annotation tracée à la main */
 .annot{position:absolute; pointer-events:none; overflow:visible; color:var(--accent);}
@@ -702,7 +725,7 @@ body.flux-vif .cours__vif::before{
   font-family:'Archivo Black', sans-serif;
   font-size:clamp(90px,20vw,300px); line-height:0.78; letter-spacing:-0.055em;
   color:var(--accent); opacity:0.11; white-space:nowrap;
-  position:absolute; pointer-events:none; user-select:none;
+  position:absolute; pointer-events:none; -webkit-user-select:none; user-select:none;
 }
 
 /* ===== Le telephone n'est pas un petit ecran large =====
@@ -1308,6 +1331,15 @@ body.flux-vif .cours__vif::before{
 }
 .offre__essai:hover{color:var(--accent);}
 .offre__essai:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+/* Au doigt, pas a la souris. Ce lien est l'entree sans engagement de
+   chaque formule — celle qu'on touche le plus sur telephone — et il
+   ne faisait que 19 px de haut, loin des 44 points que demande Apple.
+   On agrandit la zone touchable, pas le texte. `pointer:coarse` ne
+   vise que les ecrans tactiles : a la souris rien ne bouge. */
+@media (pointer:coarse){
+  .offre__essai{padding-block:12px;}
+  .wordmark{display:inline-flex; align-items:center; min-height:44px;}
+}
 
 /* ===== Citations ===== */
 .citations{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule);}
@@ -1566,8 +1598,20 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 .reglage--pf{max-width:220px;}
 @media (max-width:640px){
   .board__barre{flex-direction:column; align-items:stretch; gap:14px;}
-  .board__cmd{width:100%;}
-  .reglage--pf{flex:1; max-width:none;}
+  /* La barre ne savait pas passer a la ligne. En formule Max, ou le
+     selecteur de portefeuille apparait, ses quatre commandes
+     reclamaient 528 px sur un ecran de 390 : le selecteur de formule
+     et le menu « ••• » sortaient de l'ecran, et toute la page se
+     mettait a defiler de cote. */
+  .board__cmd{width:100%; flex-wrap:wrap;}
+  /* Et un <select> refuse de descendre sous la largeur de son option
+     la plus longue tant qu'on ne lui donne pas min-width:0 — meme
+     remede qu'en en-tete, pour la meme raison. */
+  .board__cmd .reglage{min-width:0;}
+  /* 160 px est la largeur en dessous de laquelle le nom d'un
+     portefeuille ne se lit plus : plutot que de le comprimer, on le
+     laisse prendre sa ligne. */
+  .reglage--pf{flex:1 1 160px; max-width:none;}
 }
 
 /* Menu d'outils. Un <details> natif : il s'ouvre au clavier tout seul
@@ -2139,7 +2183,7 @@ body.detaille .bascule-vue__s{opacity:1;}
 .mono-logo{
   display:inline-grid; place-items:center; border-radius:50%; flex:none;
   color:#fff; font-family:'Archivo Black', system-ui, sans-serif;
-  letter-spacing:-.02em; line-height:1; user-select:none;
+  letter-spacing:-.02em; line-height:1; -webkit-user-select:none; user-select:none;
 }
 .sous-onglets{display:flex; gap:4px; margin:0 0 24px; border-bottom:1px solid var(--rule);}
 .sous-onglet{
@@ -2287,12 +2331,10 @@ body.detaille .bascule-vue__s{opacity:1;}
 .apercu-calc__k{font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 .apercu-calc__v{font-family:'IBM Plex Mono', monospace; font-size:16px; font-weight:500; font-variant-numeric:tabular-nums;}
 
-}
-
 @media (prefers-reduced-motion: reduce){
   html:not([data-anim="force"]) .puce-cat:hover{transform:none;}
   html:not([data-anim="force"]) .apercu-calc{transition:none;}
-  html:not([data-anim="force"]) }
+}
 
 
 /* ===== Portes d'entrée de l'espace client =====
@@ -2351,7 +2393,11 @@ body.detaille .bascule-vue__s{opacity:1;}
    ============================================================ */
 .paiement{
   position:fixed; inset:0; z-index:calc(var(--z-curtain) + 4);
-  background:rgba(19,19,16,.55); backdrop-filter:blur(3px);
+  /* Le prefixe n'est pas decoratif : sans lui Safari n'applique pas le
+     flou, et le rideau de paiement perd le voile qui le detache de la
+     page. Partout ailleurs dans ce fichier les deux vont par paire. */
+  background:rgba(19,19,16,.55);
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
   display:flex; align-items:center; justify-content:center; padding:20px;
   overflow:auto;
 }
@@ -2365,7 +2411,7 @@ body.detaille .bascule-vue__s{opacity:1;}
 .paiement__champ{display:flex; flex-direction:column; gap:7px; margin-bottom:18px;}
 .paiement__champ label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 .paiement__champ input{
-  font-family:'Archivo', sans-serif; font-size:15px; color:var(--ink);
+  font-family:'Archivo', sans-serif; font-size:16px; color:var(--ink);
   background:var(--paper); border:1.5px solid var(--rule-strong); border-radius:10px;
   padding:11px 13px; width:100%;
 }
@@ -2634,6 +2680,51 @@ table.actifs tbody tr{cursor:pointer;}
 .courbe__seul{padding:26px 18px; color:var(--ink-2); font-size:15px; text-wrap:pretty;}
 .courbe__seul b{color:var(--ink);}
 
+/* ============================================================
+   REPLI POUR LES SAFARI D'AVANT 16.2
+   color-mix() y est inconnu, et une declaration qu'un navigateur
+   ne comprend pas n'est pas approximee : elle est jetee. Les
+   surfaces qui n'ont que lui pour fond deviennent donc
+   transparentes. Un en-tete collant, une barre d'onglets ou le
+   voile de l'oeuvre transparents, ce n'est pas une nuance de
+   style en moins — c'est du texte par-dessus du texte.
+   On leur rend un fond plein : moins joli, lisible. Ce bloc est
+   inerte partout ou color-mix fonctionne, donc sur tout ce qui
+   est a jour.
+   ============================================================ */
+/* ===== Le zoom d'iOS au premier contact =====
+   Safari sur iPhone agrandit toute la page quand on touche un champ
+   dont le texte fait moins de 16 px — et il ne la reduit pas apres :
+   on se retrouve dans une page zoomee qu'il faut pincer pour
+   remettre droite. Ces commandes sont volontairement petites au
+   regard ; au doigt, elles passent a 16 px, ce qui suffit a l'en
+   dissuader. La mise en page a ete verifiee a 320 px, menu ouvert :
+   rien ne deborde. A la souris, rien ne change. */
+@media (pointer:coarse){
+  .reglage, .board__cmd .bascule-vue, .barre-pf select{font-size:16px;}
+}
+
+@supports not (background: color-mix(in srgb, red 50%, transparent)){
+  .site-head[data-pose="true"], body.vue-espace .site-head{background:var(--paper);}
+  .site-head::before{background:linear-gradient(to bottom, var(--paper), transparent);}
+  body.vue-espace .barre-app{background:var(--paper);}
+  .aide-install{background:var(--paper);}
+  .pill--creux{background:var(--paper-2);}
+  .tuile-cat{background:var(--paper-2);}
+  .form-ok{background:var(--paper-2);}
+  /* Le voile de l'oeuvre : le titre doit rester lisible sur la toile. */
+  .hero__oeuvre::after{
+    background:
+      linear-gradient(to right, var(--paper) 0%, transparent 84%),
+      linear-gradient(to bottom, transparent 58%, var(--paper) 99%);
+  }
+  @media (max-width:900px){
+    .hero__oeuvre::after{
+      background:linear-gradient(to bottom, transparent 0%, var(--paper) 94%);
+    }
+  }
+}
+
 </style>
 <script>
   /* Posé avant le rendu : conditionne l'état « avant animation ».
@@ -2767,6 +2858,7 @@ window.PC = (function(){
   'hero.lede':          ["Minage, trading, actions, bitcoin, immobilier. Ce qui a été investi, ce que ça vaut aujourd'hui, poste par poste.","Mining, trading, stocks, bitcoin, property. What went in, what it is worth today, holding by holding.","Minería, trading, acciones, bitcoin, inmobiliario. Lo invertido y lo que vale hoy, posición por posición.","Mining, Trading, Aktien, Bitcoin, Immobilien. Was investiert wurde und was es heute wert ist, Position für Position."],
   'hero.cta':           ["Connexion","Sign in","Conexi\u00f3n","Anmelden"],
   'hero.install':       ["Installer l'app","Install the app","Instalar la app","App installieren"],
+  'hero.install.court': ["Installer","Install","Instalar","Installieren"],
   'hero.install.non':   ["Pour installer\u00a0: ouvrez cette page dans Chrome, ou touchez Partager puis \u00ab Sur l'\u00e9cran d'accueil \u00bb dans Safari.","To install: open this page in Chrome, or tap Share then \u201cAdd to Home Screen\u201d in Safari.","Para instalar: abra esta p\u00e1gina en Chrome, o toque Compartir y luego \u00abA\u00f1adir a pantalla de inicio\u00bb en Safari.","Zum Installieren: diese Seite in Chrome \u00f6ffnen, oder in Safari auf Teilen und dann \u201eZum Home-Bildschirm\u201c tippen."],
   'hero.oeuvre':        ["L'Ange d\u00e9chu, Alexandre Cabanel, 1847","The Fallen Angel, Alexandre Cabanel, 1847","El \u00e1ngel ca\u00eddo, Alexandre Cabanel, 1847","Der gefallene Engel, Alexandre Cabanel, 1847"],
   'hero.gratuit':       ["Gratuit, sans compte, vos chiffres restent sur votre appareil.","Free, no account, your figures stay on your device.","Gratis, sin cuenta, sus cifras se quedan en su dispositivo.","Kostenlos, ohne Konto, Ihre Zahlen bleiben auf Ihrem Gerät."],
@@ -4138,7 +4230,12 @@ window.PC = (function(){
     </nav>
     <div class="head-tools">
       <a class="pill" href="#espace-client" data-formule="normal" data-i18n="hero.cta">Connexion</a>
-      <button class="pill pill--creux" type="button" id="installer" data-i18n="hero.install">Installer l'app</button>
+      <!-- Deux libelles, comme la bande de demonstration : « Installer
+           l'app » ne tient pas a cote de « Connexion » et du menu sur un
+           ecran de 320 px. La cle ne peut pas rester sur le bouton —
+           l'applicateur i18n ecrit dans textContent et effacerait les
+           spans. -->
+      <button class="pill pill--creux" type="button" id="installer"><span class="install__long" data-i18n="hero.install">Installer l'app</span><span class="install__court" data-i18n="hero.install.court">Installer</span></button>
       <!-- Pas de data-i18n-aria ici : le libellé dépend de l'état ouvert
            ou fermé, il est posé par le script. -->
       <button class="icon-btn burger" id="burger" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Ouvrir le menu">
@@ -8123,8 +8220,14 @@ window.PC = (function(){
   }
 
   function poseVue(cible, sansDefilement){
+    /* « bourse » etait accepte ici sans avoir de panneau : la boucle
+       qui suit les aurait tous masques, puis `panneaux['bourse']`
+       aurait ete `undefined` et la ligne `v.offsetWidth` aurait leve
+       une erreur — ecran vide. Aucun balisage ne produisait cette
+       destination, mais la retirer ferme le piege : une vue inconnue
+       retombe sur la vue d'ensemble au lieu de tout casser. */
     vueCourante = (cible === 'actif' || cible === 'ajout' ||
-                   cible === 'marches' || cible === 'bourse')
+                   cible === 'marches')
       ? cible : 'general';
     /* Un panneau masqué n'a pas de boîte de mise en page : l'observateur
        du module ne le verrait jamais approcher. C'est l'ouverture de la
@@ -8183,13 +8286,18 @@ window.PC = (function(){
 
   function construitBarreApp(){
     if (!barreApp) return;
-    const entrees = [{dest:'accueil', nom:PC.t('e.bar.accueil'), icone:ICONE_ACCUEIL}];
-    actifs.forEach(function(a, i){
-      entrees.push({dest:'actif:' + i, nom:a.nom,
-                    pastille:(a.nom.trim().charAt(0) || '?').toUpperCase()});
-    });
-    entrees.push({dest:'marches', nom:PC.t('m.onglet'), icone:ICONE_MARCHES});
-    entrees.push({dest:'ajout', nom:PC.t('e.bar.ajouter'), icone:ICONE_AJOUT});
+    /* Trois destinations, toujours les memes, toujours a la meme place.
+       La barre listait aussi chaque actif : avec sept lignes elle faisait
+       814 px de large pour 366 px visibles, et « Marches » comme
+       « Ajouter » se retrouvaient a 670 et 746 px — il fallait balayer
+       par-dessus tout le portefeuille pour les atteindre, et un
+       portefeuille plus long les repoussait d'autant. Un actif s'ouvre
+       en touchant sa ligne dans la liste, qui est la pour ca. */
+    const entrees = [
+      {dest:'accueil', nom:PC.t('e.bar.accueil'), icone:ICONE_ACCUEIL},
+      {dest:'marches', nom:PC.t('m.onglet'),      icone:ICONE_MARCHES},
+      {dest:'ajout',   nom:PC.t('e.bar.ajouter'), icone:ICONE_AJOUT}
+    ];
 
     barreApp.innerHTML = entrees.map(function(e){
       return '<button class="barre-app__i" type="button" data-dest="' + echapAttr(e.dest) + '"' +
@@ -8203,24 +8311,17 @@ window.PC = (function(){
 
   function majBarreApp(dest){
     if (!barreApp) return;
+    /* La fiche d'un actif est un detail du portefeuille, pas une
+       quatrieme destination : « Accueil » y reste allume. */
     const courant = dest ||
       (vueCourante === 'marches' ? 'marches'
-       : vueCourante === 'bourse' ? 'bourse'
        : vueCourante === 'ajout' ? 'ajout'
-       : (vueCourante === 'actif' && ouvert !== null ? 'actif:' + ouvert : 'accueil'));
+       : 'accueil');
     let vu = null;
     barreApp.querySelectorAll('[data-dest]').forEach(function(b){
       if (b.dataset.dest === courant){ b.setAttribute('aria-current', 'page'); vu = b; }
       else b.removeAttribute('aria-current');
     });
-    /* L'entrée courante peut être hors de la bande visible quand le
-       portefeuille est long : on va la chercher. */
-    if (vu && barreApp.scrollWidth > barreApp.clientWidth + 1){
-      const b = vu.getBoundingClientRect(), c = barreApp.getBoundingClientRect();
-      if (b.left < c.left || b.right > c.right){
-        barreApp.scrollLeft += (b.left + b.width / 2) - (c.left + c.width / 2);
-      }
-    }
   }
 
   /* Amène une carte sous les yeux depuis la vue d'ensemble. `hote` peut
@@ -8240,12 +8341,10 @@ window.PC = (function(){
     const d = b.dataset.dest;
     if (d === 'accueil'){ ouvert = null; poseVue('general'); }
     else if (d === 'marches'){ ouvert = null; poseVue('marches'); }
-    else if (d === 'bourse'){ ouvert = null; poseVue('bourse'); }
     else if (d === 'ajout'){
       poseVue('ajout');
       setTimeout(function(){ const n = document.getElementById('a-nom'); if (n) n.focus(); }, 60);
     }
-    else if (d.indexOf('actif:') === 0){ ouvreActif(+d.split(':')[1]); }
   });
 
   barreOnglets.addEventListener('click', function(e){
@@ -8254,7 +8353,6 @@ window.PC = (function(){
     const c = b.dataset.cible;
     if (c === 'general'){ ouvert = null; poseVue('general'); }
     else if (c === 'marches'){ ouvert = null; poseVue('marches'); }
-    else if (c === 'bourse'){ ouvert = null; poseVue('bourse'); }
     else if (c === 'ajout'){ poseVue('ajout'); setTimeout(function(){ document.getElementById('a-nom').focus(); }, 60); }
     else ouvreActif(+c.split(':')[1]);
   });
