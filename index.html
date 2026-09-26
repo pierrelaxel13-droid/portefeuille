@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.1147";</script>
+<script>window.PC_VERSION = "260926.1910";</script>
 </head>
 <body>
 
@@ -2727,6 +2727,79 @@ table.actifs tbody tr{cursor:pointer;}
    elle recouvrait le bouton « Entrer ». */
 body:not(.espace-ouvert) .barre-app{display:none;}
 
+/* ===== Actualite =====
+   Deux blocs dans la meme section : les cours, qui arrivent du
+   reseau, et le journal, qui vient du fichier. */
+.actu-bloc + .actu-bloc, .actu-journal .actu-bloc{margin-top:clamp(34px,5vw,54px);}
+.actu-titre{
+  font-size:11px; letter-spacing:.19em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 16px;
+}
+.actu-sous{color:var(--ink-2); margin:-8px 0 18px; font-size:15px; text-wrap:pretty;}
+
+/* Les cours. Une rangee qui defile au pouce sur telephone plutot
+   qu'une grille qui s'empile : on regarde ca comme un bandeau, pas
+   comme un tableau. */
+.actu-cours{
+  display:grid; gap:1px; background:var(--rule);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));
+  border:1px solid var(--rule);
+}
+.actu-cours:empty{display:none;}
+.cours-case{
+  background:var(--paper); padding:16px 18px;
+  display:flex; flex-direction:column; gap:5px; min-width:0;
+}
+.cours-case__n{
+  font-size:14.5px; font-weight:600; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+}
+.cours-case__t{
+  font-family:'IBM Plex Mono', monospace; font-size:10.5px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3);
+}
+.cours-case__p{
+  font-family:'IBM Plex Mono', monospace; font-size:17px; font-weight:500;
+  font-variant-numeric:tabular-nums; margin-top:2px;
+}
+.actu-note{font-size:11.5px; color:var(--ink-3); margin:12px 0 0;}
+
+/* Le journal. Du texte, donc une colonne etroite : au-dela de
+   soixante-dix caracteres l'oeil perd sa ligne. */
+.actu-billets{display:flex; flex-direction:column; gap:1px; background:var(--rule);
+  border-block:1px solid var(--rule);}
+.billet{background:var(--paper); padding:20px 0;}
+.billet__d{
+  font-family:'IBM Plex Mono', monospace; font-size:11px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3);
+}
+.billet__t{font-size:19px; font-weight:700; letter-spacing:-.015em; margin:6px 0 8px;}
+.billet__p{color:var(--ink-2); font-size:15.5px; line-height:1.65; max-width:68ch; text-wrap:pretty;}
+
+@media (max-width:700px){
+  /* La rangee de cours defile du pouce : quatre cases tiennent dans
+     la largeur d'un telephone, les suivantes s'atteignent en
+     glissant. */
+  .actu-cours{
+    display:flex; overflow-x:auto; border:none; background:none; gap:1px;
+    scroll-snap-type:x mandatory; scrollbar-width:none;
+    margin-inline:calc(-1 * var(--pad)); padding-inline:var(--pad);
+    scroll-padding-inline:var(--pad);
+  }
+  .actu-cours::-webkit-scrollbar{display:none;}
+  .cours-case{
+    flex:0 0 46%; scroll-snap-align:start;
+    border:1px solid var(--rule); border-radius:12px;
+  }
+  /* Le titre du bloc fait doublon avec le resume du repli. */
+  .actu-titre--j{display:none;}
+}
+/* Hors telephone le repli n'en est pas un : son resume disparait et
+   le titre reprend sa place. */
+@media (min-width:701px){
+  .actu-journal > summary{display:none;}
+}
+
 /* ===== Le compte =====
    Rien de neuf visuellement : on reprend les pieces de la page —
    la carte du portail, les champs, les boutons. Un ecran de
@@ -2906,7 +2979,7 @@ window.PC = (function(){
   /* --- Châssis --- */
   'skip':               ["Aller au contenu","Skip to content","Ir al contenido","Zum Inhalt springen"],
   'curtain.hint':       ["Cliquez sur le nom","Click the name","Haga clic en el nombre","Auf den Namen klicken"],
-  'curtain.cap':        ["Minage · Trading · Actions · Bitcoin · Immobilier","Mining · Trading · Stocks · Bitcoin · Real estate","Minería · Trading · Acciones · Bitcoin · Inmobiliario","Mining · Trading · Aktien · Bitcoin · Immobilien"],
+  'curtain.cap':        ["Livret · Assurance-vie · PEA · Immobilier · Bitcoin","Savings · Life insurance · Shares · Property · Bitcoin","Ahorro · Seguro de vida · Acciones · Inmuebles · Bitcoin","Sparbuch · Lebensversicherung · Aktien · Immobilien · Bitcoin"],
   'ribbon.b':           ["Données d'exemple.","Sample data.","Datos de ejemplo.","Beispieldaten."],
   'ribbon.txt':         ["Tous les montants et performances de cette page sont fictifs, le temps que les chiffres réels soient saisis.","Every amount and return on this page is fictional, until the real figures are entered.","Todos los importes y rentabilidades de esta página son ficticios, a la espera de las cifras reales.","Sämtliche Beträge und Renditen auf dieser Seite sind fiktiv, bis die echten Zahlen eingetragen sind."],
   'billet.porteur':     ["BILLET AU PORTEUR","BEARER NOTE","BILLETE AL PORTADOR","INHABERSCHEIN"],
@@ -2935,13 +3008,22 @@ window.PC = (function(){
   'nav.devise':         ["Devise","Currency","Moneda","Währung"],
 
   /* --- Hero --- */
+  /* --- Actualite --- */
+  'actu.eyebrow':        ["Actualité","Latest","Actualidad","Aktuelles"],
+  'actu.h2':             ["Ce qui bouge aujourd'hui.","What is moving today.","Lo que se mueve hoy.","Was sich heute bewegt."],
+  'actu.intro':          ["Les cours arrivent en direct, comme dans votre espace. C'est la même mécanique&nbsp;: ce que vous voyez ici, vous le verrez sur vos propres lignes.","Prices arrive live, just as in your own space. It is the same machinery: what you see here, you will see on your own lines.","Las cotizaciones llegan en directo, igual que en su espacio. Es el mismo mecanismo: lo que ve aquí lo verá en sus propias partidas.","Die Kurse kommen live, genau wie in Ihrem Bereich. Es ist dieselbe Mechanik: was Sie hier sehen, sehen Sie auf Ihren eigenen Posten."],
+  'actu.marches':        ["Les marchés","The markets","Los mercados","Die Märkte"],
+  'actu.24h':            ["sur 24 heures","over 24 hours","en 24 horas","über 24 Stunden"],
+  'actu.journal':        ["Le journal","The journal","El diario","Das Journal"],
+  'actu.journal.d':      ["Ce que je regarde, et pourquoi.","What I am watching, and why.","Lo que observo, y por qué.","Was ich beobachte, und warum."],
+
   'hero.eyebrow':       ["Pierrel & Co · Mis à jour en juillet 2026","Pierrel & Co · Updated July 2026","Pierrel & Co · Actualizado en julio de 2026","Pierrel & Co · Stand Juli 2026"],
-  'hero.w0':            ["Cinq","Five","Cinco","Fünf"],
-  'hero.w1':            ["activités,","activities,","actividades,","Anlagen,"],
-  'hero.w2':            ["un","one","un","ein"],
-  'hero.w3':            ["seul","single","solo","einziger"],
-  'hero.w4':            ["relevé.","statement.","informe.","Auszug."],
-  'hero.lede':          ["Épargne, actions, bitcoin, immobilier, trading. Ce qui a été investi, ce que ça vaut aujourd'hui, poste par poste.","Savings, shares, bitcoin, property, trading. What was invested, what it is worth today, line by line.","Ahorro, acciones, bitcoin, inmuebles, trading. Lo invertido, lo que vale hoy, partida por partida.","Ersparnisse, Aktien, Bitcoin, Immobilien, Trading. Was investiert wurde, was es heute wert ist, Posten für Posten."],
+  'hero.w0':            ["Tout","All","Todo","Ihr"],
+  'hero.w1':            ["votre","your","su","ganzes"],
+  'hero.w2':            ["argent,","money,","dinero,","Geld,"],
+  'hero.w3':            ["enfin","finally","por fin","endlich"],
+  'hero.w4':            ["réuni.","together.","reunido.","vereint."],
+  'hero.lede':          ["Livret, assurance-vie, PEA, immobilier, bitcoin. Vous saisissez, la page calcule\u00a0: ce que vous avez mis, ce que ça vaut aujourd'hui, et ce que ça vous rapporte.","Savings, life insurance, shares, property, bitcoin. You enter the figures, the page does the rest: what you put in, what it is worth today, and what it pays you.","Ahorro, seguro de vida, acciones, inmuebles, bitcoin. Usted introduce, la página calcula: lo que puso, lo que vale hoy y lo que le renta.","Sparbuch, Lebensversicherung, Aktien, Immobilien, Bitcoin. Sie tragen ein, die Seite rechnet: was Sie eingezahlt haben, was es heute wert ist und was es einbringt."],
   'hero.cta':           ["Connexion","Sign in","Conexi\u00f3n","Anmelden"],
   'hero.install':       ["Installer l'app","Install the app","Instalar la app","App installieren"],
   'hero.install.court': ["Installer","Install","Instalar","Installieren"],
@@ -3084,21 +3166,21 @@ window.PC = (function(){
   'faq.h2':             ["Ce qu'on me demande.","What I get asked.","Lo que me preguntan.","Was man mich fragt."],
   'faq.intro':          ["Les questions qui reviennent avant de confier ses chiffres à un outil. Les réponses sont franches, y compris quand elles ne sont pas à l'avantage du produit.","The questions that come up before trusting a tool with your figures. The answers are frank, including where they do not flatter the product.","Las preguntas que surgen antes de confiar sus cifras a una herramienta. Las respuestas son francas, incluso cuando no favorecen al producto.","Die Fragen, die kommen, bevor man einem Werkzeug seine Zahlen anvertraut. Die Antworten sind offen — auch dort, wo sie dem Produkt nicht schmeicheln."],
   'faq.1.q':            ["Où vont mes chiffres ?","Where do my figures go?","¿A dónde van mis cifras?","Wohin gehen meine Zahlen?"],
-  'faq.1.a':            ["Nulle part. Ils sont enregistrés dans la mémoire locale de votre navigateur, sur votre appareil. Aucun serveur ne les reçoit, personne d'autre ne peut les lire, et il n'y a pas de compte à créer pour commencer.","Nowhere. They are saved in your browser's local storage, on your device. No server receives them, nobody else can read them, and there is no account to create to get started.","A ninguna parte. Se guardan en el almacenamiento local de su navegador, en su dispositivo. Ningún servidor las recibe, nadie más puede leerlas y no hay que crear ninguna cuenta para empezar.","Nirgendwohin. Sie werden im lokalen Speicher Ihres Browsers auf Ihrem Gerät abgelegt. Kein Server erhält sie, niemand sonst kann sie lesen, und zum Start ist kein Konto nötig."],
+  'faq.1.a':            ["Cela dépend de vous. Sans compte — la démonstration, ou l'espace ouvert tel quel — ils ne sortent pas de votre navigateur&nbsp;: aucun serveur ne les reçoit. Avec un compte, ils sont envoyés sur le serveur de Pierrel &amp; Co pour vous suivre d'un appareil à l'autre. Ils y sont rangés tels quels, jamais ouverts, jamais analysés, jamais transmis à un tiers et jamais revendus&nbsp;; techniquement, celui qui administre le serveur pourrait les lire. Le chiffrement de bout en bout, qui l'en empêcherait, est prévu et n'est pas encore là.", "That is up to you. With no account — the demo, or the space opened as it comes — they never leave your browser: no server receives them. With an account, they are sent to Pierrel &amp; Co's server so they follow you from one device to the next. There they are stored as they are, never opened, never analysed, never passed to a third party and never sold; technically, whoever administers the server could read them. End-to-end encryption, which would prevent that, is planned and not there yet.", "Depende de usted. Sin cuenta —la demostración, o el espacio tal cual— no salen de su navegador: ningún servidor las recibe. Con una cuenta, se envían al servidor de Pierrel &amp; Co para que le sigan de un dispositivo a otro. Allí se guardan tal cual, nunca se abren, nunca se analizan, nunca se ceden a terceros y nunca se venden; técnicamente, quien administra el servidor podría leerlas. El cifrado de extremo a extremo, que lo impediría, está previsto y aún no existe.", "Das hängt von Ihnen ab. Ohne Konto — die Demo oder der Bereich, wie er ist — verlassen sie Ihren Browser nicht: Kein Server erhält sie. Mit einem Konto werden sie an den Server von Pierrel &amp; Co gesendet, damit sie Ihnen von Gerät zu Gerät folgen. Dort liegen sie, wie sie sind, werden nie geöffnet, nie ausgewertet, nie an Dritte weitergegeben und nie verkauft; technisch könnte der Administrator des Servers sie lesen. Eine Ende-zu-Ende-Verschlüsselung, die das verhindern würde, ist geplant und noch nicht da."],
   'faq.2.q':            ["Et si je change d'appareil ?","What if I switch devices?","¿Y si cambio de dispositivo?","Und wenn ich das Gerät wechsle?"],
-  'faq.2.a':            ["Vos chiffres ne suivent pas : ils vivent dans le navigateur où vous les avez saisis. Les formules Pro et Max permettent d'exporter le portefeuille en un fichier et de le réimporter ailleurs. La synchronisation automatique entre appareils demandera un compte&nbsp;: elle n'existe pas encore.","They do not follow you: they live in the browser where you entered them. The Pro and Max plans let you export the portfolio to a file and import it elsewhere. Automatic syncing between devices will require an account — it does not exist yet.","No le siguen: viven en el navegador donde las introdujo. Los planes Pro y Max permiten exportar la cartera a un archivo e importarla en otro sitio. La sincronización automática entre dispositivos requerirá una cuenta: todavía no existe.","Sie folgen Ihnen nicht: sie liegen in dem Browser, in dem Sie sie eingetragen haben. Die Tarife Pro und Max erlauben den Export in eine Datei und den Import anderswo. Die automatische Synchronisierung zwischen Geräten wird ein Konto erfordern — es gibt sie noch nicht."],
+  'faq.2.a':            ["Ils suivent, dès que vous êtes connecté&nbsp;: ce que vous saisissez sur le téléphone est là sur l'ordinateur, et l'inverse. Si les deux appareils ont travaillé chacun de leur côté, la page ne choisit pas à votre place — elle montre les deux versions et vous demande laquelle garder. Sans compte, rien ne suit&nbsp;: les chiffres restent dans le navigateur où vous les avez saisis, et l'export en un fichier est le seul pont.", "They follow, as soon as you are signed in: what you enter on the phone is there on the computer, and the other way round. If both devices worked on their own, the page does not choose for you — it shows both versions and asks which to keep. With no account nothing follows: the figures stay in the browser where you entered them, and exporting a file is the only bridge.", "Le siguen en cuanto inicia sesión: lo que introduce en el teléfono está en el ordenador, y al contrario. Si los dos dispositivos han trabajado por separado, la página no elige por usted: muestra las dos versiones y pregunta cuál conservar. Sin cuenta nada le sigue: las cifras se quedan en el navegador donde las introdujo, y exportar un archivo es el único puente.", "Sie folgen, sobald Sie angemeldet sind: Was Sie am Telefon eintragen, steht am Computer — und umgekehrt. Haben beide Geräte getrennt gearbeitet, entscheidet die Seite nicht für Sie: Sie zeigt beide Fassungen und fragt, welche bleiben soll. Ohne Konto folgt nichts: Die Zahlen bleiben im Browser, in dem Sie sie eingetragen haben, und der Export in eine Datei ist die einzige Brücke."],
   'faq.3.q':            ["Est-ce un conseil en investissement ?","Is this investment advice?","¿Esto es asesoramiento de inversión?","Ist das eine Anlageberatung?"],
   'faq.3.a':            ["Non. C'est un outil de mise en forme&nbsp;: vous entrez vos chiffres, il calcule des répartitions et des pourcentages. Il ne recommande aucun placement, ne passe aucun ordre, et Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers. Les chiffres présentés sur cette page sont des exemples.","No. It is a formatting tool: you enter your figures, it works out allocations and percentages. It recommends no investment, places no order, and Pierrel &amp; Co is not authorised as a financial investment adviser. The figures shown on this page are examples.","No. Es una herramienta de presentación: usted introduce sus cifras y calcula distribuciones y porcentajes. No recomienda ninguna inversión, no ejecuta ninguna orden, y Pierrel &amp; Co no está autorizado como asesor financiero. Las cifras de esta página son ejemplos.","Nein. Es ist ein Aufbereitungswerkzeug: Sie tragen Ihre Zahlen ein, es berechnet Aufteilungen und Prozentsätze. Es empfiehlt keine Anlage, erteilt keine Order, und Pierrel &amp; Co ist nicht als Finanzanlagenvermittler zugelassen. Die Zahlen auf dieser Seite sind Beispiele."],
   'faq.4.q':            ["Je peux essayer avant de payer ?","Can I try before paying?","¿Puedo probar antes de pagar?","Kann ich vor dem Bezahlen testen?"],
   'faq.4.a':            ["Oui. La démonstration ouvre l'espace tout de suite, avec un portefeuille rempli et son historique&nbsp;: vous voyez exactement ce que l'outil fait, sans compte, sans carte bancaire et sans rien saisir. Elle tourne dans votre navigateur et ne garde rien. Ensuite seulement, si cela vous sert, vous prenez une formule.","Yes. The demo opens the space right away, with a filled portfolio and its history: you see exactly what the tool does, with no account, no card and nothing to enter. It runs in your browser and keeps nothing. Only then, if it is useful to you, do you choose a plan.","Sí. La demostración abre el espacio de inmediato, con una cartera completa y su historial: verá exactamente lo que hace la herramienta, sin cuenta, sin tarjeta y sin introducir nada. Funciona en su navegador y no guarda nada. Solo después, si le sirve, elige un plan.","Ja. Die Demo öffnet den Bereich sofort, mit einem gefüllten Portfolio samt Verlauf: Sie sehen genau, was das Werkzeug tut — ohne Konto, ohne Karte und ohne Eingaben. Sie läuft in Ihrem Browser und speichert nichts. Erst danach wählen Sie einen Tarif, wenn es Ihnen nützt."],
   'faq.5.q':            ["Puis-je résilier quand je veux ?","Can I cancel whenever I want?","¿Puedo cancelar cuando quiera?","Kann ich jederzeit kündigen?"],
-  'faq.5.a':            ["Oui, sans préavis ni frais. L'abonnement s'arrête à la fin du mois en cours et vos données restent dans votre navigateur — elles ne dépendent pas de la formule. Vous retombez simplement sur les limites de la formule gratuite.","Yes, with no notice and no fee. The subscription stops at the end of the current month and your data stays in your browser — it does not depend on the plan. You simply fall back to the free plan's limits.","Sí, sin preaviso ni comisión. La suscripción termina al final del mes en curso y sus datos siguen en su navegador: no dependen del plan. Simplemente vuelve a los límites del plan gratuito.","Ja, ohne Frist und ohne Gebühr. Das Abonnement endet zum Monatsende, und Ihre Daten bleiben im Browser — sie hängen nicht vom Tarif ab. Es gelten dann wieder die Grenzen des kostenlosen Tarifs."],
+  'faq.5.a':            ["Oui, sans préavis ni frais. L'abonnement s'arrête à la fin du mois en cours. Vous gardez la lecture et l'export de tout ce qui est déjà saisi&nbsp;; c'est l'enregistrement de nouvelles lignes qui s'arrête. Rien n'est effacé à la résiliation, et vous pouvez demander la suppression complète de votre compte quand vous voulez.", "Yes, with no notice and no fee. The subscription stops at the end of the current month. You keep reading and exporting everything already entered; what stops is the saving of new lines. Nothing is deleted when you cancel, and you can ask for your account to be removed entirely whenever you like.", "Sí, sin preaviso ni comisión. La suscripción termina al final del mes en curso. Conserva la lectura y la exportación de todo lo ya introducido; lo que se detiene es el registro de nuevas líneas. Nada se borra al cancelar, y puede pedir la supresión completa de su cuenta cuando quiera.", "Ja, ohne Frist und ohne Gebühr. Das Abonnement endet zum Ende des laufenden Monats. Lesen und Exportieren des bereits Eingetragenen bleiben; was aufhört, ist das Speichern neuer Positionen. Bei der Kündigung wird nichts gelöscht, und Sie können jederzeit die vollständige Löschung Ihres Kontos verlangen."],
   'faq.6.q':            ["Y a-t-il des cookies ou du pistage ?","Are there cookies or tracking?","¿Hay cookies o rastreo?","Gibt es Cookies oder Tracking?"],
-  'faq.6.a':            ["Aucun. Pas de cookie, pas de mesure d'audience, pas de traceur publicitaire, et donc pas de bandeau à cliquer. Les polices sont incluses dans la page plutôt que chargées chez Google, ce qui évite de transmettre votre adresse IP à un tiers.","None. No cookies, no analytics, no advertising trackers — and therefore no banner to dismiss. The fonts are embedded in the page rather than loaded from Google, which avoids handing your IP address to a third party.","Ninguno. Sin cookies, sin analítica, sin rastreadores publicitarios y, por tanto, sin banner que aceptar. Las tipografías están incluidas en la página en lugar de cargarse desde Google, lo que evita comunicar su IP a un tercero.","Keine. Keine Cookies, keine Reichweitenmessung, keine Werbetracker — und daher auch kein Banner. Die Schriften sind in der Seite eingebettet statt von Google geladen, sodass Ihre IP-Adresse keinem Dritten übermittelt wird."],
+  'faq.6.a':            ["Aucun pistage. Pas de mesure d'audience, pas de traceur publicitaire, et donc pas de bandeau à cliquer. Un seul cookie existe, et seulement si vous vous connectez&nbsp;: il tient votre session, il est illisible par les scripts de la page et il ne sert à rien d'autre. Les polices sont incluses dans la page plutôt que chargées chez Google, ce qui évite de transmettre votre adresse IP à un tiers.", "No tracking. No analytics, no advertising trackers — and therefore no banner to dismiss. A single cookie exists, and only if you sign in: it holds your session, page scripts cannot read it, and it does nothing else. The fonts are embedded in the page rather than loaded from Google, which avoids handing your IP address to a third party.", "Ningún rastreo. Sin analítica, sin rastreadores publicitarios y, por tanto, sin banner que aceptar. Existe una sola cookie, y solo si inicia sesión: mantiene su sesión, los scripts de la página no pueden leerla y no sirve para nada más. Las tipografías están incluidas en la página en lugar de cargarse desde Google, lo que evita entregar su dirección IP a un tercero.", "Kein Tracking. Keine Reichweitenmessung, keine Werbe-Tracker — und damit kein Banner zum Wegklicken. Es gibt genau ein Cookie, und nur wenn Sie sich anmelden: Es hält Ihre Sitzung, die Skripte der Seite können es nicht lesen, und mehr tut es nicht. Die Schriften sind in die Seite eingebettet statt von Google geladen, was Ihre IP-Adresse keinem Dritten übergibt."],
   'faq.7.q':            ["Les montants sont-ils convertis ?","Are amounts converted?","¿Se convierten los importes?","Werden Beträge umgerechnet?"],
   'faq.7.a':            ["Les chiffres d'exemple de cette page sont écrits en euros et convertis à l'affichage, avec des taux fixes datés indiqués en pied de page. Ceux que vous saisissez dans l'espace client ne sont jamais convertis&nbsp;: la devise choisie est simplement l'unité dans laquelle vous les entrez.","The sample figures on this page are written in euros and converted for display, using dated fixed rates shown in the footer. The figures you enter in the client area are never converted: the selected currency is simply the unit you enter them in.","Las cifras de ejemplo de esta página están escritas en euros y se convierten al mostrarlas, con tipos fijos fechados indicados en el pie. Las que usted introduce en el área de cliente nunca se convierten: la moneda elegida es solo la unidad en la que las introduce.","Die Beispielzahlen dieser Seite sind in Euro erfasst und werden für die Anzeige umgerechnet, mit datierten Festkursen im Fußbereich. Die von Ihnen im Kundenbereich eingetragenen Zahlen werden nie umgerechnet: die gewählte Währung ist schlicht die Einheit, in der Sie sie eintragen."],
   'faq.8.q':            ["Que se passe-t-il si j'efface mon navigateur ?","What happens if I clear my browser?","¿Qué pasa si borro mi navegador?","Was passiert, wenn ich meinen Browser leere?"],
-  'faq.8.a':            ["Vos données disparaissent définitivement, et personne ne peut les récupérer — c'est la contrepartie de ne rien envoyer sur un serveur. Si vos chiffres comptent, exportez-les régulièrement dans un fichier depuis les formules Pro ou Max.","Your data is gone for good, and nobody can recover it — that is the flip side of sending nothing to a server. If your figures matter, export them to a file regularly from the Pro or Max plans.","Sus datos desaparecen definitivamente y nadie puede recuperarlos: es la contrapartida de no enviar nada a un servidor. Si sus cifras importan, expórtelas periódicamente a un archivo desde los planes Pro o Max.","Ihre Daten sind endgültig weg, und niemand kann sie wiederherstellen — das ist die Kehrseite davon, nichts an einen Server zu senden. Wenn Ihre Zahlen wichtig sind, exportieren Sie sie regelmäßig als Datei über die Tarife Pro oder Max."],
+  'faq.8.a':            ["Avec un compte, rien&nbsp;: vos chiffres sont sur le serveur, vous vous reconnectez et ils reviennent. Le serveur en garde en plus une sauvegarde par jour. Sans compte, ils disparaissent définitivement et personne ne peut les récupérer — c'est la contrepartie de ne rien envoyer. Dans les deux cas, l'export en un fichier est disponible dans les trois formules&nbsp;: gardez-en un de temps en temps.", "With an account, nothing: your figures are on the server, you sign in again and they come back. The server also keeps one backup a day. With no account they are gone for good and nobody can recover them — that is the flip side of sending nothing. Either way, exporting a file is available on all three plans: keep one from time to time.", "Con una cuenta, nada: sus cifras están en el servidor, vuelve a iniciar sesión y reaparecen. El servidor guarda además una copia al día. Sin cuenta desaparecen definitivamente y nadie puede recuperarlas: es la contrapartida de no enviar nada. En ambos casos, la exportación a un archivo está en los tres planes: conserve una de vez en cuando.", "Mit einem Konto: nichts. Ihre Zahlen liegen auf dem Server, Sie melden sich wieder an und sie sind zurück. Der Server hält zusätzlich eine Sicherung pro Tag. Ohne Konto sind sie endgültig weg und niemand kann sie wiederherstellen — das ist die Kehrseite davon, nichts zu senden. In beiden Fällen ist der Export in eine Datei in allen drei Tarifen enthalten: Bewahren Sie ab und zu einen auf."],
 
   /* --- Sections en attente de contenu réel --- */
   'vide.b':             ["À remplir.","To be filled in.","Por completar.","Auszufüllen."],
@@ -3143,7 +3225,7 @@ window.PC = (function(){
   'lg.corps':           ["<b>Éditeur du site.</b> Pierrel &amp; Co — [raison sociale], [forme juridique] au capital de [montant], immatriculée au RCS de [ville] sous le numéro [SIRET]. Siège social&nbsp;: [adresse]. Numéro de TVA intracommunautaire&nbsp;: [numéro].<br><b>Directeur de la publication.</b> [nom].<br><b>Contact.</b> [adresse e-mail].<br><b>Hébergement.</b> [nom de l'hébergeur], [adresse].<br><b>Nature du service.</b> Cette page présente un portefeuille personnel et propose un outil de suivi d'actifs. Elle ne constitue ni un conseil en investissement, ni une recommandation, ni un service de réception-transmission d'ordres. Pierrel &amp; Co n'est pas agréé en tant que conseiller en investissements financiers.","<b>Site publisher.</b> Pierrel &amp; Co — [legal name], [legal form] with share capital of [amount], registered in [city] under number [registration number]. Registered office: [address]. VAT number: [number].<br><b>Publication director.</b> [name].<br><b>Contact.</b> [email address].<br><b>Hosting.</b> [host name], [address].<br><b>Nature of the service.</b> This page presents a personal portfolio and offers an asset tracking tool. It is neither investment advice, nor a recommendation, nor an order routing service. Pierrel &amp; Co is not authorised as a financial investment adviser.","<b>Editor del sitio.</b> Pierrel &amp; Co — [razón social], [forma jurídica] con un capital de [importe], inscrita en [ciudad] con el número [número de registro]. Domicilio social: [dirección]. Número de IVA: [número].<br><b>Director de publicación.</b> [nombre].<br><b>Contacto.</b> [correo electrónico].<br><b>Alojamiento.</b> [nombre del proveedor], [dirección].<br><b>Naturaleza del servicio.</b> Esta página presenta una cartera personal y ofrece una herramienta de seguimiento de activos. No constituye asesoramiento de inversión, ni recomendación, ni servicio de recepción y transmisión de órdenes. Pierrel &amp; Co no está autorizado como asesor financiero.","<b>Anbieter.</b> Pierrel &amp; Co — [Firmenname], [Rechtsform] mit einem Kapital von [Betrag], eingetragen in [Stadt] unter der Nummer [Registernummer]. Sitz: [Anschrift]. Umsatzsteuer-Identifikationsnummer: [Nummer].<br><b>Verantwortlich für den Inhalt.</b> [Name].<br><b>Kontakt.</b> [E-Mail-Adresse].<br><b>Hosting.</b> [Hoster], [Anschrift].<br><b>Art des Dienstes.</b> Diese Seite stellt ein privates Portfolio dar und bietet ein Werkzeug zur Vermögensverfolgung. Sie ist weder Anlageberatung noch Empfehlung noch Auftragsvermittlung. Pierrel &amp; Co ist nicht als Finanzanlagenvermittler zugelassen."],
 
   'cf.titre':           ["Confidentialité et données","Privacy and data","Privacidad y datos","Datenschutz"],
-  'cf.corps':           ["<b>Ce site ne collecte rien.</b> Il n'utilise ni cookie, ni mesure d'audience, ni traceur publicitaire. Aucun compte n'est créé et aucune donnée n'est transmise à un serveur.<br><b>Vos chiffres restent chez vous.</b> Les actifs, montants et relevés saisis dans l'espace client sont enregistrés dans la mémoire locale de votre navigateur (<i>localStorage</i>), sur votre appareil uniquement. Ils ne sont ni envoyés, ni sauvegardés ailleurs, ni lisibles par l'éditeur du site. Vider les données de navigation les efface définitivement&nbsp;; le bouton « Tout effacer » fait de même.<br><b>Polices de caractères.</b> Elles sont incluses dans la page, sans appel à un service tiers&nbsp;: aucune adresse IP n'est communiquée à Google Fonts ou équivalent.<br><b>Formulaire de contact et souscription.</b> Ils ouvrent votre logiciel de messagerie avec un message prérempli. Rien n'est envoyé sans votre action, et le contenu du message ne transite par aucun serveur intermédiaire.<br><b>Paiement.</b> Lorsqu'il sera activé, il sera opéré par Stripe, qui devient alors responsable du traitement des données de carte. Votre numéro de carte ne transitera jamais par ce site.<br><b>Vos droits.</b> Aucune donnée personnelle n'étant conservée par l'éditeur, il n'y a rien à consulter, rectifier ou supprimer de son côté. Pour toute question, écrivez à l'adresse de contact.","<b>This site collects nothing.</b> No cookies, no analytics, no advertising trackers. No account is created and no data is sent to a server.<br><b>Your figures stay with you.</b> The assets, amounts and statements entered in the client area are saved in your browser's local storage (<i>localStorage</i>), on your device only. They are never sent, backed up elsewhere, or readable by the site publisher. Clearing your browsing data erases them for good; the “Erase everything” button does the same.<br><b>Fonts.</b> They are embedded in the page, with no third-party call: no IP address is disclosed to Google Fonts or the like.<br><b>Contact form and subscription.</b> Both open your mail application with a pre-filled message. Nothing is sent without your action, and the message passes through no intermediate server.<br><b>Payment.</b> Once enabled, it will be operated by Stripe, which then becomes the controller for card data. Your card number will never pass through this site.<br><b>Your rights.</b> As no personal data is kept by the publisher, there is nothing to access, correct or delete on their side. For any question, write to the contact address.","<b>Este sitio no recopila nada.</b> Sin cookies, sin analítica, sin rastreadores publicitarios. No se crea ninguna cuenta y no se envía ningún dato a un servidor.<br><b>Sus cifras se quedan con usted.</b> Los activos, importes e informes introducidos en el área de cliente se guardan en el almacenamiento local de su navegador (<i>localStorage</i>), solo en su dispositivo. Nunca se envían, ni se copian en otro lugar, ni puede leerlos el editor del sitio. Borrar los datos de navegación los elimina definitivamente; el botón «Borrar todo» hace lo mismo.<br><b>Tipografías.</b> Están incluidas en la página, sin llamada a terceros: no se comunica ninguna dirección IP a Google Fonts o similar.<br><b>Formulario de contacto y suscripción.</b> Ambos abren su programa de correo con un mensaje preparado. No se envía nada sin su acción, y el mensaje no pasa por ningún servidor intermedio.<br><b>Pago.</b> Cuando se active, lo gestionará Stripe, que pasa a ser responsable del tratamiento de los datos de tarjeta. Su número de tarjeta nunca pasará por este sitio.<br><b>Sus derechos.</b> Como el editor no conserva ningún dato personal, no hay nada que consultar, rectificar o suprimir por su parte. Para cualquier duda, escriba a la dirección de contacto.","<b>Diese Website erhebt nichts.</b> Keine Cookies, keine Reichweitenmessung, keine Werbetracker. Es wird kein Konto angelegt und es werden keine Daten an einen Server übertragen.<br><b>Ihre Zahlen bleiben bei Ihnen.</b> Die im Kundenbereich erfassten Werte, Beträge und Auszüge werden im lokalen Speicher Ihres Browsers (<i>localStorage</i>) abgelegt, ausschließlich auf Ihrem Gerät. Sie werden nicht versendet, nicht anderswo gesichert und sind für den Anbieter nicht lesbar. Das Löschen der Browserdaten entfernt sie endgültig; die Schaltfläche „Alles löschen“ ebenso.<br><b>Schriften.</b> Sie sind in der Seite eingebettet, ohne Aufruf eines Dritten: es wird keine IP-Adresse an Google Fonts oder Vergleichbares übermittelt.<br><b>Kontaktformular und Abonnement.</b> Beide öffnen Ihr E-Mail-Programm mit einer vorbereiteten Nachricht. Ohne Ihr Zutun wird nichts gesendet, und die Nachricht läuft über keinen Zwischenserver.<br><b>Zahlung.</b> Sobald sie aktiviert ist, wird sie von Stripe abgewickelt, das dann für die Kartendaten verantwortlich ist. Ihre Kartennummer läuft nie über diese Website.<br><b>Ihre Rechte.</b> Da der Anbieter keine personenbezogenen Daten speichert, gibt es dort nichts einzusehen, zu berichtigen oder zu löschen. Bei Fragen schreiben Sie an die Kontaktadresse."],
+  'cf.corps':           ["<b>Sans compte, rien ne part.</b> La démonstration et l'espace ouvert tel quel travaillent entièrement dans votre navigateur&nbsp;: les actifs, montants et relevés sont enregistrés dans sa mémoire locale (<i>localStorage</i>), sur votre appareil. Aucun serveur ne les reçoit. Vider les données de navigation les efface définitivement&nbsp;; le bouton «&nbsp;Tout effacer&nbsp;» fait de même.<br><b>Avec un compte, voici ce qui est conservé.</b> Votre adresse électronique, une empreinte de votre mot de passe (jamais le mot de passe lui-même), votre formule et l'état de votre abonnement, les dates de création et de dernière visite, et votre portefeuille tel que la page l'envoie. S'y ajoute un journal des évènements de compte — inscription, connexion, écriture, changement de mot de passe — avec la date et l'adresse IP, pour que vous puissiez répondre à «&nbsp;qui a touché à mon compte&nbsp;». Le portefeuille n'est ni ouvert, ni analysé, ni transmis à un tiers, ni revendu&nbsp;; il n'est pas chiffré de bout en bout à ce jour, donc l'administrateur du serveur pourrait techniquement le lire. Une sauvegarde est prise chaque jour et conservée quelques jours.<br><b>Cookie.</b> Un seul, nommé <i>pc_session</i>, posé uniquement lorsque vous vous connectez. Il tient votre session, il est <i>HttpOnly</i> — les scripts de la page ne peuvent pas le lire —, il expire, et il ne sert à aucune mesure ni à aucune publicité. Il n'y a ni audience mesurée, ni traceur, ni bandeau à cliquer.<br><b>Polices de caractères.</b> Elles sont incluses dans la page, sans appel à un service tiers&nbsp;: aucune adresse IP n'est communiquée à Google Fonts ou équivalent.<br><b>Cours de bourse et de crypto.</b> Les afficher demande d'appeler le fournisseur de cotations depuis votre navigateur, qui voit donc votre adresse IP et les symboles demandés. Il ne reçoit ni vos montants, ni votre identité.<br><b>Formulaire de contact et souscription.</b> Ils ouvrent votre logiciel de messagerie avec un message prérempli. Rien n'est envoyé sans votre action, et le contenu du message ne transite par aucun serveur intermédiaire.<br><b>Paiement.</b> Lorsqu'il sera activé, il sera opéré par Stripe, qui devient alors responsable du traitement des données de carte. Votre numéro de carte ne transitera jamais par ce site.<br><b>Vos droits.</b> L'export de votre portefeuille en un fichier est dans l'espace, à tout moment et dans les trois formules. Pour consulter le journal de votre compte, changer votre mot de passe, ou faire supprimer le compte et tout ce qui s'y rattache, écrivez à l'adresse de contact&nbsp;: c'est fait à la main, sous 48&nbsp;h, et la suppression est définitive. Les boutons correspondants viendront dans l'espace&nbsp;; d'ici là, cette adresse est le chemin.", "<b>With no account, nothing leaves.</b> The demo and the space opened as it comes work entirely in your browser: assets, amounts and statements are saved in its local storage (<i>localStorage</i>), on your device. No server receives them. Clearing your browsing data erases them for good; the « Erase everything » button does the same.<br><b>With an account, here is what is kept.</b> Your email address, a hash of your password (never the password itself), your plan and subscription state, the dates you signed up and last visited, and your portfolio as the page sends it. Plus a log of account events — sign-up, sign-in, write, password change — with the date and the IP address, so you can answer « who touched my account ». The portfolio is not opened, not analysed, not passed to a third party and not sold; it is not end-to-end encrypted as things stand, so whoever administers the server could technically read it. One backup is taken each day and kept for a few days.<br><b>Cookie.</b> One only, named <i>pc_session</i>, set solely when you sign in. It holds your session, it is <i>HttpOnly</i> — page scripts cannot read it —, it expires, and it serves no measurement and no advertising. There is no analytics, no tracker and no banner to dismiss.<br><b>Fonts.</b> They are embedded in the page, with no call to a third-party service: no IP address is handed to Google Fonts or the like.<br><b>Stock and crypto prices.</b> Showing them means calling the quote provider from your browser, which therefore sees your IP address and the symbols requested. It receives neither your amounts nor your identity.<br><b>Contact form and subscribing.</b> They open your mail app with a prefilled message. Nothing is sent without your action, and the message never passes through an intermediate server.<br><b>Payment.</b> When it is switched on it will be operated by Stripe, which then becomes the controller for card data. Your card number will never pass through this site.<br><b>Your rights.</b> Exporting your portfolio to a file is in the space, at any time and on all three plans. To read your account log, change your password, or have the account and everything attached to it deleted, write to the contact address: it is done by hand, within 48 hours, and deletion is final. The matching buttons will come to the space; until then, that address is the way.", "<b>Sin cuenta, nada sale.</b> La demostración y el espacio tal cual funcionan enteramente en su navegador: activos, importes e informes se guardan en su almacenamiento local (<i>localStorage</i>), en su dispositivo. Ningún servidor los recibe. Borrar los datos de navegación los elimina definitivamente; el botón « Borrar todo » hace lo mismo.<br><b>Con una cuenta, esto es lo que se conserva.</b> Su dirección de correo, una huella de su contraseña (nunca la contraseña), su plan y el estado de su suscripción, las fechas de creación y de última visita, y su cartera tal como la envía la página. Se añade un registro de los eventos de la cuenta —alta, acceso, escritura, cambio de contraseña— con la fecha y la dirección IP, para que pueda responder a « quién ha tocado mi cuenta ». La cartera no se abre, no se analiza, no se cede a terceros y no se vende; hoy no está cifrada de extremo a extremo, así que quien administra el servidor podría técnicamente leerla. Se toma una copia de seguridad al día y se conserva unos días.<br><b>Cookie.</b> Una sola, llamada <i>pc_session</i>, puesta únicamente cuando inicia sesión. Mantiene su sesión, es <i>HttpOnly</i> —los scripts de la página no pueden leerla—, caduca y no sirve para ninguna medición ni publicidad. No hay analítica, ni rastreador, ni banner que aceptar.<br><b>Tipografías.</b> Están incluidas en la página, sin llamada a ningún servicio externo: no se comunica ninguna dirección IP a Google Fonts o equivalente.<br><b>Cotizaciones de bolsa y cripto.</b> Mostrarlas obliga a llamar al proveedor de cotizaciones desde su navegador, que ve por tanto su dirección IP y los símbolos pedidos. No recibe ni sus importes ni su identidad.<br><b>Formulario de contacto y suscripción.</b> Abren su programa de correo con un mensaje ya escrito. Nada se envía sin su acción, y el contenido no pasa por ningún servidor intermedio.<br><b>Pago.</b> Cuando se active, lo operará Stripe, que pasa entonces a ser responsable del tratamiento de los datos de tarjeta. Su número de tarjeta nunca pasará por este sitio.<br><b>Sus derechos.</b> La exportación de su cartera a un archivo está en el espacio, en cualquier momento y en los tres planes. Para consultar el registro de su cuenta, cambiar su contraseña o hacer suprimir la cuenta y todo lo asociado, escriba a la dirección de contacto: se hace a mano, en 48 h, y la supresión es definitiva. Los botones correspondientes llegarán al espacio; hasta entonces, esa dirección es el camino.", "<b>Ohne Konto geht nichts hinaus.</b> Die Demo und der Bereich, wie er ist, arbeiten vollständig in Ihrem Browser: Werte, Beträge und Auszüge liegen in seinem lokalen Speicher (<i>localStorage</i>), auf Ihrem Gerät. Kein Server erhält sie. Das Löschen der Browserdaten entfernt sie endgültig; die Schaltfläche »Alles löschen« ebenso.<br><b>Mit einem Konto wird Folgendes gespeichert.</b> Ihre E-Mail-Adresse, ein Hashwert Ihres Passworts (nie das Passwort selbst), Ihr Tarif und der Stand Ihres Abonnements, das Datum der Anmeldung und des letzten Besuchs sowie Ihr Portfolio, so wie die Seite es sendet. Dazu ein Protokoll der Kontoereignisse — Registrierung, Anmeldung, Schreiben, Passwortwechsel — mit Datum und IP-Adresse, damit Sie die Frage »Wer war an meinem Konto?« beantworten können. Das Portfolio wird nicht geöffnet, nicht ausgewertet, nicht an Dritte gegeben und nicht verkauft; es ist derzeit nicht Ende-zu-Ende verschlüsselt, der Administrator des Servers könnte es technisch also lesen. Einmal täglich wird eine Sicherung angelegt und einige Tage aufbewahrt.<br><b>Cookie.</b> Nur eines, <i>pc_session</i>, gesetzt allein bei der Anmeldung. Es hält Ihre Sitzung, ist <i>HttpOnly</i> — die Skripte der Seite können es nicht lesen —, läuft ab und dient keiner Messung und keiner Werbung. Es gibt keine Reichweitenmessung, keinen Tracker und kein Banner zum Wegklicken.<br><b>Schriften.</b> Sie sind in die Seite eingebettet, ohne Aufruf eines Drittdienstes: Es wird keine IP-Adresse an Google Fonts oder Ähnliches übermittelt.<br><b>Börsen- und Kryptokurse.</b> Sie anzuzeigen heißt, den Kursanbieter aus Ihrem Browser aufzurufen; er sieht damit Ihre IP-Adresse und die abgefragten Symbole. Ihre Beträge und Ihre Identität erhält er nicht.<br><b>Kontaktformular und Abschluss.</b> Sie öffnen Ihr Mailprogramm mit einer vorbereiteten Nachricht. Ohne Ihr Zutun wird nichts gesendet, und der Inhalt läuft über keinen Zwischenserver.<br><b>Zahlung.</b> Sobald sie aktiv ist, wird sie von Stripe abgewickelt, das dann für die Kartendaten verantwortlich ist. Ihre Kartennummer läuft nie über diese Seite.<br><b>Ihre Rechte.</b> Der Export Ihres Portfolios in eine Datei ist im Bereich verfügbar, jederzeit und in allen drei Tarifen. Um das Protokoll Ihres Kontos einzusehen, Ihr Passwort zu ändern oder das Konto mit allem daran Hängenden löschen zu lassen, schreiben Sie an die Kontaktadresse: Das wird von Hand erledigt, innerhalb von 48 Stunden, und die Löschung ist endgültig. Die passenden Schaltflächen kommen in den Bereich; bis dahin ist diese Adresse der Weg."],
 
   'foot.taux':          ["Taux de change au {{d}}, fixés dans la page.","Exchange rates as of {{d}}, fixed in the page.","Tipos de cambio a {{d}}, fijados en la página.","Wechselkurse zum {{d}}, in der Seite hinterlegt."],
 
@@ -3757,7 +3839,7 @@ window.PC = (function(){
   'e.rel.quoi':         ["Le cours d'une action ou d'un ETF n'est pas une donn\u00e9e libre\u00a0: il faut une cl\u00e9 de compte, et une cl\u00e9 pos\u00e9e dans une page web est lisible par tous. Un relais la garde de son c\u00f4t\u00e9. Collez ici son adresse\u00a0; laissez vide si vous n'en avez pas.","The price of a share or an ETF is not free data: it takes an account key, and a key placed in a web page is readable by anyone. A relay keeps it on its own side. Paste its address here; leave empty if you have none.","La cotizaci\u00f3n de una acci\u00f3n o un ETF no es un dato libre: hace falta una clave de cuenta, y una clave puesta en una p\u00e1gina web la lee cualquiera. Un rel\u00e9 la guarda de su lado. Pegue aqu\u00ed su direcci\u00f3n; d\u00e9jelo vac\u00edo si no tiene."," Der Kurs einer Aktie oder eines ETF ist kein freies Datum: Es braucht einen Kontoschl\u00fcssel, und ein Schl\u00fcssel in einer Webseite ist f\u00fcr alle lesbar. Ein Relais beh\u00e4lt ihn auf seiner Seite. F\u00fcgen Sie hier seine Adresse ein; leer lassen, wenn Sie keines haben."],
   'e.rel.champ':        ["Adresse du relais","Relay address","Direcci\u00f3n del rel\u00e9","Adresse des Relais"],
   'e.rel.aide':         ["Vos lignes de bourse portent alors un code de la forme tw:CW8:XPAR \u2014 le symbole, puis la place de cotation.","Your market lines then carry a code shaped like tw:CW8:XPAR \u2014 the symbol, then the trading venue.","Sus l\u00edneas de bolsa llevan entonces un c\u00f3digo con la forma tw:CW8:XPAR: el s\u00edmbolo y luego el mercado.","Ihre B\u00f6rsenpositionen tragen dann einen Code der Form tw:CW8:XPAR \u2014 Symbol, dann Handelsplatz."],
-  'e.rel.ok':           ["Relais enregistr\u00e9. Les cours de bourse passeront par lui.","Relay saved. Market prices will go through it.","Rel\u00e9 guardado. Las cotizaciones pasar\u00e1n por \u00e9l.","Relais gespeichert. Die B\u00f6rsenkurse laufen dar\u00fcber."],
+  'e.rel.pose':         ["Relais enregistr\u00e9. Les cours de bourse passeront par lui.","Relay saved. Market prices will go through it.","Rel\u00e9 guardado. Las cotizaciones pasar\u00e1n por \u00e9l.","Relais gespeichert. Die B\u00f6rsenkurse laufen dar\u00fcber."],
   'e.rel.ote':          ["Relais retir\u00e9. Les cours de bourse redeviennent manuels.","Relay removed. Market prices go back to manual.","Rel\u00e9 retirado. Las cotizaciones vuelven a ser manuales.","Relais entfernt. B\u00f6rsenkurse sind wieder manuell."],
   'e.rel.err.adresse':  ["Cette adresse n'est pas appelable\u00a0: \u00ab\u00a0{{u}}\u00a0\u00bb ne d\u00e9signe aucun serveur. Collez l'adresse exacte de votre relais, celle qui s'ouvre dans un onglet.","That address cannot be called: \u00ab {{u}} \u00bb points to no server. Paste your relay's exact address, the one that opens in a tab.","Esa direcci\u00f3n no se puede llamar: \u00ab {{u}} \u00bb no designa ning\u00fan servidor. Pegue la direcci\u00f3n exacta de su rel\u00e9, la que se abre en una pesta\u00f1a.","Diese Adresse ist nicht aufrufbar: \u00bb{{u}}\u00ab bezeichnet keinen Server. F\u00fcgen Sie die genaue Adresse Ihres Relais ein, die sich in einem Tab \u00f6ffnet."],
   'e.rel.err':          ["Cette adresse n'est pas une adresse web compl\u00e8te (elle doit commencer par https://).","This is not a complete web address (it must start with https://).","Esta no es una direcci\u00f3n web completa (debe empezar por https://).","Das ist keine vollst\u00e4ndige Webadresse (sie muss mit https:// beginnen)."],
@@ -4315,7 +4397,7 @@ window.PC = (function(){
       <path style="--i:3" d="M6 168 C 92 165 154 158 226 150 C 304 141 378 132 438 120 C 490 110 526 96 554 84"/>
       <path style="--i:4" d="M6 136 C 88 128 146 114 214 100 C 294 84 368 78 432 58 C 484 42 524 26 554 14"/>
     </svg>
-    <p class="curtain__cap" data-i18n="curtain.cap">Minage · Trading · Actions · Bitcoin · Immobilier</p>
+    <p class="curtain__cap" data-i18n="curtain.cap">Livret · Assurance-vie · PEA · Immobilier · Bitcoin</p>
   </div>
 </div>
 
@@ -4399,11 +4481,11 @@ window.PC = (function(){
   </figure>
 
   <div class="wrap hero__in">
-    <h1><span class="w" style="--i:0"><i data-i18n="hero.w0">Cinq</i></span> <span class="w" style="--i:1"><i data-i18n="hero.w1">activités,</i></span> <span class="w" style="--i:2"><i data-i18n="hero.w2">un</i></span> <span class="w" style="--i:3"><i data-i18n="hero.w3">seul</i></span> <span class="w" style="--i:4"><i data-i18n="hero.w4">relevé.</i></span></h1>
+    <h1><span class="w" style="--i:0"><i data-i18n="hero.w0">Tout</i></span> <span class="w" style="--i:1"><i data-i18n="hero.w1">votre</i></span> <span class="w" style="--i:2"><i data-i18n="hero.w2">argent,</i></span> <span class="w" style="--i:3"><i data-i18n="hero.w3">enfin</i></span> <span class="w" style="--i:4"><i data-i18n="hero.w4">réuni.</i></span></h1>
 
     <p class="hero__lede anim" style="--d:.62s" data-i18n="hero.lede">
-      Minage, trading, actions, bitcoin et immobilier. Chaque poste a sa logique, son horizon et son risque —
-      cette page les met côte à côte, avec ce qui a été investi, ce que ça vaut aujourd'hui et ce que j'en retiens.
+      Livret, assurance-vie, PEA, immobilier, bitcoin. Vous saisissez, la page calcule&nbsp;:
+      ce que vous avez mis, ce que ça vaut aujourd'hui, et ce que ça vous rapporte.
     </p>
   </div>
 </section>
@@ -4447,6 +4529,46 @@ window.PC = (function(){
 </section>
 
 <!-- ===== APERÇU (démonstration sur l'accueil) ===== -->
+<!-- ============================================================
+     ACTUALITE
+     Placee haut, juste apres les chiffres : c'est ici que le
+     visiteur decide si l'outil le concerne. Deux parties — ce que
+     font les marches en ce moment, qui arrive du reseau, et ce que
+     vous en ecrivez, qui vient du fichier.
+
+     La partie marches se cache d'elle-meme si rien n'arrive. Une
+     devanture qui affiche « erreur de chargement » fait plus de mal
+     que pas de rubrique du tout.
+     ============================================================ -->
+<section class="section section--rule" id="actualite">
+  <div class="wrap">
+    <div class="section__head section__head--duo">
+      <div>
+        <p class="eyebrow" data-i18n="actu.eyebrow">Actualité</p>
+        <h2 data-i18n="actu.h2">Ce qui bouge aujourd'hui.</h2>
+      </div>
+      <p class="section__intro" data-i18n-html="actu.intro">Les cours arrivent en direct,
+        comme dans votre espace. C'est la même mécanique&nbsp;: ce que vous voyez ici,
+        vous le verrez sur vos propres lignes.</p>
+    </div>
+
+    <div class="actu-bloc" id="actu-marches" hidden>
+      <h3 class="actu-titre mono" data-i18n="actu.marches">Les marchés</h3>
+      <div class="actu-cours" id="actu-cours"></div>
+      <p class="actu-note mono" id="actu-note"></p>
+    </div>
+
+    <details class="replimob actu-journal" open>
+      <summary data-i18n="actu.journal">Le journal</summary>
+      <div class="actu-bloc">
+        <h3 class="actu-titre mono actu-titre--j" data-i18n="actu.journal">Le journal</h3>
+        <p class="actu-sous" data-i18n="actu.journal.d">Ce que je regarde, et pourquoi.</p>
+        <div class="actu-billets" id="actu-billets"></div>
+      </div>
+    </details>
+  </div>
+</section>
+
 <section class="section section--rule" id="apercu">
   <div class="wrap">
     <div class="section__head">
@@ -4580,14 +4702,14 @@ window.PC = (function(){
 
     <div class="offres reveal" style="--rd:.16s">
       <article class="offre">
-        <p class="offre__tag" data-i18n="off.1.tag">Pour commencer</p>
+        <p class="offre__tag" data-i18n="off.1.tag">L'essentiel</p>
         <h3 class="offre__nom" data-i18n="off.1.nom">Normal</h3>
         <p class="offre__prix"><span data-i18n="off.1.prix">5 €</span> <small data-i18n="off.1.prix.s">par mois</small></p>
         <ul class="offre__liste">
-          <li data-i18n="off.1.l1">Jusqu'à 10 actifs suivis</li>
-          <li data-i18n="off.1.l2">Répartition et performance globale</li>
+          <li data-i18n="off.1.l1">Jusqu'à 15 actifs suivis</li>
+          <li data-i18n="off.1.l2">Répartition, performance et cours en direct</li>
           <li data-i18n="off.1.l3">Historique sur 12 mois</li>
-          <li data-i18n="off.1.l4">Données gardées dans votre navigateur</li>
+          <li data-i18n="off.1.l4">Vos chiffres sur tous vos appareils</li>
         </ul>
         <div class="offre__actions">
           <button class="offre__ghost" type="button" data-souscrire="normal" data-i18n="off.souscrire">Souscrire</button>
@@ -4598,12 +4720,12 @@ window.PC = (function(){
       <article class="offre offre--phare">
         <p class="offre__tag" data-i18n="off.2.tag">Le plus utilisé</p>
         <h3 class="offre__nom" data-i18n="off.2.nom">Pro</h3>
-        <p class="offre__prix"><span data-i18n="off.2.prix">9 €</span> <small data-i18n="off.2.prix.s">par mois</small></p>
+        <p class="offre__prix"><span data-i18n="off.2.prix">9,99 €</span> <small data-i18n="off.2.prix.s">par mois</small></p>
         <ul class="offre__liste">
           <li data-i18n="off.2.l1">Actifs en nombre illimité, regroupés par catégorie</li>
           <li data-i18n-html="off.2.l2">Tous les indicateurs&nbsp;: concentration, liquidité, volatilité, meilleure et pire ligne</li>
           <li data-i18n="off.2.l3">Historique complet et comparaison entre périodes</li>
-          <li data-i18n="off.2.l4">Export des données en un fichier</li>
+          <li data-i18n-html="off.2.l4">Suivi des revenus : loyers, dividendes, intérêts</li>
         </ul>
         <div class="offre__actions">
           <button class="pill" type="button" data-souscrire="pro" data-i18n="off.souscrire">Souscrire</button>
@@ -4614,11 +4736,11 @@ window.PC = (function(){
       <article class="offre">
         <p class="offre__tag" data-i18n="off.3.tag">Tout compris</p>
         <h3 class="offre__nom" data-i18n="off.3.nom">Max</h3>
-        <p class="offre__prix"><span data-i18n="off.3.prix">24 €</span> <small data-i18n="off.3.prix.s">par mois</small></p>
+        <p class="offre__prix"><span data-i18n="off.3.prix">19 €</span> <small data-i18n="off.3.prix.s">par mois</small></p>
         <ul class="offre__liste">
           <li data-i18n="off.3.l1">Plusieurs portefeuilles séparés (perso, société, famille)</li>
-          <li data-i18n-html="off.3.l2">Suivi des revenus&nbsp;: loyers, dividendes, production de minage</li>
-          <li data-i18n="off.3.l3">Rapport mensuel prêt à imprimer</li>
+          <li data-i18n="off.3.l2">Rapport mensuel prêt à imprimer</li>
+          <li data-i18n="off.3.l3">Tout ce que contient Pro</li>
           <li data-i18n="off.3.l4">Sauvegarde et restauration de vos données</li>
         </ul>
         <div class="offre__actions">
@@ -4631,8 +4753,9 @@ window.PC = (function(){
     <p class="avertit reveal" style="--rd:.2s">
       <b data-i18n="off.avert.b">Ce que c'est, et ce que ce n'est pas.</b> <span data-i18n-html="off.avert">Un outil de suivi&nbsp;: vous entrez vos chiffres,
       il les met en forme et les met à jour. Il ne recommande aucun placement, ne passe aucun ordre
-      et ne donne aucun conseil en investissement. Les tarifs ci-dessus sont des exemples,
-      à fixer avant toute mise en ligne.</span>
+      et ne donne aucun conseil en investissement. <b>Souscrire</b> envoie une demande par e-mail et
+      l'accès est ouvert à la main sous 48&nbsp;h&nbsp;; le paiement en ligne arrive.
+      <b>Essayer la démonstration</b> ouvre l'espace tout de suite, sans compte et sans engagement.</span>
     </p>
   </div>
 </section>
@@ -8156,7 +8279,7 @@ window.PC = (function(){
       return false;
     }
     try { localStorage.setItem('pierrelco.relais.v1', u); } catch (e){}
-    dire(PC.t('e.rel.ok'));
+    dire(PC.t('e.rel.pose'));
     chercheCours(true).then(function(r){ dire(motCours(r)); });
     return true;
   }
@@ -12618,6 +12741,207 @@ window.PC = (function(){
     pousse:pousse,
     tire:tire
   };
+})();
+</script>
+
+<script>
+/* ============================================================
+   ACTUALITE
+   Deux sources, et elles n'ont rien a voir l'une avec l'autre.
+
+   Les cours viennent du reseau, par la meme mecanique que l'espace
+   client — `PC_MARCHES.dix()`. C'est volontaire : ce que le visiteur
+   voit bouger ici est exactement ce qu'il verra sur ses lignes.
+
+   Le journal vient du tableau ci-dessous. Pour ecrire un billet, on
+   ajoute une entree en haut de JOURNAL et on republie. Les quatre
+   langues sont facultatives : ce qui manque retombe sur le premier
+   texte, en francais.
+
+   Ce bloc ne casse jamais la page. Sans reseau, la partie cours
+   reste cachee et le journal s'affiche seul : une devanture qui
+   annonce « erreur de chargement » fait plus de mal que pas de
+   rubrique du tout.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  /* ------------------------------------------------------------
+     LE JOURNAL — a tenir a jour
+     Le plus recent en premier. La date est au format AAAA-MM-JJ ;
+     elle s'affiche dans la langue du lecteur.
+     ------------------------------------------------------------ */
+  const JOURNAL = [
+    {
+      d: '2026-09-24',
+      t: ["L'or au-dessus de ses records, et ce que ça change",
+          "Gold above its records, and what it changes",
+          "El oro por encima de sus récords, y qué cambia",
+          "Gold über seinen Rekorden, und was das ändert"],
+      p: ["Une ligne qui prend 30 % en un an déplace tout le reste du portefeuille sans qu'on ait rien fait. C'est le moment de regarder la concentration plutôt que la performance : si un poste pèse désormais le double des autres, le portefeuille n'est plus celui qu'on avait choisi.",
+          "A line that gains 30% in a year shifts everything else without anyone lifting a finger. That is the moment to look at concentration rather than performance: if one holding now weighs twice the others, the portfolio is no longer the one that was chosen.",
+          "Una partida que gana un 30 % en un año desplaza todo lo demás sin que nadie haga nada. Es el momento de mirar la concentración y no la rentabilidad: si una posición pesa ya el doble que las demás, la cartera ya no es la que se eligió.",
+          "Ein Posten, der in einem Jahr 30 % zulegt, verschiebt alles andere, ohne dass man etwas getan hätte. Dann lohnt der Blick auf die Klumpenbildung statt auf die Rendite: wiegt eine Position doppelt so viel wie die übrigen, ist es nicht mehr das gewählte Portfolio."]
+    },
+    {
+      d: '2026-09-12',
+      t: ["Le livret ne suit plus l'inflation : faut-il bouger ?",
+          "The savings account no longer keeps up with inflation: move it?",
+          "La cuenta de ahorro ya no sigue a la inflación: ¿hay que moverla?",
+          "Das Sparbuch hält mit der Teuerung nicht mehr Schritt: umschichten?"],
+      p: ["Pas forcément. La part qui dort n'est pas là pour rapporter, elle est là pour qu'on ne vende jamais le reste dans l'urgence. La question utile n'est pas son rendement, c'est sa taille : six mois de dépenses, et le reste peut travailler.",
+          "Not necessarily. The share that sits still is not there to earn, it is there so the rest is never sold in a hurry. The useful question is not its yield but its size: six months of spending, and the rest can work.",
+          "No necesariamente. La parte que duerme no está para rendir, está para que nunca se venda el resto con prisas. La pregunta útil no es su rentabilidad sino su tamaño: seis meses de gastos, y el resto puede trabajar.",
+          "Nicht unbedingt. Der ruhende Teil ist nicht da, um Ertrag zu bringen, sondern damit der Rest nie in Eile verkauft wird. Die nützliche Frage ist nicht seine Rendite, sondern seine Größe: sechs Monatsausgaben, und der Rest kann arbeiten."]
+    },
+    {
+      d: '2026-08-30',
+      t: ["Pourquoi je note la valeur le même jour chaque mois",
+          "Why I record the value on the same day each month",
+          "Por qué anoto el valor el mismo día cada mes",
+          "Warum ich den Wert jeden Monat am selben Tag festhalte"],
+      p: ["Relever quand ça monte et oublier quand ça baisse fabrique une courbe qui ment. Une date fixe, tenue sans exception, vaut mieux qu'un relevé précis pris quand l'envie vient. C'est la régularité qui rend l'historique lisible, pas la précision.",
+          "Recording when it rises and forgetting when it falls builds a curve that lies. A fixed date, kept without exception, beats a precise reading taken on a whim. Regularity is what makes a history readable, not precision.",
+          "Anotar cuando sube y olvidar cuando baja fabrica una curva que miente. Una fecha fija, mantenida sin excepción, vale más que una lectura precisa tomada cuando apetece. Es la regularidad lo que hace legible el historial, no la precisión.",
+          "Notiert man beim Steigen und vergisst beim Fallen, entsteht eine Kurve, die lügt. Ein fester Termin, ohne Ausnahme eingehalten, ist mehr wert als eine genaue Ablesung nach Laune. Lesbar wird ein Verlauf durch Regelmäßigkeit, nicht durch Genauigkeit."]
+    }
+  ];
+
+  const hote = document.getElementById('actualite');
+  if (!hote || !window.PC) return;
+
+  /* --- Le journal --- */
+  /* `PC.langue` existe, mais c'est une chaine figee au chargement :
+     s'en servir renverrait toujours la langue du depart. `PC.locale()`
+     est une fonction et suit les changements — on lui prend ses deux
+     premieres lettres. */
+  function langue(){
+    let l = 'fr';
+    try { l = String(PC.locale()).slice(0, 2).toLowerCase(); } catch (e){}
+    const i = ['fr','en','es','de'].indexOf(l);
+    return i === -1 ? 0 : i;
+  }
+  function dit(tableau){
+    if (!Array.isArray(tableau)) return String(tableau || '');
+    return tableau[langue()] != null ? tableau[langue()] : tableau[0];
+  }
+  function echap(t){
+    return String(t).replace(/[&<>"]/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+    });
+  }
+  function dateLongue(iso){
+    /* `T12:00:00` et non la date nue : sans heure, un fuseau a
+       l'ouest fait reculer l'affichage d'un jour. */
+    const d = new Date(iso + 'T12:00:00');
+    if (isNaN(d)) return iso;
+    try {
+      return d.toLocaleDateString(PC.locale ? PC.locale() : 'fr-FR',
+                                  {day:'numeric', month:'long', year:'numeric'});
+    } catch (e){ return iso; }
+  }
+  function poseJournal(){
+    const hote2 = document.getElementById('actu-billets');
+    if (!hote2) return;
+    hote2.innerHTML = JOURNAL.map(function(b){
+      return '<article class="billet">' +
+        '<div class="billet__d">' + echap(dateLongue(b.d)) + '</div>' +
+        '<h4 class="billet__t">' + echap(dit(b.t)) + '</h4>' +
+        '<p class="billet__p">' + echap(dit(b.p)) + '</p>' +
+      '</article>';
+    }).join('');
+  }
+
+  /* --- Les cours ---
+     Trois cryptos et deux metaux : ce qui arrive sans relais, donc
+     partout. Avec un relais configure, l'espace client en montre
+     bien davantage — c'est justement l'argument. */
+  const COMBIEN = 5;
+  let posees = false;
+
+  /* Les stablecoins sortent de la liste. Ils occupent les premieres
+     places au classement, et une vignette a « +0,0 % » sur une
+     rubrique intitulee « ce qui bouge aujourd'hui » ne dit rien —
+     c'est meme exactement leur raison d'etre. */
+  const STABLES = ['tether','usd-coin','dai','binance-usd','first-digital-usd',
+                   'true-usd','usds','ethena-usde','paypal-usd'];
+  function stable(x){
+    if (!x) return false;
+    if (STABLES.indexOf(x.id) !== -1) return true;
+    /* Le filet, pour celui qu'on n'a pas nomme : un cours colle a
+       l'unite de compte et qui ne bouge pas de la journee. */
+    const v = x.price_change_percentage_24h;
+    return typeof v === 'number' && Math.abs(v) < 0.15 &&
+           /usd|eur|dollar|euro/i.test(String(x.id) + ' ' + String(x.symbol));
+  }
+
+  function pourcent(v){
+    if (typeof v !== 'number' || !isFinite(v)) return '';
+    const signe = v > 0 ? '▲' : (v < 0 ? '▼' : '');
+    const dir = v > 0 ? 'up' : (v < 0 ? 'down' : 'flat');
+    return '<span class="delta" data-dir="' + dir + '">' +
+           '<span class="delta__glyph">' + signe + '</span>' +
+           PC.pourcent(v) + '</span>';
+  }
+
+  function poseCours(liste){
+    const hote2 = document.getElementById('actu-cours');
+    const bloc = document.getElementById('actu-marches');
+    if (!hote2 || !bloc) return;
+    const bonnes = (liste || []).filter(function(x){
+      return x && typeof x.current_price === 'number';
+    }).slice(0, COMBIEN);
+    if (!bonnes.length) return;            /* on ne montre rien plutot qu'un vide */
+
+    hote2.innerHTML = bonnes.map(function(x){
+      return '<div class="cours-case">' +
+        '<div class="cours-case__n">' + echap(x.name || '') + '</div>' +
+        '<div class="cours-case__t">' + echap(String(x.symbol || '').toUpperCase()) + '</div>' +
+        '<div class="cours-case__p">' + PC.argent(x.current_price,
+            x.current_price < 10 ? 2 : 0) + '</div>' +
+        pourcent(x.price_change_percentage_24h) +
+      '</div>';
+    }).join('');
+    const note = document.getElementById('actu-note');
+    if (note) note.textContent = PC.t('actu.24h');
+    bloc.hidden = false;
+    posees = true;
+  }
+
+  function chercheCours(){
+    if (posees || !window.PC_MARCHES || !PC_MARCHES.dix) return;
+    /* Les deux sources, et on prend ce qui revient. Si l'une echoue,
+       l'autre suffit ; si les deux echouent, le bloc reste cache. */
+    Promise.all([
+      PC_MARCHES.dix('crypto').catch(function(){ return []; }),
+      PC_MARCHES.dix('matieres').catch(function(){ return []; })
+    ]).then(function(r){
+      const crypto = (r[0] || []).filter(function(x){ return !stable(x); }).slice(0, 3);
+      const metaux = (r[1] || []).slice(0, 2);
+      poseCours(crypto.concat(metaux));
+    }).catch(function(){});
+  }
+
+  /* On ne va chercher les cours que lorsque la rubrique approche de
+     l'ecran : un appel reseau au chargement retarde le premier
+     rendu, et beaucoup de visiteurs ne descendront jamais jusqu'ici. */
+  function guette(){
+    if (!window.IntersectionObserver){ chercheCours(); return; }
+    const o = new IntersectionObserver(function(e){
+      if (e[0].isIntersecting){ o.disconnect(); chercheCours(); }
+    }, {rootMargin:'320px'});
+    o.observe(hote);
+  }
+
+  poseJournal();
+  guette();
+  /* Changer de langue ou de devise refait les deux : les dates, les
+     textes et les montants en dependent. */
+  if (PC.surChangement) PC.surChangement(function(){
+    poseJournal();
+    posees = false;
+    chercheCours();
+  });
 })();
 </script>
 
