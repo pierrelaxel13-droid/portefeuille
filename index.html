@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260925.2212";</script>
+<script>window.PC_VERSION = "260926.1147";</script>
 </head>
 <body>
 
@@ -747,8 +747,10 @@ body.flux-vif .cours__vif::before{
      Retirer une ligne de cette liste suffit a le faire revenir. */
   #apercu, #repartition, #activites, #performance,
   #notes, #citations, #faq,
-  /* « Gratuit, sans compte… » : la barre du bas le dit deja, et elle
-     ne quitte jamais l'ecran. */
+  /* Le rappel des tarifs sous les chiffres : les cartes de formules
+     le disent plus bas, et en entier. (Ce commentaire parlait de la
+     barre fixe du bas, retiree depuis, et d'une promesse de gratuite
+     qui n'existe plus.) */
   .preuve__note,
   /* Six lignes de prose avant trois prix : sur un telephone, le titre
      suffit et les cartes disent le reste. */
@@ -1317,6 +1319,13 @@ body.flux-vif .cours__vif::before{
   display:inline-flex; justify-content:center; width:100%; text-decoration:none;
   border:1px solid var(--rule-strong); color:var(--ink); border-radius:999px;
   font-size:14px; font-weight:600; padding:11px 20px;
+  /* Ces deux-la ne sont pas decoratives. Un <button> n'herite ni du
+     fond ni de la police : il prend ceux du navigateur. La regle
+     allait pour le <a> de la premiere carte et rendait le bouton de
+     Max blanc sur blanc — illisible, et personne ne le signale
+     puisqu'on croit voir un bouton vide. Meme cause que le noir sur
+     noir corrige ailleurs dans ce fichier. */
+  background:transparent; font-family:inherit; cursor:pointer;
   transition:border-color .2s, background .2s;
 }
 .offre__ghost:hover{border-color:var(--accent); background:var(--accent-soft);}
@@ -2704,6 +2713,83 @@ table.actifs tbody tr{cursor:pointer;}
   .reglage, .board__cmd .bascule-vue, .barre-pf select{font-size:16px;}
 }
 
+/* Quand un serveur repond, deux choses de la page deviennent
+   fausses et doivent disparaitre : la bande qui annonce une
+   « connexion simulee », et le formulaire de demonstration. Les
+   laisser serait mentir a celui qui vient de creer un compte. */
+:root[data-serveur="1"] .demo-bar,
+/* « un vrai abonnement se controle cote serveur » : c'est
+   exactement ce qui se passe des qu'il y en a un. */
+:root[data-serveur="1"] .note-demo{display:none;}
+
+/* La barre d'onglets navigue un espace ou l'on n'est pas encore
+   entre : tant que le portail est la, elle n'a rien a proposer — et
+   elle recouvrait le bouton « Entrer ». */
+body:not(.espace-ouvert) .barre-app{display:none;}
+
+/* ===== Le compte =====
+   Rien de neuf visuellement : on reprend les pieces de la page —
+   la carte du portail, les champs, les boutons. Un ecran de
+   connexion qui ne ressemble pas au reste inquiete. */
+.compte{display:flex; flex-direction:column; gap:16px;}
+.compte__onglets{display:flex; gap:6px; border-bottom:1px solid var(--rule);}
+.compte__ong{
+  background:none; border:none; cursor:pointer; font-family:inherit;
+  font-size:14.5px; font-weight:600; color:var(--ink-3);
+  padding:10px 14px 12px; border-bottom:2px solid transparent;
+  margin-bottom:-1px; transition:color .2s, border-color .2s;
+}
+.compte__ong:hover{color:var(--ink);}
+.compte__ong[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--accent);}
+.compte__ong:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.compte__etat{
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; line-height:1.55;
+  color:var(--ink-2); margin:0; text-wrap:pretty; min-height:1.2em;
+}
+.compte__etat[data-ton="ko"]{color:var(--loss);}
+.compte__etat[data-ton="ok"]{color:var(--gain);}
+.compte__etat[data-ton="attente"]{color:var(--ink-3);}
+
+/* Le bandeau : qui, et dans quel etat. Une ligne, pas une carte. */
+.compte-bandeau{
+  display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline;
+  margin:0 0 14px; font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+}
+.compte-bandeau__qui{color:var(--ink-2);}
+.compte-bandeau__abo{color:var(--ink-3);}
+.compte-bandeau__abo[data-etat="actif"]{color:var(--gain);}
+.compte-bandeau__abo[data-etat="suspendu"]{color:var(--loss);}
+.compte-bandeau__abo[data-etat="attente"]{color:var(--accent);}
+
+/* Le desaccord. Un vrai arret : on ne peut pas l'ignorer d'un clic
+   a cote, parce que continuer a saisir par-dessus ne ferait
+   qu'aggraver l'ecart. */
+.conflit{
+  position:fixed; inset:0; z-index:calc(var(--z-curtain) + 6);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+  background:rgba(19,19,16,.6);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  overflow:auto;
+}
+.conflit[hidden]{display:none;}
+.conflit__carte{
+  background:var(--paper); border:1px solid var(--rule); border-radius:18px;
+  width:min(100%,540px); padding:clamp(22px,3.4vw,34px);
+  display:flex; flex-direction:column; gap:14px;
+  box-shadow:0 40px 80px -40px var(--shadow);
+}
+.conflit__carte h2{font-size:clamp(22px,2.6vw,28px);}
+.conflit__d{color:var(--ink-2); font-size:15px; margin:0; text-wrap:pretty;}
+.conflit__choix{display:grid; gap:10px; margin-top:4px;}
+.conflit__choix .btn{
+  display:flex; flex-direction:column; align-items:flex-start; gap:4px;
+  text-align:left; padding:14px 18px; height:auto;
+}
+.conflit__choix .btn span{
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; opacity:.8;
+  font-weight:400;
+}
+
 @supports not (background: color-mix(in srgb, red 50%, transparent)){
   .site-head[data-pose="true"], body.vue-espace .site-head{background:var(--paper);}
   .site-head::before{background:linear-gradient(to bottom, var(--paper), transparent);}
@@ -2830,8 +2916,8 @@ window.PC = (function(){
      recherche en français pour un visiteur allemand ne servent
      personne. Le titre suit aussi la vue — l'onglet doit dire où on
      est quand on en a douze d'ouverts. */
-  'meta.titre':         ["Pierrel & Co — portefeuille : minage, trading, actions, bitcoin, immobilier","Pierrel & Co — portfolio: mining, trading, stocks, bitcoin, property","Pierrel & Co — cartera: minería, trading, acciones, bitcoin, inmobiliario","Pierrel & Co — Portfolio: Mining, Trading, Aktien, Bitcoin, Immobilien"],
-  'meta.desc':          ["Portefeuille réparti sur cinq activités : minage, trading, actions, bitcoin et immobilier. Répartition, performance et notes d'analyse, plus un espace pour suivre le vôtre.","A portfolio spread over five activities: mining, trading, stocks, bitcoin and property. Allocation, performance and analysis notes, plus a space to track your own.","Cartera repartida en cinco actividades: minería, trading, acciones, bitcoin e inmobiliario. Distribución, rentabilidad y notas de análisis, más un espacio para seguir la suya.","Ein Portfolio über fünf Anlagen: Mining, Trading, Aktien, Bitcoin und Immobilien. Aufteilung, Wertentwicklung und Analysenotizen — samt Bereich für Ihr eigenes."],
+  'meta.titre':         ["Pierrel & Co — portefeuille : épargne, actions, bitcoin, immobilier","Pierrel & Co — portfolio: savings, shares, bitcoin, property","Pierrel & Co — cartera: ahorro, acciones, bitcoin, inmuebles","Pierrel & Co — Portfolio: Ersparnisse, Aktien, Bitcoin, Immobilien"],
+  'meta.desc':          ["Un portefeuille réparti sur cinq postes : épargne, actions, bitcoin, immobilier et trading. Répartition, performance et notes d'analyse, plus un espace pour suivre le vôtre.","A portfolio spread over five lines: savings, shares, bitcoin, property and trading. Allocation, performance and analysis notes, plus a space to track your own.","Una cartera repartida en cinco partidas: ahorro, acciones, bitcoin, inmuebles y trading. Distribución, rentabilidad y notas de análisis, más un espacio para seguir la suya.","Ein Portfolio über fünf Posten: Ersparnisse, Aktien, Bitcoin, Immobilien und Trading. Aufteilung, Wertentwicklung und Analysenotizen — samt Bereich für Ihr eigenes."],
   'meta.titre.espace':  ["Espace client — Pierrel & Co","Client area — Pierrel & Co","Área de cliente — Pierrel & Co","Kundenbereich — Pierrel & Co"],
 
   /* --- Navigation --- */
@@ -2855,13 +2941,13 @@ window.PC = (function(){
   'hero.w2':            ["un","one","un","ein"],
   'hero.w3':            ["seul","single","solo","einziger"],
   'hero.w4':            ["relevé.","statement.","informe.","Auszug."],
-  'hero.lede':          ["Minage, trading, actions, bitcoin, immobilier. Ce qui a été investi, ce que ça vaut aujourd'hui, poste par poste.","Mining, trading, stocks, bitcoin, property. What went in, what it is worth today, holding by holding.","Minería, trading, acciones, bitcoin, inmobiliario. Lo invertido y lo que vale hoy, posición por posición.","Mining, Trading, Aktien, Bitcoin, Immobilien. Was investiert wurde und was es heute wert ist, Position für Position."],
+  'hero.lede':          ["Épargne, actions, bitcoin, immobilier, trading. Ce qui a été investi, ce que ça vaut aujourd'hui, poste par poste.","Savings, shares, bitcoin, property, trading. What was invested, what it is worth today, line by line.","Ahorro, acciones, bitcoin, inmuebles, trading. Lo invertido, lo que vale hoy, partida por partida.","Ersparnisse, Aktien, Bitcoin, Immobilien, Trading. Was investiert wurde, was es heute wert ist, Posten für Posten."],
   'hero.cta':           ["Connexion","Sign in","Conexi\u00f3n","Anmelden"],
   'hero.install':       ["Installer l'app","Install the app","Instalar la app","App installieren"],
   'hero.install.court': ["Installer","Install","Instalar","Installieren"],
   'hero.install.non':   ["Pour installer\u00a0: ouvrez cette page dans Chrome, ou touchez Partager puis \u00ab Sur l'\u00e9cran d'accueil \u00bb dans Safari.","To install: open this page in Chrome, or tap Share then \u201cAdd to Home Screen\u201d in Safari.","Para instalar: abra esta p\u00e1gina en Chrome, o toque Compartir y luego \u00abA\u00f1adir a pantalla de inicio\u00bb en Safari.","Zum Installieren: diese Seite in Chrome \u00f6ffnen, oder in Safari auf Teilen und dann \u201eZum Home-Bildschirm\u201c tippen."],
   'hero.oeuvre':        ["L'Ange d\u00e9chu, Alexandre Cabanel, 1847","The Fallen Angel, Alexandre Cabanel, 1847","El \u00e1ngel ca\u00eddo, Alexandre Cabanel, 1847","Der gefallene Engel, Alexandre Cabanel, 1847"],
-  'hero.gratuit':       ["Gratuit, sans compte, vos chiffres restent sur votre appareil.","Free, no account, your figures stay on your device.","Gratis, sin cuenta, sus cifras se quedan en su dispositivo.","Kostenlos, ohne Konto, Ihre Zahlen bleiben auf Ihrem Gerät."],
+  'hero.gratuit':       ["Trois formules, à partir de {{m:5}} par mois. La démonstration s'ouvre sans compte.","Three plans, from {{m:5}} a month. The demo opens without an account.","Tres planes, desde {{m:5}} al mes. La demostración se abre sin cuenta.","Drei Tarife, ab {{m:5}} im Monat. Die Demo öffnet ohne Konto."],
   'ct.envoye':          ["Message prêt à partir.","Message ready to go.","Mensaje listo para enviar.","Nachricht bereit."],
   'ct.envoye.d':        ["Ce formulaire est une démonstration&nbsp;: rien n'est envoyé pour le moment. Écrivez directement à {{m}} et je vous réponds sous quelques jours.","This form is a demonstration: nothing is sent for now. Write directly to {{m}} and I will reply within a few days.","Este formulario es una demostración: por ahora no se envía nada. Escriba directamente a {{m}} y le responderé en unos días.","Dieses Formular ist eine Demonstration: es wird vorerst nichts versendet. Schreiben Sie direkt an {{m}}, ich antworte binnen weniger Tage."],
   'ct.autre':           ["Écrire un autre message","Write another message","Escribir otro mensaje","Weitere Nachricht schreiben"],
@@ -2910,8 +2996,8 @@ window.PC = (function(){
   'notes.intro':        ["Les chiffres disent le résultat, pas la raison. Quelques notes sur ce qui a marché, ce qui a coûté plus cher que prévu, et ce que je surveille.","Figures give the result, not the reason. A few notes on what worked, what cost more than expected, and what I watch.","Las cifras dan el resultado, no el motivo. Algunas notas sobre lo que funcionó, lo que costó más de lo previsto y lo que vigilo.","Zahlen nennen das Ergebnis, nicht den Grund. Ein paar Notizen dazu, was funktioniert hat, was teurer war als gedacht und worauf ich achte."],
   'notes.1.k':          ["Concentration","Concentration","Concentración","Klumpenrisiko"],
   'notes.1.p':          ["L'immobilier représente à lui seul la moitié du portefeuille. C'est le poste le plus stable, mais aussi le moins liquide&nbsp;: en cas de besoin rapide, il ne répond pas.","Property alone accounts for half the portfolio. It is the steadiest holding, but also the least liquid: if cash is needed quickly, it does not answer.","El inmobiliario representa por sí solo la mitad de la cartera. Es la posición más estable, pero también la menos líquida: ante una necesidad urgente, no responde.","Immobilien machen allein die Hälfte des Portfolios aus. Es ist die stabilste Position, aber auch die illiquideste: wird schnell Geld gebraucht, antwortet sie nicht."],
-  'notes.2.k':          ["Coût réel du minage","The real cost of mining","Coste real de la minería","Die wahren Mining-Kosten"],
-  'notes.2.p':          ["Le rendement brut ne veut rien dire sans l'électricité et l'usure du matériel. C'est la ligne où l'écart entre performance affichée et performance nette est le plus large.","Gross yield means nothing without electricity and hardware wear. This is the line where the gap between headline and net performance is widest.","El rendimiento bruto no significa nada sin la electricidad y el desgaste del material. Es la línea donde la diferencia entre rentabilidad anunciada y neta es mayor.","Die Bruttorendite sagt ohne Strom und Verschleiß nichts aus. Hier klafft die Lücke zwischen ausgewiesener und tatsächlicher Rendite am weitesten."],
+  'notes.2.k':          ["Ce qui dort","What sits still","Lo que duerme","Was ruht"],
+  'notes.2.p':          ["Un quart du portefeuille ne rapporte presque rien, et c'est voulu&nbsp;: c'est ce qui permet de ne jamais vendre le reste dans l'urgence. La question n'est pas de savoir si cette part rapporte, mais si elle est de la bonne taille.","A quarter of the portfolio earns almost nothing, on purpose: it is what makes it possible never to sell the rest in a hurry. The question is not whether that share earns, but whether it is the right size.","Una cuarta parte de la cartera no rinde casi nada, y es a propósito: es lo que permite no vender nunca el resto con prisas. La cuestión no es si esa parte rinde, sino si tiene el tamaño adecuado.","Ein Viertel des Portfolios bringt fast nichts — mit Absicht: Es sorgt dafür, dass der Rest nie in Eile verkauft werden muss. Die Frage ist nicht, ob dieser Teil etwas bringt, sondern ob er die richtige Größe hat."],
   'notes.3.k':          ["Volatilité assumée","Volatility taken on purpose","Volatilidad asumida","Bewusste Volatilität"],
   'notes.3.p':          ["Bitcoin et trading sont les deux postes qui bougent le plus. Ils sont dimensionnés pour pouvoir perdre la moitié de leur valeur sans que ça remette en cause le reste.","Bitcoin and trading are the two holdings that move the most. They are sized so that losing half their value would not put the rest in question.","Bitcoin y trading son las dos posiciones que más se mueven. Están dimensionadas para poder perder la mitad de su valor sin poner en cuestión el resto.","Bitcoin und Trading bewegen sich am stärksten. Sie sind so bemessen, dass ein Wertverlust von 50 % den Rest nicht in Frage stellt."],
   'notes.4.k':          ["Ce que je surveille","What I watch","Lo que vigilo","Worauf ich achte"],
@@ -2921,36 +3007,36 @@ window.PC = (function(){
   'off.eyebrow':          ["Formules","Plans","Planes","Tarife"],
   'off.h2':             ["Suivez votre portefeuille.","Track your portfolio.","Siga su cartera.","Behalten Sie Ihr Portfolio im Blick."],
   'off.intro':          ["Un espace où vous saisissez vos actifs — comptes, crypto, immobilier, ce que vous voulez — et où tout se recalcule&nbsp;: répartition, performance, concentration, poids de chaque ligne. Vous gardez la main sur les chiffres, l'outil ne fait que les mettre en forme.","A space where you enter your assets — accounts, crypto, property, whatever you hold — and everything recalculates: allocation, performance, concentration, the weight of each line. You keep control of the figures; the tool only lays them out.","Un espacio donde introduce sus activos — cuentas, cripto, inmuebles, lo que quiera — y todo se recalcula: distribución, rentabilidad, concentración, peso de cada línea. Usted controla las cifras; la herramienta solo las presenta.","Ein Bereich, in dem Sie Ihre Werte eintragen — Konten, Krypto, Immobilien, was immer Sie halten — und alles neu gerechnet wird: Aufteilung, Wertentwicklung, Konzentration, Gewicht jeder Position. Die Zahlen bleiben Ihre; das Werkzeug bringt sie nur in Form."],
-  'off.1.tag':          ["Pour commencer","To get started","Para empezar","Zum Einstieg"],
+  'off.1.tag':          ["L'essentiel","The essentials","Lo esencial","Das Wesentliche"],
   'off.1.nom':          ["Normal","Normal","Normal","Normal"],
-  'off.1.prix':         ["Gratuit","Free","Gratis","Kostenlos"],
-  'off.1.prix.s':       ["sans limite de durée","with no time limit","sin límite de tiempo","ohne Zeitbegrenzung"],
-  'off.1.l1':           ["Jusqu'à 10 actifs suivis","Up to 10 assets tracked","Hasta 10 activos seguidos","Bis zu 10 Werte im Blick"],
-  'off.1.l2':           ["Répartition et performance globale","Allocation and overall performance","Distribución y rentabilidad global","Aufteilung und Gesamtentwicklung"],
-  'off.1.l3':           ["Historique sur 12 mois","12 months of history","Historial de 12 meses","Verlauf über 12 Monate"],
-  'off.1.l4':           ["Données gardées dans votre navigateur","Data kept in your browser","Datos guardados en su navegador","Daten bleiben in Ihrem Browser"],
-  'off.1.cta':          ["Ouvrir l'espace","Open the space","Abrir el espacio","Bereich öffnen"],
-  'off.2.tag':          ["Le plus utilisé","Most popular","El más usado","Am meisten genutzt"],
+  'off.1.prix':         ["{{m:5}}","{{m:5}}","{{m:5}}","{{m:5}}"],
+  'off.1.prix.s':       ["par mois","per month","al mes","pro Monat"],
+  'off.1.l1':           ["Jusqu'à 15 actifs suivis","Up to 15 tracked assets","Hasta 15 activos seguidos","Bis zu 15 verfolgte Werte"],
+  'off.1.l2':           ["Répartition, performance et cours en direct","Allocation, performance and live prices","Distribución, rendimiento y cotizaciones en directo","Aufteilung, Wertentwicklung und Live-Kurse"],
+  'off.1.l3':           ["Historique sur 12 mois","Twelve months of history","Historial de 12 meses","Verlauf über 12 Monate"],
+  'off.1.l4':           ["Vos chiffres sur tous vos appareils","Your figures on every device","Sus cifras en todos sus dispositivos","Ihre Zahlen auf allen Geräten"],
+  'off.1.cta':          ["Prendre Normal","Choose Normal","Elegir Normal","Normal wählen"],
+  'off.2.tag':          ["Le plus utilisé","Most popular","El más elegido","Am meisten genutzt"],
   'off.2.nom':          ["Pro","Pro","Pro","Pro"],
-  'off.2.prix':         ["{{m:9}}","{{m:9}}","{{m:9}}","{{m:9}}"],
+  'off.2.prix':         ["{{m:9.99}}","{{m:9.99}}","{{m:9.99}}","{{m:9.99}}"],
   'off.2.prix.s':       ["par mois","per month","al mes","pro Monat"],
   'off.2.l1':           ["Actifs en nombre illimité, regroupés par catégorie","Unlimited assets, grouped by category","Activos ilimitados, agrupados por categoría","Unbegrenzt viele Werte, nach Kategorie gruppiert"],
   'off.2.l2':           ["Tous les indicateurs&nbsp;: concentration, liquidité, volatilité, meilleure et pire ligne","Every indicator: concentration, liquidity, volatility, best and worst line","Todos los indicadores: concentración, liquidez, volatilidad, mejor y peor línea","Alle Kennzahlen: Konzentration, Liquidität, Volatilität, beste und schwächste Position"],
-  'off.2.l3':           ["Historique complet et comparaison entre périodes","Full history and period-to-period comparison","Historial completo y comparación entre periodos","Vollständiger Verlauf und Periodenvergleich"],
-  'off.2.l4':           ["Export des données en un fichier","Data export to a single file","Exportación de los datos a un archivo","Datenexport in eine Datei"],
-  'off.2.cta':          ["Essayer Pro","Try Pro","Probar Pro","Pro testen"],
-  'off.3.tag':          ["Tout compris","All included","Todo incluido","Alles inklusive"],
+  'off.2.l3':           ["Historique complet et comparaison entre périodes","Full history and period-to-period comparison","Historial completo y comparación entre periodos","Vollständiger Verlauf und Vergleich zwischen Zeiträumen"],
+  'off.2.l4':           ["Suivi des revenus\u00a0: loyers, dividendes, intérêts","Income tracking: rent, dividends, interest","Seguimiento de ingresos: alquileres, dividendos, intereses","Ertragsverfolgung: Mieten, Dividenden, Zinsen"],
+  'off.2.cta':          ["Prendre Pro","Choose Pro","Elegir Pro","Pro wählen"],
+  'off.3.tag':          ["Tout compris","Everything included","Todo incluido","Alles inbegriffen"],
   'off.3.nom':          ["Max","Max","Max","Max"],
-  'off.3.prix':         ["{{m:24}}","{{m:24}}","{{m:24}}","{{m:24}}"],
+  'off.3.prix':         ["{{m:19}}","{{m:19}}","{{m:19}}","{{m:19}}"],
   'off.3.prix.s':       ["par mois","per month","al mes","pro Monat"],
   'off.3.l1':           ["Plusieurs portefeuilles séparés (perso, société, famille)","Several separate portfolios (personal, company, family)","Varias carteras separadas (personal, empresa, familia)","Mehrere getrennte Portfolios (privat, Firma, Familie)"],
-  'off.3.l2':           ["Suivi des revenus&nbsp;: loyers, dividendes, production de minage","Income tracking: rent, dividends, mining output","Seguimiento de ingresos: alquileres, dividendos, producción de minería","Ertragsverfolgung: Mieten, Dividenden, Mining-Ertrag"],
-  'off.3.l3':           ["Rapport mensuel prêt à imprimer","Print-ready monthly report","Informe mensual listo para imprimir","Druckfertiger Monatsbericht"],
+  'off.3.l2':           ["Rapport mensuel prêt à imprimer","Monthly report ready to print","Informe mensual listo para imprimir","Monatsbericht, druckfertig"],
+  'off.3.l3':           ["Tout ce que contient Pro","Everything Pro includes","Todo lo que incluye Pro","Alles, was Pro enthält"],
   'off.3.l4':           ["Sauvegarde et restauration de vos données","Backup and restore of your data","Copia de seguridad y restauración de sus datos","Sicherung und Wiederherstellung Ihrer Daten"],
-  'off.3.cta':          ["Découvrir Max","Discover Max","Descubrir Max","Max entdecken"],
+  'off.3.cta':          ["Prendre Max","Choose Max","Elegir Max","Max wählen"],
   'off.souscrire':      ["Souscrire","Subscribe","Suscribirse","Abonnieren"],
   'off.essayer':        ["Essayer la démonstration","Try the demo","Probar la demostración","Demo ausprobieren"],
-  'off.gratuit.cta':    ["Ouvrir l'espace","Open the space","Abrir el espacio","Bereich öffnen"],
+  'off.gratuit.cta':    ["Prendre Normal","Choose Normal","Elegir Normal","Normal wählen"],
   'off.mail.sujet':     ["Abonnement {{f}} — Pierrel & Co","{{f}} subscription — Pierrel & Co","Suscripción {{f}} — Pierrel & Co","Abonnement {{f}} — Pierrel & Co"],
   'off.mail.corps':     ["Bonjour,\n\nJe souhaite souscrire à la formule {{f}} ({{p}} par mois).\n\nNom :\nSociété (facultatif) :\nTéléphone (facultatif) :\n\nMerci de me dire comment procéder.\n","Hello,\n\nI would like to subscribe to the {{f}} plan ({{p}} per month).\n\nName:\nCompany (optional):\nPhone (optional):\n\nPlease let me know how to proceed.\n","Hola:\n\nDeseo suscribirme al plan {{f}} ({{p}} al mes).\n\nNombre:\nEmpresa (opcional):\nTeléfono (opcional):\n\nDíganme cómo proceder, por favor.\n","Guten Tag,\n\nich möchte den Tarif {{f}} ({{p}} pro Monat) abonnieren.\n\nName:\nUnternehmen (optional):\nTelefon (optional):\n\nBitte teilen Sie mir mit, wie ich vorgehen soll.\n"],
   'off.mail.ouvert':    ["Votre logiciel de messagerie s'est ouvert avec la demande prête à envoyer. S'il ne s'est rien passé, écrivez directement à {{m}}.","Your mail app should have opened with the request ready to send. If nothing happened, write directly to {{m}}.","Su programa de correo debería haberse abierto con la solicitud lista para enviar. Si no ha ocurrido nada, escriba directamente a {{m}}.","Ihr E-Mail-Programm sollte sich mit der fertigen Anfrage geöffnet haben. Falls nichts passiert ist, schreiben Sie direkt an {{m}}."],
@@ -3003,8 +3089,8 @@ window.PC = (function(){
   'faq.2.a':            ["Vos chiffres ne suivent pas : ils vivent dans le navigateur où vous les avez saisis. Les formules Pro et Max permettent d'exporter le portefeuille en un fichier et de le réimporter ailleurs. La synchronisation automatique entre appareils demandera un compte&nbsp;: elle n'existe pas encore.","They do not follow you: they live in the browser where you entered them. The Pro and Max plans let you export the portfolio to a file and import it elsewhere. Automatic syncing between devices will require an account — it does not exist yet.","No le siguen: viven en el navegador donde las introdujo. Los planes Pro y Max permiten exportar la cartera a un archivo e importarla en otro sitio. La sincronización automática entre dispositivos requerirá una cuenta: todavía no existe.","Sie folgen Ihnen nicht: sie liegen in dem Browser, in dem Sie sie eingetragen haben. Die Tarife Pro und Max erlauben den Export in eine Datei und den Import anderswo. Die automatische Synchronisierung zwischen Geräten wird ein Konto erfordern — es gibt sie noch nicht."],
   'faq.3.q':            ["Est-ce un conseil en investissement ?","Is this investment advice?","¿Esto es asesoramiento de inversión?","Ist das eine Anlageberatung?"],
   'faq.3.a':            ["Non. C'est un outil de mise en forme&nbsp;: vous entrez vos chiffres, il calcule des répartitions et des pourcentages. Il ne recommande aucun placement, ne passe aucun ordre, et Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers. Les chiffres présentés sur cette page sont des exemples.","No. It is a formatting tool: you enter your figures, it works out allocations and percentages. It recommends no investment, places no order, and Pierrel &amp; Co is not authorised as a financial investment adviser. The figures shown on this page are examples.","No. Es una herramienta de presentación: usted introduce sus cifras y calcula distribuciones y porcentajes. No recomienda ninguna inversión, no ejecuta ninguna orden, y Pierrel &amp; Co no está autorizado como asesor financiero. Las cifras de esta página son ejemplos.","Nein. Es ist ein Aufbereitungswerkzeug: Sie tragen Ihre Zahlen ein, es berechnet Aufteilungen und Prozentsätze. Es empfiehlt keine Anlage, erteilt keine Order, und Pierrel &amp; Co ist nicht als Finanzanlagenvermittler zugelassen. Die Zahlen auf dieser Seite sind Beispiele."],
-  'faq.4.q':            ["Que vaut vraiment la formule gratuite ?","What does the free plan actually give me?","¿Qué ofrece realmente el plan gratuito?","Was bietet der kostenlose Tarif wirklich?"],
-  'faq.4.a':            ["Jusqu'à dix actifs suivis, la répartition, la performance globale et douze mois d'historique. Sans limite de durée et sans carte bancaire. C'est assez pour un portefeuille personnel ordinaire&nbsp;; au-delà de dix lignes ou pour tous les indicateurs, il faut passer à Pro.","Up to ten assets tracked, the allocation, the overall performance and twelve months of history. No time limit and no card required. That covers an ordinary personal portfolio; past ten lines, or for the full set of indicators, you need Pro.","Hasta diez activos seguidos, la distribución, la rentabilidad global y doce meses de historial. Sin límite de tiempo y sin tarjeta. Basta para una cartera personal corriente; más allá de diez líneas, o para todos los indicadores, hace falta Pro.","Bis zu zehn erfasste Werte, die Aufteilung, die Gesamtentwicklung und zwölf Monate Verlauf. Ohne Zeitlimit und ohne Karte. Das reicht für ein übliches Privatportfolio; ab zehn Positionen oder für alle Kennzahlen braucht es Pro."],
+  'faq.4.q':            ["Je peux essayer avant de payer ?","Can I try before paying?","¿Puedo probar antes de pagar?","Kann ich vor dem Bezahlen testen?"],
+  'faq.4.a':            ["Oui. La démonstration ouvre l'espace tout de suite, avec un portefeuille rempli et son historique&nbsp;: vous voyez exactement ce que l'outil fait, sans compte, sans carte bancaire et sans rien saisir. Elle tourne dans votre navigateur et ne garde rien. Ensuite seulement, si cela vous sert, vous prenez une formule.","Yes. The demo opens the space right away, with a filled portfolio and its history: you see exactly what the tool does, with no account, no card and nothing to enter. It runs in your browser and keeps nothing. Only then, if it is useful to you, do you choose a plan.","Sí. La demostración abre el espacio de inmediato, con una cartera completa y su historial: verá exactamente lo que hace la herramienta, sin cuenta, sin tarjeta y sin introducir nada. Funciona en su navegador y no guarda nada. Solo después, si le sirve, elige un plan.","Ja. Die Demo öffnet den Bereich sofort, mit einem gefüllten Portfolio samt Verlauf: Sie sehen genau, was das Werkzeug tut — ohne Konto, ohne Karte und ohne Eingaben. Sie läuft in Ihrem Browser und speichert nichts. Erst danach wählen Sie einen Tarif, wenn es Ihnen nützt."],
   'faq.5.q':            ["Puis-je résilier quand je veux ?","Can I cancel whenever I want?","¿Puedo cancelar cuando quiera?","Kann ich jederzeit kündigen?"],
   'faq.5.a':            ["Oui, sans préavis ni frais. L'abonnement s'arrête à la fin du mois en cours et vos données restent dans votre navigateur — elles ne dépendent pas de la formule. Vous retombez simplement sur les limites de la formule gratuite.","Yes, with no notice and no fee. The subscription stops at the end of the current month and your data stays in your browser — it does not depend on the plan. You simply fall back to the free plan's limits.","Sí, sin preaviso ni comisión. La suscripción termina al final del mes en curso y sus datos siguen en su navegador: no dependen del plan. Simplemente vuelve a los límites del plan gratuito.","Ja, ohne Frist und ohne Gebühr. Das Abonnement endet zum Monatsende, und Ihre Daten bleiben im Browser — sie hängen nicht vom Tarif ab. Es gelten dann wieder die Grenzen des kostenlosen Tarifs."],
   'faq.6.q':            ["Y a-t-il des cookies ou du pistage ?","Are there cookies or tracking?","¿Hay cookies o rastreo?","Gibt es Cookies oder Tracking?"],
@@ -3114,27 +3200,27 @@ window.PC = (function(){
   'ui.saisie.copiend':  ["Copie indisponible ici.","Copy unavailable here.","Copia no disponible aquí.","Kopieren hier nicht verfügbar."],
 
   /* --- Activités : minage --- */
-  'a.minage.nom':       ["Minage","Mining","Minería","Mining"],
-  'a.minage.op':        ["Go Mining","Go Mining","Go Mining","Go Mining"],
-  'a.minage.depuis':    ["mars 2024","March 2024","marzo de 2024","März 2024"],
-  'a.minage.texte':     ["Puissance de calcul louée plutôt que machines détenues : pas de matériel à gérer, pas de bruit ni de chaleur à la maison, mais un rendement qui dépend directement du cours et de la difficulté du réseau.","Hash power rented rather than machines owned: no hardware to look after, no noise or heat at home, but a return tied directly to the price and to network difficulty.","Potencia de cálculo alquilada en lugar de máquinas propias: sin material que gestionar, sin ruido ni calor en casa, pero con un rendimiento que depende directamente de la cotización y de la dificultad de la red.","Gemietete Rechenleistung statt eigener Maschinen: keine Hardware zu betreuen, kein Lärm und keine Wärme zu Hause — aber eine Rendite, die unmittelbar am Kurs und an der Netzwerkschwierigkeit hängt."],
-  'a.minage.d1.k':      ["Puissance souscrite","Contracted hash rate","Potencia contratada","Gebuchte Hashrate"],
-  'a.minage.d1.v':      ["42 TH/s","42 TH/s","42 TH/s","42 TH/s"],
-  'a.minage.d2.k':      ["Type de contrat","Contract type","Tipo de contrato","Vertragsart"],
-  'a.minage.d2.v':      ["Location, 24 mois","Rental, 24 months","Alquiler, 24 meses","Miete, 24 Monate"],
-  'a.minage.d3.k':      ["Électricité","Electricity","Electricidad","Strom"],
-  'a.minage.d3.v':      ["Incluse dans le contrat","Included in the contract","Incluida en el contrato","Im Vertrag enthalten"],
-  'a.minage.d4.k':      ["Production mensuelle","Monthly output","Producción mensual","Monatlicher Ertrag"],
-  'a.minage.d4.v':      ["≈ 0,0041 BTC","≈ 0.0041 BTC","≈ 0,0041 BTC","≈ 0,0041 BTC"],
-  'a.minage.d5.k':      ["Frais de service","Service fee","Comisión de servicio","Servicegebühr"],
-  'a.minage.d5.v':      ["5 % de la production","5% of output","5 % de la producción","5 % des Ertrags"],
-  'a.minage.d6.k':      ["Échéance du contrat","Contract expiry","Vencimiento del contrato","Vertragsende"],
-  'a.minage.d6.v':      ["mars 2026","March 2026","marzo de 2026","März 2026"],
-  'a.minage.part':      ["Production mensuelle","Monthly output","Producción mensual","Monatlicher Ertrag"],
-  'a.minage.part.a':    ["Revenu net","Net revenue","Ingreso neto","Nettoertrag"],
-  'a.minage.part.b':    ["Frais et service","Fees and service","Comisiones y servicio","Gebühren und Service"],
-  'a.minage.risque':    ["Le rendement brut ne veut rien dire ici : ce qui compte, c'est ce qui reste une fois l'électricité et les frais déduits. Si la difficulté du réseau monte plus vite que le cours, la production fond sans que le contrat ne change.","Gross yield means nothing here: what counts is what remains once electricity and fees are taken out. If network difficulty climbs faster than the price, output melts away while the contract stays the same.","El rendimiento bruto no significa nada aquí: lo que cuenta es lo que queda una vez descontados electricidad y comisiones. Si la dificultad de la red sube más rápido que la cotización, la producción se derrite sin que el contrato cambie.","Die Bruttorendite sagt hier nichts: entscheidend ist, was nach Strom und Gebühren übrig bleibt. Steigt die Netzwerkschwierigkeit schneller als der Kurs, schmilzt der Ertrag, ohne dass sich am Vertrag etwas ändert."],
-  'a.minage.strat':     ["Ne pas renouveler automatiquement à l'échéance. Le contrat se juge au moment de le reconduire, pas pendant.","Do not roll the contract over automatically. It gets judged at renewal time, not during.","No renovar automáticamente al vencimiento. El contrato se juzga en el momento de renovarlo, no durante.","Den Vertrag nicht automatisch verlängern. Beurteilt wird er bei der Verlängerung, nicht währenddessen."],
+  'a.minage.nom':       ["Épargne","Savings","Ahorro","Ersparnisse"],
+  'a.minage.op':        ["Livret A et assurance-vie","Savings account and life insurance","Cuenta de ahorro y seguro de vida","Sparbuch und Lebensversicherung"],
+  'a.minage.depuis':    ["janvier 2019","January 2019","enero de 2019","Januar 2019"],
+  'a.minage.texte':     ["Le socle : ce qui ne bouge pas et qui reste disponible. Le livret sert de réserve de précaution, l'assurance-vie de réserve longue. Ensemble, ils amortissent le reste du portefeuille quand il tangue.","The base: what does not move and stays available. The savings account is the rainy-day reserve, the life insurance the long one. Together they cushion the rest of the portfolio when it lurches.","La base: lo que no se mueve y sigue disponible. La cuenta de ahorro es la reserva de precaución, el seguro de vida la reserva larga. Juntos amortiguan el resto de la cartera cuando se tambalea.","Das Fundament: was sich nicht bewegt und verfügbar bleibt. Das Sparbuch ist die Notreserve, die Lebensversicherung die lange. Zusammen dämpfen sie den Rest des Portfolios, wenn es schwankt."],
+  'a.minage.d1.k':      ["Livret A","Savings account","Cuenta de ahorro","Sparbuch"],
+  'a.minage.d1.v':      ["12 000 €","12,000 €","12 000 €","12.000 €"],
+  'a.minage.d2.k':      ["Assurance-vie","Life insurance","Seguro de vida","Lebensversicherung"],
+  'a.minage.d2.v':      ["13 180 €","13,180 €","13 180 €","13.180 €"],
+  'a.minage.d3.k':      ["Taux du livret","Savings rate","Tipo de la cuenta","Sparbuchzins"],
+  'a.minage.d3.v':      ["1,7 % net","1.7% net","1,7 % neto","1,7 % netto"],
+  'a.minage.d4.k':      ["Support principal","Main holding","Soporte principal","Hauptanlage"],
+  'a.minage.d4.v':      ["Fonds en euros","Euro fund","Fondo en euros","Euro-Fonds"],
+  'a.minage.d5.k':      ["Frais de gestion","Management fee","Gastos de gestión","Verwaltungsgebühr"],
+  'a.minage.d5.v':      ["0,6 % par an","0.6% a year","0,6 % al año","0,6 % pro Jahr"],
+  'a.minage.d6.k':      ["Disponibilité","Availability","Disponibilidad","Verfügbarkeit"],
+  'a.minage.d6.v':      ["Sous 72 heures","Within 72 hours","En 72 horas","Binnen 72 Stunden"],
+  'a.minage.part':      ["Répartition","Split","Reparto","Aufteilung"],
+  'a.minage.part.a':    ["Livret A","Savings account","Cuenta de ahorro","Sparbuch"],
+  'a.minage.part.b':    ["Assurance-vie","Life insurance","Seguro de vida","Lebensversicherung"],
+  'a.minage.risque':    ["Le risque n'est pas de perdre, il est de ne pas suivre. À 1,7 % quand les prix montent de 2 %, le capital est intact et le pouvoir d'achat recule. C'est le prix de la tranquillité, et il faut le payer en connaissance de cause.","The risk here is not losing, it is falling behind. At 1.7% while prices rise 2%, the capital is intact and the purchasing power shrinks. That is the price of calm, and it should be paid knowingly.","El riesgo aquí no es perder, es quedarse atrás. Al 1,7 % mientras los precios suben un 2 %, el capital queda intacto y el poder adquisitivo baja. Ese es el precio de la tranquilidad, y conviene pagarlo a sabiendas.","Das Risiko ist hier nicht der Verlust, sondern der Rückstand. Bei 1,7 % und 2 % Teuerung bleibt das Kapital unversehrt und die Kaufkraft sinkt. Das ist der Preis der Ruhe — man sollte ihn bewusst zahlen."],
+  'a.minage.strat':     ["Garder de quoi tenir six mois sur le livret, et ne pas y toucher pour saisir une occasion ailleurs. C'est la part qui permet à tout le reste de ne pas être vendue au mauvais moment.","Keep six months of living on the savings account, and do not dip into it to seize an opportunity elsewhere. It is the part that lets everything else not be sold at the wrong moment.","Mantener seis meses de gastos en la cuenta de ahorro y no tocarla para aprovechar una oportunidad. Es la parte que permite que todo lo demás no se venda en mal momento.","Sechs Monatsausgaben auf dem Sparbuch halten und nicht antasten, um anderswo eine Gelegenheit zu ergreifen. Dieser Teil sorgt dafür, dass alles andere nicht zum falschen Zeitpunkt verkauft wird."],
 
   /* --- Activités : trading --- */
   'a.trading.nom':      ["Trading","Trading","Trading","Trading"],
@@ -3268,6 +3354,39 @@ window.PC = (function(){
   'e.exporter':         ["Exporter","Export","Exportar","Exportieren"],
   'e.importer':         ["Importer","Import","Importar","Importieren"],
   'e.vider':            ["Tout effacer","Erase everything","Borrar todo","Alles löschen"],
+  /* --- Le compte, quand un serveur repond --- */
+  'c.onglet.entrer':    ["Se connecter","Sign in","Iniciar sesión","Anmelden"],
+  'c.onglet.creer':     ["Créer un compte","Create an account","Crear una cuenta","Konto erstellen"],
+  'c.entrer':           ["Entrer","Enter","Entrar","Eintreten"],
+  'c.creer':            ["Créer le compte","Create the account","Crear la cuenta","Konto anlegen"],
+  'c.patiente':         ["Un instant\u2026","One moment\u2026","Un momento\u2026","Einen Moment\u2026"],
+  'c.mdp.note':         ["Douze caractères au moins. Une phrase vaut mieux qu'un mot compliqué.","Twelve characters at least. A sentence beats a complicated word.","Doce caracteres como mínimo. Una frase vale más que una palabra complicada.","Mindestens zwölf Zeichen. Ein Satz ist besser als ein kompliziertes Wort."],
+  'c.vrai.b':           ["Vos chiffres.","Your figures.","Sus cifras.","Ihre Zahlen."],
+  'c.vrai':             ["Ils sont rangés sur ce serveur, et vous les retrouvez d'un appareil à l'autre. Vous pouvez les effacer quand vous voulez, depuis le menu de l'espace.","They are kept on this server, and you find them again from any device. You can erase them whenever you like, from the space's menu.","Se guardan en este servidor y los recupera desde cualquier dispositivo. Puede borrarlos cuando quiera, desde el menú del espacio.","Sie liegen auf diesem Server und stehen auf jedem Gerät bereit. Sie können sie jederzeit über das Menü des Bereichs löschen."],
+  'c.enregistre':       ["Enregistré.","Saved.","Guardado.","Gespeichert."],
+  'c.hors.ligne':       ["Hors ligne. Vos chiffres sont sur cet appareil, l'envoi se fera au retour du réseau.","Offline. Your figures are on this device; they will be sent when the network returns.","Sin conexión. Sus cifras están en este dispositivo; se enviarán cuando vuelva la red.","Offline. Ihre Zahlen liegen auf diesem Gerät und werden gesendet, sobald das Netz zurück ist."],
+  'c.err.mail':         ["Cette adresse n'a pas l'air d'en être une.","That does not look like an address.","Esa dirección no parece válida.","Das sieht nicht nach einer Adresse aus."],
+  'c.err.court':        ["Douze caractères au moins.","Twelve characters at least.","Doce caracteres como mínimo.","Mindestens zwölf Zeichen."],
+  'c.err.long':         ["Ce mot de passe est trop long.","That password is too long.","Esa contraseña es demasiado larga.","Dieses Passwort ist zu lang."],
+  'c.err.existe':       ["Un compte existe déjà avec cette adresse.","An account already exists with that address.","Ya existe una cuenta con esa dirección.","Mit dieser Adresse besteht bereits ein Konto."],
+  'c.err.identifiants': ["Adresse ou mot de passe incorrect.","Wrong address or password.","Dirección o contraseña incorrecta.","Adresse oder Passwort falsch."],
+  'c.err.trop':         ["Trop de tentatives. Réessayez dans un quart d'heure.","Too many attempts. Try again in fifteen minutes.","Demasiados intentos. Inténtelo dentro de quince minutos.","Zu viele Versuche. Bitte in einer Viertelstunde erneut."],
+  'c.err.suspendu':     ["Votre abonnement est suspendu : la saisie reste sur cet appareil et n'est plus enregistrée. Vous pouvez toujours tout relire et tout exporter.","Your subscription is suspended: entries stay on this device and are no longer saved. You can still read and export everything.","Su suscripción está suspendida: lo introducido queda en este dispositivo y ya no se guarda. Todavía puede leerlo y exportarlo todo.","Ihr Abonnement ist ausgesetzt: Eingaben bleiben auf diesem Gerät und werden nicht mehr gespeichert. Lesen und Exportieren bleibt möglich."],
+  'c.err.session':      ["Votre session a expiré. Reconnectez-vous.","Your session has expired. Please sign in again.","Su sesión ha caducado. Vuelva a conectarse.","Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."],
+  'c.err.serveur':      ["Le serveur n'a pas pu répondre.","The server could not answer.","El servidor no ha podido responder.","Der Server konnte nicht antworten."],
+  'c.abo.attente':      ["accès en cours d'ouverture","access being opened","acceso en trámite","Zugang wird freigeschaltet"],
+  'c.abo.actif':        ["abonnement actif","subscription active","suscripción activa","Abonnement aktiv"],
+  'c.abo.suspendu':     ["abonnement suspendu","subscription suspended","suscripción suspendida","Abonnement ausgesetzt"],
+  'c.conflit.titre':    ["Vos chiffres ont changé ailleurs.","Your figures changed elsewhere.","Sus cifras han cambiado en otro sitio.","Ihre Zahlen haben sich anderswo geändert."],
+  'c.conflit.d':        ["Cet appareil et le serveur ne disent pas la même chose. Rien n'a été écrasé — choisissez ce qu'on garde.","This device and the server disagree. Nothing has been overwritten — choose what to keep.","Este dispositivo y el servidor no coinciden. No se ha sobrescrito nada: elija qué conservar.","Dieses Gerät und der Server stimmen nicht überein. Nichts wurde überschrieben — wählen Sie, was bleibt."],
+  'c.conflit.ici':      ["Ce qui est sur cet appareil","What is on this device","Lo que hay en este dispositivo","Was auf diesem Gerät liegt"],
+  'c.conflit.la':       ["Ce qui est sur le serveur","What is on the server","Lo que hay en el servidor","Was auf dem Server liegt"],
+  'c.conflit.resume':   ["{{n}} {{A}} · {{v}} · {{r}} {{R}}","{{n}} {{A}} · {{v}} · {{r}} {{R}}","{{n}} {{A}} · {{v}} · {{r}} {{R}}","{{n}} {{A}} · {{v}} · {{r}} {{R}}"],
+  'c.actif.un':         ["actif","asset","activo","Posten"],
+  'c.actif.plus':       ["actifs","assets","activos","Posten"],
+  'c.releve.un':        ["relevé","statement","informe","Auszug"],
+  'c.releve.plus':      ["relevés","statements","informes","Auszüge"],
+  'c.conflit.pris':     ["La version du serveur a été reprise.","The server's version has been taken.","Se ha tomado la versión del servidor.","Die Version des Servers wurde übernommen."],
   'e.sortie':           ["Se déconnecter","Sign out","Cerrar sesión","Abmelden"],
   'e.tuile.1.t':        ["Vos investissements","Your investments","Sus inversiones","Ihre Anlagen"],
   'e.tuile.1.d':        ["Ajouter, consulter et détailler chaque ligne du portefeuille.","Add, review and drill into every line of the portfolio.","Añadir, consultar y detallar cada línea de la cartera.","Jede Position des Portfolios hinzufügen, ansehen und aufschlüsseln."],
@@ -3366,8 +3485,8 @@ window.PC = (function(){
   'e.ex.3.q':           ["0,33 BTC","0.33 BTC","0,33 BTC","0,33 BTC"],
   'e.ex.4.n':           ["Ethereum","Ethereum","Ethereum","Ethereum"],
   'e.ex.4.q':           ["1,55 ETH","1.55 ETH","1,55 ETH","1,55 ETH"],
-  'e.ex.5.n':           ["Contrat de minage","Mining contract","Contrato de minería","Mining-Vertrag"],
-  'e.ex.5.q':           ["42 TH/s","42 TH/s","42 TH/s","42 TH/s"],
+  'e.ex.5.n':           ["Assurance-vie","Life insurance","Seguro de vida","Lebensversicherung"],
+  'e.ex.5.q':           ["Fonds en euros","Euro fund","Fondo en euros","Euro-Fonds"],
   'e.ex.6.n':           ["Compte de trading","Trading account","Cuenta de trading","Trading-Konto"],
   'e.ex.6.q':           ["—","—","—","—"],
   'e.ex.7.n':           ["Livret","Savings account","Cuenta de ahorro","Sparkonto"],
@@ -3885,7 +4004,14 @@ window.PC = (function(){
   function t(cle, vars){
     const ligne = T[cle];
     let s = ligne ? (ligne[idx()] != null ? ligne[idx()] : ligne[0]) : cle;
-    s = s.replace(JETON, function(_, n){ return argent(parseFloat(n)); });
+    /* Un prix ecrit « {{m:9.99}} » doit s'afficher 9,99 et non 10 :
+       la devise decide du nombre de decimales, mais un montant qui en
+       porte dans le texte les a mises la pour qu'on les voie. Le yen
+       reste hors de cette regle — il ne se subdivise pas, et
+       `decimales()` s'en charge. */
+    s = s.replace(JETON, function(_, n){
+      return argent(parseFloat(n), n.indexOf('.') !== -1 ? 2 : undefined);
+    });
     if (vars){
       Object.keys(vars).forEach(function(k){
         s = s.split('{{' + k + '}}').join(vars[k]);
@@ -4429,7 +4555,7 @@ window.PC = (function(){
       <summary data-i18n="ui.notes.plus">Les notes</summary>
     <div class="notes reveal" style="--rd:.16s">
       <article class="note"><div class="note__k mono" data-i18n="notes.1.k">Concentration</div><p data-i18n-html="notes.1.p">L'immobilier représente à lui seul la moitié du portefeuille. C'est le poste le plus stable, mais aussi le moins liquide&nbsp;: en cas de besoin rapide, il ne répond pas.</p></article>
-      <article class="note"><div class="note__k mono" data-i18n="notes.2.k">Coût réel du minage</div><p data-i18n-html="notes.2.p">Le rendement brut ne veut rien dire sans l'électricité et l'usure du matériel. C'est la ligne où l'écart entre performance affichée et performance nette est le plus large.</p></article>
+      <article class="note"><div class="note__k mono" data-i18n="notes.2.k">Ce qui dort</div><p data-i18n-html="notes.2.p">Le rendement brut ne veut rien dire sans l'électricité et l'usure du matériel. C'est la ligne où l'écart entre performance affichée et performance nette est le plus large.</p></article>
       <article class="note"><div class="note__k mono" data-i18n="notes.3.k">Volatilité assumée</div><p data-i18n-html="notes.3.p">Bitcoin et trading sont les deux postes qui bougent le plus. Ils sont dimensionnés pour pouvoir perdre la moitié de leur valeur sans que ça remette en cause le reste.</p></article>
       <article class="note"><div class="note__k mono" data-i18n="notes.4.k">Ce que je surveille</div><p data-i18n-html="notes.4.p">Le rapport entre ce qui est liquide et ce qui ne l'est pas. Tant qu'une part suffisante reste mobilisable en quelques jours, le déséquilibre du reste est tenable.</p></article>
     </div>
@@ -4456,7 +4582,7 @@ window.PC = (function(){
       <article class="offre">
         <p class="offre__tag" data-i18n="off.1.tag">Pour commencer</p>
         <h3 class="offre__nom" data-i18n="off.1.nom">Normal</h3>
-        <p class="offre__prix"><span data-i18n="off.1.prix">Gratuit</span> <small data-i18n="off.1.prix.s">sans limite de durée</small></p>
+        <p class="offre__prix"><span data-i18n="off.1.prix">5 €</span> <small data-i18n="off.1.prix.s">par mois</small></p>
         <ul class="offre__liste">
           <li data-i18n="off.1.l1">Jusqu'à 10 actifs suivis</li>
           <li data-i18n="off.1.l2">Répartition et performance globale</li>
@@ -4464,7 +4590,8 @@ window.PC = (function(){
           <li data-i18n="off.1.l4">Données gardées dans votre navigateur</li>
         </ul>
         <div class="offre__actions">
-          <a class="offre__ghost" href="#espace-client" data-formule="normal" data-i18n="off.gratuit.cta">Ouvrir l'espace</a>
+          <button class="offre__ghost" type="button" data-souscrire="normal" data-i18n="off.souscrire">Souscrire</button>
+          <a class="offre__essai" href="#espace-client" data-formule="normal" data-i18n="off.essayer">Essayer la démonstration</a>
         </div>
       </article>
 
@@ -4670,6 +4797,27 @@ window.PC = (function(){
   </p>
 
   <!-- Connexion -->
+  <!-- Deux appareils ont travaille chacun de leur cote. On ne
+       tranche pas a leur place : on montre les deux et on demande. -->
+  <div class="conflit" id="c-conflit" role="dialog" aria-modal="true"
+       aria-labelledby="c-conflit-titre" hidden>
+    <div class="conflit__carte">
+      <h2 id="c-conflit-titre" data-i18n="c.conflit.titre">Vos chiffres ont changé ailleurs.</h2>
+      <p class="conflit__d" data-i18n="c.conflit.d">Cet appareil et le serveur ne
+        disent pas la même chose. Rien n'a été écrasé — choisissez ce qu'on garde.</p>
+      <div class="conflit__choix">
+        <button class="btn" type="button" id="c-garde-ici">
+          <b data-i18n="c.conflit.ici">Ce qui est sur cet appareil</b>
+          <span id="c-conflit-ici"></span>
+        </button>
+        <button class="btn btn--ghost" type="button" id="c-garde-la">
+          <b data-i18n="c.conflit.la">Ce qui est sur le serveur</b>
+          <span id="c-conflit-la"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="gate" id="gate">
     <form class="gate__card" id="form-connexion" novalidate>
       <p class="eyebrow" data-i18n="e.eyebrow">Espace client</p>
@@ -4704,10 +4852,48 @@ window.PC = (function(){
       </details>
       <a class="btn btn--ghost" href="#top" data-quitter data-i18n="e.retour">Retour au site</a>
     </form>
+      <!-- Le vrai compte. Il ne s'affiche que si un serveur repond ;
+         sinon c'est la demonstration ci-dessous qui reste, et la
+         page se comporte comme avant. -->
+    <section class="gate__card compte" id="c-portail" hidden>
+      <div class="compte__onglets" id="c-onglets" role="tablist">
+        <button type="button" class="compte__ong" data-mode="connexion"
+                role="tab" aria-selected="true" data-i18n="c.onglet.entrer">Se connecter</button>
+        <button type="button" class="compte__ong" data-mode="inscription"
+                role="tab" aria-selected="false" data-i18n="c.onglet.creer">Créer un compte</button>
+      </div>
+      <form id="c-form" novalidate>
+        <div class="champ">
+          <label for="c-mail" data-i18n="e.mail">Adresse e-mail</label>
+          <input id="c-mail" name="courriel" type="email" autocomplete="email" required>
+        </div>
+        <div class="champ">
+          <label for="c-mdp" data-i18n="e.mdp">Mot de passe</label>
+          <input id="c-mdp" name="motdepasse" type="password"
+                 autocomplete="current-password" required>
+          <span class="champ__note" data-i18n="c.mdp.note">Douze caractères au moins. Une phrase vaut mieux qu'un mot compliqué.</span>
+        </div>
+        <p class="compte__etat" id="c-etat" aria-live="polite"></p>
+        <button class="btn" type="submit" id="c-valide" data-i18n="c.entrer">Entrer</button>
+      </form>
+      <p class="gate__note">
+        <b data-i18n="c.vrai.b">Vos chiffres.</b>
+        <span data-i18n="c.vrai">Ils sont rangés sur ce serveur, et vous les
+        retrouvez d'un appareil à l'autre. Vous pouvez les effacer quand vous
+        voulez, depuis le menu de l'espace.</span>
+      </p>
+    </section>
   </div>
 
   <!-- Tableau de bord -->
   <div id="board" hidden>
+    <!-- Qui est connecte, et ou en est l'enregistrement. Masque tant
+         qu'il n'y a pas de serveur : sans compte, la question ne se
+         pose pas. -->
+    <p class="compte-bandeau" id="c-bandeau" hidden>
+      <span class="compte-bandeau__qui" id="c-qui"></span>
+      <span class="compte-bandeau__abo" id="c-abo"></span>
+    </p>
     <!-- ============================================================
          EN-TÊTE DU TABLEAU DE BORD
          Une seule rangée. Les sept boutons d'outils tenaient toute
@@ -5233,16 +5419,22 @@ window.PC = (function(){
      ========================================================== */
   const ACTIVITES = [
     {
+      /* La cle reste « minage » : elle ne sert qu'a relier l'activite
+         a ses textes, et la renommer obligerait a toucher vingt
+         endroits pour rien. Ce qu'elle DESIGNE a change — le minage
+         etait trop particulier pour la devanture, ou il faut que
+         chacun se reconnaisse. L'epargne, presque tout le monde en a.
+
+         Les chiffres suivent : une epargne monte doucement et ne
+         redescend pas. C'est le poste le moins volatil et le plus
+         liquide du portefeuille, l'exact oppose de ce qu'il y avait
+         ici — et c'est le role qu'il joue vraiment. */
       cle:'minage',
-      investi:12400, valeur:15830,
-      serie:[12400,12210,12680,13040,12890,13520,13980,13760,14310,14880,14620,15240,15830],
+      investi:24000, valeur:25180,
+      serie:[24000,24090,24180,24280,24370,24470,24560,24660,24760,24860,24960,25070,25180],
       details:6,
-      volat:4, liquid:2,
-      /* Une seule saisie : la production d'une journée et le cours.
-         Le mois et l'année en découlent, donc les trois lignes ne
-         peuvent jamais se contredire. */
-      production:{btcJour:0.000135, prixBtc:57800},
-      part:{a:412, b:88}
+      volat:1, liquid:5,
+      part:{a:12000, b:13180}
     },
     {
       cle:'trading',
@@ -6278,7 +6470,11 @@ window.PC = (function(){
   document.querySelectorAll('[data-souscrire]').forEach(function(btn){
     btn.addEventListener('click', function(){
       const f = btn.getAttribute('data-souscrire');
-      const nom = PC.t('off.' + (f === 'pro' ? '2' : '3') + '.nom');
+      /* Trois formules payantes desormais : « normal » n'est plus
+         une porte gratuite et doit pouvoir se souscrire comme les
+         autres. Sans cette ligne, elle heritait du nom de Max. */
+      const rang = {normal:'1', pro:'2', max:'3'}[f] || '3';
+      const nom = PC.t('off.' + rang + '.nom');
 
       /* Paiement branché : tout se passe dans la page. */
       if (paiementBranche()){ ouvrePaiement(f, nom, tarifDe(f)); return; }
@@ -6613,8 +6809,17 @@ window.PC = (function(){
      se contrôle côté serveur, jamais dans la page.
      ============================================================ */
   const FORMULES = {
-    normal:{ actifs:10,       indicateurs:false, moisHisto:12,       portefeuilles:1,        revenus:false, rapport:false, fichier:false },
-    pro:   { actifs:Infinity, indicateurs:true,  moisHisto:Infinity, portefeuilles:1,        revenus:false, rapport:false, fichier:true  },
+    /* Il n'y a plus de formule gratuite. L'entree est a 5 EUR, et
+       elle doit rester utilisable : quinze actifs couvrent un
+       patrimoine ordinaire — livret, assurance-vie, PEA, un bien,
+       deux ou trois cryptos.
+
+       L'export est dans les TROIS formules, y compris la premiere.
+       Retenir les donnees de quelqu'un pour lui vendre la formule
+       au-dessus se retourne toujours : un client qui sait qu'il
+       peut partir avec ses chiffres est un client qui reste. */
+    normal:{ actifs:15,       indicateurs:false, moisHisto:12,       portefeuilles:1,        revenus:false, rapport:false, fichier:true  },
+    pro:   { actifs:Infinity, indicateurs:true,  moisHisto:Infinity, portefeuilles:1,        revenus:true,  rapport:false, fichier:true  },
     max:   { actifs:Infinity, indicateurs:true,  moisHisto:Infinity, portefeuilles:Infinity, revenus:true,  rapport:true,  fichier:true  }
   };
   const NOMS_FORMULES = ['normal','pro','max'];
@@ -6650,9 +6855,15 @@ window.PC = (function(){
         portefeuilles:portefeuilles, courant:courant,
         connecte:connecte, formule:formule
       }));
+      /* Le serveur, s'il y en a un, est prevenu apres coup : l'ecriture
+         locale ne doit jamais attendre le reseau. Une panne d'envoi ne
+         fait donc pas perdre la saisie — elle la laisse en local, et le
+         module de compte reessaiera. */
+      if (apresEcriture) { try { apresEcriture(); } catch (e){} }
       return true;
     } catch (e){ return false; }
   }
+  let apresEcriture = null;
 
   /* --- Portefeuilles ---
      `actifs` et `historique` restent les variables de travail de tout
@@ -6733,7 +6944,7 @@ window.PC = (function(){
     {n:2, cat:'actions', inv:22500, val:26910, liq:1, rev:610, revP:'an'},
     {n:3, cat:'crypto',  inv:11000, val:17400, liq:1},
     {n:4, cat:'crypto',  inv:3200,  val:4260,  liq:1},
-    {n:5, cat:'minage',  inv:12400, val:15830, liq:0, rev:412, revP:'mois'},
+    {n:5, cat:'av',      inv:12400, val:13180, liq:1, rev:310, revP:'an'},
     {n:6, cat:'trading', inv:8000,  val:9240,  liq:1},
     {n:7, cat:'liquid',  inv:9000,  val:9180,  liq:1, rev:180, revP:'an'}
   ];
@@ -10075,6 +10286,7 @@ window.PC = (function(){
 
   function ouvrir(){
     connecte = true;
+    document.body.classList.add('espace-ouvert');
     document.getElementById('gate').hidden = true;
     document.getElementById('board').hidden = false;
     ecrire(false, true);
@@ -10095,6 +10307,7 @@ window.PC = (function(){
 
   document.getElementById('sortie').addEventListener('click', function(){
     connecte = false; ecrire();
+    document.body.classList.remove('espace-ouvert');
     document.getElementById('board').hidden = true;
     document.getElementById('gate').hidden = false;
     window.scrollTo(0, 0);
@@ -10901,10 +11114,73 @@ window.PC = (function(){
 
   /* La bascule de vue est dans un autre script : on lui laisse une
      poignee plutot qu'une variable globale de plus. */
+  /* Ce que le module de compte (plus bas) a le droit de toucher.
+     Une poignee etroite plutot qu'une dizaine de variables globales :
+     tout le reste du fichier continue de travailler sur `actifs` et
+     `historique` sans rien savoir d'un serveur. */
   window.PC_ESPACE = {
     flux:function(dedans){
       if (dedans) ouvreFlux(); else fermeFlux();
-    }
+    },
+
+    /* Ce qui part au serveur : exactement ce qu'on range en local,
+       moins `connecte`, qui est une notion de cet appareil. */
+    litLocal:function(){
+      rangePortefeuille();
+      return {portefeuilles:portefeuilles, courant:courant, formule:formule};
+    },
+
+    /* Ce qui revient du serveur. On refuse un objet qui n'a pas la
+       bonne forme plutot que de vider l'espace sur une reponse
+       inattendue. */
+    poseLocal:function(o){
+      if (!o || !Array.isArray(o.portefeuilles) || !o.portefeuilles.length) return false;
+      portefeuilles = o.portefeuilles.map(function(x, i){
+        return {id:x.id || ('p' + (i + 1)), nom:x.nom || '',
+                actifs:remetEnEtat(x.actifs), 
+                historique:Array.isArray(x.historique) ? x.historique : []};
+      });
+      courant = portefeuilles.some(function(x){ return x.id === o.courant; })
+        ? o.courant : portefeuilles[0].id;
+      if (NOMS_FORMULES.indexOf(o.formule) !== -1) formule = o.formule;
+      const p = portefeuilleCourant();
+      actifs = p.actifs; historique = p.historique;
+      construitSelecteurs(); construitBarreApp(); rendre();
+      return true;
+    },
+
+    vide:function(){
+      return !portefeuilles.some(function(p){
+        return (p.actifs && p.actifs.length) || (p.historique && p.historique.length);
+      });
+    },
+
+    /* Un resume lisible, pour laisser choisir en cas de desaccord
+       entre deux appareils sans avoir a lire du JSON. */
+    resume:function(o){
+      const ps = (o && o.portefeuilles) || [];
+      let n = 0, val = 0, rel = 0;
+      ps.forEach(function(p){
+        (p.actifs || []).forEach(function(a){ n++; val += (+a.val || 0); });
+        rel += (p.historique || []).length;
+      });
+      return {actifs:n, valeur:val, releves:rel};
+    },
+
+    ouvre:function(){ ouvrir(); },
+    ferme:function(){
+      connecte = false; ecrire();
+      document.body.classList.remove('espace-ouvert');
+      document.getElementById('board').hidden = true;
+      document.getElementById('gate').hidden = false;
+      window.scrollTo(0, 0);
+    },
+    estOuvert:function(){ return !!connecte; },
+
+    /* Appele apres chaque ecriture locale. Le module de compte s'en
+       sert pour programmer un envoi ; il n'y en a qu'un, et le
+       poser n'oblige a rien. */
+    surEcriture:function(f){ apresEcriture = f; }
   };
   majVue();
   if (document.body.classList.contains('vue-espace')) ouvreFlux();
@@ -11995,6 +12271,353 @@ window.PC = (function(){
     dernier = 0;
     charge(true).then(function(){ if (ouverte) chargeCourbe(); });
   });
+})();
+</script>
+
+<script>
+/* ============================================================
+   LE COMPTE, ET LA SYNCHRONISATION
+   Cette page vit dans deux mondes, et doit marcher dans les deux :
+
+     — servie par son serveur (le conteneur) : il y a un compte, les
+       chiffres sont ranges chez vous et suivent d'un appareil a
+       l'autre ;
+     — servie par n'importe quoi d'autre, ou ouverte en fichier
+       local : il n'y a pas de serveur, et tout reste dans le
+       navigateur, comme avant.
+
+   On ne le devine pas, on le demande : un appel a /api/sante au
+   chargement. Ce qui suit ne s'allume que s'il repond.
+
+   Regle de conduite : l'ecriture locale ne doit JAMAIS attendre le
+   reseau. On ecrit d'abord, on envoie ensuite. Une coupure ne fait
+   pas perdre une saisie, elle la laisse en attente.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  const ESPACE = window.PC_ESPACE;
+  if (!ESPACE || !ESPACE.litLocal) return;   /* page sans espace client */
+
+  /* --- Etat --- */
+  let serveur = false;        /* un serveur repond-il ? */
+  let moi = null;             /* le compte, ou null */
+  let version = 0;            /* la version du serveur qu'on croit avoir */
+  let enVol = false;          /* un envoi est-il en cours ? */
+  let aRenvoyer = false;      /* une ecriture est-elle survenue pendant ? */
+  let minuteur = null;
+  /* Poser ce qui vient du serveur declenche un rendu, donc une
+     ecriture locale, donc — sans ce verrou — un renvoi vers le
+     serveur. La version avancait alors dans le dos des autres
+     appareils, et leur prochain envoi passait pour un conflit : le
+     premier a ecrire perdait sa saisie. Pendant qu'on pose, on
+     n'envoie pas : ce qu'on vient de recevoir est deja la-bas. */
+  let onPose = false;
+
+  const CLE_VERSION = 'pierrelco.compte.v1';
+
+  function litRepere(){
+    try { return JSON.parse(localStorage.getItem(CLE_VERSION) || 'null') || {}; }
+    catch (e){ return {}; }
+  }
+  function ecritRepere(o){
+    try { localStorage.setItem(CLE_VERSION, JSON.stringify(o)); } catch (e){}
+  }
+
+  /* --- Le dialogue avec le serveur --- */
+  function appel(methode, chemin, corps){
+    const o = {
+      method: methode,
+      /* Meme origine : le cookie de session part avec, et il n'y a
+         pas de cookie tiers a faire bloquer par Safari. */
+      credentials: 'same-origin',
+      headers: {}
+    };
+    if (corps !== undefined){
+      o.headers['Content-Type'] = 'application/json';
+      o.body = JSON.stringify(corps);
+    }
+    return fetch(chemin, o).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(d){
+        return {code:r.status, ok:r.ok, d:d};
+      });
+    });
+  }
+
+  /* Les messages du serveur sont des cles, pas des phrases : il ne
+     connait pas la langue de celui qui lit. */
+  function phrase(cle){
+    const t = {
+      'courriel.invalide':    'c.err.mail',
+      'motdepasse.court':     'c.err.court',
+      'motdepasse.long':      'c.err.long',
+      'compte.existe':        'c.err.existe',
+      'identifiants':         'c.err.identifiants',
+      'trop.tentatives':      'c.err.trop',
+      'abonnement.suspendu':  'c.err.suspendu',
+      'session':              'c.err.session',
+      'conflit':              'c.conflit.titre'
+    }[cle];
+    return t ? PC.t(t) : PC.t('c.err.serveur');
+  }
+
+  /* --- Ce qu'on montre --- */
+  function dit(texte, ton){
+    const e = document.getElementById('c-etat');
+    if (!e) return;
+    e.textContent = texte || '';
+    e.setAttribute('data-ton', ton || '');
+  }
+
+  function majBandeau(){
+    const b = document.getElementById('c-bandeau');
+    if (!b) return;
+    b.hidden = !(serveur && moi);
+    if (!moi) return;
+    const qui = document.getElementById('c-qui');
+    if (qui) qui.textContent = moi.courriel;
+    const ab = document.getElementById('c-abo');
+    if (ab){
+      const cle = {attente:'c.abo.attente', actif:'c.abo.actif', suspendu:'c.abo.suspendu'}[moi.abonnement];
+      ab.textContent = cle ? PC.t(cle) : '';
+      ab.setAttribute('data-etat', moi.abonnement || '');
+    }
+  }
+
+  /* --- Tirer du serveur --- */
+  function tire(){
+    return appel('GET', '/api/portefeuille').then(function(r){
+      if (r.code === 401){ perdLaSession(); return false; }
+      if (!r.ok) return false;
+      version = r.d.version || 0;
+      ecritRepere({version:version, courriel:moi && moi.courriel});
+      if (!r.d.bloc){
+        /* Rien chez le serveur : c'est un compte neuf. Ce qu'il y a
+           sur cet appareil devient la premiere version. */
+        return pousse(true);
+      }
+      let o = null;
+      try { o = JSON.parse(r.d.bloc); } catch (e){ return false; }
+      onPose = true;
+      try { ESPACE.poseLocal(o); }
+      finally {
+        /* Rendu au tour suivant : les ecritures declenchees par le
+           rendu sont deja passees, celles de l'utilisateur non. */
+        setTimeout(function(){ onPose = false; }, 0);
+      }
+      return true;
+    });
+  }
+
+  /* --- Pousser vers le serveur --- */
+  function pousse(force){
+    if (!serveur || !moi) return Promise.resolve(false);
+    if (enVol){ aRenvoyer = true; return Promise.resolve(false); }
+    enVol = true;
+    const bloc = JSON.stringify(ESPACE.litLocal());
+    return appel('PUT', '/api/portefeuille', {bloc:bloc, version:version})
+      .then(function(r){
+        enVol = false;
+        if (r.code === 401){ perdLaSession(); return false; }
+        if (r.code === 402){
+          /* Abonnement suspendu : la saisie reste sur l'appareil, et
+             on le dit clairement plutot que de laisser croire que
+             c'est enregistre. */
+          moi.abonnement = 'suspendu'; majBandeau();
+          dit(PC.t('c.err.suspendu'), 'ko');
+          return false;
+        }
+        if (r.code === 409){ return conflit(r.d); }
+        if (!r.ok){ dit(phrase(r.d.erreur), 'ko'); return false; }
+        version = r.d.version;
+        ecritRepere({version:version, courriel:moi.courriel});
+        dit(PC.t('c.enregistre'), 'ok');
+        if (aRenvoyer){ aRenvoyer = false; return pousse(); }
+        return true;
+      })
+      .catch(function(){
+        enVol = false;
+        /* Le reseau, pas le serveur : les chiffres sont sur
+           l'appareil, on reessaiera. */
+        dit(PC.t('c.hors.ligne'), 'attente');
+        return false;
+      });
+  }
+
+  /* --- Le desaccord entre deux appareils ---
+     On n'ecrase jamais en silence : on montre les deux, chiffres a
+     l'appui, et c'est l'utilisateur qui tranche. */
+  function conflit(d){
+    let distant = null;
+    try { distant = JSON.parse(d.bloc); } catch (e){}
+    const ici = ESPACE.resume(ESPACE.litLocal());
+    const la  = ESPACE.resume(distant || {});
+    const boite = document.getElementById('c-conflit');
+    if (!boite || !distant){
+      /* Sans de quoi demander, on garde le plus prudent : on ne
+         touche a rien et on le dit. */
+      dit(PC.t('c.conflit.titre'), 'ko');
+      return false;
+    }
+    /* « 1 relevés » se remarque tout de suite et fait negligé. La
+       page a deja de quoi accorder : on s'en sert. */
+    const decris = function(x){
+      return PC.t('c.conflit.resume', {
+        n: x.actifs, A: PC.pluriel(x.actifs, 'c.actif.un', 'c.actif.plus'),
+        v: PC.argent(x.valeur),
+        r: x.releves, R: PC.pluriel(x.releves, 'c.releve.un', 'c.releve.plus')
+      });
+    };
+    document.getElementById('c-conflit-ici').textContent = decris(ici);
+    document.getElementById('c-conflit-la').textContent  = decris(la);
+    boite.hidden = false;
+
+    const finis = function(){ boite.hidden = true; };
+    document.getElementById('c-garde-ici').onclick = function(){
+      /* On adopte la version du serveur comme point de depart, puis
+         on reecrit ce qu'il y a ici par-dessus. */
+      version = d.version;
+      finis(); pousse(true);
+    };
+    document.getElementById('c-garde-la').onclick = function(){
+      version = d.version;
+      ecritRepere({version:version, courriel:moi && moi.courriel});
+      onPose = true;
+      try { ESPACE.poseLocal(distant); }
+      finally { setTimeout(function(){ onPose = false; }, 0); }
+      finis();
+      dit(PC.t('c.conflit.pris'), 'ok');
+    };
+    return false;
+  }
+
+  function perdLaSession(){
+    moi = null; version = 0;
+    majBandeau(); majPortail();
+    if (ESPACE.estOuvert()) ESPACE.ferme();
+    dit(PC.t('c.err.session'), 'ko');
+  }
+
+  /* --- L'envoi differe ---
+     Saisir une ligne declenche plusieurs ecritures d'affilee ; on
+     attend que la main s'arrete plutot que d'envoyer quatre fois. */
+  function programme(){
+    if (!serveur || !moi || onPose) return;
+    if (minuteur) clearTimeout(minuteur);
+    minuteur = setTimeout(function(){ minuteur = null; pousse(); }, 1200);
+  }
+
+  /* --- Le portail : vrai compte, ou demonstration --- */
+  function majPortail(){
+    const demo = document.querySelector('.gate__demo');
+    const vrai = document.getElementById('c-portail');
+    if (!demo || !vrai) return;
+    demo.hidden = serveur;          /* le faux disparait quand le vrai existe */
+    vrai.hidden = !serveur || !!moi;
+  }
+
+  /* --- Amorcage --- */
+  function branche(){
+    /* Le formulaire : connexion ou inscription, selon l'onglet. */
+    let mode = 'connexion';
+    const onglets = document.querySelectorAll('#c-onglets [data-mode]');
+    Array.prototype.forEach.call(onglets, function(b){
+      b.addEventListener('click', function(){
+        mode = b.dataset.mode;
+        Array.prototype.forEach.call(onglets, function(x){
+          x.setAttribute('aria-selected', x === b ? 'true' : 'false');
+        });
+        const t = document.getElementById('c-valide');
+        if (t) t.textContent = PC.t(mode === 'connexion' ? 'c.entrer' : 'c.creer');
+        dit('');
+      });
+    });
+
+    const f = document.getElementById('c-form');
+    if (f) f.addEventListener('submit', function(e){
+      e.preventDefault();
+      const courriel = document.getElementById('c-mail').value.trim();
+      const mdp = document.getElementById('c-mdp').value;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(courriel)){ dit(PC.t('c.err.mail'), 'ko'); return; }
+      if (mdp.length < 12){ dit(PC.t('c.err.court'), 'ko'); return; }
+      const bouton = document.getElementById('c-valide');
+      if (bouton) bouton.disabled = true;
+      dit(PC.t('c.patiente'), 'attente');
+
+      appel('POST', mode === 'connexion' ? '/api/connexion' : '/api/inscription',
+            {courriel:courriel, motdepasse:mdp})
+        .then(function(r){
+          if (bouton) bouton.disabled = false;
+          /* Le mot de passe ne traine pas dans le champ. */
+          document.getElementById('c-mdp').value = '';
+          if (!r.ok){ dit(phrase(r.d.erreur), 'ko'); return; }
+          moi = r.d.compte;
+          dit('');
+          majBandeau(); majPortail();
+
+          /* Ce qu'il y a deja sur cet appareil ne doit pas
+             disparaitre parce qu'on se connecte. S'il y a quelque
+             chose ici et rien la-bas, c'est ici qui gagne ; sinon on
+             prend ce que le serveur a, et le desaccord eventuel
+             passe par la meme question que d'habitude. */
+          return tire().then(function(){ ESPACE.ouvre(); });
+        })
+        .catch(function(){
+          if (bouton) bouton.disabled = false;
+          dit(PC.t('c.hors.ligne'), 'ko');
+        });
+    });
+
+    const sortie = document.getElementById('sortie');
+    if (sortie) sortie.addEventListener('click', function(){
+      if (!serveur || !moi) return;
+      appel('POST', '/api/deconnexion').catch(function(){}).then(function(){
+        moi = null; version = 0;
+        ecritRepere({});
+        majBandeau(); majPortail();
+      });
+    }, true);
+
+    ESPACE.surEcriture(programme);
+
+    /* Revenir en ligne apres une coupure : on renvoie ce qui
+       attendait, sans rien demander. */
+    window.addEventListener('online', function(){ if (moi) pousse(); });
+  }
+
+  /* On ne demande rien a un fichier local : il n'y a pas d'origine
+     a interroger, et l'appel echouerait bruyamment. */
+  if (location.protocol.indexOf('http') !== 0) return;
+
+  fetch('/api/sante', {credentials:'same-origin'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (!d || !d.ok) return;
+      serveur = true;
+      document.documentElement.setAttribute('data-serveur', '1');
+      branche();
+      majPortail();
+      /* Une session peut deja exister : on ne redemande pas le mot
+         de passe a chaque visite. */
+      return appel('GET', '/api/moi').then(function(r){
+        if (!r.ok) return;
+        moi = r.d.compte;
+        const rep = litRepere();
+        version = (rep.courriel === moi.courriel && rep.version) || 0;
+        majBandeau(); majPortail();
+        return tire().then(function(){
+          if (!ESPACE.estOuvert()) ESPACE.ouvre();
+        });
+      });
+    })
+    .catch(function(){ /* pas de serveur : la page reste locale */ });
+
+  window.PC_COMPTE = {
+    present:function(){ return serveur; },
+    compte:function(){ return moi; },
+    pousse:pousse,
+    tire:tire
+  };
 })();
 </script>
 
