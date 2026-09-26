@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.2221";</script>
+<script>window.PC_VERSION = "260926.2238";</script>
 </head>
 <body>
 
@@ -11601,7 +11601,10 @@ window.PC = (function(){
        destination.
      ============================================================ */
   const CLE_LOCALE = {
-    empreinte: '',                 /* <- la ligne a remplir */
+    /* Posee le 26 septembre 2026, calculee par la page elle-meme dans
+       le navigateur du proprietaire : la phrase n'a jamais transite.
+       Une phrase perdue ne se recupere pas — c'est le principe. */
+    empreinte: '4fd49dd4b743f0ff30c161bb7e6dc3e9bbb8f381f89435f7833970c33f091564',
     sel: 'pierrelco.local.v1',
     tours: 310000
   };
