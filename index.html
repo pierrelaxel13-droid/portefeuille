@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.2049";</script>
+<script>window.PC_VERSION = "260926.2106";</script>
 </head>
 <body>
 
@@ -2159,6 +2159,22 @@ body.detaille .bascule-vue__s{opacity:1;}
   .adm__q{margin-left:0; width:100%;}
 }
 
+/* La porte du proprietaire, sur la carte « demande un compte ». Un
+   lien souligne, pas un bouton : ce n'est pas l'action principale de
+   cet ecran, et la presenter comme telle inviterait a l'emprunter. */
+.gate__sans{
+  border-top:1px solid var(--rule); margin:16px 0 14px; padding-top:14px;
+  font-size:13px; line-height:1.55; color:var(--ink-3); text-wrap:pretty;
+}
+.gate__sans__d{display:block; margin-top:5px;}
+.lien-nu{
+  background:none; border:none; padding:0; font-family:inherit; font-size:13.5px;
+  color:var(--accent); text-decoration:underline; text-underline-offset:3px;
+  cursor:pointer;
+}
+.lien-nu:hover{color:var(--ink);}
+.lien-nu:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+
 /* Le bandeau du mode local. Une ligne, un filet d'accent : il doit
    se lire une fois et ne pas repousser les chiffres. */
 .bar-local{
@@ -3518,6 +3534,8 @@ window.PC = (function(){
   'adm.err.etat':       ["État inconnu.", "Unknown state.", "Estado desconocido.", "Unbekannter Status."],
   'adm.err.formule':    ["Formule inconnue.", "Unknown plan.", "Plan desconocido.", "Unbekannter Tarif."],
   'adm.err.mois':       ["Le nombre de mois doit être un entier entre 1 et 600.", "The number of months must be a whole number between 1 and 600.", "El número de meses debe ser un entero entre 1 y 600.", "Die Anzahl der Monate muss eine ganze Zahl zwischen 1 und 600 sein."],
+  'e.local.ouvrir':     ["Ouvrir sans compte, en local", "Open locally, without an account", "Abrir en local, sin cuenta", "Lokal öffnen, ohne Konto"],
+  'e.local.quoi':       ["Pour voir l'outil tourner : les chiffres restent dans ce navigateur, rien n'est envoyé, rien n'est synchronisé et rien n'est sauvegardé. Ce n'est pas un abonnement.", "To see the tool run: the figures stay in this browser, nothing is sent, nothing is synced and nothing is backed up. This is not a subscription.", "Para ver la herramienta funcionar: las cifras se quedan en este navegador, nada se envía, nada se sincroniza y nada se respalda. No es una suscripción.", "Um das Werkzeug laufen zu sehen: Die Zahlen bleiben in diesem Browser, nichts wird gesendet, nichts synchronisiert und nichts gesichert. Das ist kein Abonnement."],
   'c.err.session':      ["Votre session a expiré. Reconnectez-vous.","Your session has expired. Please sign in again.","Su sesión ha caducado. Vuelva a conectarse.","Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."],
   'c.err.serveur':      ["Le serveur n'a pas pu répondre.","The server could not answer.","El servidor no ha podido responder.","Der Server konnte nicht antworten."],
   'c.abo.attente':      ["accès en cours d'ouverture","access being opened","acceso en trámite","Zugang wird freigeschaltet"],
@@ -4996,6 +5014,18 @@ window.PC = (function(){
         <a class="btn" href="#offres" data-quitter data-i18n="e.ferme.offres">Voir les trois formules</a>
         <a class="btn btn--ghost" href="#contact" data-quitter data-i18n="e.ferme.ecrire">Écrire pour ouvrir un accès</a>
       </div>
+      <!-- La porte du proprietaire. Elle existe parce que l'entree par
+           adresse — « #espace-local » — n'atteint pas une page affichee
+           dans un cadre : le fragment reste sur la fenetre parente.
+           Sans ce bouton, celui qui tient le site est dehors.
+           Elle disparait avec toute la carte des qu'un serveur
+           repond : voir :root[data-serveur="1"] #c-ferme. -->
+      <p class="gate__sans">
+        <button class="lien-nu" type="button" id="ouvre-local" data-i18n="e.local.ouvrir">Ouvrir sans compte, en local</button>
+        <span class="gate__sans__d" data-i18n-html="e.local.quoi">Pour voir l'outil tourner&nbsp;:
+        les chiffres restent dans ce navigateur, rien n'est envoyé, rien n'est synchronisé
+        et rien n'est sauvegardé. Ce n'est pas un abonnement.</span>
+      </p>
       <a class="btn btn--ghost" href="#top" data-quitter data-i18n="e.retour">Retour au site</a>
     </section>
     <!-- Le portail du compte. C'est la seule porte. Il ne s'affiche
@@ -11403,8 +11433,10 @@ window.PC = (function(){
      Si un serveur repond, on ne fait rien : le compte a la priorite,
      et l'on ne veut pas de deux etats qui se disputent l'ecran.
      ============================================================ */
-  function ouvreLocal(){
-    if (window.location.hash !== '#espace-local') return;
+  function ouvreLocal(force){
+    /* Deux appelants : l'adresse « #espace-local » au chargement, et
+       le bouton de la carte — qui n'a pas d'adresse a presenter. */
+    if (!force && window.location.hash !== '#espace-local') return;
     if (window.PC_COMPTE && PC_COMPTE.present()) return;
     const bar = document.getElementById('bar-local');
     if (bar) bar.hidden = false;
@@ -11445,6 +11477,11 @@ window.PC = (function(){
      premier coup d'oeil, pour ne pas montrer un portail qui
      disparaitrait aussitot. */
   ouvreLocal();
+
+  const porteLocale = document.getElementById('ouvre-local');
+  if (porteLocale) porteLocale.addEventListener('click', function(){
+    ouvreLocal(true);
+  });
 
   /* La bascule de vue est dans un autre script : on lui laisse une
      poignee plutot qu'une variable globale de plus. */
