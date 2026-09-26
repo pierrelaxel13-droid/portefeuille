@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.2009";</script>
+<script>window.PC_VERSION = "260926.2024";</script>
 </head>
 <body>
 
@@ -2107,6 +2107,15 @@ body.detaille .bascule-vue{background:var(--accent); border-color:var(--accent);
 .bascule-vue__s{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none; opacity:.55;}
 body.detaille .bascule-vue__s{opacity:1;}
 
+/* Le bandeau du mode local. Une ligne, un filet d'accent : il doit
+   se lire une fois et ne pas repousser les chiffres. */
+.bar-local{
+  font-family:'IBM Plex Mono', monospace; font-size:11.5px; line-height:1.5;
+  color:var(--ink-2); border-left:2.5px solid var(--accent);
+  padding:2px 0 2px 12px; margin:0 0 clamp(20px,3vw,32px);
+}
+.bar-local b{font-weight:500; color:var(--ink);}
+
 /* ===== La porte =====
    Il n'y en a plus qu'une, et elle demande un vrai compte. Les trois
    entrees libres — voir un exemple, commencer avec mes chiffres,
@@ -2991,7 +3000,7 @@ window.PC = (function(){
   /* --- Actualite --- */
   'actu.eyebrow':        ["Actualité","Latest","Actualidad","Aktuelles"],
   'actu.h2':             ["Ce qui bouge aujourd'hui.","What is moving today.","Lo que se mueve hoy.","Was sich heute bewegt."],
-  'actu.intro':          ["Les cours arrivent en direct, comme dans votre espace. C'est la même mécanique&nbsp;: ce que vous voyez ici, vous le verrez sur vos propres lignes.","Prices arrive live, just as in your own space. It is the same machinery: what you see here, you will see on your own lines.","Las cotizaciones llegan en directo, igual que en su espacio. Es el mismo mecanismo: lo que ve aquí lo verá en sus propias partidas.","Die Kurse kommen live, genau wie in Ihrem Bereich. Es ist dieselbe Mechanik: was Sie hier sehen, sehen Sie auf Ihren eigenen Posten."],
+  'actu.intro':          ["Les cours ci-dessous arrivent du marché, comme ceux de vos lignes. En dessous, ce que je regarde en ce moment et pourquoi&nbsp;— à lire ou à ignorer, c'est selon.", "The prices below come from the market, like those on your own lines. Under them, what I am watching at the moment and why — read it or skip it, as you like.", "Las cotizaciones de abajo vienen del mercado, como las de sus líneas. Debajo, lo que observo ahora y por qué: para leer o para ignorar, como prefiera.", "Die Kurse unten kommen vom Markt, wie die Ihrer eigenen Positionen. Darunter, was ich gerade beobachte und warum — lesen oder überblättern, wie Sie mögen."],
   'actu.marches':        ["Les marchés","The markets","Los mercados","Die Märkte"],
   'actu.24h':            ["sur 24 heures","over 24 hours","en 24 horas","über 24 Stunden"],
   'actu.journal':        ["Le journal","The journal","El diario","Das Journal"],
@@ -3435,6 +3444,8 @@ window.PC = (function(){
   'c.att.quoi':         ["D'ici là, rien n'est perdu et rien n'est enregistré&nbsp;: le serveur refuse d'écrire tant que l'accès n'est pas ouvert. Ce n'est pas une panne.", "Until then nothing is lost and nothing is saved: the server refuses to write while access is closed. This is not a fault.", "Hasta entonces nada se pierde y nada se guarda: el servidor se niega a escribir mientras el acceso esté cerrado. No es una avería.", "Bis dahin geht nichts verloren und nichts wird gespeichert: Der Server verweigert das Schreiben, solange der Zugang zu ist. Das ist keine Störung."],
   'c.att.ecrire':       ["Écrire pour accélérer", "Write to speed it up", "Escribir para acelerar", "Schreiben, um es zu beschleunigen"],
   'c.err.attente':      ["Votre accès n'est pas encore ouvert&nbsp;: la saisie n'est pas enregistrée. Écrivez-nous et c'est réglé sous 48&nbsp;heures.", "Your access is not open yet: entries are not being saved. Write to us and it is settled within 48 hours.", "Su acceso aún no está abierto: lo que introduce no se guarda. Escríbanos y se resuelve en 48 horas.", "Ihr Zugang ist noch nicht offen: Eingaben werden nicht gespeichert. Schreiben Sie uns, dann ist es in 48 Stunden geregelt."],
+  'e.local.b':          ["Mode local.", "Local mode.", "Modo local.", "Lokaler Modus."],
+  'e.local.d':          ["Aucun compte, aucun serveur&nbsp;: ce que vous saisissez reste dans ce navigateur et n'est enregistré nulle part ailleurs. Vider les données de navigation l'effacerait.", "No account, no server: what you enter stays in this browser and is saved nowhere else. Clearing your browsing data would erase it.", "Sin cuenta, sin servidor: lo que introduce se queda en este navegador y no se guarda en ningún otro sitio. Borrar los datos de navegación lo eliminaría.", "Kein Konto, kein Server: Was Sie eintragen, bleibt in diesem Browser und wird nirgends sonst gespeichert. Das Löschen der Browserdaten würde es entfernen."],
   'c.err.session':      ["Votre session a expiré. Reconnectez-vous.","Your session has expired. Please sign in again.","Su sesión ha caducado. Vuelva a conectarse.","Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."],
   'c.err.serveur':      ["Le serveur n'a pas pu répondre.","The server could not answer.","El servidor no ha podido responder.","Der Server konnte nicht antworten."],
   'c.abo.attente':      ["accès en cours d'ouverture","access being opened","acceso en trámite","Zugang wird freigeschaltet"],
@@ -4515,34 +4526,6 @@ window.PC = (function(){
      devanture qui affiche « erreur de chargement » fait plus de mal
      que pas de rubrique du tout.
      ============================================================ -->
-<section class="section section--rule" id="actualite">
-  <div class="wrap">
-    <div class="section__head section__head--duo">
-      <div>
-        <p class="eyebrow" data-i18n="actu.eyebrow">Actualité</p>
-        <h2 data-i18n="actu.h2">Ce qui bouge aujourd'hui.</h2>
-      </div>
-      <p class="section__intro" data-i18n-html="actu.intro">Les cours arrivent en direct,
-        comme dans votre espace. C'est la même mécanique&nbsp;: ce que vous voyez ici,
-        vous le verrez sur vos propres lignes.</p>
-    </div>
-
-    <div class="actu-bloc" id="actu-marches" hidden>
-      <h3 class="actu-titre mono" data-i18n="actu.marches">Les marchés</h3>
-      <div class="actu-cours" id="actu-cours"></div>
-      <p class="actu-note mono" id="actu-note"></p>
-    </div>
-
-    <details class="replimob actu-journal" open>
-      <summary data-i18n="actu.journal">Le journal</summary>
-      <div class="actu-bloc">
-        <h3 class="actu-titre mono actu-titre--j" data-i18n="actu.journal">Le journal</h3>
-        <p class="actu-sous" data-i18n="actu.journal.d">Ce que je regarde, et pourquoi.</p>
-        <div class="actu-billets" id="actu-billets"></div>
-      </div>
-    </details>
-  </div>
-</section>
 
 <section class="section section--rule" id="apercu">
   <div class="wrap">
@@ -4907,6 +4890,17 @@ window.PC = (function(){
     </div>
   </div>
 
+  <!-- Mode local : affiche seulement quand on est entre par
+       « #espace-local ». Il ne s'agit pas d'un avertissement
+       decoratif — sans serveur, rien de ce qui est saisi ici ne
+       quitte ce navigateur, et il faut que ce soit ecrit. -->
+  <p class="bar-local" id="bar-local" hidden>
+    <b data-i18n="e.local.b">Mode local.</b>
+    <span data-i18n-html="e.local.d">Aucun compte, aucun serveur&nbsp;: ce que vous
+    saisissez reste dans ce navigateur et n'est enregistré nulle part ailleurs.
+    Vider les données de navigation l'effacerait.</span>
+  </p>
+
   <div class="gate" id="gate">
     <!-- Aucun serveur ne repond : il n'y a donc pas de compte a
          ouvrir, et rien ne sert de montrer un formulaire qui
@@ -4924,8 +4918,11 @@ window.PC = (function(){
         serveur — une vitrine, un fichier. Elle ne peut ni créer un compte ni en
         reconnaître un.</p>
       <div class="gate__portes">
-        <a class="btn" href="#offres" data-i18n="e.ferme.offres">Voir les trois formules</a>
-        <a class="btn btn--ghost" href="#contact" data-i18n="e.ferme.ecrire">Écrire pour ouvrir un accès</a>
+        <!-- « data-quitter » n'est pas decoratif : #offres et #contact
+             vivent dans <main>, que la vue espace masque en entier.
+             Sans lui, ces deux boutons ne faisaient rien. -->
+        <a class="btn" href="#offres" data-quitter data-i18n="e.ferme.offres">Voir les trois formules</a>
+        <a class="btn btn--ghost" href="#contact" data-quitter data-i18n="e.ferme.ecrire">Écrire pour ouvrir un accès</a>
       </div>
       <a class="btn btn--ghost" href="#top" data-quitter data-i18n="e.retour">Retour au site</a>
     </section>
@@ -5201,6 +5198,35 @@ window.PC = (function(){
       </div>
     </div>
       </div>
+
+      <!-- L'actualite vit ICI, dans l'espace, et non sur la
+           page d'accueil : elle est reservee aux clients. -->
+      <section class="actu" id="actualite">
+    <div class="section__head section__head--duo">
+      <div>
+        <p class="eyebrow" data-i18n="actu.eyebrow">Actualité</p>
+        <h2 data-i18n="actu.h2">Ce qui bouge aujourd'hui.</h2>
+      </div>
+      <p class="section__intro" data-i18n-html="actu.intro">Les cours ci-dessous
+        arrivent du marché, comme ceux de vos lignes. En dessous, ce que je regarde
+        en ce moment et pourquoi&nbsp;— à lire ou à ignorer, c'est selon.</p>
+    </div>
+
+    <div class="actu-bloc" id="actu-marches" hidden>
+      <h3 class="actu-titre mono" data-i18n="actu.marches">Les marchés</h3>
+      <div class="actu-cours" id="actu-cours"></div>
+      <p class="actu-note mono" id="actu-note"></p>
+    </div>
+
+    <details class="replimob actu-journal" open>
+      <summary data-i18n="actu.journal">Le journal</summary>
+      <div class="actu-bloc">
+        <h3 class="actu-titre mono actu-titre--j" data-i18n="actu.journal">Le journal</h3>
+        <p class="actu-sous" data-i18n="actu.journal.d">Ce que je regarde, et pourquoi.</p>
+        <div class="actu-billets" id="actu-billets"></div>
+      </div>
+    </details>
+      </section>
 
     </div>
 
@@ -11132,7 +11158,15 @@ window.PC = (function(){
      la navigation par fragment et l'écriture d'historique — l'espace
      client doit s'ouvrir quand même. */
   const ADRESSE = '#espace-client';
-  let dansEspace = window.location.hash === ADRESSE;
+  /* Une seconde adresse, qu'aucun lien de la page ne porte : elle
+     ouvre l'espace sans compte, pour celui qui tient le site. Voir le
+     commentaire du bloc « MODE LOCAL » plus bas. */
+  const ADRESSE_LOCALE = '#espace-local';
+  const estEspace = function(h){ return h === ADRESSE || h === ADRESSE_LOCALE; };
+  let dansEspace = estEspace(window.location.hash);
+  /* On retient par ou l'on est entre : sinon `noteAdresse` reecrirait
+     « #espace-client » et un rechargement perdrait le mode local. */
+  let parLocal = window.location.hash === ADRESSE_LOCALE;
 
   function majVue(){
     document.body.classList.toggle('vue-espace', dansEspace);
@@ -11151,7 +11185,8 @@ window.PC = (function(){
   function noteAdresse(dedans){
     try {
       const base = window.location.pathname + window.location.search;
-      history.pushState('', document.title, dedans ? base + ADRESSE : base);
+      history.pushState('', document.title,
+        dedans ? base + (parLocal ? ADRESSE_LOCALE : ADRESSE) : base);
     } catch (e){ /* historique indisponible : la variable fait foi */ }
   }
 
@@ -11167,18 +11202,37 @@ window.PC = (function(){
       bascule(true);
     });
   });
+  /* « Retour au site » ramene en haut ; mais un bouton peut aussi
+     vouloir un endroit precis de la vitrine — les formules, le
+     formulaire de contact. On quitte la vue, puis on va a la
+     destination annoncee par le href. Ignorer ce href, c'est ce qui
+     rendait deux boutons parfaitement inertes. */
   document.querySelectorAll('[data-quitter]').forEach(function(a){
     a.addEventListener('click', function(e){
       e.preventDefault();
       bascule(false);
+      const cible = (a.getAttribute('href') || '').trim();
+      if (!cible || cible === '#top' || cible === ADRESSE) return;
+      const el = cible.charAt(0) === '#' ? document.getElementById(cible.slice(1)) : null;
+      if (!el) return;
+      /* Apres `bascule`, <main> vient de reapparaitre : on laisse le
+         navigateur poser la mise en page avant de defiler, sinon la
+         position calculee est celle d'une page encore masquee. */
+      requestAnimationFrame(function(){
+        el.scrollIntoView({block:'start', behavior:'smooth'});
+      });
     });
   });
 
   /* Retour arrière et arrivée sur un lien partagé : on resynchronise
      depuis l'adresse, seule source fiable dans ces deux cas. */
   function suitAdresse(){
-    dansEspace = window.location.hash === ADRESSE;
+    dansEspace = estEspace(window.location.hash);
+    parLocal = window.location.hash === ADRESSE_LOCALE;
     majVue();
+    /* Arriver sur « #espace-local » par un lien ou par le bouton
+       « retour » doit ouvrir, comme au chargement. */
+    if (parLocal) ouvreLocal();
   }
   window.addEventListener('hashchange', suitAdresse);
   window.addEventListener('popstate', suitAdresse);
@@ -11194,6 +11248,33 @@ window.PC = (function(){
       return a;
     });
   }
+
+  /* ============================================================
+     MODE LOCAL — la porte du proprietaire
+
+     Sans serveur, l'espace n'a aucune entree : c'est le prix de
+     « compte obligatoire ». Il faut pourtant pouvoir regarder son
+     propre outil. Cette fonction ouvre l'espace en local, et elle
+     n'est appelee QUE si l'adresse porte « #espace-local ». Rien
+     dans la page ne mene a cette adresse.
+
+     Ce n'est pas une serrure : qui la connait entre. C'est de la
+     discretion. La serrure est cote serveur et ne bouge pas — sans
+     session et sans abonnement « actif », aucune ecriture ne passe.
+     Un visiteur en mode local joue dans son navigateur, jamais dans
+     les donnees de quelqu'un.
+
+     Si un serveur repond, on ne fait rien : le compte a la priorite,
+     et l'on ne veut pas de deux etats qui se disputent l'ecran.
+     ============================================================ */
+  function ouvreLocal(){
+    if (window.location.hash !== '#espace-local') return;
+    if (window.PC_COMPTE && PC_COMPTE.present()) return;
+    const bar = document.getElementById('bar-local');
+    if (bar) bar.hidden = false;
+    if (!ecranOuvert) ouvrir();
+  }
+  window.PC_LOCAL = ouvreLocal;
 
   const sauve = lire();
   if (sauve && sauve.portefeuilles.length){
@@ -11224,6 +11305,10 @@ window.PC = (function(){
 
   construitSelecteurs();
   rendre();
+  /* Entre par « #espace-local » : on ouvre tout de suite, avant le
+     premier coup d'oeil, pour ne pas montrer un portail qui
+     disparaitrait aussitot. */
+  ouvreLocal();
 
   /* La bascule de vue est dans un autre script : on lui laisse une
      poignee plutot qu'une variable globale de plus. */
