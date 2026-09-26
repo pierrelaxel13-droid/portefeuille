@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.2106";</script>
+<script>window.PC_VERSION = "260926.2133";</script>
 </head>
 <body>
 
@@ -2162,18 +2162,36 @@ body.detaille .bascule-vue__s{opacity:1;}
 /* La porte du proprietaire, sur la carte « demande un compte ». Un
    lien souligne, pas un bouton : ce n'est pas l'action principale de
    cet ecran, et la presenter comme telle inviterait a l'emprunter. */
-.gate__sans{
-  border-top:1px solid var(--rule); margin:16px 0 14px; padding-top:14px;
-  font-size:13px; line-height:1.55; color:var(--ink-3); text-wrap:pretty;
+.gate__cle{border-top:1px solid var(--rule); margin:16px 0 14px; padding-top:14px;}
+.gate__cle > summary{
+  cursor:pointer; list-style:none; font-family:'IBM Plex Mono', monospace;
+  font-size:12px; letter-spacing:.06em; color:var(--ink-3); padding-bottom:4px;
 }
-.gate__sans__d{display:block; margin-top:5px;}
+.gate__cle > summary::-webkit-details-marker{display:none;}
+.gate__cle > summary::before{content:"+ "; color:var(--accent);}
+.gate__cle[open] > summary::before{content:"– ";}
+.gate__cle > summary:hover{color:var(--ink);}
+.gate__cle > summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+.gate__cle .champ{margin-top:14px;}
+.gate__cle__e{font-size:13px; margin:10px 0; min-height:1.2em;}
+.gate__cle__e[data-ok="0"]{color:var(--loss);}
+.gate__cle__e[data-ok="1"]{color:var(--gain);}
 .lien-nu{
-  background:none; border:none; padding:0; font-family:inherit; font-size:13.5px;
-  color:var(--accent); text-decoration:underline; text-underline-offset:3px;
-  cursor:pointer;
+  background:none; border:none; padding:0; font-family:inherit; font-size:13px;
+  color:var(--ink-3); text-decoration:underline; text-underline-offset:3px;
+  cursor:pointer; display:block; margin-top:4px;
 }
 .lien-nu:hover{color:var(--ink);}
 .lien-nu:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+.gate__cle__d{font-size:12.5px; line-height:1.55; color:var(--ink-3); margin:12px 0 0; text-wrap:pretty;}
+.gate__forge{border-top:1px dashed var(--rule); margin-top:16px; padding-top:14px;}
+.gate__forge p{font-size:12.5px; line-height:1.55; color:var(--ink-3); margin:0 0 12px; text-wrap:pretty;}
+.gate__forge__out{
+  font-family:'IBM Plex Mono', monospace; font-size:11px; line-height:1.5;
+  background:var(--paper-2); border:1px solid var(--rule); border-radius:8px;
+  padding:10px 12px; margin:12px 0 0; overflow-x:auto; white-space:pre-wrap;
+  overflow-wrap:anywhere; user-select:all;
+}
 
 /* Le bandeau du mode local. Une ligne, un filet d'accent : il doit
    se lire une fois et ne pas repousser les chiffres. */
@@ -3534,8 +3552,23 @@ window.PC = (function(){
   'adm.err.etat':       ["État inconnu.", "Unknown state.", "Estado desconocido.", "Unbekannter Status."],
   'adm.err.formule':    ["Formule inconnue.", "Unknown plan.", "Plan desconocido.", "Unbekannter Tarif."],
   'adm.err.mois':       ["Le nombre de mois doit être un entier entre 1 et 600.", "The number of months must be a whole number between 1 and 600.", "El número de meses debe ser un entero entre 1 y 600.", "Die Anzahl der Monate muss eine ganze Zahl zwischen 1 und 600 sein."],
-  'e.local.ouvrir':     ["Ouvrir sans compte, en local", "Open locally, without an account", "Abrir en local, sin cuenta", "Lokal öffnen, ohne Konto"],
-  'e.local.quoi':       ["Pour voir l'outil tourner : les chiffres restent dans ce navigateur, rien n'est envoyé, rien n'est synchronisé et rien n'est sauvegardé. Ce n'est pas un abonnement.", "To see the tool run: the figures stay in this browser, nothing is sent, nothing is synced and nothing is backed up. This is not a subscription.", "Para ver la herramienta funcionar: las cifras se quedan en este navegador, nada se envía, nada se sincroniza y nada se respalda. No es una suscripción.", "Um das Werkzeug laufen zu sehen: Die Zahlen bleiben in diesem Browser, nichts wird gesendet, nichts synchronisiert und nichts gesichert. Das ist kein Abonnement."],
+  'e.cle.titre':        ["Accès réservé", "Private access", "Acceso reservado", "Vorbehaltener Zugang"],
+  'e.cle.champ':        ["Phrase de passe", "Passphrase", "Frase de paso", "Passphrase"],
+  'e.cle.entrer':       ["Entrer", "Enter", "Entrar", "Eintreten"],
+  'e.cle.quoi':         ["Cet accès ouvre l'espace sur cet appareil seulement : rien n'est envoyé, rien n'est synchronisé, rien n'est sauvegardé. La phrase reste dans ce navigateur, sous forme d'empreinte — jamais en clair, et elle n'en sort pas. L'exclusivité réelle viendra du serveur, qui vérifiera le mot de passe de son côté.", "This access opens the space on this device only: nothing is sent, nothing is synced, nothing is backed up. The passphrase stays in this browser, as a fingerprint — never in the clear, and it does not leave. Real exclusivity will come from the server, which will check the password on its own side.", "Este acceso abre el espacio solo en este aparato: nada se envía, nada se sincroniza, nada se respalda. La frase se queda en este navegador, como huella, nunca en claro, y no sale de ahí. La exclusividad real vendrá del servidor, que comprobará la contraseña de su lado.", "Dieser Zugang öffnet den Bereich nur auf diesem Gerät: nichts wird gesendet, nichts synchronisiert, nichts gesichert. Die Passphrase bleibt in diesem Browser, als Fingerabdruck — nie im Klartext, und sie verlässt ihn nicht. Echte Exklusivität kommt vom Server, der das Passwort auf seiner Seite prüft."],
+  'e.cle.forge':        ["Aucune clé n'est encore posée dans cette page. Choisissez une phrase de passe ci-dessus, puis cliquez ci-dessous : la page calcule son empreinte sans que la phrase sorte de votre navigateur. Envoyez-moi la ligne obtenue — elle ne permet pas de retrouver votre phrase.", "No key is set in this page yet. Choose a passphrase above, then click below: the page works out its fingerprint without the passphrase leaving your browser. Send me the resulting line — it cannot be turned back into your passphrase.", "Aún no hay ninguna clave en esta página. Elija una frase de paso arriba y pulse abajo: la página calcula su huella sin que la frase salga de su navegador. Envíeme la línea obtenida: no permite recuperar su frase.", "In dieser Seite ist noch kein Schlüssel gesetzt. Wählen Sie oben eine Passphrase und klicken Sie unten: Die Seite berechnet ihren Fingerabdruck, ohne dass die Passphrase Ihren Browser verlässt. Senden Sie mir die erhaltene Zeile — daraus lässt sich Ihre Passphrase nicht zurückgewinnen."],
+  'e.cle.calcule':      ["Calculer mon empreinte", "Work out my fingerprint", "Calcular mi huella", "Meinen Fingerabdruck berechnen"],
+  'e.cle.patiente':     ["Un instant : le calcul est lent à dessein.", "One moment: the computation is deliberately slow.", "Un momento: el cálculo es lento a propósito.", "Einen Moment: Die Berechnung ist absichtlich langsam."],
+  'e.cle.err.vide':     ["Il faut une phrase de passe.", "A passphrase is needed.", "Hace falta una frase de paso.", "Es braucht eine Passphrase."],
+  'e.cle.err.non':      ["Cette phrase ne correspond pas.", "That passphrase does not match.", "Esa frase no coincide.", "Diese Passphrase passt nicht."],
+  'e.cle.err.aucune':   ["Aucune clé n'est posée dans cette page : personne ne peut entrer par ici. Calculez votre empreinte ci-dessous.", "No key is set in this page: nobody can get in this way. Work out your fingerprint below.", "No hay ninguna clave en esta página: nadie puede entrar por aquí. Calcule su huella abajo.", "In dieser Seite ist kein Schlüssel gesetzt: Hier kommt niemand herein. Berechnen Sie unten Ihren Fingerabdruck."],
+  'e.cle.err.courte':   ["Quatre mots au moins, sans rapport entre eux. Une empreinte se trouve dans la page : un seul mot tomberait en quelques minutes.", "Four words at least, unrelated to one another. A fingerprint sits in the page: a single word would fall in minutes.", "Cuatro palabras como mínimo, sin relación entre ellas. La huella está en la página: una sola palabra caería en minutos.", "Mindestens vier Wörter, ohne Zusammenhang. Der Fingerabdruck steht in der Seite: ein einzelnes Wort fiele in Minuten."],
+  'e.cle.err.crypto':   ["Ce navigateur ne donne pas accès aux fonctions de chiffrement ici — il y faut une adresse en https. Impossible de vérifier quoi que ce soit dans ces conditions.", "This browser does not expose the cryptographic functions here — that needs an https address. Nothing can be verified under these conditions.", "Este navegador no da acceso a las funciones criptográficas aquí: hace falta una dirección https. No se puede verificar nada en estas condiciones.", "Dieser Browser gibt hier keinen Zugang zu den Kryptofunktionen — dafür braucht es eine https-Adresse. Unter diesen Umständen ist nichts überprüfbar."],
+  'e.cle.poser':        ["Choisir cette phrase", "Set this passphrase", "Elegir esta frase", "Diese Passphrase festlegen"],
+  'e.cle.premiere':     ["Première visite : la phrase que vous tapez devient celle de cet appareil. Quatre mots au moins.", "First visit: the passphrase you type becomes this device's. Four words at least.", "Primera visita: la frase que escriba pasa a ser la de este aparato. Cuatro palabras como mínimo.", "Erster Besuch: Die Passphrase, die Sie eintippen, wird die dieses Geräts. Mindestens vier Wörter."],
+  'e.cle.posee':        ["C'est retenu pour cet appareil. Elle sera redemandée à chaque nouvel onglet.", "Remembered for this device. It will be asked again in each new tab.", "Guardada para este aparato. Se pedirá de nuevo en cada pestaña.", "Für dieses Gerät gespeichert. Sie wird in jedem neuen Tab erneut verlangt."],
+  'e.cle.oubli':        ["J'ai oublié ma phrase", "I have forgotten my passphrase", "He olvidado mi frase", "Ich habe meine Passphrase vergessen"],
+  'e.cle.oublie':       ["Effacée. Vos chiffres sont intacts : choisissez une nouvelle phrase.", "Erased. Your figures are untouched: choose a new passphrase.", "Borrada. Sus cifras están intactas: elija una nueva frase.", "Gelöscht. Ihre Zahlen sind unberührt: wählen Sie eine neue Passphrase."],
   'c.err.session':      ["Votre session a expiré. Reconnectez-vous.","Your session has expired. Please sign in again.","Su sesión ha caducado. Vuelva a conectarse.","Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."],
   'c.err.serveur':      ["Le serveur n'a pas pu répondre.","The server could not answer.","El servidor no ha podido responder.","Der Server konnte nicht antworten."],
   'c.abo.attente':      ["accès en cours d'ouverture","access being opened","acceso en trámite","Zugang wird freigeschaltet"],
@@ -5020,12 +5053,40 @@ window.PC = (function(){
            Sans ce bouton, celui qui tient le site est dehors.
            Elle disparait avec toute la carte des qu'un serveur
            repond : voir :root[data-serveur="1"] #c-ferme. -->
-      <p class="gate__sans">
-        <button class="lien-nu" type="button" id="ouvre-local" data-i18n="e.local.ouvrir">Ouvrir sans compte, en local</button>
-        <span class="gate__sans__d" data-i18n-html="e.local.quoi">Pour voir l'outil tourner&nbsp;:
-        les chiffres restent dans ce navigateur, rien n'est envoyé, rien n'est synchronisé
-        et rien n'est sauvegardé. Ce n'est pas un abonnement.</span>
-      </p>
+      <!-- L'acces reserve. Il remplace un bouton qui etait ouvert a
+           tous. Ce qu'il vaut exactement est ecrit dans le bloc
+           « ACCES RESERVE » du script, et resume sous le champ. -->
+      <details class="gate__cle" id="gate-cle">
+        <summary data-i18n="e.cle.titre">Accès réservé</summary>
+        <div class="champ">
+          <label for="cle-phrase" data-i18n="e.cle.champ">Phrase de passe</label>
+          <input id="cle-phrase" type="password" autocomplete="current-password"
+                 spellcheck="false" autocapitalize="off">
+        </div>
+        <p class="gate__cle__e" id="cle-msg" aria-live="polite"></p>
+        <button class="btn" type="button" id="cle-entrer" data-i18n="e.cle.entrer">Entrer</button>
+        <!-- Sans cela, une phrase oubliee enferme dehors pour de bon,
+             et il faudrait vider les donnees du navigateur — ce qui
+             emporterait aussi les chiffres saisis. -->
+        <button class="lien-nu" type="button" id="cle-oubli" hidden data-i18n="e.cle.oubli">J'ai oublié ma phrase</button>
+        <p class="gate__cle__d" data-i18n-html="e.cle.quoi">Cet accès ouvre l'espace sur cet
+        appareil seulement&nbsp;: rien n'est envoyé, rien n'est synchronisé, rien n'est
+        sauvegardé. L'exclusivité réelle viendra du serveur, qui vérifiera le mot de passe
+        de son côté.</p>
+
+        <!-- Visible seulement tant qu'aucune empreinte n'est posee dans
+             la page. Il derive l'empreinte SUR PLACE : la phrase ne part
+             nulle part, et c'est l'empreinte — inoffensive — qui se
+             recopie dans le fichier. -->
+        <div class="gate__forge" id="cle-forge" hidden>
+          <p data-i18n-html="e.cle.forge">Aucune clé n'est encore posée dans cette page.
+          Choisissez une phrase de passe ci-dessus, puis cliquez ci-dessous&nbsp;: la page
+          calcule son empreinte sans que la phrase sorte de votre navigateur. Envoyez-moi
+          la ligne obtenue — elle ne permet pas de retrouver votre phrase.</p>
+          <button class="btn btn--ghost" type="button" id="cle-calcule" data-i18n="e.cle.calcule">Calculer mon empreinte</button>
+          <pre class="gate__forge__out" id="cle-out" hidden></pre>
+        </div>
+      </details>
       <a class="btn btn--ghost" href="#top" data-quitter data-i18n="e.retour">Retour au site</a>
     </section>
     <!-- Le portail du compte. C'est la seule porte. Il ne s'affiche
@@ -11397,8 +11458,8 @@ window.PC = (function(){
     parLocal = window.location.hash === ADRESSE_LOCALE;
     majVue();
     /* Arriver sur « #espace-local » par un lien ou par le bouton
-       « retour » doit ouvrir, comme au chargement. */
-    if (parLocal) ouvreLocal();
+       « retour » deplie le volet, comme au chargement. Rien de plus. */
+    if (parLocal && typeof montreVerrou === 'function') montreVerrou();
   }
   window.addEventListener('hashchange', suitAdresse);
   window.addEventListener('popstate', suitAdresse);
@@ -11433,16 +11494,21 @@ window.PC = (function(){
      Si un serveur repond, on ne fait rien : le compte a la priorite,
      et l'on ne veut pas de deux etats qui se disputent l'ecran.
      ============================================================ */
-  function ouvreLocal(force){
-    /* Deux appelants : l'adresse « #espace-local » au chargement, et
-       le bouton de la carte — qui n'a pas d'adresse a presenter. */
-    if (!force && window.location.hash !== '#espace-local') return;
+  /* Un SEUL appelant : le verrou, apres verification de la phrase de
+     passe. L'adresse « #espace-local » n'ouvre plus rien par elle-meme
+     — elle deplie le volet, c'est tout. Le garde est explicite pour
+     que rebrancher un appel demande de l'ecrire, et que le test [53]
+     le voie.
+
+     Rien n'est expose sur `window` : « PC_LOCAL » etait une poignee
+     qui ouvrait l'espace depuis la console, donc une porte de plus. */
+  function ouvreLocal(deVerrou){
+    if (deVerrou !== true) return;
     if (window.PC_COMPTE && PC_COMPTE.present()) return;
     const bar = document.getElementById('bar-local');
     if (bar) bar.hidden = false;
     if (!ecranOuvert) ouvrir();
   }
-  window.PC_LOCAL = ouvreLocal;
 
   const sauve = lire();
   if (sauve && sauve.portefeuilles.length){
@@ -11473,15 +11539,246 @@ window.PC = (function(){
 
   construitSelecteurs();
   rendre();
-  /* Entre par « #espace-local » : on ouvre tout de suite, avant le
-     premier coup d'oeil, pour ne pas montrer un portail qui
-     disparaitrait aussitot. */
-  ouvreLocal();
+  /* « #espace-local » est un raccourci d'AFFICHAGE : il deplie le
+     volet « Acces reserve » et pose le curseur dans le champ. Il
+     n'ouvre rien — c'est la phrase de passe qui ouvre, et elle seule.
+     Mon test [53] verifiait l'ancien comportement et passait encore :
+     c'est ce qui m'a fait voir que la porte d'a cote etait restee
+     grande ouverte. */
+  function montreVerrou(){
+    if (window.location.hash !== '#espace-local') return;
+    const d = document.getElementById('gate-cle');
+    if (d) d.open = true;
+    const c = document.getElementById('cle-phrase');
+    if (c) setTimeout(function(){ try { c.focus(); } catch (e){} }, 120);
+  }
+  montreVerrou();
 
-  const porteLocale = document.getElementById('ouvre-local');
-  if (porteLocale) porteLocale.addEventListener('click', function(){
-    ouvreLocal(true);
-  });
+  /* ============================================================
+     ACCES RESERVE — la clef du proprietaire
+
+     ==== A REGLER UNE FOIS ====
+     `CLE_LOCALE.empreinte` est vide : personne ne peut donc entrer
+     par ici, et c'est voulu — un verrou sans clef vaut mieux qu'une
+     porte ouverte. Pour poser la votre :
+
+       1. Ouvrez la page, « Connexion », « Acces reserve ».
+       2. Tapez votre phrase de passe. Une PHRASE : quatre ou cinq
+          mots sans rapport entre eux. « cheval-brique-orage-lundi »
+          bat « Tr0ub4dor! » de tres loin, et se retient mieux.
+       3. « Calculer mon empreinte ». La page derive l'empreinte SUR
+          PLACE : votre phrase ne part nulle part.
+       4. Recopiez la ligne obtenue ici, a la place de la ligne vide.
+
+     Ce que ce verrou vaut, sans enjoliver :
+
+     - L'empreinte est dans la page, donc lisible par qui l'ouvre.
+       Quelqu'un peut la recopier et essayer des phrases contre elle,
+       hors ligne, aussi vite que sa machine le permet. C'est pour
+       cela que la derivation est lente a dessein — PBKDF2-SHA256,
+       310 000 tours, la recommandation de l'OWASP — et pour cela
+       qu'une phrase de quatre mots est indispensable : un mot du
+       dictionnaire tomberait en quelques minutes.
+     - Le deverrouillage est retenu dans sessionStorage, donc
+       forgeable par qui ouvre les outils de developpement. Ce verrou
+       arrete l'usage occasionnel, pas quelqu'un de determine.
+     - La seule exclusivite qui tienne est celle du serveur : un mot
+       de passe qu'il verifie de son cote, une session qu'il delivre,
+       et rien de verifiable dans la page. C'est une etape, pas une
+       destination.
+     ============================================================ */
+  const CLE_LOCALE = {
+    empreinte: '',                 /* <- la ligne a remplir */
+    sel: 'pierrelco.local.v1',
+    tours: 310000
+  };
+  const CLE_MARQUE = 'pierrelco.local.ouvert';
+  /* L'empreinte choisie a la premiere visite, quand la page n'en porte
+     pas. Elle ne vaut que pour CE navigateur — c'est sa limite, et
+     c'est dit a l'ecran. */
+  const CLE_ICI = 'pierrelco.local.cle';
+
+  function cleLocale(){
+    try { return localStorage.getItem(CLE_ICI) || ''; } catch (e){ return ''; }
+  }
+  /* L'empreinte de la page gagne toujours : si elle existe, celle du
+     navigateur n'est plus consultee. Sinon un inconnu qui aurait pose
+     la sienne avant vous entrerait encore. */
+  function cleAttendue(){ return CLE_LOCALE.empreinte || cleLocale(); }
+
+  function digCle(phrase){
+    /* WebCrypto n'existe pas hors contexte securise (http:// autre que
+       localhost). Sans lui on ne peut ni verifier ni poser de clef :
+       on le dit, plutot que de laisser croire a un mot de passe. */
+    const sc = window.crypto && window.crypto.subtle;
+    if (!sc) return Promise.reject(new Error('pas-de-webcrypto'));
+    const enc = new TextEncoder();
+    return sc.importKey('raw', enc.encode(phrase), {name:'PBKDF2'}, false, ['deriveBits'])
+      .then(function(k){
+        return sc.deriveBits({
+          name:'PBKDF2', salt:enc.encode(CLE_LOCALE.sel),
+          iterations:CLE_LOCALE.tours, hash:'SHA-256'
+        }, k, 256);
+      })
+      .then(function(bits){
+        return Array.prototype.map.call(new Uint8Array(bits), function(o){
+          return o.toString(16).padStart(2, '0');
+        }).join('');
+      });
+  }
+
+  /* Comparaison a temps constant. Sur une empreinte publique le gain
+     est theorique, mais ecrire « === » ici apprendrait la mauvaise
+     habitude a la prochaine lecture. */
+  function memeCle(a, b){
+    if (typeof a !== 'string' || typeof b !== 'string') return false;
+    if (a.length !== b.length) return false;
+    let d = 0;
+    for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    return d === 0;
+  }
+
+  function ditCle(texte, ok){
+    const el = document.getElementById('cle-msg');
+    if (!el) return;
+    el.textContent = texte || '';
+    if (ok === undefined) el.removeAttribute('data-ok');
+    else el.setAttribute('data-ok', ok ? '1' : '0');
+  }
+
+  function brancheCle(){
+    const forge = document.getElementById('cle-forge');
+    const champ = document.getElementById('cle-phrase');
+    const entrer = document.getElementById('cle-entrer');
+    const calcule = document.getElementById('cle-calcule');
+    if (!champ || !entrer) return;
+
+    /* Trois etats :
+         - la page porte une empreinte  → elle seule ouvre
+         - sinon, ce navigateur en a une → elle ouvre ici
+         - sinon                        → la premiere visite la choisit */
+    const dansLaPage = !!CLE_LOCALE.empreinte;
+    const aPoser = !dansLaPage && !cleLocale();
+
+    /* L'outil qui calcule la ligne a me transmettre n'a de sens que
+       tant que la page n'en porte pas. */
+    if (forge) forge.hidden = dansLaPage;
+
+    /* Premiere visite : le bouton pose la clef au lieu de la verifier.
+       On le dit, plutot que de laisser croire a une verification. */
+    const oubli = document.getElementById('cle-oubli');
+    function majTexte(){
+      const neuf = !CLE_LOCALE.empreinte && !cleLocale();
+      /* On change la CLE de traduction, pas seulement le texte :
+         l'applicateur de i18n repasse apres nous et reecrit le
+         textContent depuis « data-i18n ». Poser l'un sans l'autre
+         faisait afficher « Entrer » sur une premiere visite — ce que
+         le test [56] a vu. Et un changement de langue doit suivre. */
+      entrer.setAttribute('data-i18n', neuf ? 'e.cle.poser' : 'e.cle.entrer');
+      entrer.textContent = PC.t(neuf ? 'e.cle.poser' : 'e.cle.entrer');
+      if (neuf) ditCle(PC.t('e.cle.premiere'));
+      /* Oublier n'a de sens que pour une clef posee dans CE navigateur :
+         celle de la page, on ne l'efface pas depuis la page. */
+      if (oubli) oubli.hidden = !!CLE_LOCALE.empreinte || !cleLocale();
+    }
+    majTexte();
+
+    /* Changer de langue ne doit pas ramener le mauvais libelle. */
+    if (PC.surChangement) PC.surChangement(majTexte);
+
+    if (oubli) oubli.addEventListener('click', function(){
+      /* On efface la clef, PAS les chiffres. Une phrase oubliee ne doit
+         pas coûter un portefeuille. */
+      try { localStorage.removeItem(CLE_ICI); } catch (e){}
+      try { sessionStorage.removeItem(CLE_MARQUE); } catch (e){}
+      champ.value = '';
+      ditCle(PC.t('e.cle.oublie'), true);
+      majTexte();
+    });
+
+    /* Deja deverrouille dans cet onglet : on rouvre sans redemander. */
+    let dejaOuvert = false;
+    try { dejaOuvert = sessionStorage.getItem(CLE_MARQUE) === '1'; } catch (e){}
+    if (dejaOuvert && cleAttendue()) ouvreLocal(true);
+
+    entrer.addEventListener('click', function(){
+      const phrase = champ.value;
+      if (!phrase){ ditCle(PC.t('e.cle.err.vide'), false); return; }
+
+      /* Rien nulle part : on POSE la clef de ce navigateur. Meme
+         exigence de longueur que pour l'empreinte a transmettre — une
+         phrase d'un mot ne protege rien. */
+      if (!cleAttendue()){
+        if (phrase.trim().split(/\s+|-/).filter(Boolean).length < 4){
+          ditCle(PC.t('e.cle.err.courte'), false);
+          return;
+        }
+        entrer.disabled = true;
+        ditCle(PC.t('e.cle.patiente'));
+        digCle(phrase).then(function(d){
+          entrer.disabled = false;
+          try { localStorage.setItem(CLE_ICI, d); } catch (e){}
+          champ.value = '';
+          try { sessionStorage.setItem(CLE_MARQUE, '1'); } catch (e){}
+          ditCle(PC.t('e.cle.posee'), true);
+          majTexte();
+          ouvreLocal(true);
+        }).catch(function(e){
+          entrer.disabled = false;
+          ditCle(PC.t(e && e.message === 'pas-de-webcrypto' ? 'e.cle.err.crypto' : 'e.cle.err.non'), false);
+        });
+        return;
+      }
+
+      entrer.disabled = true;
+      ditCle(PC.t('e.cle.patiente'));
+      digCle(phrase).then(function(d){
+        entrer.disabled = false;
+        if (!memeCle(d, cleAttendue())){
+          /* On ne dit pas « phrase inconnue » plus vite qu'on ne dirait
+             « phrase correcte » : les 310 000 tours sont passes dans les
+             deux cas, et c'est deja ce qui ralentit une attaque. */
+          ditCle(PC.t('e.cle.err.non'), false);
+          return;
+        }
+        champ.value = '';
+        try { sessionStorage.setItem(CLE_MARQUE, '1'); } catch (e){}
+        ditCle('');
+        ouvreLocal(true);
+      }).catch(function(e){
+        entrer.disabled = false;
+        ditCle(PC.t(e && e.message === 'pas-de-webcrypto' ? 'e.cle.err.crypto' : 'e.cle.err.non'), false);
+      });
+    });
+
+    champ.addEventListener('keydown', function(e){
+      if (e.key === 'Enter'){ e.preventDefault(); entrer.click(); }
+    });
+
+    if (calcule) calcule.addEventListener('click', function(){
+      const phrase = champ.value;
+      const out = document.getElementById('cle-out');
+      if (!phrase){ ditCle(PC.t('e.cle.err.vide'), false); return; }
+      if (phrase.trim().split(/\s+|-/).filter(Boolean).length < 4){
+        ditCle(PC.t('e.cle.err.courte'), false);
+        return;
+      }
+      calcule.disabled = true;
+      ditCle(PC.t('e.cle.patiente'));
+      digCle(phrase).then(function(d){
+        calcule.disabled = false;
+        ditCle('');
+        if (out){
+          out.hidden = false;
+          out.textContent = "empreinte: '" + d + "',";
+        }
+      }).catch(function(){
+        calcule.disabled = false;
+        ditCle(PC.t('e.cle.err.crypto'), false);
+      });
+    });
+  }
+  brancheCle();
 
   /* La bascule de vue est dans un autre script : on lui laisse une
      poignee plutot qu'une variable globale de plus. */
