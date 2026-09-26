@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.1910";</script>
+<script>window.PC_VERSION = "260926.2009";</script>
 </head>
 <body>
 
@@ -1541,17 +1541,6 @@ body.flux-vif .cours__vif::before{
 body.vue-espace .espace{display:block;}
 body.vue-espace main, body.vue-espace .site-foot{display:none;}
 
-/* Une ligne, pas un pavé. L'information se lit une fois : un bloc
-   plein écran en tête de page lui donnait un poids qu'elle n'a pas, et
-   repoussait les chiffres d'autant. Le filet d'accent suffit à la
-   distinguer du reste. */
-.espace .demo-bar{
-  font-family:'IBM Plex Mono', monospace; font-size:11.5px; line-height:1.5;
-  color:var(--ink-2); border-left:2.5px solid var(--accent);
-  padding:2px 0 2px 12px; margin-bottom:clamp(20px,3vw,32px);
-}
-.espace .demo-bar b{font-weight:500; color:var(--ink);}
-
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
   font-family:inherit; font-size:14px; font-weight:600; cursor:pointer;
@@ -1949,13 +1938,7 @@ body.vue-espace .field{opacity:.95;}
 /* Sur telephone, le total est ce qu'on vient voir : il passe devant,
    en grand, et le reste s'efface un peu. Le gain prend la forme d'une
    pastille — c'est ce que l'oeil cherche en premier apres le montant. */
-/* L'avertissement de demonstration doit rester lisible partout, mais
-   trois lignes de mono avant le moindre chiffre, sur un telephone,
-   c'est un ecran perdu. La version courte dit la meme chose. */
-.demo-bar__court{display:none;}
 @media (max-width:700px){
-  .demo-bar__long{display:none;}
-  .demo-bar__court{display:inline;}
   .board__titre .eyebrow{display:none;}
   .board__titre h2{font-size:26px;}
   .board__barre{gap:12px;}
@@ -2124,25 +2107,18 @@ body.detaille .bascule-vue{background:var(--accent); border-color:var(--accent);
 .bascule-vue__s{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none; opacity:.55;}
 body.detaille .bascule-vue__s{opacity:1;}
 
-/* ===== Portes d'entrée =====
-   Le formulaire demandait une adresse et un mot de passe pour ouvrir une
-   démonstration qui accepte n'importe quoi : c'est du travail demandé
-   à quelqu'un qui ne sait pas encore si la page l'intéresse. Deux
-   boutons d'abord, le faux formulaire plus bas pour qui veut le voir. */
+/* ===== La porte =====
+   Il n'y en a plus qu'une, et elle demande un vrai compte. Les trois
+   entrees libres — voir un exemple, commencer avec mes chiffres,
+   simuler une connexion — sont parties : elles laissaient utiliser
+   l'outil entier sans compte et sans payer.
+
+   Trois cartes se relaient au meme endroit (#c-ferme, #c-portail,
+   #c-attente) ; une seule est visible a la fois, et aucune ne mene
+   au tableau de bord par elle-meme. */
 .gate__portes{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
 .gate__portes .btn, .gate__portes .btn--ghost{width:100%; justify-content:center;}
 .gate__quoi{font-size:13.5px; line-height:1.55; color:var(--ink-3); margin:-2px 0 8px; text-wrap:pretty;}
-.gate__demo{border-top:1px solid var(--rule); padding-top:14px; margin-top:4px;}
-.gate__demo > summary{
-  cursor:pointer; list-style:none; font-family:'IBM Plex Mono', monospace;
-  font-size:12px; letter-spacing:.06em; color:var(--ink-3); padding-bottom:4px;
-}
-.gate__demo > summary::-webkit-details-marker{display:none;}
-.gate__demo > summary::before{content:"+ "; color:var(--accent);}
-.gate__demo[open] > summary::before{content:"– ";}
-.gate__demo > summary:hover{color:var(--ink);}
-.gate__demo > summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
-.gate__demo .champ{margin-top:14px;}
 
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
 
@@ -2557,11 +2533,18 @@ body.impression .grain, body.impression .field{display:none;}
 .barre-pf select:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 .barre-pf__k{font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 .barre-pf .btn{padding:0 12px; height:36px; font-size:12.5px;}
-.note-demo{
-  font-family:'IBM Plex Mono', monospace; font-size:11.5px; line-height:1.5;
-  color:var(--ink-3); max-width:78ch;
-  margin:clamp(30px,4vw,48px) 0 0; padding-top:16px; border-top:1px solid var(--rule);
+/* La formule n'est plus un reglage : c'est un fait. Meme hauteur et
+   meme famille que les selecteurs d'a cote, pour tenir dans la
+   rangee sans la casser — mais aucun ornement de controle : ni
+   fleche, ni bordure cliquable, ni curseur de main. */
+.formule-nom{
+  display:inline-flex; align-items:center; height:36px; padding:0 11px;
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+  letter-spacing:.06em; color:var(--ink-2);
+  border:1px solid var(--rule); border-radius:10px;
+  background:var(--paper-2); white-space:nowrap;
 }
+
 /* Un plafond atteint se dit à l'endroit où il gêne, pas ailleurs. */
 .mur{
   border:1px solid var(--rule-strong); border-left:3px solid var(--accent);
@@ -2713,14 +2696,11 @@ table.actifs tbody tr{cursor:pointer;}
   .reglage, .board__cmd .bascule-vue, .barre-pf select{font-size:16px;}
 }
 
-/* Quand un serveur repond, deux choses de la page deviennent
-   fausses et doivent disparaitre : la bande qui annonce une
-   « connexion simulee », et le formulaire de demonstration. Les
-   laisser serait mentir a celui qui vient de creer un compte. */
-:root[data-serveur="1"] .demo-bar,
-/* « un vrai abonnement se controle cote serveur » : c'est
-   exactement ce qui se passe des qu'il y en a un. */
-:root[data-serveur="1"] .note-demo{display:none;}
+/* Un serveur repond : la carte qui explique l'absence de serveur n'a
+   plus lieu d'etre. C'est aussi fait en JavaScript (majPortail), mais
+   la regle CSS agit sans attendre le premier rendu — sinon la carte
+   apparait puis disparait sous les yeux du visiteur. */
+:root[data-serveur="1"] #c-ferme{display:none;}
 
 /* La barre d'onglets navigue un espace ou l'on n'est pas encore
    entre : tant que le portail est la, elle n'a rien a proposer — et
@@ -3111,14 +3091,11 @@ window.PC = (function(){
   'off.3.nom':          ["Max","Max","Max","Max"],
   'off.3.prix':         ["{{m:19}}","{{m:19}}","{{m:19}}","{{m:19}}"],
   'off.3.prix.s':       ["par mois","per month","al mes","pro Monat"],
-  'off.3.l1':           ["Plusieurs portefeuilles séparés (perso, société, famille)","Several separate portfolios (personal, company, family)","Varias carteras separadas (personal, empresa, familia)","Mehrere getrennte Portfolios (privat, Firma, Familie)"],
-  'off.3.l2':           ["Rapport mensuel prêt à imprimer","Monthly report ready to print","Informe mensual listo para imprimir","Monatsbericht, druckfertig"],
-  'off.3.l3':           ["Tout ce que contient Pro","Everything Pro includes","Todo lo que incluye Pro","Alles, was Pro enthält"],
-  'off.3.l4':           ["Sauvegarde et restauration de vos données","Backup and restore of your data","Copia de seguridad y restauración de sus datos","Sicherung und Wiederherstellung Ihrer Daten"],
+  'off.3.l1':           ["Tout ce que contient Pro", "Everything Pro includes", "Todo lo que incluye Pro", "Alles, was Pro enthält"],
+  'off.3.l2':           ["Plusieurs portefeuilles séparés (perso, société, famille)", "Several separate portfolios (personal, company, family)", "Varias carteras separadas (personal, empresa, familia)", "Mehrere getrennte Portfolios (privat, Firma, Familie)"],
+  'off.3.l3':           ["Rapport mensuel prêt à imprimer", "Monthly report ready to print", "Informe mensual listo para imprimir", "Monatsbericht, druckfertig"],
   'off.3.cta':          ["Prendre Max","Choose Max","Elegir Max","Max wählen"],
   'off.souscrire':      ["Souscrire","Subscribe","Suscribirse","Abonnieren"],
-  'off.essayer':        ["Essayer la démonstration","Try the demo","Probar la demostración","Demo ausprobieren"],
-  'off.gratuit.cta':    ["Prendre Normal","Choose Normal","Elegir Normal","Normal wählen"],
   'off.mail.sujet':     ["Abonnement {{f}} — Pierrel & Co","{{f}} subscription — Pierrel & Co","Suscripción {{f}} — Pierrel & Co","Abonnement {{f}} — Pierrel & Co"],
   'off.mail.corps':     ["Bonjour,\n\nJe souhaite souscrire à la formule {{f}} ({{p}} par mois).\n\nNom :\nSociété (facultatif) :\nTéléphone (facultatif) :\n\nMerci de me dire comment procéder.\n","Hello,\n\nI would like to subscribe to the {{f}} plan ({{p}} per month).\n\nName:\nCompany (optional):\nPhone (optional):\n\nPlease let me know how to proceed.\n","Hola:\n\nDeseo suscribirme al plan {{f}} ({{p}} al mes).\n\nNombre:\nEmpresa (opcional):\nTeléfono (opcional):\n\nDíganme cómo proceder, por favor.\n","Guten Tag,\n\nich möchte den Tarif {{f}} ({{p}} pro Monat) abonnieren.\n\nName:\nUnternehmen (optional):\nTelefon (optional):\n\nBitte teilen Sie mir mit, wie ich vorgehen soll.\n"],
   'off.mail.ouvert':    ["Votre logiciel de messagerie s'est ouvert avec la demande prête à envoyer. S'il ne s'est rien passé, écrivez directement à {{m}}.","Your mail app should have opened with the request ready to send. If nothing happened, write directly to {{m}}.","Su programa de correo debería haberse abierto con la solicitud lista para enviar. Si no ha ocurrido nada, escriba directamente a {{m}}.","Ihr E-Mail-Programm sollte sich mit der fertigen Anfrage geöffnet haben. Falls nichts passiert ist, schreiben Sie direkt an {{m}}."],
@@ -3136,7 +3113,7 @@ window.PC = (function(){
   'pay.echec':          ["Le paiement n'a pas abouti&nbsp;: {{e}}","The payment did not go through: {{e}}","El pago no se ha completado: {{e}}","Die Zahlung ist fehlgeschlagen: {{e}}"],
   'pay.horsligne':      ["Le paiement en ligne n'est pas encore branché sur ce site. Votre demande a été préparée par e-mail à la place.","Online payment is not wired up on this site yet. Your request has been prepared by email instead.","El pago en línea aún no está conectado en este sitio. Se ha preparado su solicitud por correo en su lugar.","Die Online-Zahlung ist auf dieser Website noch nicht angebunden. Stattdessen wurde Ihre Anfrage per E-Mail vorbereitet."],
   'off.avert.b':        ["Ce que c'est, et ce que ce n'est pas.","What this is, and what it is not.","Lo que es, y lo que no es.","Was es ist — und was nicht."],
-  'off.avert':          ["Un outil de suivi&nbsp;: vous entrez vos chiffres, il les met en forme et les met à jour. Il ne recommande aucun placement, ne passe aucun ordre et ne donne aucun conseil en investissement. <b>Souscrire</b> envoie une demande par e-mail et l'accès est ouvert à la main sous 48&nbsp;h&nbsp;; le paiement en ligne arrive. <b>Essayer la démonstration</b> ouvre l'espace tout de suite, sans compte et sans engagement.","A tracking tool: you enter your figures, it formats and updates them. It recommends no investment, places no order and gives no investment advice. <b>Subscribe</b> sends a request by email and access is opened by hand within 48 hours; online payment is coming. <b>Try the demo</b> opens the space right away, with no account and no commitment.","Una herramienta de seguimiento: usted introduce sus cifras y ella las presenta y actualiza. No recomienda ninguna inversión, no ejecuta ninguna orden y no da asesoramiento de inversión. <b>Suscribirse</b> envía una solicitud por correo y el acceso se abre a mano en 48 h; el pago en línea llegará. <b>Probar la demostración</b> abre el espacio de inmediato, sin cuenta ni compromiso.","Ein Werkzeug zur Nachverfolgung: Sie tragen Ihre Zahlen ein, es stellt sie dar und hält sie aktuell. Es empfiehlt keine Anlage, erteilt keine Order und gibt keine Anlageberatung. <b>Abonnieren</b> sendet eine Anfrage per E-Mail, der Zugang wird binnen 48 Stunden manuell freigeschaltet; die Online-Zahlung folgt. <b>Demo ausprobieren</b> öffnet den Bereich sofort, ohne Konto und ohne Verpflichtung."],
+  'off.avert':          ["Un outil de suivi&nbsp;: vous entrez vos chiffres, il les met en forme et les met à jour. Il ne recommande aucun placement, ne passe aucun ordre et ne donne aucun conseil en investissement. <b>Souscrire</b> envoie une demande par e-mail&nbsp;; l'accès est ouvert à la main sous 48&nbsp;h, et le paiement en ligne arrive. Dans les trois formules&nbsp;: l'export de vos données en un fichier, et une sauvegarde du serveur chaque jour. Il n'y a pas de démonstration ouverte — l'espace travaille sur de vrais chiffres, et cela demande un compte.", "A tracking tool: you enter your figures, it formats them and keeps them up to date. It recommends no investment, places no order and gives no investment advice. <b>Subscribe</b> sends a request by email; access is opened by hand within 48 hours, and online payment is coming. On all three plans: exporting your data to a file, and a server backup every day. There is no open demo — the space works on real figures, and that takes an account.", "Una herramienta de seguimiento: usted introduce sus cifras, ella las presenta y las actualiza. No recomienda ninguna inversión, no ejecuta ninguna orden y no da asesoramiento. <b>Suscribirse</b> envía una solicitud por correo; el acceso se abre a mano en 48 h, y el pago en línea llegará. En los tres planes: la exportación de sus datos a un archivo y una copia de seguridad del servidor cada día. No hay demostración abierta: el espacio trabaja con cifras reales, y eso exige una cuenta.", "Ein Werkzeug zur Nachverfolgung: Sie tragen Ihre Zahlen ein, es bringt sie in Form und hält sie aktuell. Es empfiehlt keine Anlage, führt keine Order aus und gibt keine Anlageberatung. <b>Abonnieren</b> sendet eine Anfrage per E-Mail; der Zugang wird binnen 48 Stunden von Hand geöffnet, die Online-Zahlung kommt. In allen drei Tarifen: der Export Ihrer Daten in eine Datei und täglich eine Sicherung des Servers. Es gibt keine offene Demo — der Bereich arbeitet mit echten Zahlen, und das verlangt ein Konto."],
 
   /* --- Repères --- */
   'cit.eyebrow':        ["06 — Repères","06 — Principles","06 — Referencias","06 — Leitsätze"],
@@ -3166,13 +3143,13 @@ window.PC = (function(){
   'faq.h2':             ["Ce qu'on me demande.","What I get asked.","Lo que me preguntan.","Was man mich fragt."],
   'faq.intro':          ["Les questions qui reviennent avant de confier ses chiffres à un outil. Les réponses sont franches, y compris quand elles ne sont pas à l'avantage du produit.","The questions that come up before trusting a tool with your figures. The answers are frank, including where they do not flatter the product.","Las preguntas que surgen antes de confiar sus cifras a una herramienta. Las respuestas son francas, incluso cuando no favorecen al producto.","Die Fragen, die kommen, bevor man einem Werkzeug seine Zahlen anvertraut. Die Antworten sind offen — auch dort, wo sie dem Produkt nicht schmeicheln."],
   'faq.1.q':            ["Où vont mes chiffres ?","Where do my figures go?","¿A dónde van mis cifras?","Wohin gehen meine Zahlen?"],
-  'faq.1.a':            ["Cela dépend de vous. Sans compte — la démonstration, ou l'espace ouvert tel quel — ils ne sortent pas de votre navigateur&nbsp;: aucun serveur ne les reçoit. Avec un compte, ils sont envoyés sur le serveur de Pierrel &amp; Co pour vous suivre d'un appareil à l'autre. Ils y sont rangés tels quels, jamais ouverts, jamais analysés, jamais transmis à un tiers et jamais revendus&nbsp;; techniquement, celui qui administre le serveur pourrait les lire. Le chiffrement de bout en bout, qui l'en empêcherait, est prévu et n'est pas encore là.", "That is up to you. With no account — the demo, or the space opened as it comes — they never leave your browser: no server receives them. With an account, they are sent to Pierrel &amp; Co's server so they follow you from one device to the next. There they are stored as they are, never opened, never analysed, never passed to a third party and never sold; technically, whoever administers the server could read them. End-to-end encryption, which would prevent that, is planned and not there yet.", "Depende de usted. Sin cuenta —la demostración, o el espacio tal cual— no salen de su navegador: ningún servidor las recibe. Con una cuenta, se envían al servidor de Pierrel &amp; Co para que le sigan de un dispositivo a otro. Allí se guardan tal cual, nunca se abren, nunca se analizan, nunca se ceden a terceros y nunca se venden; técnicamente, quien administra el servidor podría leerlas. El cifrado de extremo a extremo, que lo impediría, está previsto y aún no existe.", "Das hängt von Ihnen ab. Ohne Konto — die Demo oder der Bereich, wie er ist — verlassen sie Ihren Browser nicht: Kein Server erhält sie. Mit einem Konto werden sie an den Server von Pierrel &amp; Co gesendet, damit sie Ihnen von Gerät zu Gerät folgen. Dort liegen sie, wie sie sind, werden nie geöffnet, nie ausgewertet, nie an Dritte weitergegeben und nie verkauft; technisch könnte der Administrator des Servers sie lesen. Eine Ende-zu-Ende-Verschlüsselung, die das verhindern würde, ist geplant und noch nicht da."],
+  'faq.1.a':            ["Sur le serveur de Pierrel&nbsp;&amp;&nbsp;Co, et nulle part ailleurs. C'est ce qui leur permet d'être les mêmes sur votre téléphone et sur votre ordinateur. Ils y sont rangés tels quels, jamais ouverts, jamais analysés, jamais transmis à un tiers et jamais revendus&nbsp;; techniquement, celui qui administre le serveur pourrait les lire. Le chiffrement de bout en bout, qui l'en empêcherait, est prévu et n'est pas encore là. Vous pouvez tout exporter en un fichier à tout moment, et faire supprimer le compte.", "On Pierrel &amp; Co's server, and nowhere else. That is what lets them be the same on your phone and on your computer. There they are stored as they are, never opened, never analysed, never passed to a third party and never sold; technically, whoever administers the server could read them. End-to-end encryption, which would prevent that, is planned and not there yet. You can export everything to a file at any time, and have the account deleted.", "En el servidor de Pierrel &amp; Co, y en ningún otro sitio. Es lo que les permite ser las mismas en su teléfono y en su ordenador. Allí se guardan tal cual, nunca se abren, nunca se analizan, nunca se ceden a terceros y nunca se venden; técnicamente, quien administra el servidor podría leerlas. El cifrado de extremo a extremo, que lo impediría, está previsto y aún no existe. Puede exportarlo todo a un archivo en cualquier momento y hacer suprimir la cuenta.", "Auf dem Server von Pierrel &amp; Co, und nirgends sonst. Genau das lässt sie auf Ihrem Telefon und Ihrem Computer dieselben sein. Dort liegen sie, wie sie sind, werden nie geöffnet, nie ausgewertet, nie an Dritte weitergegeben und nie verkauft; technisch könnte der Administrator des Servers sie lesen. Eine Ende-zu-Ende-Verschlüsselung, die das verhindern würde, ist geplant und noch nicht da. Sie können jederzeit alles in eine Datei exportieren und das Konto löschen lassen."],
   'faq.2.q':            ["Et si je change d'appareil ?","What if I switch devices?","¿Y si cambio de dispositivo?","Und wenn ich das Gerät wechsle?"],
-  'faq.2.a':            ["Ils suivent, dès que vous êtes connecté&nbsp;: ce que vous saisissez sur le téléphone est là sur l'ordinateur, et l'inverse. Si les deux appareils ont travaillé chacun de leur côté, la page ne choisit pas à votre place — elle montre les deux versions et vous demande laquelle garder. Sans compte, rien ne suit&nbsp;: les chiffres restent dans le navigateur où vous les avez saisis, et l'export en un fichier est le seul pont.", "They follow, as soon as you are signed in: what you enter on the phone is there on the computer, and the other way round. If both devices worked on their own, the page does not choose for you — it shows both versions and asks which to keep. With no account nothing follows: the figures stay in the browser where you entered them, and exporting a file is the only bridge.", "Le siguen en cuanto inicia sesión: lo que introduce en el teléfono está en el ordenador, y al contrario. Si los dos dispositivos han trabajado por separado, la página no elige por usted: muestra las dos versiones y pregunta cuál conservar. Sin cuenta nada le sigue: las cifras se quedan en el navegador donde las introdujo, y exportar un archivo es el único puente.", "Sie folgen, sobald Sie angemeldet sind: Was Sie am Telefon eintragen, steht am Computer — und umgekehrt. Haben beide Geräte getrennt gearbeitet, entscheidet die Seite nicht für Sie: Sie zeigt beide Fassungen und fragt, welche bleiben soll. Ohne Konto folgt nichts: Die Zahlen bleiben im Browser, in dem Sie sie eingetragen haben, und der Export in eine Datei ist die einzige Brücke."],
+  'faq.2.a':            ["Ils suivent&nbsp;: ce que vous saisissez sur le téléphone est là sur l'ordinateur, et l'inverse. Si les deux appareils ont travaillé chacun de leur côté — l'un hors réseau, par exemple — la page ne choisit pas à votre place&nbsp;: elle montre les deux versions et vous demande laquelle garder. Rien n'est écrasé sans qu'on vous le demande.", "They follow: what you enter on the phone is there on the computer, and the other way round. If both devices worked on their own — one of them offline, say — the page does not choose for you: it shows both versions and asks which to keep. Nothing is overwritten without asking you.", "Le siguen: lo que introduce en el teléfono está en el ordenador, y al contrario. Si los dos dispositivos han trabajado por separado —uno de ellos sin conexión, por ejemplo— la página no elige por usted: muestra las dos versiones y pregunta cuál conservar. Nada se sobrescribe sin preguntarle.", "Sie folgen: Was Sie am Telefon eintragen, steht am Computer — und umgekehrt. Haben beide Geräte getrennt gearbeitet — eines etwa ohne Netz —, entscheidet die Seite nicht für Sie: Sie zeigt beide Fassungen und fragt, welche bleiben soll. Nichts wird ohne Rückfrage überschrieben."],
   'faq.3.q':            ["Est-ce un conseil en investissement ?","Is this investment advice?","¿Esto es asesoramiento de inversión?","Ist das eine Anlageberatung?"],
   'faq.3.a':            ["Non. C'est un outil de mise en forme&nbsp;: vous entrez vos chiffres, il calcule des répartitions et des pourcentages. Il ne recommande aucun placement, ne passe aucun ordre, et Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers. Les chiffres présentés sur cette page sont des exemples.","No. It is a formatting tool: you enter your figures, it works out allocations and percentages. It recommends no investment, places no order, and Pierrel &amp; Co is not authorised as a financial investment adviser. The figures shown on this page are examples.","No. Es una herramienta de presentación: usted introduce sus cifras y calcula distribuciones y porcentajes. No recomienda ninguna inversión, no ejecuta ninguna orden, y Pierrel &amp; Co no está autorizado como asesor financiero. Las cifras de esta página son ejemplos.","Nein. Es ist ein Aufbereitungswerkzeug: Sie tragen Ihre Zahlen ein, es berechnet Aufteilungen und Prozentsätze. Es empfiehlt keine Anlage, erteilt keine Order, und Pierrel &amp; Co ist nicht als Finanzanlagenvermittler zugelassen. Die Zahlen auf dieser Seite sind Beispiele."],
-  'faq.4.q':            ["Je peux essayer avant de payer ?","Can I try before paying?","¿Puedo probar antes de pagar?","Kann ich vor dem Bezahlen testen?"],
-  'faq.4.a':            ["Oui. La démonstration ouvre l'espace tout de suite, avec un portefeuille rempli et son historique&nbsp;: vous voyez exactement ce que l'outil fait, sans compte, sans carte bancaire et sans rien saisir. Elle tourne dans votre navigateur et ne garde rien. Ensuite seulement, si cela vous sert, vous prenez une formule.","Yes. The demo opens the space right away, with a filled portfolio and its history: you see exactly what the tool does, with no account, no card and nothing to enter. It runs in your browser and keeps nothing. Only then, if it is useful to you, do you choose a plan.","Sí. La demostración abre el espacio de inmediato, con una cartera completa y su historial: verá exactamente lo que hace la herramienta, sin cuenta, sin tarjeta y sin introducir nada. Funciona en su navegador y no guarda nada. Solo después, si le sirve, elige un plan.","Ja. Die Demo öffnet den Bereich sofort, mit einem gefüllten Portfolio samt Verlauf: Sie sehen genau, was das Werkzeug tut — ohne Konto, ohne Karte und ohne Eingaben. Sie läuft in Ihrem Browser und speichert nichts. Erst danach wählen Sie einen Tarif, wenn es Ihnen nützt."],
+  'faq.4.q':            ["Je peux essayer avant de payer ?", "Can I try before paying?", "¿Puedo probar antes de pagar?", "Kann ich vor dem Bezahlen testen?"],
+  'faq.4.a':            ["Non, et c'est assumé. L'espace travaille sur vos vrais chiffres, rangés sur le serveur pour vous suivre d'un appareil à l'autre&nbsp;: cela demande un compte, et un compte ouvert. Ce qui reste&nbsp;: cette page, qui montre la mécanique sur un portefeuille réel, poste par poste — et un mot à l'adresse de contact, on vous fait visiter, sans engagement. L'entrée est à 5&nbsp;€ et s'arrête le mois même.", "No, and that is deliberate. The space works on your real figures, kept on the server so they follow you from one device to the next: that takes an account, and an account that has been opened. What is left: this page, which shows the machinery on a real portfolio, holding by holding — and a note to the contact address, and we will walk you through it, with no commitment. Entry is 5 € and stops the same month.", "No, y es a propósito. El espacio trabaja con sus cifras reales, guardadas en el servidor para seguirle de un dispositivo a otro: eso exige una cuenta, y una cuenta abierta. Lo que queda: esta página, que muestra el mecanismo sobre una cartera real, partida por partida, y un mensaje a la dirección de contacto: le hacemos una visita guiada, sin compromiso. La entrada cuesta 5 € y se corta el mismo mes.", "Nein, und das ist so gewollt. Der Bereich arbeitet mit Ihren echten Zahlen, die auf dem Server liegen, damit sie Ihnen von Gerät zu Gerät folgen: Das verlangt ein Konto, und ein geöffnetes. Was bleibt: diese Seite, die die Mechanik an einem echten Portfolio zeigt, Posten für Posten — und eine Nachricht an die Kontaktadresse, dann führen wir Sie durch, ohne Verpflichtung. Der Einstieg kostet 5 € und endet im selben Monat."],
   'faq.5.q':            ["Puis-je résilier quand je veux ?","Can I cancel whenever I want?","¿Puedo cancelar cuando quiera?","Kann ich jederzeit kündigen?"],
   'faq.5.a':            ["Oui, sans préavis ni frais. L'abonnement s'arrête à la fin du mois en cours. Vous gardez la lecture et l'export de tout ce qui est déjà saisi&nbsp;; c'est l'enregistrement de nouvelles lignes qui s'arrête. Rien n'est effacé à la résiliation, et vous pouvez demander la suppression complète de votre compte quand vous voulez.", "Yes, with no notice and no fee. The subscription stops at the end of the current month. You keep reading and exporting everything already entered; what stops is the saving of new lines. Nothing is deleted when you cancel, and you can ask for your account to be removed entirely whenever you like.", "Sí, sin preaviso ni comisión. La suscripción termina al final del mes en curso. Conserva la lectura y la exportación de todo lo ya introducido; lo que se detiene es el registro de nuevas líneas. Nada se borra al cancelar, y puede pedir la supresión completa de su cuenta cuando quiera.", "Ja, ohne Frist und ohne Gebühr. Das Abonnement endet zum Ende des laufenden Monats. Lesen und Exportieren des bereits Eingetragenen bleiben; was aufhört, ist das Speichern neuer Positionen. Bei der Kündigung wird nichts gelöscht, und Sie können jederzeit die vollständige Löschung Ihres Kontos verlangen."],
   'faq.6.q':            ["Y a-t-il des cookies ou du pistage ?","Are there cookies or tracking?","¿Hay cookies o rastreo?","Gibt es Cookies oder Tracking?"],
@@ -3180,7 +3157,7 @@ window.PC = (function(){
   'faq.7.q':            ["Les montants sont-ils convertis ?","Are amounts converted?","¿Se convierten los importes?","Werden Beträge umgerechnet?"],
   'faq.7.a':            ["Les chiffres d'exemple de cette page sont écrits en euros et convertis à l'affichage, avec des taux fixes datés indiqués en pied de page. Ceux que vous saisissez dans l'espace client ne sont jamais convertis&nbsp;: la devise choisie est simplement l'unité dans laquelle vous les entrez.","The sample figures on this page are written in euros and converted for display, using dated fixed rates shown in the footer. The figures you enter in the client area are never converted: the selected currency is simply the unit you enter them in.","Las cifras de ejemplo de esta página están escritas en euros y se convierten al mostrarlas, con tipos fijos fechados indicados en el pie. Las que usted introduce en el área de cliente nunca se convierten: la moneda elegida es solo la unidad en la que las introduce.","Die Beispielzahlen dieser Seite sind in Euro erfasst und werden für die Anzeige umgerechnet, mit datierten Festkursen im Fußbereich. Die von Ihnen im Kundenbereich eingetragenen Zahlen werden nie umgerechnet: die gewählte Währung ist schlicht die Einheit, in der Sie sie eintragen."],
   'faq.8.q':            ["Que se passe-t-il si j'efface mon navigateur ?","What happens if I clear my browser?","¿Qué pasa si borro mi navegador?","Was passiert, wenn ich meinen Browser leere?"],
-  'faq.8.a':            ["Avec un compte, rien&nbsp;: vos chiffres sont sur le serveur, vous vous reconnectez et ils reviennent. Le serveur en garde en plus une sauvegarde par jour. Sans compte, ils disparaissent définitivement et personne ne peut les récupérer — c'est la contrepartie de ne rien envoyer. Dans les deux cas, l'export en un fichier est disponible dans les trois formules&nbsp;: gardez-en un de temps en temps.", "With an account, nothing: your figures are on the server, you sign in again and they come back. The server also keeps one backup a day. With no account they are gone for good and nobody can recover them — that is the flip side of sending nothing. Either way, exporting a file is available on all three plans: keep one from time to time.", "Con una cuenta, nada: sus cifras están en el servidor, vuelve a iniciar sesión y reaparecen. El servidor guarda además una copia al día. Sin cuenta desaparecen definitivamente y nadie puede recuperarlas: es la contrapartida de no enviar nada. En ambos casos, la exportación a un archivo está en los tres planes: conserve una de vez en cuando.", "Mit einem Konto: nichts. Ihre Zahlen liegen auf dem Server, Sie melden sich wieder an und sie sind zurück. Der Server hält zusätzlich eine Sicherung pro Tag. Ohne Konto sind sie endgültig weg und niemand kann sie wiederherstellen — das ist die Kehrseite davon, nichts zu senden. In beiden Fällen ist der Export in eine Datei in allen drei Tarifen enthalten: Bewahren Sie ab und zu einen auf."],
+  'faq.8.a':            ["Rien. Vos chiffres sont sur le serveur, pas dans le navigateur&nbsp;: vous vous reconnectez et ils reviennent, sur cet appareil ou sur un autre. Le serveur en garde en plus une sauvegarde par jour. Ce qu'un navigateur effacé emporte, c'est votre session — donc votre mot de passe à retaper, rien d'autre.", "Nothing. Your figures are on the server, not in the browser: you sign in again and they come back, on that device or another. The server also keeps one backup a day. What a cleared browser takes away is your session — so your password to type again, nothing more.", "Nada. Sus cifras están en el servidor, no en el navegador: vuelve a iniciar sesión y reaparecen, en ese dispositivo o en otro. El servidor guarda además una copia al día. Lo que se lleva un navegador borrado es su sesión: su contraseña que hay que volver a teclear, nada más.", "Nichts. Ihre Zahlen liegen auf dem Server, nicht im Browser: Sie melden sich wieder an und sie sind zurück, auf diesem Gerät oder einem anderen. Der Server hält zusätzlich eine Sicherung pro Tag. Was ein geleerter Browser mitnimmt, ist Ihre Sitzung — also Ihr Passwort, das Sie neu eintippen, nichts weiter."],
 
   /* --- Sections en attente de contenu réel --- */
   'vide.b':             ["À remplir.","To be filled in.","Por completar.","Auszufüllen."],
@@ -3225,7 +3202,7 @@ window.PC = (function(){
   'lg.corps':           ["<b>Éditeur du site.</b> Pierrel &amp; Co — [raison sociale], [forme juridique] au capital de [montant], immatriculée au RCS de [ville] sous le numéro [SIRET]. Siège social&nbsp;: [adresse]. Numéro de TVA intracommunautaire&nbsp;: [numéro].<br><b>Directeur de la publication.</b> [nom].<br><b>Contact.</b> [adresse e-mail].<br><b>Hébergement.</b> [nom de l'hébergeur], [adresse].<br><b>Nature du service.</b> Cette page présente un portefeuille personnel et propose un outil de suivi d'actifs. Elle ne constitue ni un conseil en investissement, ni une recommandation, ni un service de réception-transmission d'ordres. Pierrel &amp; Co n'est pas agréé en tant que conseiller en investissements financiers.","<b>Site publisher.</b> Pierrel &amp; Co — [legal name], [legal form] with share capital of [amount], registered in [city] under number [registration number]. Registered office: [address]. VAT number: [number].<br><b>Publication director.</b> [name].<br><b>Contact.</b> [email address].<br><b>Hosting.</b> [host name], [address].<br><b>Nature of the service.</b> This page presents a personal portfolio and offers an asset tracking tool. It is neither investment advice, nor a recommendation, nor an order routing service. Pierrel &amp; Co is not authorised as a financial investment adviser.","<b>Editor del sitio.</b> Pierrel &amp; Co — [razón social], [forma jurídica] con un capital de [importe], inscrita en [ciudad] con el número [número de registro]. Domicilio social: [dirección]. Número de IVA: [número].<br><b>Director de publicación.</b> [nombre].<br><b>Contacto.</b> [correo electrónico].<br><b>Alojamiento.</b> [nombre del proveedor], [dirección].<br><b>Naturaleza del servicio.</b> Esta página presenta una cartera personal y ofrece una herramienta de seguimiento de activos. No constituye asesoramiento de inversión, ni recomendación, ni servicio de recepción y transmisión de órdenes. Pierrel &amp; Co no está autorizado como asesor financiero.","<b>Anbieter.</b> Pierrel &amp; Co — [Firmenname], [Rechtsform] mit einem Kapital von [Betrag], eingetragen in [Stadt] unter der Nummer [Registernummer]. Sitz: [Anschrift]. Umsatzsteuer-Identifikationsnummer: [Nummer].<br><b>Verantwortlich für den Inhalt.</b> [Name].<br><b>Kontakt.</b> [E-Mail-Adresse].<br><b>Hosting.</b> [Hoster], [Anschrift].<br><b>Art des Dienstes.</b> Diese Seite stellt ein privates Portfolio dar und bietet ein Werkzeug zur Vermögensverfolgung. Sie ist weder Anlageberatung noch Empfehlung noch Auftragsvermittlung. Pierrel &amp; Co ist nicht als Finanzanlagenvermittler zugelassen."],
 
   'cf.titre':           ["Confidentialité et données","Privacy and data","Privacidad y datos","Datenschutz"],
-  'cf.corps':           ["<b>Sans compte, rien ne part.</b> La démonstration et l'espace ouvert tel quel travaillent entièrement dans votre navigateur&nbsp;: les actifs, montants et relevés sont enregistrés dans sa mémoire locale (<i>localStorage</i>), sur votre appareil. Aucun serveur ne les reçoit. Vider les données de navigation les efface définitivement&nbsp;; le bouton «&nbsp;Tout effacer&nbsp;» fait de même.<br><b>Avec un compte, voici ce qui est conservé.</b> Votre adresse électronique, une empreinte de votre mot de passe (jamais le mot de passe lui-même), votre formule et l'état de votre abonnement, les dates de création et de dernière visite, et votre portefeuille tel que la page l'envoie. S'y ajoute un journal des évènements de compte — inscription, connexion, écriture, changement de mot de passe — avec la date et l'adresse IP, pour que vous puissiez répondre à «&nbsp;qui a touché à mon compte&nbsp;». Le portefeuille n'est ni ouvert, ni analysé, ni transmis à un tiers, ni revendu&nbsp;; il n'est pas chiffré de bout en bout à ce jour, donc l'administrateur du serveur pourrait techniquement le lire. Une sauvegarde est prise chaque jour et conservée quelques jours.<br><b>Cookie.</b> Un seul, nommé <i>pc_session</i>, posé uniquement lorsque vous vous connectez. Il tient votre session, il est <i>HttpOnly</i> — les scripts de la page ne peuvent pas le lire —, il expire, et il ne sert à aucune mesure ni à aucune publicité. Il n'y a ni audience mesurée, ni traceur, ni bandeau à cliquer.<br><b>Polices de caractères.</b> Elles sont incluses dans la page, sans appel à un service tiers&nbsp;: aucune adresse IP n'est communiquée à Google Fonts ou équivalent.<br><b>Cours de bourse et de crypto.</b> Les afficher demande d'appeler le fournisseur de cotations depuis votre navigateur, qui voit donc votre adresse IP et les symboles demandés. Il ne reçoit ni vos montants, ni votre identité.<br><b>Formulaire de contact et souscription.</b> Ils ouvrent votre logiciel de messagerie avec un message prérempli. Rien n'est envoyé sans votre action, et le contenu du message ne transite par aucun serveur intermédiaire.<br><b>Paiement.</b> Lorsqu'il sera activé, il sera opéré par Stripe, qui devient alors responsable du traitement des données de carte. Votre numéro de carte ne transitera jamais par ce site.<br><b>Vos droits.</b> L'export de votre portefeuille en un fichier est dans l'espace, à tout moment et dans les trois formules. Pour consulter le journal de votre compte, changer votre mot de passe, ou faire supprimer le compte et tout ce qui s'y rattache, écrivez à l'adresse de contact&nbsp;: c'est fait à la main, sous 48&nbsp;h, et la suppression est définitive. Les boutons correspondants viendront dans l'espace&nbsp;; d'ici là, cette adresse est le chemin.", "<b>With no account, nothing leaves.</b> The demo and the space opened as it comes work entirely in your browser: assets, amounts and statements are saved in its local storage (<i>localStorage</i>), on your device. No server receives them. Clearing your browsing data erases them for good; the « Erase everything » button does the same.<br><b>With an account, here is what is kept.</b> Your email address, a hash of your password (never the password itself), your plan and subscription state, the dates you signed up and last visited, and your portfolio as the page sends it. Plus a log of account events — sign-up, sign-in, write, password change — with the date and the IP address, so you can answer « who touched my account ». The portfolio is not opened, not analysed, not passed to a third party and not sold; it is not end-to-end encrypted as things stand, so whoever administers the server could technically read it. One backup is taken each day and kept for a few days.<br><b>Cookie.</b> One only, named <i>pc_session</i>, set solely when you sign in. It holds your session, it is <i>HttpOnly</i> — page scripts cannot read it —, it expires, and it serves no measurement and no advertising. There is no analytics, no tracker and no banner to dismiss.<br><b>Fonts.</b> They are embedded in the page, with no call to a third-party service: no IP address is handed to Google Fonts or the like.<br><b>Stock and crypto prices.</b> Showing them means calling the quote provider from your browser, which therefore sees your IP address and the symbols requested. It receives neither your amounts nor your identity.<br><b>Contact form and subscribing.</b> They open your mail app with a prefilled message. Nothing is sent without your action, and the message never passes through an intermediate server.<br><b>Payment.</b> When it is switched on it will be operated by Stripe, which then becomes the controller for card data. Your card number will never pass through this site.<br><b>Your rights.</b> Exporting your portfolio to a file is in the space, at any time and on all three plans. To read your account log, change your password, or have the account and everything attached to it deleted, write to the contact address: it is done by hand, within 48 hours, and deletion is final. The matching buttons will come to the space; until then, that address is the way.", "<b>Sin cuenta, nada sale.</b> La demostración y el espacio tal cual funcionan enteramente en su navegador: activos, importes e informes se guardan en su almacenamiento local (<i>localStorage</i>), en su dispositivo. Ningún servidor los recibe. Borrar los datos de navegación los elimina definitivamente; el botón « Borrar todo » hace lo mismo.<br><b>Con una cuenta, esto es lo que se conserva.</b> Su dirección de correo, una huella de su contraseña (nunca la contraseña), su plan y el estado de su suscripción, las fechas de creación y de última visita, y su cartera tal como la envía la página. Se añade un registro de los eventos de la cuenta —alta, acceso, escritura, cambio de contraseña— con la fecha y la dirección IP, para que pueda responder a « quién ha tocado mi cuenta ». La cartera no se abre, no se analiza, no se cede a terceros y no se vende; hoy no está cifrada de extremo a extremo, así que quien administra el servidor podría técnicamente leerla. Se toma una copia de seguridad al día y se conserva unos días.<br><b>Cookie.</b> Una sola, llamada <i>pc_session</i>, puesta únicamente cuando inicia sesión. Mantiene su sesión, es <i>HttpOnly</i> —los scripts de la página no pueden leerla—, caduca y no sirve para ninguna medición ni publicidad. No hay analítica, ni rastreador, ni banner que aceptar.<br><b>Tipografías.</b> Están incluidas en la página, sin llamada a ningún servicio externo: no se comunica ninguna dirección IP a Google Fonts o equivalente.<br><b>Cotizaciones de bolsa y cripto.</b> Mostrarlas obliga a llamar al proveedor de cotizaciones desde su navegador, que ve por tanto su dirección IP y los símbolos pedidos. No recibe ni sus importes ni su identidad.<br><b>Formulario de contacto y suscripción.</b> Abren su programa de correo con un mensaje ya escrito. Nada se envía sin su acción, y el contenido no pasa por ningún servidor intermedio.<br><b>Pago.</b> Cuando se active, lo operará Stripe, que pasa entonces a ser responsable del tratamiento de los datos de tarjeta. Su número de tarjeta nunca pasará por este sitio.<br><b>Sus derechos.</b> La exportación de su cartera a un archivo está en el espacio, en cualquier momento y en los tres planes. Para consultar el registro de su cuenta, cambiar su contraseña o hacer suprimir la cuenta y todo lo asociado, escriba a la dirección de contacto: se hace a mano, en 48 h, y la supresión es definitiva. Los botones correspondientes llegarán al espacio; hasta entonces, esa dirección es el camino.", "<b>Ohne Konto geht nichts hinaus.</b> Die Demo und der Bereich, wie er ist, arbeiten vollständig in Ihrem Browser: Werte, Beträge und Auszüge liegen in seinem lokalen Speicher (<i>localStorage</i>), auf Ihrem Gerät. Kein Server erhält sie. Das Löschen der Browserdaten entfernt sie endgültig; die Schaltfläche »Alles löschen« ebenso.<br><b>Mit einem Konto wird Folgendes gespeichert.</b> Ihre E-Mail-Adresse, ein Hashwert Ihres Passworts (nie das Passwort selbst), Ihr Tarif und der Stand Ihres Abonnements, das Datum der Anmeldung und des letzten Besuchs sowie Ihr Portfolio, so wie die Seite es sendet. Dazu ein Protokoll der Kontoereignisse — Registrierung, Anmeldung, Schreiben, Passwortwechsel — mit Datum und IP-Adresse, damit Sie die Frage »Wer war an meinem Konto?« beantworten können. Das Portfolio wird nicht geöffnet, nicht ausgewertet, nicht an Dritte gegeben und nicht verkauft; es ist derzeit nicht Ende-zu-Ende verschlüsselt, der Administrator des Servers könnte es technisch also lesen. Einmal täglich wird eine Sicherung angelegt und einige Tage aufbewahrt.<br><b>Cookie.</b> Nur eines, <i>pc_session</i>, gesetzt allein bei der Anmeldung. Es hält Ihre Sitzung, ist <i>HttpOnly</i> — die Skripte der Seite können es nicht lesen —, läuft ab und dient keiner Messung und keiner Werbung. Es gibt keine Reichweitenmessung, keinen Tracker und kein Banner zum Wegklicken.<br><b>Schriften.</b> Sie sind in die Seite eingebettet, ohne Aufruf eines Drittdienstes: Es wird keine IP-Adresse an Google Fonts oder Ähnliches übermittelt.<br><b>Börsen- und Kryptokurse.</b> Sie anzuzeigen heißt, den Kursanbieter aus Ihrem Browser aufzurufen; er sieht damit Ihre IP-Adresse und die abgefragten Symbole. Ihre Beträge und Ihre Identität erhält er nicht.<br><b>Kontaktformular und Abschluss.</b> Sie öffnen Ihr Mailprogramm mit einer vorbereiteten Nachricht. Ohne Ihr Zutun wird nichts gesendet, und der Inhalt läuft über keinen Zwischenserver.<br><b>Zahlung.</b> Sobald sie aktiv ist, wird sie von Stripe abgewickelt, das dann für die Kartendaten verantwortlich ist. Ihre Kartennummer läuft nie über diese Seite.<br><b>Ihre Rechte.</b> Der Export Ihres Portfolios in eine Datei ist im Bereich verfügbar, jederzeit und in allen drei Tarifen. Um das Protokoll Ihres Kontos einzusehen, Ihr Passwort zu ändern oder das Konto mit allem daran Hängenden löschen zu lassen, schreiben Sie an die Kontaktadresse: Das wird von Hand erledigt, innerhalb von 48 Stunden, und die Löschung ist endgültig. Die passenden Schaltflächen kommen in den Bereich; bis dahin ist diese Adresse der Weg."],
+  'cf.corps':           ["<b>Il n'y a pas d'espace sans compte.</b> La page publique — celle que vous lisez — ne collecte rien du tout&nbsp;: aucun compte n'y est créé, aucun cookie n'y est posé, aucune mesure d'audience n'y tourne. L'espace client, lui, demande un compte, parce que vos chiffres y sont rangés sur le serveur et non dans ce navigateur.<br><b>Avec un compte, voici ce qui est conservé.</b> Votre adresse électronique, une empreinte de votre mot de passe (jamais le mot de passe lui-même), votre formule et l'état de votre abonnement, les dates de création et de dernière visite, et votre portefeuille tel que la page l'envoie. S'y ajoute un journal des évènements de compte — inscription, connexion, écriture, changement de mot de passe — avec la date et l'adresse IP, pour que vous puissiez répondre à «&nbsp;qui a touché à mon compte&nbsp;». Le portefeuille n'est ni ouvert, ni analysé, ni transmis à un tiers, ni revendu&nbsp;; il n'est pas chiffré de bout en bout à ce jour, donc l'administrateur du serveur pourrait techniquement le lire. Une sauvegarde est prise chaque jour et conservée quelques jours.<br><b>Cookie.</b> Un seul, nommé <i>pc_session</i>, posé uniquement lorsque vous vous connectez. Il tient votre session, il est <i>HttpOnly</i> — les scripts de la page ne peuvent pas le lire —, il expire, et il ne sert à aucune mesure ni à aucune publicité. Il n'y a ni audience mesurée, ni traceur, ni bandeau à cliquer.<br><b>Polices de caractères.</b> Elles sont incluses dans la page, sans appel à un service tiers&nbsp;: aucune adresse IP n'est communiquée à Google Fonts ou équivalent.<br><b>Cours de bourse et de crypto.</b> Les afficher demande d'appeler le fournisseur de cotations depuis votre navigateur, qui voit donc votre adresse IP et les symboles demandés. Il ne reçoit ni vos montants, ni votre identité.<br><b>Formulaire de contact et souscription.</b> Ils ouvrent votre logiciel de messagerie avec un message prérempli. Rien n'est envoyé sans votre action, et le contenu du message ne transite par aucun serveur intermédiaire.<br><b>Paiement.</b> Lorsqu'il sera activé, il sera opéré par Stripe, qui devient alors responsable du traitement des données de carte. Votre numéro de carte ne transitera jamais par ce site.<br><b>Vos droits.</b> L'export de votre portefeuille en un fichier est dans l'espace, à tout moment et dans les trois formules. Pour consulter le journal de votre compte, changer votre mot de passe, ou faire supprimer le compte et tout ce qui s'y rattache, écrivez à l'adresse de contact&nbsp;: c'est fait à la main, sous 48&nbsp;h, et la suppression est définitive. Les boutons correspondants viendront dans l'espace&nbsp;; d'ici là, cette adresse est le chemin.", "<b>There is no space without an account.</b> The public page — the one you are reading — collects nothing at all: no account is created on it, no cookie is set, no analytics run. The client area, on the other hand, requires an account, because your figures are kept on the server and not in this browser.<br><b>With an account, here is what is kept.</b> Your email address, a hash of your password (never the password itself), your plan and subscription state, the dates you signed up and last visited, and your portfolio as the page sends it. Plus a log of account events — sign-up, sign-in, write, password change — with the date and the IP address, so you can answer « who touched my account ». The portfolio is not opened, not analysed, not passed to a third party and not sold; it is not end-to-end encrypted as things stand, so whoever administers the server could technically read it. One backup is taken each day and kept for a few days.<br><b>Cookie.</b> One only, named <i>pc_session</i>, set solely when you sign in. It holds your session, it is <i>HttpOnly</i> — page scripts cannot read it —, it expires, and it serves no measurement and no advertising. There is no analytics, no tracker and no banner to dismiss.<br><b>Fonts.</b> They are embedded in the page, with no call to a third-party service: no IP address is handed to Google Fonts or the like.<br><b>Stock and crypto prices.</b> Showing them means calling the quote provider from your browser, which therefore sees your IP address and the symbols requested. It receives neither your amounts nor your identity.<br><b>Contact form and subscribing.</b> They open your mail app with a prefilled message. Nothing is sent without your action, and the message never passes through an intermediate server.<br><b>Payment.</b> When it is switched on it will be operated by Stripe, which then becomes the controller for card data. Your card number will never pass through this site.<br><b>Your rights.</b> Exporting your portfolio to a file is in the space, at any time and on all three plans. To read your account log, change your password, or have the account and everything attached to it deleted, write to the contact address: it is done by hand, within 48 hours, and deletion is final. The matching buttons will come to the space; until then, that address is the way.", "<b>No hay espacio sin cuenta.</b> La página pública —la que está leyendo— no recoge absolutamente nada: no se crea ninguna cuenta, no se pone ninguna cookie, no funciona ninguna analítica. El espacio de cliente, en cambio, exige una cuenta, porque sus cifras se guardan en el servidor y no en este navegador.<br><b>Con una cuenta, esto es lo que se conserva.</b> Su dirección de correo, una huella de su contraseña (nunca la contraseña), su plan y el estado de su suscripción, las fechas de creación y de última visita, y su cartera tal como la envía la página. Se añade un registro de los eventos de la cuenta —alta, acceso, escritura, cambio de contraseña— con la fecha y la dirección IP, para que pueda responder a « quién ha tocado mi cuenta ». La cartera no se abre, no se analiza, no se cede a terceros y no se vende; hoy no está cifrada de extremo a extremo, así que quien administra el servidor podría técnicamente leerla. Se toma una copia de seguridad al día y se conserva unos días.<br><b>Cookie.</b> Una sola, llamada <i>pc_session</i>, puesta únicamente cuando inicia sesión. Mantiene su sesión, es <i>HttpOnly</i> —los scripts de la página no pueden leerla—, caduca y no sirve para ninguna medición ni publicidad. No hay analítica, ni rastreador, ni banner que aceptar.<br><b>Tipografías.</b> Están incluidas en la página, sin llamada a ningún servicio externo: no se comunica ninguna dirección IP a Google Fonts o equivalente.<br><b>Cotizaciones de bolsa y cripto.</b> Mostrarlas obliga a llamar al proveedor de cotizaciones desde su navegador, que ve por tanto su dirección IP y los símbolos pedidos. No recibe ni sus importes ni su identidad.<br><b>Formulario de contacto y suscripción.</b> Abren su programa de correo con un mensaje ya escrito. Nada se envía sin su acción, y el contenido no pasa por ningún servidor intermedio.<br><b>Pago.</b> Cuando se active, lo operará Stripe, que pasa entonces a ser responsable del tratamiento de los datos de tarjeta. Su número de tarjeta nunca pasará por este sitio.<br><b>Sus derechos.</b> La exportación de su cartera a un archivo está en el espacio, en cualquier momento y en los tres planes. Para consultar el registro de su cuenta, cambiar su contraseña o hacer suprimir la cuenta y todo lo asociado, escriba a la dirección de contacto: se hace a mano, en 48 h, y la supresión es definitiva. Los botones correspondientes llegarán al espacio; hasta entonces, esa dirección es el camino.", "<b>Ohne Konto gibt es keinen Bereich.</b> Die öffentliche Seite — die Sie gerade lesen — erhebt überhaupt nichts: Es wird kein Konto angelegt, kein Cookie gesetzt, keine Reichweitenmessung läuft. Der Kundenbereich hingegen verlangt ein Konto, denn Ihre Zahlen liegen auf dem Server und nicht in diesem Browser.<br><b>Mit einem Konto wird Folgendes gespeichert.</b> Ihre E-Mail-Adresse, ein Hashwert Ihres Passworts (nie das Passwort selbst), Ihr Tarif und der Stand Ihres Abonnements, das Datum der Anmeldung und des letzten Besuchs sowie Ihr Portfolio, so wie die Seite es sendet. Dazu ein Protokoll der Kontoereignisse — Registrierung, Anmeldung, Schreiben, Passwortwechsel — mit Datum und IP-Adresse, damit Sie die Frage »Wer war an meinem Konto?« beantworten können. Das Portfolio wird nicht geöffnet, nicht ausgewertet, nicht an Dritte gegeben und nicht verkauft; es ist derzeit nicht Ende-zu-Ende verschlüsselt, der Administrator des Servers könnte es technisch also lesen. Einmal täglich wird eine Sicherung angelegt und einige Tage aufbewahrt.<br><b>Cookie.</b> Nur eines, <i>pc_session</i>, gesetzt allein bei der Anmeldung. Es hält Ihre Sitzung, ist <i>HttpOnly</i> — die Skripte der Seite können es nicht lesen —, läuft ab und dient keiner Messung und keiner Werbung. Es gibt keine Reichweitenmessung, keinen Tracker und kein Banner zum Wegklicken.<br><b>Schriften.</b> Sie sind in die Seite eingebettet, ohne Aufruf eines Drittdienstes: Es wird keine IP-Adresse an Google Fonts oder Ähnliches übermittelt.<br><b>Börsen- und Kryptokurse.</b> Sie anzuzeigen heißt, den Kursanbieter aus Ihrem Browser aufzurufen; er sieht damit Ihre IP-Adresse und die abgefragten Symbole. Ihre Beträge und Ihre Identität erhält er nicht.<br><b>Kontaktformular und Abschluss.</b> Sie öffnen Ihr Mailprogramm mit einer vorbereiteten Nachricht. Ohne Ihr Zutun wird nichts gesendet, und der Inhalt läuft über keinen Zwischenserver.<br><b>Zahlung.</b> Sobald sie aktiv ist, wird sie von Stripe abgewickelt, das dann für die Kartendaten verantwortlich ist. Ihre Kartennummer läuft nie über diese Seite.<br><b>Ihre Rechte.</b> Der Export Ihres Portfolios in eine Datei ist im Bereich verfügbar, jederzeit und in allen drei Tarifen. Um das Protokoll Ihres Kontos einzusehen, Ihr Passwort zu ändern oder das Konto mit allem daran Hängenden löschen zu lassen, schreiben Sie an die Kontaktadresse: Das wird von Hand erledigt, innerhalb von 48 Stunden, und die Löschung ist endgültig. Die passenden Schaltflächen kommen in den Bereich; bis dahin ist diese Adresse der Weg."],
 
   'foot.taux':          ["Taux de change au {{d}}, fixés dans la page.","Exchange rates as of {{d}}, fixed in the page.","Tipos de cambio a {{d}}, fijados en la página.","Wechselkurse zum {{d}}, in der Seite hinterlegt."],
 
@@ -3418,17 +3395,11 @@ window.PC = (function(){
   /* ============================================================
      ESPACE CLIENT
      ============================================================ */
-  'e.demo.b':           ["Démonstration.","Demonstration.","Demostración.","Demonstration."],
-  'e.demo':             ["Cette vue ne relie aucun compte&nbsp;: la connexion est simulée et vos chiffres restent dans ce navigateur.","This view connects to no account: the sign-in is simulated and your figures stay in this browser.","Esta vista no conecta con ninguna cuenta: el acceso es simulado y sus cifras se quedan en este navegador.","Diese Ansicht verbindet sich mit keinem Konto: die Anmeldung ist simuliert und Ihre Zahlen bleiben in diesem Browser."],
-  'e.demo.court':       ["Connexion simulée, chiffres gardés sur cet appareil.","Simulated sign-in, figures kept on this device.","Acceso simulado, cifras guardadas en este aparato.","Simulierte Anmeldung, Zahlen auf diesem Gerät."],
   'e.eyebrow':          ["Espace client","Client area","Área de cliente","Kundenbereich"],
   'e.titre':            ["Votre portefeuille.","Your portfolio.","Su cartera.","Ihr Portfolio."],
   'e.sous':             ["Saisissez vos actifs&nbsp;: l'espace calcule la répartition, la performance et la concentration.","Enter your assets: the space works out allocation, performance and concentration.","Introduzca sus activos: el espacio calcula la distribución, la rentabilidad y la concentración.","Tragen Sie Ihre Werte ein: der Bereich berechnet Aufteilung, Entwicklung und Konzentration."],
   'e.mail':             ["Adresse e-mail","Email address","Correo electrónico","E-Mail-Adresse"],
   'e.mdp':              ["Mot de passe","Password","Contraseña","Passwort"],
-  'e.entrer':           ["Entrer","Enter","Entrar","Eintreten"],
-  'e.note.b':           ["À lire.","Please read.","Léalo.","Bitte lesen."],
-  'e.note':             ["Il n'y a ni serveur ni compte derrière cette page. N'importe quelle adresse et n'importe quel mot de passe d'au moins six caractères ouvrent la démonstration, et rien n'est envoyé nulle part. <b>N'utilisez pas un vrai mot de passe.</b> Un espace client réel demande un serveur et une authentification en bonne et due forme.","There is no server and no account behind this page. Any address and any password of at least six characters opens the demonstration, and nothing is sent anywhere. <b>Do not use a real password.</b> A genuine client area requires a server and proper authentication.","No hay servidor ni cuenta detrás de esta página. Cualquier dirección y cualquier contraseña de al menos seis caracteres abren la demostración, y no se envía nada a ninguna parte. <b>No utilice una contraseña real.</b> Un área de cliente real exige un servidor y una autenticación en regla.","Hinter dieser Seite stehen weder Server noch Konto. Jede Adresse und jedes Passwort ab sechs Zeichen öffnet die Demonstration, und es wird nichts irgendwohin gesendet. <b>Verwenden Sie kein echtes Passwort.</b> Ein echter Kundenbereich braucht einen Server und eine ordentliche Authentifizierung."],
   'e.retour':           ["Retour au site","Back to the site","Volver al sitio","Zurück zur Website"],
   'e.board.eyebrow':    ["Tableau de bord","Dashboard","Panel","Übersicht"],
   'e.board.titre':      ["Vos actifs.","Your assets.","Sus activos.","Ihre Werte."],
@@ -3454,6 +3425,16 @@ window.PC = (function(){
   'c.err.identifiants': ["Adresse ou mot de passe incorrect.","Wrong address or password.","Dirección o contraseña incorrecta.","Adresse oder Passwort falsch."],
   'c.err.trop':         ["Trop de tentatives. Réessayez dans un quart d'heure.","Too many attempts. Try again in fifteen minutes.","Demasiados intentos. Inténtelo dentro de quince minutos.","Zu viele Versuche. Bitte in einer Viertelstunde erneut."],
   'c.err.suspendu':     ["Votre abonnement est suspendu : la saisie reste sur cet appareil et n'est plus enregistrée. Vous pouvez toujours tout relire et tout exporter.","Your subscription is suspended: entries stay on this device and are no longer saved. You can still read and export everything.","Su suscripción está suspendida: lo introducido queda en este dispositivo y ya no se guarda. Todavía puede leerlo y exportarlo todo.","Ihr Abonnement ist ausgesetzt: Eingaben bleiben auf diesem Gerät und werden nicht mehr gespeichert. Lesen und Exportieren bleibt möglich."],
+  'e.ferme.titre':      ["L'espace demande un compte.", "The space requires an account.", "El espacio requiere una cuenta.", "Der Bereich verlangt ein Konto."],
+  'e.ferme.d':          ["Vos chiffres sont rangés sur le serveur de Pierrel&nbsp;&amp;&nbsp;Co, pas dans ce navigateur&nbsp;: c'est ce qui leur permet de vous suivre d'un appareil à l'autre. Il n'y a donc pas d'espace à ouvrir sans compte.", "Your figures are kept on Pierrel &amp; Co's server, not in this browser: that is what lets them follow you from one device to the next. So there is no space to open without an account.", "Sus cifras se guardan en el servidor de Pierrel &amp; Co, no en este navegador: es lo que les permite seguirle de un dispositivo a otro. No hay, por tanto, espacio que abrir sin cuenta.", "Ihre Zahlen liegen auf dem Server von Pierrel &amp; Co, nicht in diesem Browser: Genau das lässt sie Ihnen von Gerät zu Gerät folgen. Ohne Konto gibt es also keinen Bereich zu öffnen."],
+  'e.ferme.ici':        ["Cette page-ci est servie sans serveur — une vitrine, un fichier. Elle ne peut ni créer un compte ni en reconnaître un.", "This page is served without a server — a shop window, a file. It can neither create an account nor recognise one.", "Esta página se sirve sin servidor: un escaparate, un archivo. No puede crear una cuenta ni reconocerla.", "Diese Seite wird ohne Server ausgeliefert — ein Schaufenster, eine Datei. Sie kann weder ein Konto anlegen noch eines erkennen."],
+  'e.ferme.offres':     ["Voir les trois formules", "See the three plans", "Ver los tres planes", "Die drei Tarife ansehen"],
+  'e.ferme.ecrire':     ["Écrire pour ouvrir un accès", "Write to get access", "Escribir para obtener acceso", "Für einen Zugang schreiben"],
+  'c.att.titre':        ["Votre compte est créé.", "Your account is created.", "Su cuenta está creada.", "Ihr Konto ist angelegt."],
+  'c.att.d':            ["L'accès s'ouvre à la main, une fois l'abonnement réglé&nbsp;: comptez 48&nbsp;heures en semaine. Vous recevrez un mot dès que c'est fait, et vos chiffres vous attendront ici.", "Access is opened by hand once the subscription is settled: allow 48 hours on weekdays. You will get a note as soon as it is done, and your figures will be waiting here.", "El acceso se abre a mano una vez pagada la suscripción: cuente 48 horas en días laborables. Recibirá un aviso en cuanto esté hecho, y sus cifras le esperarán aquí.", "Der Zugang wird von Hand geöffnet, sobald das Abonnement bezahlt ist: rechnen Sie an Werktagen mit 48 Stunden. Sie erhalten eine Nachricht, sobald es erledigt ist, und Ihre Zahlen warten hier."],
+  'c.att.quoi':         ["D'ici là, rien n'est perdu et rien n'est enregistré&nbsp;: le serveur refuse d'écrire tant que l'accès n'est pas ouvert. Ce n'est pas une panne.", "Until then nothing is lost and nothing is saved: the server refuses to write while access is closed. This is not a fault.", "Hasta entonces nada se pierde y nada se guarda: el servidor se niega a escribir mientras el acceso esté cerrado. No es una avería.", "Bis dahin geht nichts verloren und nichts wird gespeichert: Der Server verweigert das Schreiben, solange der Zugang zu ist. Das ist keine Störung."],
+  'c.att.ecrire':       ["Écrire pour accélérer", "Write to speed it up", "Escribir para acelerar", "Schreiben, um es zu beschleunigen"],
+  'c.err.attente':      ["Votre accès n'est pas encore ouvert&nbsp;: la saisie n'est pas enregistrée. Écrivez-nous et c'est réglé sous 48&nbsp;heures.", "Your access is not open yet: entries are not being saved. Write to us and it is settled within 48 hours.", "Su acceso aún no está abierto: lo que introduce no se guarda. Escríbanos y se resuelve en 48 horas.", "Ihr Zugang ist noch nicht offen: Eingaben werden nicht gespeichert. Schreiben Sie uns, dann ist es in 48 Stunden geregelt."],
   'c.err.session':      ["Votre session a expiré. Reconnectez-vous.","Your session has expired. Please sign in again.","Su sesión ha caducado. Vuelva a conectarse.","Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."],
   'c.err.serveur':      ["Le serveur n'a pas pu répondre.","The server could not answer.","El servidor no ha podido responder.","Der Server konnte nicht antworten."],
   'c.abo.attente':      ["accès en cours d'ouverture","access being opened","acceso en trámite","Zugang wird freigeschaltet"],
@@ -3592,7 +3573,6 @@ window.PC = (function(){
   'e.form.normal':      ["Normal","Normal","Normal","Normal"],
   'e.form.pro':         ["Pro","Pro","Pro","Pro"],
   'e.form.max':         ["Max","Max","Max","Max"],
-  'e.form.demo':        ["Verrouillage de démonstration, dans votre navigateur : un vrai abonnement se contrôle côté serveur.","Demonstration lock, in your browser: a real subscription is enforced server-side.","Bloqueo de demostración, en su navegador: una suscripción real se controla en el servidor.","Demo-Sperre, in Ihrem Browser: ein echtes Abonnement wird serverseitig geprüft."],
   'e.form.limactifs':   ["La formule {{f}} suit {{n}} actifs au maximum. Passez à Pro pour en ajouter d'autres.","The {{f}} plan tracks {{n}} assets at most. Move to Pro to add more.","El plan {{f}} sigue {{n}} activos como máximo. Pase a Pro para añadir más.","Der Tarif {{f}} erfasst höchstens {{n}} Werte. Wechseln Sie zu Pro, um mehr hinzuzufügen."],
   'e.form.limfichier':  ["L'export et l'import demandent la formule Pro ou Max.","Export and import require the Pro or Max plan.","La exportación y la importación requieren el plan Pro o Max.","Export und Import erfordern den Tarif Pro oder Max."],
   'e.form.limpf':       ["Les portefeuilles séparés demandent la formule Max.","Separate portfolios require the Max plan.","Las carteras separadas requieren el plan Max.","Getrennte Portfolios erfordern den Tarif Max."],
@@ -3741,7 +3721,6 @@ window.PC = (function(){
   'e.aucunreleve':      ["Ajoutez un investissement pour lancer le suivi.","Add an investment to start tracking.","Añada una inversión para iniciar el seguimiento.","Fügen Sie eine Anlage hinzu, um die Verfolgung zu starten."],
   'e.courbe.aria':      ["Valeur du portefeuille du {{a}} au {{b}}, {{n}} relevés.","Portfolio value from {{a}} to {{b}}, {{n}} statements.","Valor de la cartera del {{a}} al {{b}}, {{n}} informes.","Portfoliowert vom {{a}} bis {{b}}, {{n}} Auszüge."],
   'e.err.mail':         ["Cette adresse e-mail ne semble pas valide.","That email address does not look valid.","Esa dirección de correo no parece válida.","Diese E-Mail-Adresse scheint ungültig."],
-  'e.err.mdp':          ["Le mot de passe doit faire au moins six caractères.","The password must be at least six characters.","La contraseña debe tener al menos seis caracteres.","Das Passwort muss mindestens sechs Zeichen haben."],
   'e.err.nom':          ["Donnez un nom à cet actif.","Give this asset a name.","Dé un nombre a este activo.","Geben Sie diesem Wert einen Namen."],
   'e.err.inv':          ["Le montant investi n'est pas un nombre valide.","The amount invested is not a valid number.","El importe invertido no es un número válido.","Der investierte Betrag ist keine gültige Zahl."],
   'e.err.val':          ["La valeur actuelle n'est pas un nombre valide.","The current value is not a valid number.","El valor actual no es un número válido.","Der aktuelle Wert ist keine gültige Zahl."],
@@ -3783,10 +3762,6 @@ window.PC = (function(){
   'e.solde.jour':       ["Valeur du jour","Today's value","Valor de hoy","Heutiger Wert"],
   'e.vue.plus':         ["Tout afficher","Show everything","Mostrarlo todo","Alles anzeigen"],
   'e.vue.moins':        ["Vue simple","Simple view","Vista simple","Einfache Ansicht"],
-  'e.gate.essai':       ["Voir un exemple tout de suite","See an example right away","Ver un ejemplo ahora mismo","Sofort ein Beispiel ansehen"],
-  'e.gate.essai.d':     ["Un portefeuille rempli, avec son historique. Rien \u00e0 saisir, rien \u00e0 cr\u00e9er.","A filled portfolio, with its history. Nothing to enter, nothing to create.","Una cartera completa, con su historial. Nada que introducir, nada que crear.","Ein gef\u00fclltes Portfolio samt Verlauf. Nichts einzugeben, nichts anzulegen."],
-  'e.gate.mes':         ["Commencer avec mes chiffres","Start with my own figures","Empezar con mis cifras","Mit meinen Zahlen beginnen"],
-  'e.gate.demo':        ["Simuler une connexion","Simulate a sign-in","Simular un inicio de sesi\u00f3n","Anmeldung simulieren"],
   'e.src.sanscode':     ["Aucune de vos lignes ne porte de code de march\u00e9\u00a0: leur valeur reste celle que vous avez saisie. Ouvrez une ligne pour lui en donner un.","None of your lines carries a market code: their value stays as you entered it. Open a line to give it one.","Ninguna de sus l\u00edneas lleva un c\u00f3digo de mercado: su valor sigue siendo el que introdujo. Abra una l\u00ednea para darle uno.","Keine Ihrer Positionen tr\u00e4gt einen Marktcode: Ihr Wert bleibt, wie Sie ihn eingetragen haben. \u00d6ffnen Sie eine Position, um ihr einen zu geben."],
   'm.surplage':         ["sur {{p}}","over {{p}}","en {{p}}","\u00fcber {{p}}"],
   'e.sug.t':            ["Titres trouv\u00e9s \u2014 choisissez la bonne place de cotation","Securities found \u2014 pick the right listing","T\u00edtulos encontrados \u2014 elija la plaza correcta","Gefundene Titel \u2014 w\u00e4hlen Sie den richtigen Handelsplatz"],
@@ -4437,7 +4412,7 @@ window.PC = (function(){
       </div>
     </nav>
     <div class="head-tools">
-      <a class="pill" href="#espace-client" data-formule="normal" data-i18n="hero.cta">Connexion</a>
+      <a class="pill" href="#espace-client" data-i18n="hero.cta">Connexion</a>
       <!-- Deux libelles, comme la bande de demonstration : « Installer
            l'app » ne tient pas a cote de « Connexion » et du menu sur un
            ecran de 320 px. La cle ne peut pas rester sur le bouton —
@@ -4713,7 +4688,6 @@ window.PC = (function(){
         </ul>
         <div class="offre__actions">
           <button class="offre__ghost" type="button" data-souscrire="normal" data-i18n="off.souscrire">Souscrire</button>
-          <a class="offre__essai" href="#espace-client" data-formule="normal" data-i18n="off.essayer">Essayer la démonstration</a>
         </div>
       </article>
 
@@ -4729,7 +4703,6 @@ window.PC = (function(){
         </ul>
         <div class="offre__actions">
           <button class="pill" type="button" data-souscrire="pro" data-i18n="off.souscrire">Souscrire</button>
-          <a class="offre__essai" href="#espace-client" data-formule="pro" data-i18n="off.essayer">Essayer la démonstration</a>
         </div>
       </article>
 
@@ -4738,14 +4711,12 @@ window.PC = (function(){
         <h3 class="offre__nom" data-i18n="off.3.nom">Max</h3>
         <p class="offre__prix"><span data-i18n="off.3.prix">19 €</span> <small data-i18n="off.3.prix.s">par mois</small></p>
         <ul class="offre__liste">
-          <li data-i18n="off.3.l1">Plusieurs portefeuilles séparés (perso, société, famille)</li>
-          <li data-i18n="off.3.l2">Rapport mensuel prêt à imprimer</li>
-          <li data-i18n="off.3.l3">Tout ce que contient Pro</li>
-          <li data-i18n="off.3.l4">Sauvegarde et restauration de vos données</li>
+          <li data-i18n="off.3.l1">Tout ce que contient Pro</li>
+          <li data-i18n="off.3.l2">Plusieurs portefeuilles séparés (perso, société, famille)</li>
+          <li data-i18n="off.3.l3">Rapport mensuel prêt à imprimer</li>
         </ul>
         <div class="offre__actions">
           <button class="offre__ghost" type="button" data-souscrire="max" data-i18n="off.souscrire">Souscrire</button>
-          <a class="offre__essai" href="#espace-client" data-formule="max" data-i18n="off.essayer">Essayer la démonstration</a>
         </div>
       </article>
     </div>
@@ -4914,11 +4885,6 @@ window.PC = (function(){
 <!-- ===== ESPACE CLIENT =====
      Vue de la même page, affichée quand l'adresse porte #espace-client. -->
 <section class="espace wrap" id="espace" aria-labelledby="espace-titre">
-  <p class="demo-bar">
-    <b data-i18n="e.demo.b">Démonstration.</b> <span class="demo-bar__long" data-i18n-html="e.demo">Cette vue ne relie aucun compte&nbsp;: la connexion est simulée
-    et vos chiffres restent dans ce navigateur.</span><span class="demo-bar__court" data-i18n="e.demo.court">Connexion simulée, chiffres gardés sur cet appareil.</span>
-  </p>
-
   <!-- Connexion -->
   <!-- Deux appareils ont travaille chacun de leur cote. On ne
        tranche pas a leur place : on montre les deux et on demande. -->
@@ -4942,43 +4908,34 @@ window.PC = (function(){
   </div>
 
   <div class="gate" id="gate">
-    <form class="gate__card" id="form-connexion" novalidate>
+    <!-- Aucun serveur ne repond : il n'y a donc pas de compte a
+         ouvrir, et rien ne sert de montrer un formulaire qui
+         echouerait. On le dit, et on renvoie aux formules. Cette
+         carte est l'etat par defaut : elle s'efface des que
+         /api/sante repond (voir :root[data-serveur="1"]). -->
+    <section class="gate__card" id="c-ferme">
+      <p class="eyebrow" data-i18n="e.eyebrow">Espace client</p>
+      <h2 data-i18n="e.ferme.titre">L'espace demande un compte.</h2>
+      <p class="gate__quoi" data-i18n-html="e.ferme.d">Vos chiffres sont rangés sur
+        le serveur de Pierrel&nbsp;&amp;&nbsp;Co, pas dans ce navigateur&nbsp;: c'est ce qui
+        leur permet de vous suivre d'un appareil à l'autre. Il n'y a donc pas
+        d'espace à ouvrir sans compte.</p>
+      <p class="gate__quoi" data-i18n-html="e.ferme.ici">Cette page-ci est servie sans
+        serveur — une vitrine, un fichier. Elle ne peut ni créer un compte ni en
+        reconnaître un.</p>
+      <div class="gate__portes">
+        <a class="btn" href="#offres" data-i18n="e.ferme.offres">Voir les trois formules</a>
+        <a class="btn btn--ghost" href="#contact" data-i18n="e.ferme.ecrire">Écrire pour ouvrir un accès</a>
+      </div>
+      <a class="btn btn--ghost" href="#top" data-quitter data-i18n="e.retour">Retour au site</a>
+    </section>
+    <!-- Le portail du compte. C'est la seule porte. Il ne s'affiche
+         que si un serveur repond : sans lui, il n'y a rien derriere. -->
+    <section class="gate__card compte" id="c-portail" hidden>
       <p class="eyebrow" data-i18n="e.eyebrow">Espace client</p>
       <h2 id="espace-titre" data-i18n="e.titre">Votre portefeuille.</h2>
-      <p style="color:var(--ink-2); font-size:15px" data-i18n-html="e.sous">
-        Saisissez vos actifs&nbsp;: l'espace calcule la répartition, la performance et la concentration.
-      </p>
-      <div class="gate__portes">
-        <button class="btn" type="button" id="essai-exemple" data-i18n="e.gate.essai">Voir un exemple tout de suite</button>
-        <p class="gate__quoi" data-i18n="e.gate.essai.d">Un portefeuille rempli, avec son historique. Rien à saisir, rien à créer.</p>
-        <button class="btn btn--ghost" type="button" id="essai-vierge" data-i18n="e.gate.mes">Commencer avec mes chiffres</button>
-      </div>
-
-      <details class="gate__demo">
-        <summary data-i18n="e.gate.demo">Simuler une connexion</summary>
-        <div class="champ">
-          <label for="mail" data-i18n="e.mail">Adresse e-mail</label>
-          <input id="mail" name="email" type="email" autocomplete="email">
-        </div>
-        <div class="champ">
-          <label for="mdp" data-i18n="e.mdp">Mot de passe</label>
-          <input id="mdp" name="password" type="password" autocomplete="current-password">
-        </div>
-        <p class="err" id="err-connexion" aria-live="polite"></p>
-        <button class="btn" type="submit" data-i18n="e.entrer">Entrer</button>
-        <p class="gate__note">
-        <b data-i18n="e.note.b">À lire.</b> <span data-i18n-html="e.note">Il n'y a ni serveur ni compte derrière cette page. N'importe quelle adresse
-        et n'importe quel mot de passe d'au moins six caractères ouvrent la démonstration, et rien
-        n'est envoyé nulle part. <b>N'utilisez pas un vrai mot de passe.</b> Un espace client réel
-        demande un serveur et une authentification en bonne et due forme.</span>
-      </p>
-      </details>
-      <a class="btn btn--ghost" href="#top" data-quitter data-i18n="e.retour">Retour au site</a>
-    </form>
-      <!-- Le vrai compte. Il ne s'affiche que si un serveur repond ;
-         sinon c'est la demonstration ci-dessous qui reste, et la
-         page se comporte comme avant. -->
-    <section class="gate__card compte" id="c-portail" hidden>
+      <p class="gate__quoi" data-i18n-html="e.sous">Saisissez vos actifs&nbsp;:
+        l'espace calcule la répartition, la performance et la concentration.</p>
       <div class="compte__onglets" id="c-onglets" role="tablist">
         <button type="button" class="compte__ong" data-mode="connexion"
                 role="tab" aria-selected="true" data-i18n="c.onglet.entrer">Se connecter</button>
@@ -5005,6 +4962,26 @@ window.PC = (function(){
         retrouvez d'un appareil à l'autre. Vous pouvez les effacer quand vous
         voulez, depuis le menu de l'espace.</span>
       </p>
+    </section>
+    <!-- Compte reconnu, acces pas encore ouvert. Il n'y a pas de
+         formule gratuite : s'inscrire ne donne donc rien par
+         lui-meme, et le serveur refuse d'ecrire (api.js,
+         « peutEcrire »). Plutot que de laisser croire le contraire
+         pendant deux jours, on le dit ici. -->
+    <section class="gate__card" id="c-attente" hidden>
+      <p class="eyebrow" data-i18n="e.eyebrow">Espace client</p>
+      <h2 data-i18n="c.att.titre">Votre compte est créé.</h2>
+      <p class="gate__quoi" data-i18n-html="c.att.d">L'accès s'ouvre à la main, une
+        fois l'abonnement réglé&nbsp;: comptez 48&nbsp;heures en semaine. Vous
+        recevrez un mot dès que c'est fait, et vos chiffres vous attendront ici.</p>
+      <p class="gate__quoi" data-i18n-html="c.att.quoi">D'ici là, rien n'est perdu et
+        rien n'est enregistré&nbsp;: le serveur refuse d'écrire tant que l'accès
+        n'est pas ouvert. Ce n'est pas une panne.</p>
+      <div class="gate__portes">
+        <a class="btn" id="c-att-ecrire" href="#contact" data-i18n="c.att.ecrire">Écrire pour accélérer</a>
+        <button class="btn btn--ghost" type="button" id="c-att-sortie" data-i18n="e.sortie">Se déconnecter</button>
+      </div>
+      <a class="btn btn--ghost" href="#top" data-quitter data-i18n="e.retour">Retour au site</a>
     </section>
   </div>
 
@@ -5037,7 +5014,13 @@ window.PC = (function(){
         <select id="sel-pf" class="reglage reglage--pf" hidden></select>
 
         <label class="sr" for="sel-formule" data-i18n="e.form.label">Formule</label>
+        <!-- Le menu ne sert plus qu'a un cas : aucun serveur, donc
+             aucun compte, donc un espace qui ne s'ouvre pas. Il reste
+             dans le document parce que « construitSelecteurs » lit sa
+             valeur, et il est masque des que le compte a parle. A sa
+             place, l'etiquette ci-dessous : lisible, pas cliquable. -->
         <select id="sel-formule" class="reglage"></select>
+        <span class="formule-nom" id="formule-nom" hidden></span>
 
         <details class="menu" id="menu-board">
           <summary class="icon-btn" data-i18n-titre="e.menu" aria-label="Menu">
@@ -5433,7 +5416,6 @@ window.PC = (function(){
       <div class="pa" id="page-actif"></div>
     </div>
 
-    <p class="note-demo" data-i18n="e.form.demo"></p>
   </div>
 
   <!-- Remplie au rendu : accueil, un bouton par actif, ajouter. -->
@@ -6917,6 +6899,15 @@ window.PC = (function(){
   };
 
   let actifs = [], connecte = false;
+  /* `connecte` est le marqueur garde dans le stockage : cet appareil a
+     eu une session. `ouvert` dit si le tableau de bord est a l'ecran
+     MAINTENANT. Les deux n'ont plus rien a voir depuis que seul le
+     serveur ouvre l'espace : au chargement, le marqueur vaut vrai et
+     l'ecran montre le portail. Les confondre effacait le marqueur a la
+     premiere ecriture. Le nom est long a dessein : « ouvert » tout
+     court existe deja quelques centaines de lignes plus bas, et
+     designe l'index de l'actif affiche en pleine page. */
+  let ecranOuvert = false;
 
   /* ============================================================
      FORMULES
@@ -6947,6 +6938,11 @@ window.PC = (function(){
   };
   const NOMS_FORMULES = ['normal','pro','max'];
   let formule = 'normal';
+  /* Vrai des que le serveur a dit quelle formule appartient a ce
+     compte. A partir de la, le navigateur n'a plus voix au
+     chapitre : le selecteur disparait et les liens de la section
+     Formules ne changent plus rien. */
+  let formuleDuServeur = false;
   function droit(quoi){ return FORMULES[formule][quoi]; }
   const reduceMotionEspace = document.documentElement.getAttribute('data-anim') !== 'force'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -8149,6 +8145,17 @@ window.PC = (function(){
     /* Les portefeuilles séparés appartiennent à Max : hors de cette
        formule, le sélecteur et ses trois actions disparaissent plutôt
        que de rester grisés à côté d'un seul choix possible. */
+    /* La formule n'est pas un reglage : c'est ce qui a ete paye. Des
+       que le serveur l'a dite, le menu deroulant n'a plus rien a
+       proposer — le laisser reviendrait a offrir Max d'un clic. */
+    selFo.hidden = formuleDuServeur;
+    selFo.disabled = formuleDuServeur;
+    const nom = document.getElementById('formule-nom');
+    if (nom){
+      nom.hidden = !formuleDuServeur;
+      nom.textContent = PC.t('e.form.' + formule);
+    }
+
     const plusieurs = droit('portefeuilles') > 1;
     selPf.hidden = !plusieurs;
     document.getElementById('menu-pf').hidden = !plusieurs;
@@ -8158,25 +8165,16 @@ window.PC = (function(){
     document.getElementById('importer').hidden = !droit('fichier');
   }
 
-  /* Les trois boutons de la section Formules entrent chacun dans leur
-     formule. L'écouteur est posé avant celui de PC, qui commute la vue :
-     la formule est donc déjà à jour quand l'espace s'affiche. */
-  document.querySelectorAll('a[data-formule]').forEach(function(a){
-    a.addEventListener('click', function(){
-      const f = a.getAttribute('data-formule');
-      if (NOMS_FORMULES.indexOf(f) === -1 || f === formule) return;
-      formule = f;
-      if (droit('portefeuilles') === 1 && courant !== portefeuilles[0].id){
-        chargePortefeuille(portefeuilles[0].id);
-      }
-      ecrire();
-      construitSelecteurs();
-      rendre();
-      dire(PC.t('e.form.change', {f:PC.t('e.form.' + formule)}));
-    });
-  });
+  /* Il y avait ici un ecouteur sur « a[data-formule] » : cliquer un
+     lien de la section Formules faisait passer l'espace dans cette
+     formule. C'etait la seconde porte de derriere, apres le menu
+     deroulant. Elle est fermee : la formule vient du compte, par
+     PC_ESPACE.poseFormule, et rien dans la page ne l'ecrit plus.
+     Le test [52] essaie les deux chemins et verifie qu'ils ne
+     donnent rien. */
 
   document.getElementById('sel-formule').addEventListener('change', function(e){
+    if (formuleDuServeur) return;
     if (NOMS_FORMULES.indexOf(e.target.value) === -1) return;
     formule = e.target.value;
     /* Redescendre en Normal avec plusieurs portefeuilles ouverts : on
@@ -10324,18 +10322,13 @@ window.PC = (function(){
   try { vueDepart = localStorage.getItem(CLE_VUE) === 'detaille'; } catch (e){}
   poseVueDetail(vueDepart);
 
-  /* ===== Portes d'entrée =====
-     L'exemple réutilise l'entrée de menu existante plutôt que d'en
-     recopier la logique : une seule définition de ce qu'est l'exemple,
-     et elle ne peut pas se mettre à diverger. */
-  const porteExemple = document.getElementById('essai-exemple');
-  if (porteExemple) porteExemple.addEventListener('click', function(){
-    ouvrir();
-    document.getElementById('exemple').click();
-  });
-
-  const porteVierge = document.getElementById('essai-vierge');
-  if (porteVierge) porteVierge.addEventListener('click', function(){ ouvrir(); });
+  /* ===== Une seule porte =====
+     Il y en avait trois qui ne demandaient rien : « Voir un exemple
+     tout de suite », « Commencer avec mes chiffres » et le
+     formulaire de connexion simulee. Elles sont parties. `ouvrir()`
+     n'est plus appele que par le module de compte, apres que le
+     serveur a reconnu une session — c'est-a-dire apres un vrai
+     mot de passe sur un compte dont l'acces a ete ouvert. */
 
   /* La liste est réécrite à chaque rendu : on écoute le conteneur. */
   const listeLignes = document.getElementById('lignes');
@@ -10408,7 +10401,7 @@ window.PC = (function(){
   });
 
   function ouvrir(){
-    connecte = true;
+    connecte = true; ecranOuvert = true;
     document.body.classList.add('espace-ouvert');
     document.getElementById('gate').hidden = true;
     document.getElementById('board').hidden = false;
@@ -10416,20 +10409,8 @@ window.PC = (function(){
     poseVue('hub');
   }
 
-  document.getElementById('form-connexion').addEventListener('submit', function(e){
-    e.preventDefault();
-    const mail = document.getElementById('mail').value.trim();
-    const mdp = document.getElementById('mdp').value;
-    const err = document.getElementById('err-connexion');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)){ err.textContent = PC.t('e.err.mail'); return; }
-    if (mdp.length < 6){ err.textContent = PC.t('e.err.mdp'); return; }
-    err.textContent = '';
-    document.getElementById('mdp').value = '';   // ni conservé ni transmis
-    ouvrir();
-  });
-
   document.getElementById('sortie').addEventListener('click', function(){
-    connecte = false; ecrire();
+    connecte = false; ecranOuvert = false; ecrire();
     document.body.classList.remove('espace-ouvert');
     document.getElementById('board').hidden = true;
     document.getElementById('gate').hidden = false;
@@ -11223,10 +11204,19 @@ window.PC = (function(){
     });
     courant = portefeuilles.some(function(p){ return p.id === sauve.courant; })
       ? sauve.courant : portefeuilles[0].id;
-    if (NOMS_FORMULES.indexOf(sauve.formule) !== -1) formule = sauve.formule;
+    /* Le bloc porte encore un champ `formule`, du temps ou la formule
+       etait un reglage de cet appareil. Des que le serveur a dit
+       celle du compte, ce champ n'est plus qu'un vestige : le relire
+       ferait gagner une vieille sauvegarde contre l'abonnement. */
+    if (!formuleDuServeur && NOMS_FORMULES.indexOf(sauve.formule) !== -1) formule = sauve.formule;
     const p = portefeuilleCourant();
     actifs = p.actifs; historique = p.historique;
-    if (sauve.connecte) ouvrir();
+    /* On retient le marqueur — sinon la premiere ecriture l'efface et
+       l'appareil oublie qu'il a eu une session — mais on N'OUVRE PAS.
+       Un `connecte:true` recopie a la main dans le stockage ne doit
+       pas suffire a entrer : c'est le serveur qui ouvre, apres
+       /api/moi, et lui seul. */
+    connecte = !!sauve.connecte;
   } else {
     portefeuilles = [{id:'p1', nom:'', actifs:[], historique:[]}];
     courant = 'p1';
@@ -11265,7 +11255,11 @@ window.PC = (function(){
       });
       courant = portefeuilles.some(function(x){ return x.id === o.courant; })
         ? o.courant : portefeuilles[0].id;
-      if (NOMS_FORMULES.indexOf(o.formule) !== -1) formule = o.formule;
+      /* Le bloc porte encore un champ `formule`, du temps ou la formule
+         etait un reglage de cet appareil. Des que le serveur a dit
+         celle du compte, ce champ n'est plus qu'un vestige : le relire
+         ferait gagner une vieille sauvegarde contre l'abonnement. */
+      if (!formuleDuServeur && NOMS_FORMULES.indexOf(o.formule) !== -1) formule = o.formule;
       const p = portefeuilleCourant();
       actifs = p.actifs; historique = p.historique;
       construitSelecteurs(); construitBarreApp(); rendre();
@@ -11290,15 +11284,36 @@ window.PC = (function(){
       return {actifs:n, valeur:val, releves:rel};
     },
 
+    /* Le serveur annonce la formule du compte. On ne l'ecrit PAS en
+       local : le compte est la source, et une ecriture ici
+       declencherait un renvoi vers le serveur pour une valeur qui
+       vient de lui. */
+    poseFormule:function(f){
+      if (NOMS_FORMULES.indexOf(f) === -1) return;
+      formuleDuServeur = true;
+      if (f !== formule){
+        formule = f;
+        /* Redescendre de Max ferme les portefeuilles en trop : on
+           n'en supprime aucun, on revient au premier. */
+        if (droit('portefeuilles') === 1 && courant !== portefeuilles[0].id){
+          chargePortefeuille(portefeuilles[0].id);
+        }
+      }
+      construitSelecteurs();
+      rendre();
+    },
+
     ouvre:function(){ ouvrir(); },
     ferme:function(){
-      connecte = false; ecrire();
+      connecte = false; ecranOuvert = false; ecrire();
       document.body.classList.remove('espace-ouvert');
       document.getElementById('board').hidden = true;
       document.getElementById('gate').hidden = false;
       window.scrollTo(0, 0);
     },
-    estOuvert:function(){ return !!connecte; },
+    /* Ce que l'ecran montre, pas ce que le stockage retient : c'est
+       la-dessus que le module de compte decide d'ouvrir ou non. */
+    estOuvert:function(){ return !!ecranOuvert; },
 
     /* Appele apres chaque ecriture locale. Le module de compte s'en
        sert pour programmer un envoi ; il n'y en a qu'un, et le
@@ -12478,6 +12493,7 @@ window.PC = (function(){
       'identifiants':         'c.err.identifiants',
       'trop.tentatives':      'c.err.trop',
       'abonnement.suspendu':  'c.err.suspendu',
+      'abonnement.attente':   'c.err.attente',
       'session':              'c.err.session',
       'conflit':              'c.conflit.titre'
     }[cle];
@@ -12630,13 +12646,32 @@ window.PC = (function(){
     minuteur = setTimeout(function(){ minuteur = null; pousse(); }, 1200);
   }
 
-  /* --- Le portail : vrai compte, ou demonstration --- */
+  /* --- Le portail : trois cartes, une seule visible --------------
+     c-ferme    aucun serveur : il n'y a pas de compte a ouvrir
+     c-portail  un serveur, personne de connecte : entrer ou s'inscrire
+     c-attente  connecte, mais l'acces n'a pas encore ete ouvert
+     Aucune des trois ne mene au tableau de bord : seul `ouvrir()`
+     le fait, et il n'est appele qu'apres un abonnement actif. */
   function majPortail(){
-    const demo = document.querySelector('.gate__demo');
-    const vrai = document.getElementById('c-portail');
-    if (!demo || !vrai) return;
-    demo.hidden = serveur;          /* le faux disparait quand le vrai existe */
-    vrai.hidden = !serveur || !!moi;
+    const ferme   = document.getElementById('c-ferme');
+    const vrai    = document.getElementById('c-portail');
+    const attente = document.getElementById('c-attente');
+    const enAttente = !!moi && moi.abonnement === 'attente';
+    if (ferme)   ferme.hidden   = serveur;
+    if (vrai)    vrai.hidden    = !serveur || !!moi;
+    if (attente) attente.hidden = !enAttente;
+  }
+
+  /* Ce que le serveur vient de dire du compte, applique a l'espace :
+     la formule payee, puis la decision d'ouvrir ou non.
+     Retourne vrai si le tableau de bord a le droit de s'afficher. */
+  function appliqueCompte(){
+    if (!moi) return false;
+    if (ESPACE.poseFormule) ESPACE.poseFormule(moi.formule);
+    /* « attente » : le compte existe, l'acces n'est pas ouvert, et le
+       serveur refusera d'ecrire. Ouvrir le tableau de bord laisserait
+       saisir une heure de chiffres pour rien. */
+    return moi.abonnement !== 'attente';
   }
 
   /* --- Amorcage --- */
@@ -12676,7 +12711,9 @@ window.PC = (function(){
           if (!r.ok){ dit(phrase(r.d.erreur), 'ko'); return; }
           moi = r.d.compte;
           dit('');
+          const ouvrable = appliqueCompte();
           majBandeau(); majPortail();
+          if (!ouvrable) return;   /* la carte « en attente » a pris la place */
 
           /* Ce qu'il y a deja sur cet appareil ne doit pas
              disparaitre parce qu'on se connecte. S'il y a quelque
@@ -12691,15 +12728,21 @@ window.PC = (function(){
         });
     });
 
-    const sortie = document.getElementById('sortie');
-    if (sortie) sortie.addEventListener('click', function(){
+    /* Deux boutons pour la meme sortie : celui du menu de l'espace, et
+       celui de la carte « en attente » — ou le menu n'existe pas,
+       puisque le tableau de bord ne s'est jamais affiche. */
+    function deconnecte(){
       if (!serveur || !moi) return;
       appel('POST', '/api/deconnexion').catch(function(){}).then(function(){
         moi = null; version = 0;
         ecritRepere({});
         majBandeau(); majPortail();
       });
-    }, true);
+    }
+    const sortie = document.getElementById('sortie');
+    if (sortie) sortie.addEventListener('click', deconnecte, true);
+    const sortieAtt = document.getElementById('c-att-sortie');
+    if (sortieAtt) sortieAtt.addEventListener('click', deconnecte);
 
     ESPACE.surEcriture(programme);
 
@@ -12727,7 +12770,9 @@ window.PC = (function(){
         moi = r.d.compte;
         const rep = litRepere();
         version = (rep.courriel === moi.courriel && rep.version) || 0;
+        const ouvrable = appliqueCompte();
         majBandeau(); majPortail();
+        if (!ouvrable) return;
         return tire().then(function(){
           if (!ESPACE.estOuvert()) ESPACE.ouvre();
         });
