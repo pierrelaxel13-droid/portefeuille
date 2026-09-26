@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.2133";</script>
+<script>window.PC_VERSION = "260926.2221";</script>
 </head>
 <body>
 
@@ -2866,15 +2866,7 @@ body:not(.espace-ouvert) .barre-app{display:none;}
     flex:0 0 46%; scroll-snap-align:start;
     border:1px solid var(--rule); border-radius:12px;
   }
-  /* Le titre du bloc fait doublon avec le resume du repli. */
-  .actu-titre--j{display:none;}
 }
-/* Hors telephone le repli n'en est pas un : son resume disparait et
-   le titre reprend sa place. */
-@media (min-width:701px){
-  .actu-journal > summary{display:none;}
-}
-
 /* ===== Le compte =====
    Rien de neuf visuellement : on reprend les pieces de la page —
    la carte du portail, les champs, les boutons. Un ecran de
@@ -3569,6 +3561,7 @@ window.PC = (function(){
   'e.cle.posee':        ["C'est retenu pour cet appareil. Elle sera redemandée à chaque nouvel onglet.", "Remembered for this device. It will be asked again in each new tab.", "Guardada para este aparato. Se pedirá de nuevo en cada pestaña.", "Für dieses Gerät gespeichert. Sie wird in jedem neuen Tab erneut verlangt."],
   'e.cle.oubli':        ["J'ai oublié ma phrase", "I have forgotten my passphrase", "He olvidado mi frase", "Ich habe meine Passphrase vergessen"],
   'e.cle.oublie':       ["Effacée. Vos chiffres sont intacts : choisissez une nouvelle phrase.", "Erased. Your figures are untouched: choose a new passphrase.", "Borrada. Sus cifras están intactas: elija una nueva frase.", "Gelöscht. Ihre Zahlen sind unberührt: wählen Sie eine neue Passphrase."],
+  'actu.onglet':        ["Actualité", "Latest", "Actualidad", "Aktuelles"],
   'c.err.session':      ["Votre session a expiré. Reconnectez-vous.","Your session has expired. Please sign in again.","Su sesión ha caducado. Vuelva a conectarse.","Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."],
   'c.err.serveur':      ["Le serveur n'a pas pu répondre.","The server could not answer.","El servidor no ha podido responder.","Der Server konnte nicht antworten."],
   'c.abo.attente':      ["accès en cours d'ouverture","access being opened","acceso en trámite","Zugang wird freigeschaltet"],
@@ -5426,34 +5419,6 @@ window.PC = (function(){
     </div>
       </div>
 
-      <!-- L'actualite vit ICI, dans l'espace, et non sur la
-           page d'accueil : elle est reservee aux clients. -->
-      <section class="actu" id="actualite">
-    <div class="section__head section__head--duo">
-      <div>
-        <p class="eyebrow" data-i18n="actu.eyebrow">Actualité</p>
-        <h2 data-i18n="actu.h2">Ce qui bouge aujourd'hui.</h2>
-      </div>
-      <p class="section__intro" data-i18n-html="actu.intro">Les cours ci-dessous
-        arrivent du marché, comme ceux de vos lignes. En dessous, ce que je regarde
-        en ce moment et pourquoi&nbsp;— à lire ou à ignorer, c'est selon.</p>
-    </div>
-
-    <div class="actu-bloc" id="actu-marches" hidden>
-      <h3 class="actu-titre mono" data-i18n="actu.marches">Les marchés</h3>
-      <div class="actu-cours" id="actu-cours"></div>
-      <p class="actu-note mono" id="actu-note"></p>
-    </div>
-
-    <details class="replimob actu-journal" open>
-      <summary data-i18n="actu.journal">Le journal</summary>
-      <div class="actu-bloc">
-        <h3 class="actu-titre mono actu-titre--j" data-i18n="actu.journal">Le journal</h3>
-        <p class="actu-sous" data-i18n="actu.journal.d">Ce que je regarde, et pourquoi.</p>
-        <div class="actu-billets" id="actu-billets"></div>
-      </div>
-    </details>
-      </section>
 
     </div>
 
@@ -5663,6 +5628,40 @@ window.PC = (function(){
       </div>
 
       <div class="marches__vue" id="mar-vue-fiche" hidden></div>
+    </div>
+
+
+    <!-- ============================================================
+         ACTUALITE
+         Une destination de la barre du bas, pas une section de plus au
+         bas du tableau de bord : on y va quand on veut, et les
+         chiffres du client restent la premiere chose qu'il voit.
+         ============================================================ -->
+    <div class="pan" id="pan-actu" role="tabpanel" aria-labelledby="ong-actu" tabindex="0" hidden>
+      <section class="actu" id="actualite">
+    <div class="section__head section__head--duo">
+      <div>
+        <p class="eyebrow" data-i18n="actu.eyebrow">Actualité</p>
+        <h2 data-i18n="actu.h2">Ce qui bouge aujourd'hui.</h2>
+      </div>
+      <p class="section__intro" data-i18n-html="actu.intro">Les cours ci-dessous
+        arrivent du marché, comme ceux de vos lignes. En dessous, ce que je regarde
+        en ce moment et pourquoi&nbsp;— à lire ou à ignorer, c'est selon.</p>
+    </div>
+
+    <div class="actu-bloc" id="actu-marches" hidden>
+      <h3 class="actu-titre mono" data-i18n="actu.marches">Les marchés</h3>
+      <div class="actu-cours" id="actu-cours"></div>
+      <p class="actu-note mono" id="actu-note"></p>
+    </div>
+
+    <!-- Plus de repli : on arrive ici en ayant choisi « Actualite ». -->
+    <div class="actu-bloc actu-journal">
+      <h3 class="actu-titre mono" data-i18n="actu.journal">Le journal</h3>
+      <p class="actu-sous" data-i18n="actu.journal.d">Ce que je regarde, et pourquoi.</p>
+      <div class="actu-billets" id="actu-billets"></div>
+    </div>
+      </section>
     </div>
 
     <div class="pan" id="pan-actif" role="tabpanel" tabindex="0" hidden>
@@ -8759,7 +8758,8 @@ window.PC = (function(){
     general: document.getElementById('pan-general'),
     ajout:   document.getElementById('pan-ajout'),
     actif:   document.getElementById('pan-actif'),
-    marches: document.getElementById('pan-marches')
+    marches: document.getElementById('pan-marches'),
+    actu:    document.getElementById('pan-actu')
   };
   let vueCourante = 'general';
   let plageActif = 2;   /* 7 jours : assez pour voir une tendance */
@@ -8778,6 +8778,7 @@ window.PC = (function(){
                   ton:res > 0 ? 'up' : (res < 0 ? 'down' : 'flat')});
     });
     liste.push({cle:'marches', id:'ong-marches', nom:PC.t('m.onglet')});
+    liste.push({cle:'actu', id:'ong-actu', nom:PC.t('actu.onglet')});
     liste.push({cle:'ajout', id:'ong-ajout', nom:PC.t('e.ong.ajout'), ajout:true});
 
     barreOnglets.innerHTML = liste.map(function(o){
@@ -8812,7 +8813,7 @@ window.PC = (function(){
        destination, mais la retirer ferme le piege : une vue inconnue
        retombe sur la vue d'ensemble au lieu de tout casser. */
     vueCourante = (cible === 'actif' || cible === 'ajout' ||
-                   cible === 'marches')
+                   cible === 'marches' || cible === 'actu')
       ? cible : 'general';
     /* Un panneau masqué n'a pas de boîte de mise en page : l'observateur
        du module ne le verrait jamais approcher. C'est l'ouverture de la
@@ -8864,6 +8865,15 @@ window.PC = (function(){
   /* Un immeuble de colonnes : la bourse, par opposition a la courbe
      de marche des cryptos. Deux dessins distincts valent mieux que le
      meme repete, qui ferait croire a un doublon. */
+  /* Un journal plie : de l'ecrit, pas une courbe. Le dessin doit se
+     distinguer d'un coup d'oeil de celui des marches, sinon les deux
+     destinations voisines se confondent. */
+  const ICONE_ACTU =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M4 5h11v14H4z"/><path d="M15 9h5v8a2 2 0 0 1-2 2h-3"/>' +
+    '<path d="M7 8.5h5M7 12h5M7 15.5h3"/></svg>';
+
   const ICONE_BOURSE =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -8881,6 +8891,7 @@ window.PC = (function(){
     const entrees = [
       {dest:'accueil', nom:PC.t('e.bar.accueil'), icone:ICONE_ACCUEIL},
       {dest:'marches', nom:PC.t('m.onglet'),      icone:ICONE_MARCHES},
+      {dest:'actu',    nom:PC.t('actu.onglet'),   icone:ICONE_ACTU},
       {dest:'ajout',   nom:PC.t('e.bar.ajouter'), icone:ICONE_AJOUT}
     ];
 
@@ -8900,6 +8911,7 @@ window.PC = (function(){
        quatrieme destination : « Accueil » y reste allume. */
     const courant = dest ||
       (vueCourante === 'marches' ? 'marches'
+       : vueCourante === 'actu' ? 'actu'
        : vueCourante === 'ajout' ? 'ajout'
        : 'accueil');
     let vu = null;
@@ -8926,6 +8938,7 @@ window.PC = (function(){
     const d = b.dataset.dest;
     if (d === 'accueil'){ ouvert = null; poseVue('general'); }
     else if (d === 'marches'){ ouvert = null; poseVue('marches'); }
+    else if (d === 'actu'){ ouvert = null; poseVue('actu'); }
     else if (d === 'ajout'){
       poseVue('ajout');
       setTimeout(function(){ const n = document.getElementById('a-nom'); if (n) n.focus(); }, 60);
@@ -13506,6 +13519,61 @@ window.PC = (function(){
      ------------------------------------------------------------ */
   const JOURNAL = [
     {
+      d: '2026-09-26',
+      t: ["Le livret A à 1,7 % : ce que ça change pour la réserve",
+          "The savings account at 1.7%: what it changes for the reserve",
+          "La cuenta de ahorro al 1,7 %: qué cambia para la reserva",
+          "Das Sparbuch bei 1,7 %: was das für die Reserve ändert"],
+      p: ["Un taux sous l'inflation ne rend pas le livret inutile, il change sa fonction : ce n'est plus un placement, c'est une assurance. Six mois de dépenses qui ne bougent pas, disponibles en vingt-quatre heures, c'est ce qui permet de ne pas vendre le reste au mauvais moment. Le coût de cette tranquillité se calcule : sur 12 000 €, un point d'écart avec l'inflation fait 120 € par an. À comparer à ce qu'une vente précipitée coûte vraiment.",
+          "A rate below inflation does not make the savings account useless, it changes its job: it is no longer an investment, it is insurance. Six months of spending that does not move, available within twenty-four hours, is what lets you avoid selling the rest at the wrong moment. The cost of that calm can be worked out: on 12,000 €, one point behind inflation is 120 € a year. Compare that with what a rushed sale really costs.",
+          "Un tipo por debajo de la inflación no hace inútil la cuenta de ahorro, le cambia la función: ya no es una inversión, es un seguro. Seis meses de gastos que no se mueven, disponibles en veinticuatro horas, es lo que permite no vender el resto en mal momento. El coste de esa tranquilidad se calcula: sobre 12 000 €, un punto de diferencia con la inflación son 120 € al año. Compárelo con lo que cuesta de verdad una venta precipitada.",
+          "Ein Zins unter der Inflation macht das Sparbuch nicht nutzlos, er ändert seine Aufgabe: Es ist keine Anlage mehr, es ist eine Versicherung. Sechs Monatsausgaben, die sich nicht bewegen und binnen vierundzwanzig Stunden verfügbar sind — das erlaubt, den Rest nicht zum falschen Zeitpunkt zu verkaufen. Der Preis dieser Ruhe lässt sich rechnen: auf 12 000 € ist ein Punkt Rückstand 120 € im Jahr. Vergleichen Sie das mit den echten Kosten eines überstürzten Verkaufs."]
+    },
+    {
+      d: '2026-09-22',
+      t: ["Concentration : le chiffre qu'on regarde en dernier, et qui compte le plus",
+          "Concentration: the figure looked at last, and the one that matters most",
+          "Concentración: la cifra que se mira al final, y la que más importa",
+          "Klumpenrisiko: die Zahl, die man zuletzt ansieht, und die am meisten zählt"],
+      p: ["La performance dit ce qui s'est passé, la concentration dit ce qui peut arriver. Une ligne à 40 % du portefeuille suffit à décider seule de l'année, quelle que soit la qualité du reste. Le seuil n'a rien de scientifique : c'est le montant que vous acceptez de voir baisser de moitié sans changer vos projets. Écrivez-le une fois, et relisez-le quand un poste monte.",
+          "Performance says what happened, concentration says what can happen. One line at 40% of the portfolio is enough to decide the year on its own, whatever the quality of the rest. The threshold is not scientific: it is the amount you accept seeing halved without changing your plans. Write it down once, and read it again when a holding rises.",
+          "La rentabilidad dice lo que ha pasado, la concentración dice lo que puede pasar. Una partida al 40 % de la cartera basta para decidir el año por sí sola, cualquiera que sea la calidad del resto. El umbral no tiene nada de científico: es el importe que acepta ver caer a la mitad sin cambiar sus planes. Escríbalo una vez y vuelva a leerlo cuando una posición suba.",
+          "Die Wertentwicklung sagt, was war; das Klumpenrisiko sagt, was kommen kann. Ein Posten mit 40 % des Portfolios entscheidet das Jahr allein, wie gut der Rest auch ist. Die Schwelle ist nicht wissenschaftlich: Es ist der Betrag, den Sie halbiert sehen können, ohne Ihre Pläne zu ändern. Schreiben Sie ihn einmal auf und lesen Sie ihn wieder, wenn ein Posten steigt."]
+    },
+    {
+      d: '2026-09-18',
+      t: ["Loyers : le rendement net n'est pas le rendement affiché",
+          "Rent: net yield is not the advertised yield",
+          "Alquileres: la rentabilidad neta no es la anunciada",
+          "Mieten: Die Nettorendite ist nicht die ausgewiesene"],
+      p: ["Un bien annoncé à 6 % brut descend souvent vers 3 % une fois la taxe foncière, les charges non récupérables, l'assurance, la gestion et deux mois de vacance déduits. Ce n'est pas un défaut de l'immobilier, c'est la différence entre un loyer encaissé et un revenu. Saisissez le loyer NET dans l'espace, pas le brut : une courbe bâtie sur le brut vous annonce une aisance que votre compte en banque ne connaît pas.",
+          "A property advertised at 6% gross often falls towards 3% once property tax, non-recoverable charges, insurance, management and two months of vacancy are taken out. That is not a flaw of property, it is the difference between rent collected and income. Enter the NET rent in the space, not the gross: a curve built on gross figures promises comfort your bank account does not know about.",
+          "Un inmueble anunciado al 6 % bruto baja a menudo hacia el 3 % una vez descontados el impuesto, los gastos no recuperables, el seguro, la gestión y dos meses de vacío. No es un defecto del inmobiliario, es la diferencia entre un alquiler cobrado y un ingreso. Introduzca el alquiler NETO en el espacio, no el bruto: una curva construida sobre el bruto le anuncia una holgura que su cuenta no conoce.",
+          "Eine mit 6 % brutto beworbene Immobilie sinkt oft auf 3 %, sobald Grundsteuer, nicht umlagefähige Kosten, Versicherung, Verwaltung und zwei Monate Leerstand abgezogen sind. Das ist kein Mangel der Immobilie, sondern der Unterschied zwischen eingenommener Miete und Einkommen. Tragen Sie die NETTO-Miete ein, nicht die Brutto: eine Kurve auf Bruttozahlen verspricht einen Wohlstand, den Ihr Konto nicht kennt."]
+    },
+    {
+      d: '2026-09-15',
+      t: ["Bitcoin : pourquoi le prix du jour ne dit presque rien",
+          "Bitcoin: why today's price says almost nothing",
+          "Bitcoin: por qué el precio de hoy dice casi nada",
+          "Bitcoin: warum der heutige Kurs fast nichts sagt"],
+      p: ["Sur un actif qui bouge de 3 % par jour, le cours d'un instant n'est pas une information, c'est un bruit. Ce qui renseigne : le prix moyen auquel vous avez acheté, et la part que la ligne pèse aujourd'hui. Le premier ne change jamais, la seconde bouge toute seule — et c'est elle qui vous dira s'il faut faire quelque chose, pas le titre du jour.",
+          "On an asset that moves 3% a day, the price at any instant is not information, it is noise. What informs: the average price you paid, and the weight the line carries today. The first never changes, the second moves on its own — and it is the one that will tell you whether to act, not today's headline.",
+          "En un activo que se mueve un 3 % al día, la cotización de un instante no es información, es ruido. Lo que informa: el precio medio al que compró y el peso que la partida tiene hoy. El primero no cambia nunca, el segundo se mueve solo, y es el que le dirá si hay que hacer algo, no el titular del día.",
+          "Bei einem Wert, der sich täglich um 3 % bewegt, ist der Kurs eines Augenblicks keine Information, sondern Rauschen. Was informiert: Ihr durchschnittlicher Kaufpreis und das Gewicht, das der Posten heute hat. Das erste ändert sich nie, das zweite bewegt sich von selbst — und es sagt Ihnen, ob zu handeln ist, nicht die Schlagzeile des Tages."]
+    },
+    {
+      d: '2026-09-08',
+      t: ["Un relevé par mois vaut mieux qu'un tableau parfait",
+          "One statement a month beats a perfect spreadsheet",
+          "Un registro al mes vale más que una hoja perfecta",
+          "Ein Eintrag im Monat ist mehr wert als eine perfekte Tabelle"],
+      p: ["Deux points ne font pas une courbe, et douze font une histoire. La régularité bat la précision : un relevé approximatif le premier de chaque mois apprend infiniment plus qu'un inventaire exact fait une fois par an, puis abandonné. Le bouton « valeur du jour » existe pour ça — trente secondes, et vous ne saisissez rien à la main.",
+          "Two points do not make a curve, and twelve make a story. Regularity beats precision: a rough statement on the first of every month teaches infinitely more than an exact inventory done once a year and then dropped. The « today's value » button is there for that — thirty seconds, and nothing to type.",
+          "Dos puntos no hacen una curva, y doce hacen una historia. La regularidad vence a la precisión: un registro aproximado el día uno de cada mes enseña infinitamente más que un inventario exacto hecho una vez al año y luego abandonado. El botón « valor de hoy » está para eso: treinta segundos y nada que teclear.",
+          "Zwei Punkte machen keine Kurve, zwölf machen eine Geschichte. Regelmäßigkeit schlägt Genauigkeit: ein ungefährer Eintrag am Ersten jedes Monats lehrt unendlich mehr als eine exakte Bestandsaufnahme einmal im Jahr, die dann liegen bleibt. Die Schaltfläche »Heutiger Wert« ist dafür da — dreißig Sekunden, und nichts einzutippen."]
+    },
+    {
       d: '2026-09-24',
       t: ["L'or au-dessus de ses records, et ce que ça change",
           "Gold above its records, and what it changes",
@@ -13586,10 +13654,15 @@ window.PC = (function(){
   }
 
   /* --- Les cours ---
-     Trois cryptos et deux metaux : ce qui arrive sans relais, donc
-     partout. Avec un relais configure, l'espace client en montre
-     bien davantage — c'est justement l'argument. */
-  const COMBIEN = 5;
+     Huit vignettes. La rubrique est une destination de la barre du
+     bas, plus une section au pied du tableau de bord : elle a la
+     place, et cinq cases y faisaient vide.
+
+     Ce plafond double celui de « chercheCours », qui choisit deja
+     combien prendre a chaque source. Le laisser a cinq annulait
+     silencieusement le reglage d'a cote — c'est ce que le test [51] a
+     vu, en comptant cinq cases la ou le code en demandait huit. */
+  const COMBIEN = 8;
   let posees = false;
 
   /* Les stablecoins sortent de la liste. Ils occupent les premieres
@@ -13649,8 +13722,22 @@ window.PC = (function(){
       PC_MARCHES.dix('crypto').catch(function(){ return []; }),
       PC_MARCHES.dix('matieres').catch(function(){ return []; })
     ]).then(function(r){
-      const crypto = (r[0] || []).filter(function(x){ return !stable(x); }).slice(0, 3);
-      const metaux = (r[1] || []).slice(0, 2);
+      /* Huit vignettes : la rubrique est une destination, elle a la
+         place. On prend d'abord jusqu'a trois metaux — ils donnent a la
+         rangee son interet, un portefeuille n'est pas que de la
+         crypto — puis on complete avec les cryptos jusqu'a huit. Si les
+         metaux manquent, ce qui arrive sans relais, la rangee reste
+         pleine au lieu de tomber a trois cases. */
+      const VISE = 8;
+      const metaux = (r[1] || []).slice(0, 3);
+      const crypto = (r[0] || [])
+        .filter(function(x){ return !stable(x); })
+        /* Un jeton adosse au metal figure dans les deux listes : sans ce
+           filtre l'or apparaitrait deux fois. */
+        .filter(function(x){
+          return !metaux.some(function(m){ return m && x && m.id === x.id; });
+        })
+        .slice(0, Math.max(0, VISE - metaux.length));
       poseCours(crypto.concat(metaux));
     }).catch(function(){});
   }
