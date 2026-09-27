@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260927.1912";</script>
+<script>window.PC_VERSION = "260927.2001";</script>
 </head>
 <body>
 
@@ -1616,7 +1616,12 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 }
 .board__titre h2{font-size:clamp(26px,3.2vw,38px); letter-spacing:-.03em;}
 .board__cmd{display:flex; gap:8px; align-items:center; flex:none;}
-.reglage--pf{max-width:220px;}
+/* Un nom de portefeuille est libre : « Portefeuille principal » par
+   defaut, mais rien n'empeche plus long. Sur telephone il etait coupe
+   net au milieu d'un mot — « Portefeuille pri ». Les points de
+   suspension disent qu'il continue ; une coupe franche fait croire a
+   un defaut. */
+.reglage--pf{max-width:220px; text-overflow:ellipsis;}
 @media (max-width:640px){
   .board__barre{flex-direction:column; align-items:stretch; gap:14px;}
   /* La barre ne savait pas passer a la ligne. En formule Max, ou le
@@ -3354,6 +3359,63 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   body.vue-espace .carte[style*="margin-bottom:30px"]{margin-bottom:18px !important;}
   .an-titre{margin-bottom:4px;}
   .solde__actions{gap:8px; margin-top:14px;}
+
+  /* ===== Le premier ecran de l'espace =====
+     Mesure : 342 px passaient avant le premier chiffre, sur 844 — 40 %
+     de l'ecran, et les indicateurs arrivaient coupes en deux. Il
+     fallait faire defiler pour savoir combien on a, ce qui est la
+     seule question qu'on se pose en ouvrant.
+
+     Ce qui part, et pourquoi chacun :
+
+     - L'EN-TETE DU SITE (69 px). Dans l'espace, c'est un second
+       systeme de navigation par-dessus la barre du bas, avec
+       « Connexion » pour quelqu'un qui est deja entre. Ses deux seules
+       entrees utiles — installer, revenir au site — sont dans le menu
+       des trois points. Dans l'application installee il n'y a de toute
+       facon plus de barre de navigateur : cet en-tete y faisait double
+       emploi avec lui-meme.
+
+     - LE TITRE « Tableau de bord » (36 px avec sa marge). La barre du
+       bas dit deja « Accueil », en surbrillance.
+
+     - LA RANGEE DE COMMANDES passait sur deux lignes ; elle en fait
+       une.
+
+     - LE BANDEAU DU MODE LOCAL garde ses deux premieres lignes. Il dit
+       quelque chose qui compte — aucun compte, aucun serveur — mais il
+       le redit a chaque ouverture.
+
+     Resultat : le total et les cinq chiffres cles tiennent sur le
+     premier ecran d'un telephone courant, sans toucher a rien. */
+  body.vue-espace .site-head{display:none;}
+  body.vue-espace .espace{padding-top:14px;}
+  .board__titre{display:none;}
+  .board__barre{gap:10px; margin-bottom:10px;}
+  .board__cmd{gap:7px;}
+  .bar-local{
+    margin-bottom:12px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .msg{margin-bottom:10px;}
+  .kpis{margin-bottom:18px; grid-template-columns:repeat(2, minmax(0,1fr));}
+  /* Cinq tuiles empilees en une colonne faisaient 354 px — le tiers
+     du premier ecran pour cinq nombres courts. Sur deux colonnes,
+     trois rangees suffisent. Le chiffre descend juste assez pour que
+     « 1 234 567 € » tienne dans une demi-largeur sans etre coupe :
+     test66 mesure le debordement, il ne le suppose pas. */
+  .kpi{padding:11px 12px;}
+  .kpi__v{font-size:17.5px;}
+  .kpi__s{font-size:11px;}
+}
+/* Sous 360 px, la demi-largeur ne tient plus un montant a sept
+   chiffres : « 1 166 100 € » sortait de sa tuile, et le chiffre ne se
+   coupe pas — il se lit en entier ou il ne sert a rien. Les ecrans
+   etroits gardent donc une colonne. Mesure, pas supposition : voir la
+   verification de debordement dans test66. */
+@media (max-width:360px){
+  .kpis{grid-template-columns:1fr;}
 }
 </style>
 <script>
@@ -5851,6 +5913,12 @@ window.PC = (function(){
             </svg>
           </summary>
           <div class="menu__p">
+            <!-- Masquee tant que le navigateur ne propose pas
+                 l'installation. Elle double le bouton de l'en-tete du
+                 site, qui disparait dans l'espace sur telephone : sans
+                 elle, on perdrait le seul chemin vers l'installation
+                 une fois entre. -->
+            <button class="menu__i" type="button" id="installer-menu" data-i18n="hero.install" hidden>Installer l'app</button>
             <button class="menu__i" type="button" id="exemple" data-i18n="e.exemple">Charger un exemple</button>
             <button class="menu__i" type="button" id="rapport-btn" data-i18n="e.rap.bouton">Rapport mensuel</button>
             <button class="menu__i" type="button" id="relais-btn" data-i18n="e.rel.bouton">Relais pour la bourse…</button>
@@ -7613,10 +7681,24 @@ window.PC = (function(){
 
   const aideInstall = document.getElementById('install-aide');
 
+  const btnInstallMenu = document.getElementById('installer-menu');
+
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     inviteInstall = e;
     if (aideInstall) aideInstall.hidden = true;
+    /* L'entree du menu de l'espace n'apparait que la : ailleurs elle
+       promettrait une installation que le navigateur ne sait pas
+       faire. */
+    if (btnInstallMenu) btnInstallMenu.hidden = false;
+  });
+
+  /* Un seul comportement, deux portes : l'entree du menu declenche le
+     bouton de l'en-tete plutot que d'en recopier la logique. */
+  if (btnInstallMenu) btnInstallMenu.addEventListener('click', function(){
+    const d = document.getElementById('menu-board');
+    if (d) d.open = false;
+    if (btnInstall) btnInstall.click();
   });
 
   if (btnInstall) btnInstall.addEventListener('click', function(){
@@ -7639,6 +7721,7 @@ window.PC = (function(){
 
   window.addEventListener('appinstalled', function(){
     inviteInstall = null;
+    if (btnInstallMenu) btnInstallMenu.hidden = true;
     if (btnInstall) btnInstall.hidden = true;
     if (aideInstall) aideInstall.hidden = true;
   });
