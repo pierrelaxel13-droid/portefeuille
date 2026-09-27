@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260927.1758";</script>
+<script>window.PC_VERSION = "260927.1912";</script>
 </head>
 <body>
 
@@ -1646,7 +1646,21 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   min-width:260px; padding:6px;
   background:var(--paper); border:1px solid var(--rule-strong);
   box-shadow:0 22px 50px -24px var(--shadow);
+  /* Le menu grandit avec la formule : sept entrees en Normal, onze en
+     Max — portefeuilles separes et rapport mensuel en plus. Sur un
+     telephone court, les dernieres passaient SOUS le bord de l'ecran.
+     La page pouvait defiler pour les atteindre, mais un menu qu'il
+     faut faire defiler par-dessous n'en est plus un : sur telephone, le
+     geste referme le volet au lieu de l'atteindre.
+
+     Le panneau se borne donc a la hauteur disponible et defile
+     LUI-MEME. « dvh » et non « vh » : sur iOS la barre d'adresse fait
+     varier vh pendant le defilement, et la borne sauterait avec elle. */
+  max-height:calc(100dvh - 150px);
+  overflow-y:auto; overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
 }
+
 .menu__i{
   display:block; width:100%; text-align:left; text-decoration:none;
   background:none; border:none; cursor:pointer;
@@ -1657,11 +1671,34 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 .menu__i:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
 .menu__i--danger{color:var(--loss);}
 .menu__sep{border-top:1px solid var(--rule); margin-top:6px; padding-top:6px;}
-/* Le menu reste accroché au bouton, qui est du côté droit : `left:0`
-   le poussait hors de l'écran. On garde l'ancrage à droite et on borne
-   la largeur pour qu'il tienne dans la fenêtre. */
-@media (max-width:640px){
-  .menu__p{right:0; left:auto; min-width:0; width:min(84vw, 280px);}
+/* Sur telephone, le menu devient une FEUILLE ANCREE EN BAS.
+
+   Il grandit avec la formule : sept entrees en Normal, onze en Max —
+   portefeuilles separes et rapport mensuel en plus. Accroche au bouton,
+   qui se trouve deja a 250 px du haut, les dernieres entrees passaient
+   sous le bord de l'ecran sur un telephone court. La page pouvait
+   defiler pour les atteindre, mais un menu qu'il faut faire defiler
+   par-dessous n'en est plus un.
+
+   En bas, il tient quelle que soit la hauteur de l'ecran, il defile
+   LUI-MEME si la liste est longue, et le pouce y arrive. « dvh » et non
+   « vh » : sur iOS la barre d'adresse fait varier vh pendant le
+   defilement, et la borne sauterait avec elle.
+
+   Cette regle remplace celle qui bornait la largeur a 280 px et
+   ancrait a droite : elle traitait le meme probleme, en moins bien. */
+@media (max-width:700px){
+  .menu__p{
+    position:fixed; left:0; right:0; bottom:0; top:auto;
+    min-width:0; width:auto; max-height:min(82dvh, calc(100dvh - 56px));
+    padding:8px 8px calc(10px + env(safe-area-inset-bottom, 0px));
+    border:none; border-top:1px solid var(--rule-strong);
+    border-radius:18px 18px 0 0;
+    box-shadow:0 -22px 60px -20px var(--shadow);
+    overflow-y:auto; overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .menu__i{padding:13px 14px; font-size:15px;}
 }
 .board__outils{display:flex; align-items:center; gap:9px; flex-wrap:wrap;}
 .msg{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--ink-2); min-height:1.2em; margin-bottom:14px;}
@@ -1863,6 +1900,8 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   background:var(--ink-3); transform:translate(-50%, -50%);
 }
 .an-paire[data-force="forte"] .an-cb__p{background:var(--accent);}
+
+
 .an-m[data-ton="baisse"] .an-m__v{color:var(--loss);}
 /* Les paires correlees. Le chiffre a gauche, les deux noms a droite :
    on lit la force avant de lire qui. */
@@ -3253,6 +3292,69 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   }
 }
 
+
+/* ===== L'espace sur telephone : plus dense =====
+   Les tailles de l'espace ont ete calibrees sur un grand ecran, ou
+   l'air est gratuit. Sur un telephone il coute du defilement : le
+   panneau d'analyse, avec sa courbe et ses cinq mesures par ligne,
+   faisait plusieurs ecrans pour trois lignes.
+
+   On resserre le texte SECONDAIRE et les rembourrages ; les chiffres
+   qu'on vient lire — le solde, la valeur de chaque mesure — restent
+   grands. Reduire tout uniformement aurait rendu la page illisible
+   sans la raccourcir vraiment : c'est l'air entre les blocs qui
+   prend la place, pas les caracteres. */
+@media (max-width:700px){
+  body.vue-espace{font-size:15.5px;}
+  .carte__t{padding:12px 14px;}
+  .carte__t h3{font-size:15px;}
+  .carte__t span{font-size:11px;}
+  .carte__c{padding:14px;}
+  .kpi{padding:13px 14px; gap:3px;}
+  .kpi__v{font-size:20px;}
+  .kpi__s{font-size:11.5px;}
+  .solde__d{font-size:14.5px;}
+  .repere{padding:11px 14px;}
+  .repere__k, .repere__v{font-size:13.5px;}
+  .lecture{padding:13px 14px;}
+  .lecture__p{font-size:14px; line-height:1.55; margin-top:6px;}
+  .lectures__non, .lectures__pied{padding:12px 14px;}
+  /* Le panneau d'analyse, le plus long de tous. */
+  .an-bloc + .an-bloc{margin-top:26px;}
+  .an-sous{font-size:13.5px; margin-bottom:14px;}
+  .an-ligne{padding:14px;}
+  .an-ligne__n{font-size:15.5px;}
+  .an-sp{height:52px; margin:11px 0 2px;}
+  .an-mes{margin-top:11px;}
+  /* La mesure sur UNE ligne : l'etiquette a gauche, le chiffre a
+     droite, la phrase dessous. Empilees sur trois lignes, les cinq
+     mesures d'une seule valeur cotee prenaient 130 px de plus — et
+     c'est la, pas dans la taille des caracteres, que se trouvait le
+     defilement. Meme forme que les reperes de la vue d'ensemble. */
+  .an-m{
+    display:grid; grid-template-columns:minmax(0,1fr) auto;
+    gap:2px 12px; align-items:baseline; padding:10px 13px;
+  }
+  .an-m__k{grid-column:1; grid-row:1;}
+  .an-m__v{grid-column:2; grid-row:1; font-size:17.5px; margin:0; white-space:nowrap;}
+  .an-m__d{grid-column:1 / -1; font-size:12px; line-height:1.45;}
+  .an-j, .an-bar{grid-column:1 / -1; margin:6px 0 2px;}
+  .an-paire{padding:12px 13px;}
+  .an-paire__n{font-size:14.5px;}
+  .an-paire__c{font-size:17px;}
+  .analyse__t{font-size:15.5px; line-height:1.65;}
+
+  /* L'AIR entre les blocs, qui est ce qui coute vraiment. Mesure sur
+     l'exemple : la liste des actifs faisait 603 px pour sept lignes et
+     les cartes etaient separees de 30 px chacune — six cartes, 180 px
+     de vide. Rogner les caracteres ne rendait que 8 % ; c'est ici que
+     se trouve le reste. */
+  .ligne{padding:10px 14px; gap:11px;}
+  .grille{gap:16px; margin-bottom:18px;}
+  body.vue-espace .carte[style*="margin-bottom:30px"]{margin-bottom:18px !important;}
+  .an-titre{margin-bottom:4px;}
+  .solde__actions{gap:8px; margin-top:14px;}
+}
 </style>
 <script>
   /* Posé avant le rendu : conditionne l'état « avant animation ».
@@ -8137,8 +8239,23 @@ window.PC = (function(){
   const EXEMPLE = [
     {n:1, cat:'immo',    inv:68000, val:79500, liq:0, rev:780, revP:'mois'},
     {n:2, cat:'actions', inv:22500, val:26910, liq:1, rev:610, revP:'an'},
-    {n:3, cat:'crypto',  inv:11000, val:17400, liq:1},
-    {n:4, cat:'crypto',  inv:3200,  val:4260,  liq:1},
+    /* Ces deux-la portent leur CODE DE MARCHE. Sans lui, l'exemple
+       n'avait aucune ligne cotee : quelqu'un qui le chargeait pour voir
+       a quoi ressemble le produit ouvrait l'onglet Analyse et lisait
+       « aucune de vos lignes ne suit un cours ». La fonction qui
+       justifie Pro et Max etait vide sur la demonstration meme.
+
+       Avec le code, le cours arrive du marche, l'historique de douze
+       mois se charge, et l'analyse se remplit — sur de vrais chiffres.
+       « pu » n'est PAS pose : tant que le cours n'est pas arrive,
+       valeurCours() rend null et la valeur d'exemple tient. Des qu'il
+       arrive, la ligne devient vivante.
+
+       Seules les cryptos : elles se lisent chez un fournisseur public,
+       sans relais ni cle. Une action demanderait le relais, que tout le
+       monde n'a pas. */
+    {n:3, cat:'crypto',  inv:11000, val:17400, liq:1, sym:'bitcoin',  q:0.33},
+    {n:4, cat:'crypto',  inv:3200,  val:4260,  liq:1, sym:'ethereum', q:1.55},
     {n:5, cat:'av',      inv:12400, val:13180, liq:1, rev:310, revP:'an'},
     {n:6, cat:'trading', inv:8000,  val:9240,  liq:1},
     {n:7, cat:'liquid',  inv:9000,  val:9180,  liq:1, rev:180, revP:'an'}
@@ -8147,6 +8264,9 @@ window.PC = (function(){
     return EXEMPLE.map(function(e){
       const a = {id:neufId(), nom:PC.t('e.ex.' + e.n + '.n'), cat:e.cat, qte:PC.t('e.ex.' + e.n + '.q'),
                  inv:PC.enDevise(e.inv), val:PC.enDevise(e.val), liq:e.liq};
+      /* Le code et la quantite vont ensemble : l'un sans l'autre ne
+         declenche ni cours ni historique (voir codeAChercher). */
+      if (e.sym && typeof e.q === 'number'){ a.sym = e.sym; a.q = e.q; }
       if (e.rev){ a.rev = PC.enDevise(e.rev); a.revP = e.revP; }
       return a;
     });
