@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260926.2238";</script>
+<script>window.PC_VERSION = "260927.1131";</script>
 </head>
 <body>
 
@@ -753,8 +753,11 @@ body.flux-vif .cours__vif::before{
      qui n'existe plus.) */
   .preuve__note,
   /* Six lignes de prose avant trois prix : sur un telephone, le titre
-     suffit et les cartes disent le reste. */
-  #offres .section__intro{display:none;}
+     suffit et les cartes disent le reste. Meme raison pour le
+     diagnostic : « Ce qu'un tableur ne vous dira pas » annonce le
+     bloc, et ce sont les six chiffres qui convainquent, pas la phrase
+     qui les presente. */
+  #offres .section__intro, #diagnostic .section__intro{display:none;}
 }
 /* Un bloc qui se replie sur telephone et reste ouvert ailleurs. Le
    contenu ne bouge pas : seule sa presentation suit la largeur. */
@@ -1094,9 +1097,13 @@ body.flux-vif .cours__vif::before{
 
 /* Les colonnes, une seule fois : l'en-tête et les lignes partagent le
    même gabarit, sinon rien ne s'aligne. */
+/* Sept colonnes : rang, nom, prix, puis TROIS performances, puis la
+   capitalisation. La sixieme portait un petit graphique, present pour
+   certaines lignes et absent pour les autres — des cases et des
+   non-cases sur la meme liste. Des chiffres sont toujours la. */
 .marches__tete, .marches__l{
-  display:grid; align-items:center; gap:16px;
-  grid-template-columns:34px minmax(0,1.5fr) minmax(0,1fr) 80px minmax(0,1fr) 108px;
+  display:grid; align-items:center; gap:14px;
+  grid-template-columns:34px minmax(0,1.6fr) minmax(0,1fr) 78px 78px 78px minmax(0,1fr);
 }
 .marches__tete{
   padding:0 16px 10px; font-size:10.5px; letter-spacing:.14em;
@@ -1132,26 +1139,42 @@ body.flux-vif .cours__vif::before{
 }
 .marches__var[data-dir="up"]{color:var(--gain);}
 .marches__var[data-dir="down"]{color:var(--loss);}
-.marches__spark{height:34px; width:100%;}
-.marches__spark path{fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;}
-.marches__spark path[data-dir="up"]{stroke:var(--gain);}
-.marches__spark path[data-dir="down"]{stroke:var(--loss);}
+/* Un horizon que le fournisseur ne donne pas n'est ni un gain ni une
+   perte : il ne prend aucune couleur. */
+.marches__var[data-dir="rien"]{color:var(--ink-3);}
 
-/* Sous 860 px : deux lignes par crypto. Le rang et le graphique sortent
-   — ce sont les deux informations dont on se passe le mieux quand la
-   place manque. */
+/* Sous 860 px : deux rangees par ligne. Le rang sort — c'est
+   l'information dont on se passe le mieux quand la place manque.
+
+   Les trois performances passent en seconde rangee, chacune avec son
+   etiquette au-dessus du chiffre : l'en-tete du tableau a disparu, et
+   trois pourcentages nus cote a cote ne diraient rien.
+
+   Le placement se fait par « nth-child » et non par zones nommees :
+   les trois cases de variation partagent la meme classe, donc une
+   zone nommee les empilerait toutes les trois au meme endroit. Les
+   rangs comptent la position dans le document — le rang masque
+   compte, d'ou le decalage a partir de 4. */
 @media (max-width:860px){
   .marches__tete{display:none;}
   .marches__l{
-    grid-template-columns:minmax(0,1fr) auto;
-    grid-template-areas:"nom prix" "cap var";
-    gap:4px 14px; padding:14px 4px;
+    grid-template-columns:minmax(0,1fr) repeat(3, auto);
+    gap:10px 12px; padding:14px 4px;
   }
-  .marches__rang, .marches__spark{display:none;}
-  .marches__nom{grid-area:nom;}
-  .marches__prix{grid-area:prix;}
-  .marches__cap{grid-area:cap; text-align:left; font-size:12px;}
-  .marches__var{grid-area:var;}
+  .marches__rang{display:none;}
+  .marches__nom{grid-column:1 / span 3; grid-row:1;}
+  .marches__prix{grid-column:4; grid-row:1;}
+  .marches__l > :nth-child(4){grid-column:1; grid-row:2;}
+  .marches__l > :nth-child(5){grid-column:2; grid-row:2;}
+  .marches__l > :nth-child(6){grid-column:3; grid-row:2;}
+  .marches__cap{grid-column:4; grid-row:2; text-align:right; font-size:12px;}
+  /* L'etiquette au-dessus du chiffre, en petit. */
+  .marches__var{display:flex; flex-direction:column; align-items:flex-start; gap:1px;}
+  .marches__var::before{
+    content:attr(data-h);
+    font-size:9.5px; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--ink-3); font-weight:400;
+  }
 }
 
 .marches__pages{
@@ -2802,6 +2825,83 @@ table.actifs tbody tr{cursor:pointer;}
    elle recouvrait le bouton « Entrer ». */
 body:not(.espace-ouvert) .barre-app{display:none;}
 
+/* ===== Le tableau comparatif =====
+   Un vrai tableau : trois colonnes de valeurs courtes (« 15 »,
+   « illimite », un signe) et une colonne de libelles qui se replie. A
+   390 px cela tient sans defilement — c'est pour cela que les valeurs
+   restent courtes. */
+.comparo{margin-top:clamp(34px,4vw,54px);}
+.comparo__t{
+  font-size:11px; letter-spacing:.19em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 16px;
+}
+.comparo__boite{overflow-x:auto;}
+.cmp{width:100%; border-collapse:collapse; font-size:14px;}
+.cmp th, .cmp td{padding:11px 10px; border-bottom:1px solid var(--rule); text-align:left;}
+.cmp thead th{
+  font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-3); border-bottom:1.5px solid var(--rule-strong);
+  white-space:nowrap;
+}
+.cmp tbody th{font-weight:400; color:var(--ink-2); text-wrap:pretty;}
+.cmp td{text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap;}
+/* La colonne de la formule mise en avant se distingue, comme sa carte. */
+.cmp .cmp--phare{background:var(--paper-2);}
+.cmp__oui{color:var(--gain); font-size:16px;}
+.cmp__non{color:var(--ink-3);}
+.cmp__prix{font-weight:700; color:var(--ink);}
+@media (max-width:700px){
+  .cmp{font-size:12.5px;}
+  .cmp th, .cmp td{padding:9px 5px;}
+  .cmp thead th{font-size:9.5px; letter-spacing:.08em;}
+}
+
+/* ===== Le diagnostic =====
+   Six cases. Le CHIFFRE d'abord, gros : c'est lui qu'on retient. Le
+   nom au-dessus en petit, l'explication en dessous — une phrase, pas
+   un paragraphe : si elle ne tient pas en une ligne et demie, c'est
+   que le chiffre n'est pas clair. */
+.diag{
+  display:grid; gap:1px; background:var(--rule);
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, 268px), 1fr));
+  border:1px solid var(--rule);
+}
+.diag__c{background:var(--paper); padding:clamp(18px,2.4vw,26px);}
+.diag__k{
+  font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.diag__v{
+  font-size:clamp(26px,3.4vw,34px); font-weight:700; letter-spacing:-.03em;
+  margin:8px 0 2px; font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.diag__q{font-size:13px; color:var(--ink-2); font-variant-numeric:tabular-nums;}
+.diag__d{font-size:13.5px; line-height:1.55; color:var(--ink-3); margin:12px 0 0; text-wrap:pretty;}
+/* Le chiffre qui doit inquieter un peu prend la couleur de l'accent :
+   la concentration n'est pas une bonne nouvelle, et l'afficher comme
+   un gain serait malhonnete. */
+.diag__c[data-ton="attention"] .diag__v{color:var(--accent);}
+@media (max-width:700px){
+  /* Six cases empilees faisaient deux ecrans pleins avant meme
+     d'arriver aux formules, et la devanture en demandait sept au
+     total. Elles defilent du pouce, comme la rangee de cours et les
+     cartes de formules : on voit la premiere et le bord de la
+     suivante, ce qui dit qu'il y en a d'autres. Rien n'est cache —
+     c'est la seule raison d'avoir choisi le defilement plutot qu'un
+     repli. */
+  .diag{
+    display:flex; overflow-x:auto; border:none; background:none; gap:12px;
+    scroll-snap-type:x mandatory; scrollbar-width:none;
+    margin-inline:calc(-1 * var(--pad)); padding-inline:var(--pad);
+    scroll-padding-inline:var(--pad); -webkit-overflow-scrolling:touch;
+  }
+  .diag::-webkit-scrollbar{display:none;}
+  .diag__c{
+    flex:0 0 78%; scroll-snap-align:start;
+    border:1px solid var(--rule); border-radius:14px;
+  }
+}
+
 /* ===== Actualite =====
    Deux blocs dans la meme section : les cours, qui arrivent du
    reseau, et le journal, qui vient du fichier. */
@@ -2815,10 +2915,22 @@ body:not(.espace-ouvert) .barre-app{display:none;}
 /* Les cours. Une rangee qui defile au pouce sur telephone plutot
    qu'une grille qui s'empile : on regarde ca comme un bandeau, pas
    comme un tableau. */
+/* QUATRE COLONNES, PAS « auto-fit ».
+
+   « auto-fit » avec un minimum de 180 px donnait six colonnes sur un
+   conteneur de 1152 px : avec huit vignettes, six puis deux, et quatre
+   cases vides que l'oeil lit comme un defaut d'affichage. Quatre
+   colonnes divisent huit, et deux colonnes aussi : la rangee est
+   pleine aux deux paliers. Le nombre de vignettes rendues est tenu
+   multiple de quatre cote script — les deux vont ensemble, changer
+   l'un sans l'autre ramene le trou. */
 .actu-cours{
   display:grid; gap:1px; background:var(--rule);
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));
+  grid-template-columns:repeat(4, minmax(0, 1fr));
   border:1px solid var(--rule);
+}
+@media (max-width:1000px){
+  .actu-cours{grid-template-columns:repeat(2, minmax(0, 1fr));}
 }
 .actu-cours:empty{display:none;}
 .cours-case{
@@ -2837,7 +2949,41 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   font-family:'IBM Plex Mono', monospace; font-size:17px; font-weight:500;
   font-variant-numeric:tabular-nums; margin-top:2px;
 }
+/* Les trois horizons. L'etiquette a gauche, la variation a droite :
+   l'oeil descend une colonne de pourcentages alignes plutot que de
+   chercher trois nombres dans une phrase. */
+.cours-case__v{display:flex; flex-direction:column; gap:3px; margin-top:8px;}
+.cours-case__l{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+}
+.cours-case__h{
+  font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3);
+}
 .actu-note{font-size:11.5px; color:var(--ink-3); margin:12px 0 0;}
+
+/* La presse. Une liste de liens, pas des cartes : ce sont des titres
+   qu'on parcourt et dont on suit un seul. La source et l'heure en
+   petit, sous le titre — c'est le titre qu'on lit. */
+.actu-titres{
+  display:flex; flex-direction:column; gap:1px; background:var(--rule);
+  border-block:1px solid var(--rule);
+}
+.titre-p{background:var(--paper); padding:14px 0;}
+.titre-p__a{
+  color:var(--ink); text-decoration:none; font-size:16.5px; line-height:1.4;
+  font-weight:600; letter-spacing:-.01em; display:inline-block; max-width:72ch;
+  text-wrap:pretty;
+}
+.titre-p__a:hover{color:var(--accent); text-decoration:underline; text-underline-offset:3px;}
+.titre-p__a:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+/* Le lien sort du site : on le dit, discretement, plutot que de le
+   laisser surprendre. */
+.titre-p__a::after{content:" \2197"; color:var(--ink-3); font-weight:400;}
+.titre-p__m{
+  font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3); margin-top:6px;
+}
 
 /* Le journal. Du texte, donc une colonne etroite : au-dela de
    soixante-dix caracteres l'oeil perd sa ligne. */
@@ -3562,6 +3708,55 @@ window.PC = (function(){
   'e.cle.oubli':        ["J'ai oublié ma phrase", "I have forgotten my passphrase", "He olvidado mi frase", "Ich habe meine Passphrase vergessen"],
   'e.cle.oublie':       ["Effacée. Vos chiffres sont intacts : choisissez une nouvelle phrase.", "Erased. Your figures are untouched: choose a new passphrase.", "Borrada. Sus cifras están intactas: elija una nueva frase.", "Gelöscht. Ihre Zahlen sind unberührt: wählen Sie eine neue Passphrase."],
   'actu.onglet':        ["Actualité", "Latest", "Actualidad", "Aktuelles"],
+  'actu.presse':        ["La presse", "The press", "La prensa", "Die Presse"],
+  'actu.presse.d':      ["Les titres du jour, chez ceux qui les écrivent.", "Today's headlines, at the people who write them.", "Los titulares del día, en casa de quienes los escriben.", "Die Schlagzeilen des Tages, bei denen, die sie schreiben."],
+  'actu.p.maintenant':  ["à l'instant", "just now", "ahora mismo", "gerade eben"],
+  'actu.p.min':         ["il y a {{n}} min", "{{n}} min ago", "hace {{n}} min", "vor {{n}} Min."],
+  'actu.p.h':           ["il y a {{n}} h", "{{n}} h ago", "hace {{n}} h", "vor {{n}} Std."],
+  'actu.p.j':           ["il y a {{n}} j", "{{n}} d ago", "hace {{n}} d", "vor {{n}} Tg."],
+  'actu.p.via':         ["Titres et liens : {{s}}. Les articles restent chez leurs auteurs.", "Headlines and links: {{s}}. The articles stay with their authors.", "Titulares y enlaces: {{s}}. Los artículos permanecen en sus autores.", "Schlagzeilen und Links: {{s}}. Die Artikel bleiben bei ihren Urhebern."],
+  'diag.eyebrow':       ["Le diagnostic", "The diagnosis", "El diagnóstico", "Die Diagnose"],
+  'diag.h2':            ["Ce qu'un tableur<br>ne vous dira pas.", "What a spreadsheet<br>will not tell you.", "Lo que una hoja de cálculo<br>no le dirá.", "Was eine Tabelle<br>Ihnen nicht sagt."],
+  'diag.intro':         ["Un tableur additionne. Voilà les six chiffres qu'il faut savoir en plus — calculés à l'instant sur le portefeuille d'exemple ci-dessus, et recalculés chez vous à chaque ligne que vous saisissez.", "A spreadsheet adds up. Here are the six figures you need on top — worked out just now on the sample portfolio above, and worked out again on yours with every line you enter.", "Una hoja de cálculo suma. Estas son las seis cifras que hace falta saber además, calculadas ahora mismo sobre la cartera de ejemplo de arriba, y recalculadas en la suya con cada línea que introduzca.", "Eine Tabelle addiert. Hier sind die sechs Zahlen, die darüber hinaus zählen — gerade eben am Beispielportfolio oben berechnet, und bei Ihnen mit jeder Position neu."],
+  'diag.dutotal':       ["du total", "of the total", "del total", "des Gesamten"],
+  'diag.points':        ["points", "points", "puntos", "Punkte"],
+  'diag.grosse':        ["La plus grosse ligne", "The biggest holding", "La mayor posición", "Der größte Posten"],
+  'diag.grosse.d':      ["Une ligne qui pèse un tiers du portefeuille décide seule de votre année, quelle que soit la qualité du reste.", "A holding worth a third of the portfolio decides your year on its own, whatever the quality of the rest.", "Una posición que pesa un tercio de la cartera decide su año por sí sola, cualquiera que sea la calidad del resto.", "Ein Posten mit einem Drittel des Portfolios entscheidet Ihr Jahr allein, wie gut der Rest auch ist."],
+  'diag.trois':         ["Les trois premières", "The top three", "Las tres primeras", "Die ersten drei"],
+  'diag.trois.d':       ["Au-delà de 70 %, tout ce qui reste ne change presque rien. C'est là qu'est le risque réel, pas dans le nombre de lignes.", "Past 70%, everything else barely moves the needle. That is where the real risk sits — not in the number of lines.", "Más allá del 70 %, todo lo demás apenas cambia algo. Ahí está el riesgo real, no en el número de líneas.", "Über 70 % ändert der ganze Rest fast nichts. Dort liegt das eigentliche Risiko — nicht in der Zahl der Positionen."],
+  'diag.mobilisable':   ["Mobilisable en quelques jours", "Available within days", "Movilizable en unos días", "Binnen Tagen verfügbar"],
+  'diag.mobilisable.d': ["Ce que vous pouvez sortir sans vendre un bien. C'est ce chiffre qui décide si une mauvaise année se traverse ou se subit.", "What you can free up without selling a property. This figure decides whether a bad year is weathered or suffered.", "Lo que puede sacar sin vender un inmueble. Esta cifra decide si un mal año se atraviesa o se padece.", "Was Sie freimachen können, ohne eine Immobilie zu verkaufen. Diese Zahl entscheidet, ob ein schlechtes Jahr durchgehalten oder erlitten wird."],
+  'diag.rentable':      ["La plus rentable", "The best performer", "La más rentable", "Der rentabelste Posten"],
+  'diag.rentable.d':    ["Pas la plus grosse : celle qui travaille le mieux. Les deux sont rarement la même, et c'est l'écart qui instruit.", "Not the biggest: the one that works hardest. The two are rarely the same, and the gap is what teaches.", "No la mayor: la que mejor trabaja. Las dos rara vez coinciden, y es la diferencia la que enseña.", "Nicht der größte: der, der am besten arbeitet. Beide sind selten dasselbe, und der Abstand ist lehrreich."],
+  'diag.ecart':         ["L'écart entre les extrêmes", "The spread between extremes", "La diferencia entre extremos", "Der Abstand der Extreme"],
+  'diag.ecart.d':       ["Entre la meilleure et la pire. Un écart large veut dire qu'une seule ligne porte le portefeuille — agréable tant qu'elle monte.", "Between best and worst. A wide spread means a single line carries the portfolio — pleasant for as long as it rises.", "Entre la mejor y la peor. Una diferencia amplia significa que una sola posición sostiene la cartera: agradable mientras suba.", "Zwischen bestem und schwächstem. Ein weiter Abstand heißt, ein einzelner Posten trägt das Portfolio — angenehm, solange er steigt."],
+  'diag.multiple':      ["Le multiple", "The multiple", "El múltiplo", "Das Vielfache"],
+  'diag.multiple.d':    ["Ce que chaque euro investi est devenu. Une seule question, une seule réponse — et elle ne se discute pas.", "What each euro invested has become. One question, one answer — and it is not open to debate.", "En qué se ha convertido cada euro invertido. Una sola pregunta, una sola respuesta, y no se discute.", "Was aus jedem investierten Euro geworden ist. Eine Frage, eine Antwort — und die steht nicht zur Debatte."],
+  'diag.pied.b':        ["Aucun de ces six chiffres ne se lit dans un tableur.", "None of these six figures can be read off a spreadsheet.", "Ninguna de estas seis cifras se lee en una hoja de cálculo.", "Keine dieser sechs Zahlen lässt sich aus einer Tabelle ablesen."],
+  'diag.pied':          ["Il faudrait les construire, puis les maintenir à chaque achat. C'est exactement le travail que cette page fait à votre place — et c'est la seule raison valable de la préférer à une feuille de calcul.", "You would have to build them, then maintain them with every purchase. That is exactly the work this page does for you — and the only good reason to prefer it to a spreadsheet.", "Habría que construirlas y luego mantenerlas con cada compra. Es exactamente el trabajo que esta página hace por usted, y la única razón válida para preferirla a una hoja de cálculo.", "Sie müssten sie bauen und dann bei jedem Kauf pflegen. Genau diese Arbeit erledigt diese Seite für Sie — und das ist der einzige gute Grund, sie einer Tabelle vorzuziehen."],
+  'actu.h.24h':         ["24 h", "24 h", "24 h", "24 Std."],
+  'actu.h.7j':          ["7 j", "7 d", "7 d", "7 Tg."],
+  'actu.h.30j':         ["30 j", "30 d", "30 d", "30 Tg."],
+  'm.30j':              ["30 jours", "30 days", "30 días", "30 Tage"],
+  'cmp.titre':          ["Ligne par ligne", "Line by line", "Línea por línea", "Punkt für Punkt"],
+  'cmp.voir':           ["Comparer ligne par ligne", "Compare line by line", "Comparar línea por línea", "Punkt für Punkt vergleichen"],
+  'cmp.legende':        ["Comparaison des trois formules", "Comparison of the three plans", "Comparación de los tres planes", "Vergleich der drei Tarife"],
+  'cmp.note':           ["Ce tableau est écrit par le programme lui-même, depuis les règles qu'il applique : il ne peut pas annoncer autre chose que ce que vous obtiendrez.", "This table is written by the program itself, from the rules it enforces: it cannot promise anything other than what you will get.", "Esta tabla la escribe el propio programa, a partir de las reglas que aplica: no puede anunciar otra cosa que lo que usted obtendrá.", "Diese Tabelle schreibt das Programm selbst, aus den Regeln, die es durchsetzt: Sie kann nichts anderes versprechen als das, was Sie bekommen."],
+  'cmp.oui':            ["compris", "included", "incluido", "enthalten"],
+  'cmp.non':            ["non compris", "not included", "no incluido", "nicht enthalten"],
+  'cmp.illimite':       ["illimité", "unlimited", "ilimitado", "unbegrenzt"],
+  'cmp.actifs':         ["Actifs suivis", "Tracked assets", "Activos seguidos", "Verfolgte Werte"],
+  'cmp.indicateurs':    ["Les quatorze indicateurs (concentration, liquidité, meilleure et pire ligne…)", "All fourteen indicators (concentration, liquidity, best and worst line…)", "Los catorce indicadores (concentración, liquidez, mejor y peor posición…)", "Alle vierzehn Kennzahlen (Konzentration, Liquidität, beste und schwächste Position…)"],
+  'cmp.histo':          ["Historique conservé (mois)", "History kept (months)", "Historial conservado (meses)", "Aufbewahrter Verlauf (Monate)"],
+  'cmp.revenus':        ["Suivi des revenus : loyers, dividendes, intérêts", "Income tracking: rent, dividends, interest", "Seguimiento de ingresos: alquileres, dividendos, intereses", "Ertragsverfolgung: Mieten, Dividenden, Zinsen"],
+  'cmp.pf':             ["Portefeuilles séparés (perso, société, famille)", "Separate portfolios (personal, company, family)", "Carteras separadas (personal, empresa, familia)", "Getrennte Portfolios (privat, Firma, Familie)"],
+  'cmp.rapport':        ["Rapport mensuel prêt à imprimer", "Monthly report ready to print", "Informe mensual listo para imprimir", "Monatsbericht, druckfertig"],
+  'cmp.fichier':        ["Export et import de vos données", "Export and import of your data", "Exportación e importación de sus datos", "Export und Import Ihrer Daten"],
+  'cmp.tous.cours':     ["Cours de bourse et de crypto en direct", "Live stock and crypto prices", "Cotizaciones de bolsa y cripto en directo", "Börsen- und Kryptokurse live"],
+  'cmp.tous.appareils': ["Vos chiffres sur tous vos appareils", "Your figures on every device", "Sus cifras en todos sus dispositivos", "Ihre Zahlen auf allen Geräten"],
+  'cmp.tous.sauvegarde': ["Sauvegarde du serveur, chaque jour", "Server backup, every day", "Copia del servidor, cada día", "Serversicherung, täglich"],
+  'cmp.tous.pistage':   ["Aucun pistage, aucune publicité, aucun cookie de mesure", "No tracking, no advertising, no analytics cookie", "Sin rastreo, sin publicidad, sin cookie de medición", "Kein Tracking, keine Werbung, kein Mess-Cookie"],
+  'cmp.tous.resil':     ["Résiliable à tout moment, sans frais", "Cancel any time, at no cost", "Cancelable en cualquier momento, sin gastos", "Jederzeit kündbar, ohne Kosten"],
   'c.err.session':      ["Votre session a expiré. Reconnectez-vous.","Your session has expired. Please sign in again.","Su sesión ha caducado. Vuelva a conectarse.","Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."],
   'c.err.serveur':      ["Le serveur n'a pas pu répondre.","The server could not answer.","El servidor no ha podido responder.","Der Server konnte nicht antworten."],
   'c.abo.attente':      ["accès en cours d'ouverture","access being opened","acceso en trámite","Zugang wird freigeschaltet"],
@@ -4658,6 +4853,37 @@ window.PC = (function(){
   </div>
 </section>
 
+<!-- ============================================================
+     LE DIAGNOSTIC
+     Ce que l'outil DIT du portefeuille, pas ce qu'il contient. Six
+     chiffres, tous calcules depuis les memes donnees que la bande de
+     preuve ci-dessus — aucun n'est ecrit en dur.
+     ============================================================ -->
+<section class="section section--rule" id="diagnostic">
+  <div class="wrap">
+    <div class="section__head section__head--duo">
+      <div>
+        <p class="eyebrow" data-i18n="diag.eyebrow">Le diagnostic</p>
+        <h2 data-i18n-html="diag.h2">Ce qu'un tableur<br>ne vous dira pas.</h2>
+      </div>
+      <p class="section__intro reveal" style="--rd:.12s" data-i18n-html="diag.intro">
+        Un tableur additionne. Voilà les six chiffres qu'il faut savoir en plus&nbsp;—
+        calculés à l'instant sur le portefeuille d'exemple ci-dessus, et recalculés
+        chez vous à chaque ligne que vous saisissez.
+      </p>
+    </div>
+
+    <div class="diag" id="diag"></div>
+
+    <p class="avertit reveal" style="--rd:.2s">
+      <b data-i18n="diag.pied.b">Aucun de ces six chiffres ne se lit dans un tableur.</b>
+      <span data-i18n-html="diag.pied">Il faudrait les construire, puis les maintenir à chaque
+      achat. C'est exactement le travail que cette page fait à votre place&nbsp;— et c'est la
+      seule raison valable de la préférer à une feuille de calcul.</span>
+    </p>
+  </div>
+</section>
+
 <!-- ===== RÉPARTITION ===== -->
 <section class="section" id="repartition">
   <div class="wrap">
@@ -4820,12 +5046,38 @@ window.PC = (function(){
       </article>
     </div>
 
+    <!-- Construit depuis PC_FORMULES, l'objet qui applique les
+         limites. Vide si le script ne tourne pas : un tableau de
+         tarifs a moitie rempli vaut moins que pas de tableau. -->
+    <div class="comparo reveal" id="comparo" style="--rd:.18s" hidden>
+      <h3 class="comparo__t" data-i18n="cmp.titre">Ligne par ligne</h3>
+      <!-- Replie sur telephone : douze lignes sur trois colonnes font
+           un ecran entier, et un tableau de comparaison se consulte
+           quand on hesite, pas en passant. Sur grand ecran le resume
+           disparait et le bloc reste ouvert. -->
+      <details class="replimob" open>
+      <summary data-i18n="cmp.voir">Comparer ligne par ligne</summary>
+      <div class="comparo__boite">
+        <table class="cmp">
+          <caption class="sr" data-i18n="cmp.legende">Comparaison des trois formules</caption>
+          <thead><tr id="cmp-tete"></tr></thead>
+          <tbody id="cmp-corps"></tbody>
+        </table>
+      </div>
+      <p class="comparo__n" data-i18n-html="cmp.note">Ce tableau est écrit par le programme
+        lui-même, depuis les règles qu'il applique&nbsp;: il ne peut pas annoncer autre chose
+        que ce que vous obtiendrez.</p>
+      </details>
+    </div>
+
     <p class="avertit reveal" style="--rd:.2s">
       <b data-i18n="off.avert.b">Ce que c'est, et ce que ce n'est pas.</b> <span data-i18n-html="off.avert">Un outil de suivi&nbsp;: vous entrez vos chiffres,
       il les met en forme et les met à jour. Il ne recommande aucun placement, ne passe aucun ordre
-      et ne donne aucun conseil en investissement. <b>Souscrire</b> envoie une demande par e-mail et
-      l'accès est ouvert à la main sous 48&nbsp;h&nbsp;; le paiement en ligne arrive.
-      <b>Essayer la démonstration</b> ouvre l'espace tout de suite, sans compte et sans engagement.</span>
+      et ne donne aucun conseil en investissement. <b>Souscrire</b> envoie une demande par e-mail&nbsp;;
+      l'accès est ouvert à la main sous 48&nbsp;h, et le paiement en ligne arrive.
+      Dans les trois formules&nbsp;: l'export de vos données en un fichier, et une sauvegarde du
+      serveur chaque jour. Il n'y a pas de démonstration ouverte&nbsp;— l'espace travaille sur de
+      vrais chiffres, et cela demande un compte.</span>
     </p>
   </div>
 </section>
@@ -5616,8 +5868,9 @@ window.PC = (function(){
           <span data-i18n="m.nom">Nom</span>
           <span data-i18n="m.prix">Prix</span>
           <span data-i18n="m.var">24 h</span>
-          <span id="tete-cap" data-i18n="m.cap">Capitalisation</span>
           <span data-i18n="m.7j">7 jours</span>
+          <span data-i18n="m.30j">30 jours</span>
+          <span id="tete-cap" data-i18n="m.cap">Capitalisation</span>
         </div>
         <div class="marches__liste" id="mar-liste"></div>
         <div class="marches__pages">
@@ -5653,6 +5906,18 @@ window.PC = (function(){
       <h3 class="actu-titre mono" data-i18n="actu.marches">Les marchés</h3>
       <div class="actu-cours" id="actu-cours"></div>
       <p class="actu-note mono" id="actu-note"></p>
+    </div>
+
+    <!-- La presse. Masquee tant que le serveur ne rend rien : un
+         navigateur ne peut pas lire le flux d'un journal lui-meme (le
+         journal refuse les appels d'une autre origine), donc sans
+         serveur ce bloc n'apparait jamais. Une rubrique muette vaut
+         mieux qu'un message d'erreur sur une devanture. -->
+    <div class="actu-bloc" id="actu-presse" hidden>
+      <h3 class="actu-titre mono" data-i18n="actu.presse">La presse</h3>
+      <p class="actu-sous" data-i18n="actu.presse.d">Les titres du jour, chez ceux qui les écrivent.</p>
+      <div class="actu-titres" id="actu-titres"></div>
+      <p class="actu-note mono" id="actu-sources"></p>
     </div>
 
     <!-- Plus de repli : on arrive ici en ayant choisi « Actualite ». -->
@@ -5906,6 +6171,170 @@ window.PC = (function(){
   }
   calcule();
 
+  /* ------------------------------------------------------------
+     LE DIAGNOSTIC
+
+     Six chiffres, tous tires d'ACTIVITES — la meme source que la bande
+     de preuve et la repartition. Rien n'est ecrit en dur : si les
+     montants d'exemple changent, le diagnostic suit. Un chiffre de
+     vitrine qui contredit celui d'a cote coute plus cher que pas de
+     chiffre du tout.
+
+     « Mobilisable » se lit ici comme une liquidite de 4 ou 5 sur
+     l'echelle de la page — « Bonne » et « Immediate » (voir
+     ui.liq.4/5). Dans l'espace c'est une case a cocher par actif ; la
+     vitrine n'a qu'une echelle, et l'annoncer autrement serait
+     promettre un calcul different de celui du produit.
+     ------------------------------------------------------------ */
+  const LIQ_MOBILISABLE = 4;
+
+  /* Ce bloc n'avait aucun echappement : tout ce qu'il affiche vient du
+     dictionnaire ou d'un nombre formate. Les valeurs posees ci-dessous
+     sont dans ce cas aussi — mais on n'ecrit pas d'innerHTML sans
+     echapper, sinon le jour ou l'une d'elles viendra d'ailleurs
+     personne ne s'en souviendra. */
+  function echapH(t){
+    const d = document.createElement('span');
+    d.textContent = String(t == null ? '' : t);
+    return d.innerHTML;
+  }
+
+  function diagnostic(){
+    const hote = document.getElementById('diag');
+    if (!hote || !ACTIVITES.length || !totalValeur) return;
+
+    const parPoids = ACTIVITES.slice().sort(function(x, y){ return y.valeur - x.valeur; });
+    const part = function(v){ return v / totalValeur * 100; };
+    const nom = function(a){ return PC.t('a.' + a.cle + '.nom'); };
+    const perf = function(a){ return a.investi ? (a.valeur - a.investi) / a.investi * 100 : 0; };
+
+    const grosse = parPoids[0];
+    const trois = parPoids.slice(0, 3).reduce(function(t, a){ return t + a.valeur; }, 0);
+    const mobilisable = ACTIVITES
+      .filter(function(a){ return (a.liquid || 0) >= LIQ_MOBILISABLE; })
+      .reduce(function(t, a){ return t + a.valeur; }, 0);
+    const parPerf = ACTIVITES.slice().sort(function(x, y){ return perf(y) - perf(x); });
+    const meilleure = parPerf[0], pire = parPerf[parPerf.length - 1];
+    const ecart = perf(meilleure) - perf(pire);
+
+    const cases = [
+      { k:'diag.grosse', v:PC.part(part(grosse.valeur), 0), q:nom(grosse) + ' · ' + eur.format(grosse.valeur),
+        d:'diag.grosse.d', ton:part(grosse.valeur) >= 35 ? 'attention' : '' },
+      { k:'diag.trois', v:PC.part(part(trois), 0), q:parPoids.slice(0, 3).map(nom).join(' · '),
+        d:'diag.trois.d', ton:part(trois) >= 70 ? 'attention' : '' },
+      { k:'diag.mobilisable', v:eur.format(mobilisable), q:PC.part(part(mobilisable), 0) + ' ' + PC.t('diag.dutotal'),
+        d:'diag.mobilisable.d', ton:'' },
+      { k:'diag.rentable', v:pct(perf(meilleure)), q:nom(meilleure),
+        d:'diag.rentable.d', ton:'' },
+      { k:'diag.ecart', v:PC.nombre(ecart, 0) + ' ' + PC.t('diag.points'),
+        q:nom(meilleure) + ' / ' + nom(pire), d:'diag.ecart.d', ton:'' },
+      { k:'diag.multiple', v:PC.nombre(totalValeur / totalInvesti, 2) + ' \u00d7',
+        q:eur.format(totalInvesti) + ' \u2192 ' + eur.format(totalValeur),
+        d:'diag.multiple.d', ton:'' }
+    ];
+
+    hote.innerHTML = cases.map(function(c){
+      return '<div class="diag__c"' + (c.ton ? ' data-ton="' + c.ton + '"' : '') + '>' +
+        '<div class="diag__k">' + echapH(PC.t(c.k)) + '</div>' +
+        '<div class="diag__v">' + echapH(c.v) + '</div>' +
+        '<div class="diag__q">' + echapH(c.q) + '</div>' +
+        '<p class="diag__d">' + PC.t(c.d) + '</p>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* ------------------------------------------------------------
+     LE TABLEAU COMPARATIF
+
+     Construit depuis PC_FORMULES, la copie de l'objet que « droit() »
+     interroge pour appliquer chaque limite. Le tableau ne peut donc pas
+     annoncer autre chose que ce que le client obtiendra — et c'est la
+     seule raison de le construire plutot que de l'ecrire.
+
+     L'ordre des lignes va du plus parlant au plus technique : on
+     commence par ce qui decide un achat.
+     ------------------------------------------------------------ */
+  const CMP_LIGNES = [
+    {cle:'actifs',        k:'cmp.actifs'},
+    {cle:'indicateurs',   k:'cmp.indicateurs'},
+    {cle:'moisHisto',     k:'cmp.histo'},
+    {cle:'revenus',       k:'cmp.revenus'},
+    {cle:'portefeuilles', k:'cmp.pf'},
+    {cle:'rapport',       k:'cmp.rapport'},
+    {cle:'fichier',       k:'cmp.fichier'}
+  ];
+
+  /* Ce qui est vrai des TROIS formules, et ne figure donc pas dans
+     FORMULES : il n'y a rien a y brider. Ces lignes sont ecrites ici,
+     et c'est assumé — elles ne decrivent aucune limite, donc rien dont
+     elles puissent devier. */
+  const CMP_TOUTES = ['cmp.tous.cours', 'cmp.tous.appareils',
+                      'cmp.tous.sauvegarde', 'cmp.tous.pistage', 'cmp.tous.resil'];
+
+  function valeurCmp(v){
+    if (v === true)  return '<span class="cmp__oui" aria-label="' + echapH(PC.t('cmp.oui')) + '">\u2713</span>';
+    if (v === false) return '<span class="cmp__non" aria-label="' + echapH(PC.t('cmp.non')) + '">\u2014</span>';
+    if (v === Infinity) return echapH(PC.t('cmp.illimite'));
+    return echapH(PC.nombre(v, 0));
+  }
+
+  function comparatif(){
+    const boite = document.getElementById('comparo');
+    const tete  = document.getElementById('cmp-tete');
+    const corps = document.getElementById('cmp-corps');
+    const F = window.PC_FORMULES;
+    /* Sans les regles, pas de tableau : mieux vaut rien qu'a moitie. */
+    if (!boite || !tete || !corps || !F) return;
+    const noms = Object.keys(F);
+    if (!noms.length) return;
+
+    /* Le prix vient de la carte correspondante, pas d'une seconde
+       liste : deux endroits qui annoncent un tarif finissent par se
+       contredire. */
+    const prixDe = function(f){
+      const el = document.querySelector('[data-souscrire="' + f + '"]');
+      const c = el && el.closest ? el.closest('.offre') : null;
+      const p2 = c ? c.querySelector('.offre__prix span') : null;
+      return p2 ? p2.textContent.trim() : '';
+    };
+
+    tete.innerHTML = '<th scope="col"></th>' + noms.map(function(f){
+      return '<th scope="col"' + (f === 'pro' ? ' class="cmp--phare"' : '') + '>' +
+        echapH(PC.t('e.form.' + f)) +
+        '<div class="cmp__prix">' + echapH(prixDe(f)) + '</div>' +
+      '</th>';
+    }).join('');
+
+    corps.innerHTML = CMP_LIGNES.map(function(l){
+      return '<tr><th scope="row">' + echapH(PC.t(l.k)) + '</th>' +
+        noms.map(function(f){
+          return '<td' + (f === 'pro' ? ' class="cmp--phare"' : '') + '>' +
+            valeurCmp(F[f][l.cle]) + '</td>';
+        }).join('') + '</tr>';
+    }).join('') + CMP_TOUTES.map(function(k){
+      return '<tr><th scope="row">' + echapH(PC.t(k)) + '</th>' +
+        noms.map(function(f){
+          return '<td' + (f === 'pro' ? ' class="cmp--phare"' : '') + '>' +
+            valeurCmp(true) + '</td>';
+        }).join('') + '</tr>';
+    }).join('');
+
+    boite.hidden = false;
+  }
+  /* Le bloc de l'espace pose PC_FORMULES apres celui-ci : il rappellera
+     cette fonction une fois les regles disponibles. On l'expose plutot
+     que de parier sur l'ordre des blocs — ce que j'avais fait, et le
+     tableau restait vide sans que rien ne le signale. */
+  window.PC_COMPARATIF = comparatif;
+  /* Le prix affiche dans l'en-tete est LU sur la carte. Avant
+     PC.init(), la carte porte encore le texte de secours ecrit dans le
+     HTML ; apres, celui du dictionnaire — et il change encore a chaque
+     langue et a chaque devise. Sans cet abonnement le tableau gardait
+     une photo prise trop tot : « 5 € » quand la carte disait deja
+     « 5 $ ». Un tarif annonce a deux endroits differents, c'est
+     exactement ce que ce tableau devait empecher. */
+  PC.surChangement(comparatif);
+
   /* --- Chiffre de tête --- */
   const elTotal = document.getElementById('hero-total');
   const elDelta = document.getElementById('hero-delta');
@@ -5917,6 +6346,8 @@ window.PC = (function(){
     if (!anime) elTotal.textContent = eur.format(totalValeur);
   }
   majHero(true);
+  diagnostic();
+  comparatif();
 
   function countTo(el, target, ms){
     if (reduceMotion){ el.textContent = eur.format(target); return; }
@@ -7012,6 +7443,12 @@ window.PC = (function(){
     redessine();
     majPlage();
     SIGNE = PC.symbole();
+    /* Les six chiffres du diagnostic portent des montants et des noms
+       de poste : langue et devise les changent tous les deux. */
+    diagnostic();
+    /* Le tableau porte les tarifs, donc la devise, et les libelles,
+       donc la langue. */
+    comparatif();
   });
 
   /* --- Séquence d'ouverture ---
@@ -7189,6 +7626,29 @@ window.PC = (function(){
     max:   { actifs:Infinity, indicateurs:true,  moisHisto:Infinity, portefeuilles:Infinity, revenus:true,  rapport:true,  fichier:true  }
   };
   const NOMS_FORMULES = ['normal','pro','max'];
+
+  /* Le tableau comparatif de la vitrine se construit d'ici, et non
+     d'une liste recopiee a la main : ce qui est annonce au visiteur est
+     donc exactement ce que « droit() » applique. On expose une COPIE —
+     la vitrine lit, elle ne doit pas pouvoir toucher a ce qui
+     autorise. « Infinity » ne survit pas a JSON, d'ou la copie a la
+     main plutot qu'un parse/stringify. */
+  window.PC_FORMULES = (function(){
+    const o = {};
+    NOMS_FORMULES.forEach(function(f){
+      const p = {};
+      Object.keys(FORMULES[f]).forEach(function(k){ p[k] = FORMULES[f][k]; });
+      /* Geler l'objet du dessus ne protege pas ce qu'il contient :
+         sans cette ligne, « PC_FORMULES.normal.actifs = 9999 » passe
+         et la vitrine annonce une limite que droit() n'applique pas. */
+      o[f] = Object.freeze(p);
+    });
+    return Object.freeze(o);
+  })();
+
+  /* La vitrine a deja essaye de dessiner son tableau, avant que cette
+     ligne existe : on la rappelle maintenant que les regles sont la. */
+  if (typeof window.PC_COMPARATIF === 'function') window.PC_COMPARATIF();
   let formule = 'normal';
   /* Vrai des que le serveur a dit quelle formule appartient a ce
      compte. A partir de la, le navigateur n'a plus voix au
@@ -12043,6 +12503,9 @@ window.PC = (function(){
      construire leur contenu et se sont abonnés aux changements. On
      branche les sélecteurs et on applique la langue retenue. */
   PC.init();
+  /* Le tableau comparatif lit les prix sur les cartes : il ne peut
+     donc se construire qu'une fois la langue appliquee. */
+  if (typeof window.PC_COMPARATIF === 'function') window.PC_COMPARATIF();
 </script>
 
 <!-- ============================================================
@@ -12197,26 +12660,46 @@ window.PC = (function(){
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  /* Le trait des sept jours. Volontairement sans axes ni repères : à
-     34 px de haut il donne une direction, pas une lecture. */
-  function sparkline(serie, monte){
-    if (!serie || serie.length < 2) return '';
-    const L = 120, H = 34, m = 3;
-    let bas = Infinity, haut = -Infinity;
-    serie.forEach(function(v){ if (v < bas) bas = v; if (v > haut) haut = v; });
-    const ec = (haut - bas) || 1;
-    const d = serie.map(function(v, i){
-      const x = m + i * (L - 2 * m) / (serie.length - 1);
-      const y = H - m - (v - bas) / ec * (H - 2 * m);
-      return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
-    }).join(' ');
-    return '<svg class="marches__spark" viewBox="0 0 ' + L + ' ' + H +
-      '" preserveAspectRatio="none" aria-hidden="true">' +
-      '<path d="' + d + '" data-dir="' + (monte ? 'up' : 'down') + '"/></svg>';
+  /* La colonne du petit graphique de sept jours a ete retiree : elle
+     etait presente pour les lignes dont le fournisseur donnait une
+     serie et ABSENTE pour les autres, ce qui faisait une liste ou
+     certaines lignes ont une case et d'autres pas. Trois colonnes de
+     chiffres la remplacent, toujours remplies. La fonction qui la
+     dessinait n'a plus d'appelant et part avec elle — du code mort qui
+     dessine est du code qu'on croira utile a la prochaine lecture.
+     (La vitrine a son propre « sparkline », intact : ce n'est pas
+     celui-la.) */
+  /* Une variation, quel que soit le nom que le fournisseur lui donne.
+     CoinGecko suffixe « _in_currency » des qu'on demande plusieurs
+     horizons, et garde la forme sans suffixe pour 24 h : on accepte
+     les deux plutot que de parier sur une. */
+  function varOf(c, cles){
+    for (const k of cles){
+      if (typeof c[k] === 'number' && isFinite(c[k])) return c[k];
+    }
+    return null;
+  }
+  const H24 = ['price_change_percentage_24h_in_currency', 'price_change_percentage_24h'];
+  const H7  = ['price_change_percentage_7d_in_currency',  'price_change_percentage_7d'];
+  const H30 = ['price_change_percentage_30d_in_currency', 'price_change_percentage_30d'];
+
+  /* Une case TOUJOURS remplie : un tiret quand le fournisseur ne donne
+     pas cet horizon. C'est ce qui garantit que toutes les lignes ont le
+     meme nombre de cases — le defaut qu'on repare ici.
+
+     L'etiquette voyage avec la case, dans « data-h » : sur telephone
+     l'en-tete du tableau disparait, et trois pourcentages nus cote a
+     cote ne voudraient rien dire. */
+  function caseVar(v, etiquette){
+    const h = ' data-h="' + ech(etiquette) + '"';
+    if (v === null) return '<span class="marches__var"' + h + ' data-dir="rien">\u2014</span>';
+    const monte = !(v < 0);
+    return '<span class="marches__var"' + h + ' data-dir="' + (monte ? 'up' : 'down') + '">' +
+      (monte ? '\u25b2' : '\u25bc') + ' ' + PC.pourcent(v, 1) + '</span>';
   }
 
   function ligne(c){
-    const v = c.price_change_percentage_24h;
+    const v = varOf(c, H24);
     const monte = !(v < 0);
     return '<button class="marches__l" type="button" data-piece="' + ech(c.id) + '">' +
       '<span class="marches__rang">' + (c.market_cap_rank || '—') + '</span>' +
@@ -12226,14 +12709,14 @@ window.PC = (function(){
         '<span class="marches__tic">' + ech(c.unite || c.symbol) + '</span>' +
       '</span>' +
       '<span class="marches__prix">' + prix(c.current_price) + '</span>' +
-      '<span class="marches__var" data-dir="' + (monte ? 'up' : 'down') + '">' +
-        (monte ? '▲' : '▼') + ' ' + PC.pourcent(v || 0, 2) + '</span>' +
+      caseVar(v, PC.t('actu.h.24h')) +
+      caseVar(varOf(c, H7), PC.t('actu.h.7j')) +
+      caseVar(varOf(c, H30), PC.t('actu.h.30j')) +
       /* En bourse la capitalisation n'est pas servie : on montre le
          volume plutot qu'une colonne de tirets, et l'en-tete change
          de nom pour ne pas mentir sur ce qu'on lit. */
       '<span class="marches__cap">' +
         gros(marcheSource === 'crypto' ? c.market_cap : c.total_volume) + '</span>' +
-      (c.sparkline_in_7d ? sparkline(c.sparkline_in_7d.price, monte) : '<span></span>') +
     '</button>';
   }
 
@@ -12351,7 +12834,7 @@ window.PC = (function(){
     const pCg = cg.length
       ? json(BASE + '/coins/markets?vs_currency=' + dev() + '&ids=' +
           encodeURIComponent(cg.join(',')) +
-          '&sparkline=true&price_change_percentage=24h').catch(function(){ return []; })
+          '&price_change_percentage=24h,7d,30d').catch(function(){ return []; })
       : Promise.resolve([]);
     const pRl = (rl.length && u)
       ? json(avecQ(u, 'ids=' + encodeURIComponent(rl.join(',')) +
@@ -12394,11 +12877,11 @@ window.PC = (function(){
     if (recherche){
       return BASE + '/coins/markets?vs_currency=' + dev() +
         '&ids=' + encodeURIComponent(recherche.join(',')) +
-        '&sparkline=true&price_change_percentage=24h';
+        '&price_change_percentage=24h,7d,30d';
     }
     return BASE + '/coins/markets?vs_currency=' + dev() +
       '&order=market_cap_desc&per_page=' + PAR_PAGE + '&page=' + page +
-      '&sparkline=true&price_change_percentage=24h';
+      '&price_change_percentage=24h,7d,30d';
   }
 
   function noteRefus(e){
@@ -12906,7 +13389,14 @@ window.PC = (function(){
       const u = bourse
         ? (relais() ? avecQ(relais(), 'marche=1&vs_currencies=' + dev()) : null)
         : BASE + '/coins/markets?vs_currency=' + dev() +
-          '&order=market_cap_desc&per_page=12&page=1&price_change_percentage=24h';
+          '&order=market_cap_desc&per_page=12&page=1' +
+          /* Les trois horizons, comme la liste des marches. Cette
+             URL-ci ne portait pas « sparkline=true », donc le
+             remplacement qui a mis a jour les trois autres l'a
+             laissee de cote : les vignettes de l'actualite
+             n'affichaient qu'une ligne sur trois, et tout avait
+             l'air correct. C'est le test [60] qui l'a vu. */
+          '&price_change_percentage=24h,7d,30d';
       if (!u) return Promise.resolve(null);   /* null : pas de relais */
       return json(u).then(function(o){
         return Array.isArray(o) ? o.slice(0, 12) : [];
@@ -13693,13 +14183,46 @@ window.PC = (function(){
            PC.pourcent(v) + '</span>';
   }
 
+  /* Les trois horizons d'une vignette. CoinGecko suffixe les champs
+     « _in_currency » quand on les demande par « price_change_percentage »,
+     et garde « price_change_percentage_24h » sans suffixe dans tous les
+     cas : on accepte les deux formes plutot que de parier sur une. Un
+     horizon absent est simplement omis — une ligne vide vaudrait moins
+     que pas de ligne. */
+  const HORIZONS = [
+    ['24h', ['price_change_percentage_24h_in_currency', 'price_change_percentage_24h']],
+    ['7j',  ['price_change_percentage_7d_in_currency',  'price_change_percentage_7d']],
+    ['30j', ['price_change_percentage_30d_in_currency', 'price_change_percentage_30d']]
+  ];
+
+  function variations(x){
+    return '<div class="cours-case__v">' + HORIZONS.map(function(h){
+      let v = null;
+      for (const champ of h[1]){
+        if (typeof x[champ] === 'number' && isFinite(x[champ])){ v = x[champ]; break; }
+      }
+      if (v === null) return '';
+      return '<div class="cours-case__l">' +
+        '<span class="cours-case__h">' + echap(PC.t('actu.h.' + h[0])) + '</span>' +
+        pourcent(v) +
+      '</div>';
+    }).join('') + '</div>';
+  }
+
   function poseCours(liste){
     const hote2 = document.getElementById('actu-cours');
     const bloc = document.getElementById('actu-marches');
     if (!hote2 || !bloc) return;
-    const bonnes = (liste || []).filter(function(x){
+    let bonnes = (liste || []).filter(function(x){
       return x && typeof x.current_price === 'number';
     }).slice(0, COMBIEN);
+    /* Un multiple de quatre, parce que la grille en a quatre (et deux
+       au palier suivant, que quatre divise aussi). Cinq vignettes
+       laisseraient trois trous, et trois trous se lisent comme une
+       page cassee. En rendre quatre plutot que cinq est le moindre
+       mal : on perd une information, on ne donne pas l'impression que
+       le site ne marche pas. */
+    bonnes = bonnes.slice(0, Math.floor(bonnes.length / 4) * 4);
     if (!bonnes.length) return;            /* on ne montre rien plutot qu'un vide */
 
     hote2.innerHTML = bonnes.map(function(x){
@@ -13708,13 +14231,99 @@ window.PC = (function(){
         '<div class="cours-case__t">' + echap(String(x.symbol || '').toUpperCase()) + '</div>' +
         '<div class="cours-case__p">' + PC.argent(x.current_price,
             x.current_price < 10 ? 2 : 0) + '</div>' +
-        pourcent(x.price_change_percentage_24h) +
+        /* Trois horizons, pas un. A 24 heures, un actif qui bouge de
+           3 % par jour ne dit rien — c'est ce qu'affirme un des
+           billets juste en dessous, et il serait malvenu de le
+           contredire trois centimetres plus haut. */
+        variations(x) +
       '</div>';
     }).join('');
     const note = document.getElementById('actu-note');
     if (note) note.textContent = PC.t('actu.24h');
     bloc.hidden = false;
     posees = true;
+  }
+
+  /* ------------------------------------------------------------
+     LA PRESSE
+
+     Le serveur va lire les flux et nous rend du JSON propre :
+     titre, source, heure, lien. Rien d'autre — jamais le texte d'un
+     article, ce n'est ni utile ni permis.
+
+     Le serveur nettoie deja ce qu'il rend (voir serveur/actu.js). On
+     echappe quand meme ici : deux defenses valent mieux qu'une, et
+     celle du serveur peut etre contournee par une forme d'encodage
+     qu'il n'aurait pas prevue. Un titre venu d'un tiers ne doit
+     JAMAIS atteindre innerHTML sans passer par echap().
+     ------------------------------------------------------------ */
+  let presseFaite = false;
+
+  /* Le nom d'une source vient de notre propre reglage, jamais du
+     journal : un chevron n'y est jamais legitime, et l'effacer coute
+     moins qu'une surprise. */
+  function nomSource(t){
+    return String(t == null ? '' : t).replace(/[<>]/g, '').slice(0, 60).trim();
+  }
+
+  function ilYA(iso){
+    if (!iso) return '';
+    const t = Date.parse(iso);
+    if (isNaN(t)) return '';
+    const min = Math.round((Date.now() - t) / 60000);
+    if (min < 2) return PC.t('actu.p.maintenant');
+    if (min < 60) return PC.t('actu.p.min', {n:String(min)});
+    const h = Math.round(min / 60);
+    if (h < 24) return PC.t('actu.p.h', {n:String(h)});
+    const j = Math.round(h / 24);
+    /* Au-dela d'une semaine l'age relatif n'apprend plus rien : on
+       donne la date, qui se situe mieux. */
+    if (j <= 7) return PC.t('actu.p.j', {n:String(j)});
+    try { return new Date(t).toLocaleDateString(PC.locale(), {day:'numeric', month:'short'}); }
+    catch (e){ return ''; }
+  }
+
+  function posePresse(lignes, sources){
+    const bloc = document.getElementById('actu-presse');
+    const hote3 = document.getElementById('actu-titres');
+    if (!bloc || !hote3) return;
+    const bonnes = (lignes || []).filter(function(x){
+      /* Sans lien on n'affiche pas : reprendre un titre sans renvoyer
+         chez celui qui l'a ecrit, c'est se l'approprier. */
+      return x && x.titre && /^https?:\/\//i.test(String(x.lien || ''));
+    });
+    if (!bonnes.length) return;          /* rien a dire : on se taît */
+
+    hote3.innerHTML = bonnes.map(function(x){
+      const age = ilYA(x.date);
+      return '<div class="titre-p">' +
+        '<a class="titre-p__a" href="' + echap(x.lien) + '"' +
+          ' target="_blank" rel="noopener noreferrer nofollow">' +
+          echap(x.titre) + '</a>' +
+        '<div class="titre-p__m">' + echap(nomSource(x.source)) +
+          (age ? ' \u00b7 ' + echap(age) : '') + '</div>' +
+      '</div>';
+    }).join('');
+
+    const pied = document.getElementById('actu-sources');
+    if (pied){
+      const noms = (sources || []).map(nomSource).filter(Boolean);
+      pied.textContent = noms.length ? PC.t('actu.p.via', {s:noms.join(', ')}) : '';
+    }
+    bloc.hidden = false;
+    presseFaite = true;
+  }
+
+  function cherchePresse(){
+    if (presseFaite) return;
+    /* Pas d'origine a interroger dans un fichier local. */
+    if (location.protocol.indexOf('http') !== 0) return;
+    fetch('/api/actu', {credentials:'omit'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ if (d) posePresse(d.lignes, d.sources); })
+      /* Aucun serveur, ou un serveur muet : le bloc reste cache. On
+         n'ecrit pas « erreur » sur une devanture. */
+      .catch(function(){});
   }
 
   function chercheCours(){
@@ -13749,9 +14358,9 @@ window.PC = (function(){
      l'ecran : un appel reseau au chargement retarde le premier
      rendu, et beaucoup de visiteurs ne descendront jamais jusqu'ici. */
   function guette(){
-    if (!window.IntersectionObserver){ chercheCours(); return; }
+    if (!window.IntersectionObserver){ chercheCours(); cherchePresse(); return; }
     const o = new IntersectionObserver(function(e){
-      if (e[0].isIntersecting){ o.disconnect(); chercheCours(); }
+      if (e[0].isIntersecting){ o.disconnect(); chercheCours(); cherchePresse(); }
     }, {rootMargin:'320px'});
     o.observe(hote);
   }
@@ -13764,6 +14373,10 @@ window.PC = (function(){
     poseJournal();
     posees = false;
     chercheCours();
+    /* « il y a deux heures » change de langue aussi : on redemande
+       plutot que de traduire a moitie. */
+    presseFaite = false;
+    cherchePresse();
   });
 })();
 </script>
