@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260927.1131";</script>
+<script>window.PC_VERSION = "260927.1250";</script>
 </head>
 <body>
 
@@ -1760,6 +1760,24 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 .repere__k{font-size:14px; color:var(--ink-2);}
 .repere__v{font-family:'IBM Plex Mono', monospace; font-size:14px; font-weight:500; font-variant-numeric:tabular-nums; text-align:right;}
 
+/* ===== Les lectures =====
+   Un constat par bloc : une etiquette courte, puis une phrase. Aucune
+   couleur de statut — un constat n'est ni un gain ni une perte, et le
+   teindre en vert ou en rouge lui donnerait un sens qu'il n'a pas. */
+.lectures{display:flex; flex-direction:column; gap:1px; background:var(--rule); border-top:1px solid var(--rule);}
+.lecture{background:var(--paper); padding:16px 18px;}
+.lecture__k{
+  font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.lecture__p{margin:7px 0 0; font-size:15px; line-height:1.6; color:var(--ink); max-width:74ch; text-wrap:pretty;}
+.lectures__non{background:var(--paper); padding:16px 18px; color:var(--ink-3); font-size:14.5px;}
+.lectures__pied{
+  padding:14px 18px; border-top:1px solid var(--rule); background:var(--paper);
+  font-family:'IBM Plex Mono', monospace; font-size:11.5px; line-height:1.6;
+  color:var(--ink-3); text-wrap:pretty;
+}
+
 .tab-zone{overflow-x:auto;}
 table.actifs{width:100%; border-collapse:collapse; font-size:14.5px; min-width:720px;}
 table.actifs th, table.actifs td{padding:11px 12px; border-bottom:1px solid var(--rule); text-align:right; white-space:nowrap;}
@@ -3308,15 +3326,15 @@ window.PC = (function(){
   'off.1.prix.s':       ["par mois","per month","al mes","pro Monat"],
   'off.1.l1':           ["Jusqu'à 15 actifs suivis","Up to 15 tracked assets","Hasta 15 activos seguidos","Bis zu 15 verfolgte Werte"],
   'off.1.l2':           ["Répartition, performance et cours en direct","Allocation, performance and live prices","Distribución, rendimiento y cotizaciones en directo","Aufteilung, Wertentwicklung und Live-Kurse"],
-  'off.1.l3':           ["Historique sur 12 mois","Twelve months of history","Historial de 12 meses","Verlauf über 12 Monate"],
-  'off.1.l4':           ["Vos chiffres sur tous vos appareils","Your figures on every device","Sus cifras en todos sus dispositivos","Ihre Zahlen auf allen Geräten"],
+  'off.1.l3':           ["Les quatorze indicateurs, concentration et liquidité comprises","All fourteen indicators, concentration and liquidity included","Los catorce indicadores, concentración y liquidez incluidas","Alle vierzehn Kennzahlen, Konzentration und Liquidität inbegriffen"],
+  'off.1.l4':           ["Historique sur 12 mois","Twelve months of history","Historial de 12 meses","Verlauf über 12 Monate"],
   'off.1.cta':          ["Prendre Normal","Choose Normal","Elegir Normal","Normal wählen"],
   'off.2.tag':          ["Le plus utilisé","Most popular","El más elegido","Am meisten genutzt"],
   'off.2.nom':          ["Pro","Pro","Pro","Pro"],
   'off.2.prix':         ["{{m:9.99}}","{{m:9.99}}","{{m:9.99}}","{{m:9.99}}"],
   'off.2.prix.s':       ["par mois","per month","al mes","pro Monat"],
   'off.2.l1':           ["Actifs en nombre illimité, regroupés par catégorie","Unlimited assets, grouped by category","Activos ilimitados, agrupados por categoría","Unbegrenzt viele Werte, nach Kategorie gruppiert"],
-  'off.2.l2':           ["Tous les indicateurs : concentration, liquidité, volatilité, meilleure et pire ligne","Every indicator: concentration, liquidity, volatility, best and worst line","Todos los indicadores: concentración, liquidez, volatilidad, mejor y peor línea","Alle Kennzahlen: Konzentration, Liquidität, Volatilität, beste und schwächste Position"],
+  'off.2.l2':           ["Les lectures : vos chiffres commentés en clair — des constats, pas des conseils","Readings: your figures explained plainly — observations, not advice","Las lecturas: sus cifras comentadas con claridad — constataciones, no consejos","Die Lesarten: Ihre Zahlen klar kommentiert — Feststellungen, keine Ratschläge"],
   'off.2.l3':           ["Historique complet et comparaison entre périodes","Full history and period-to-period comparison","Historial completo y comparación entre periodos","Vollständiger Verlauf und Vergleich zwischen Zeiträumen"],
   'off.2.l4':           ["Suivi des revenus\u00a0: loyers, dividendes, intérêts","Income tracking: rent, dividends, interest","Seguimiento de ingresos: alquileres, dividendos, intereses","Ertragsverfolgung: Mieten, Dividenden, Zinsen"],
   'off.2.cta':          ["Prendre Pro","Choose Pro","Elegir Pro","Pro wählen"],
@@ -3380,7 +3398,7 @@ window.PC = (function(){
   'faq.2.q':            ["Et si je change d'appareil ?","What if I switch devices?","¿Y si cambio de dispositivo?","Und wenn ich das Gerät wechsle?"],
   'faq.2.a':            ["Ils suivent : ce que vous saisissez sur le téléphone est là sur l'ordinateur, et l'inverse. Si les deux appareils ont travaillé chacun de leur côté — l'un hors réseau, par exemple — la page ne choisit pas à votre place : elle montre les deux versions et vous demande laquelle garder. Rien n'est écrasé sans qu'on vous le demande.", "They follow: what you enter on the phone is there on the computer, and the other way round. If both devices worked on their own — one of them offline, say — the page does not choose for you: it shows both versions and asks which to keep. Nothing is overwritten without asking you.", "Le siguen: lo que introduce en el teléfono está en el ordenador, y al contrario. Si los dos dispositivos han trabajado por separado —uno de ellos sin conexión, por ejemplo— la página no elige por usted: muestra las dos versiones y pregunta cuál conservar. Nada se sobrescribe sin preguntarle.", "Sie folgen: Was Sie am Telefon eintragen, steht am Computer — und umgekehrt. Haben beide Geräte getrennt gearbeitet — eines etwa ohne Netz —, entscheidet die Seite nicht für Sie: Sie zeigt beide Fassungen und fragt, welche bleiben soll. Nichts wird ohne Rückfrage überschrieben."],
   'faq.3.q':            ["Est-ce un conseil en investissement ?","Is this investment advice?","¿Esto es asesoramiento de inversión?","Ist das eine Anlageberatung?"],
-  'faq.3.a':            ["Non. C'est un outil de mise en forme : vous entrez vos chiffres, il calcule des répartitions et des pourcentages. Il ne recommande aucun placement, ne passe aucun ordre, et Pierrel & Co n'est pas agréé comme conseiller en investissements financiers. Les chiffres présentés sur cette page sont des exemples.","No. It is a formatting tool: you enter your figures, it works out allocations and percentages. It recommends no investment, places no order, and Pierrel & Co is not authorised as a financial investment adviser. The figures shown on this page are examples.","No. Es una herramienta de presentación: usted introduce sus cifras y calcula distribuciones y porcentajes. No recomienda ninguna inversión, no ejecuta ninguna orden, y Pierrel & Co no está autorizado como asesor financiero. Las cifras de esta página son ejemplos.","Nein. Es ist ein Aufbereitungswerkzeug: Sie tragen Ihre Zahlen ein, es berechnet Aufteilungen und Prozentsätze. Es empfiehlt keine Anlage, erteilt keine Order, und Pierrel & Co ist nicht als Finanzanlagenvermittler zugelassen. Die Zahlen auf dieser Seite sind Beispiele."],
+  'faq.3.a':            ["Non. C'est un outil de mise en forme : vous entrez vos chiffres, il calcule des répartitions et des pourcentages. Il ne recommande aucun placement, ne passe aucun ordre, et Pierrel & Co n'est pas agréé comme conseiller en investissements financiers. Les formules Pro et Max ajoutent des lectures : elles reformulent vos propres chiffres et disent ce qu'ils impliquent — « telle ligne pèse 79 % du portefeuille, une baisse de 10 % sur elle retirerait tant au total » — sans jamais recommander d'acheter, de vendre ou de conserver quoi que ce soit. Les chiffres présentés sur cette page sont des exemples.","No. It is a formatting tool: you enter your figures, it works out allocations and percentages. It recommends no investment, places no order, and Pierrel & Co is not authorised as a financial investment adviser. The Pro and Max plans add readings: they restate your own figures and say what those imply — \"this line is 79% of the portfolio; a 10% drop on it would take this much off the total\" — without ever recommending that you buy, sell or hold anything. The figures shown on this page are examples.","No. Es una herramienta de presentación: usted introduce sus cifras y calcula distribuciones y porcentajes. No recomienda ninguna inversión, no ejecuta ninguna orden, y Pierrel & Co no está autorizado como asesor financiero. Los planes Pro y Max añaden lecturas: reformulan sus propias cifras y dicen lo que implican — « esta línea representa el 79 % de la cartera; una caída del 10 % en ella restaría tanto al total » — sin recomendar nunca comprar, vender ni conservar nada. Las cifras de esta página son ejemplos.","Nein. Es ist ein Aufbereitungswerkzeug: Sie tragen Ihre Zahlen ein, es berechnet Aufteilungen und Prozentsätze. Es empfiehlt keine Anlage, erteilt keine Order, und Pierrel & Co ist nicht als Finanzanlagenvermittler zugelassen. Die Tarife Pro und Max fügen Lesarten hinzu: sie formulieren Ihre eigenen Zahlen um und sagen, was daraus folgt — „diese Position macht 79 % des Portfolios aus; ein Rückgang von 10 % würde so viel vom Gesamtwert nehmen\" — ohne jemals zu empfehlen, etwas zu kaufen, zu verkaufen oder zu halten. Die Zahlen auf dieser Seite sind Beispiele."],
   'faq.4.q':            ["Je peux essayer avant de payer ?", "Can I try before paying?", "¿Puedo probar antes de pagar?", "Kann ich vor dem Bezahlen testen?"],
   'faq.4.a':            ["Non, et c'est assumé. L'espace travaille sur vos vrais chiffres, rangés sur le serveur pour vous suivre d'un appareil à l'autre : cela demande un compte, et un compte ouvert. Ce qui reste : cette page, qui montre la mécanique sur un portefeuille réel, poste par poste — et un mot à l'adresse de contact, on vous fait visiter, sans engagement. L'entrée est à 5 € et s'arrête le mois même.", "No, and that is deliberate. The space works on your real figures, kept on the server so they follow you from one device to the next: that takes an account, and an account that has been opened. What is left: this page, which shows the machinery on a real portfolio, holding by holding — and a note to the contact address, and we will walk you through it, with no commitment. Entry is 5 € and stops the same month.", "No, y es a propósito. El espacio trabaja con sus cifras reales, guardadas en el servidor para seguirle de un dispositivo a otro: eso exige una cuenta, y una cuenta abierta. Lo que queda: esta página, que muestra el mecanismo sobre una cartera real, partida por partida, y un mensaje a la dirección de contacto: le hacemos una visita guiada, sin compromiso. La entrada cuesta 5 € y se corta el mismo mes.", "Nein, und das ist so gewollt. Der Bereich arbeitet mit Ihren echten Zahlen, die auf dem Server liegen, damit sie Ihnen von Gerät zu Gerät folgen: Das verlangt ein Konto, und ein geöffnetes. Was bleibt: diese Seite, die die Mechanik an einem echten Portfolio zeigt, Posten für Posten — und eine Nachricht an die Kontaktadresse, dann führen wir Sie durch, ohne Verpflichtung. Der Einstieg kostet 5 € und endet im selben Monat."],
   'faq.5.q':            ["Puis-je résilier quand je veux ?","Can I cancel whenever I want?","¿Puedo cancelar cuando quiera?","Kann ich jederzeit kündigen?"],
@@ -3747,6 +3765,38 @@ window.PC = (function(){
   'cmp.illimite':       ["illimité", "unlimited", "ilimitado", "unbegrenzt"],
   'cmp.actifs':         ["Actifs suivis", "Tracked assets", "Activos seguidos", "Verfolgte Werte"],
   'cmp.indicateurs':    ["Les quatorze indicateurs (concentration, liquidité, meilleure et pire ligne…)", "All fourteen indicators (concentration, liquidity, best and worst line…)", "Los catorce indicadores (concentración, liquidez, mejor y peor posición…)", "Alle vierzehn Kennzahlen (Konzentration, Liquidität, beste und schwächste Position…)"],
+  /* --- Les lectures (formules Pro et Max) ---
+     « Des conseils mais pas vraiment des conseils. » La limite est
+     stricte et elle est ici, dans le texte : chaque phrase reformule
+     un chiffre que le client a lui-meme produit et dit ce qu'il
+     implique mecaniquement. Aucune ne contient d'imperatif, dans
+     aucune des quatre langues — test62 les relit et cherche ces
+     verbes. Le seul endroit ou « acheter » et « vendre » sont ecrits
+     est l'avertissement, qui dit precisement qu'on ne les dit pas. */
+  'e.lec.t':            ["Ce que disent vos chiffres","What your figures say","Lo que dicen sus cifras","Was Ihre Zahlen sagen"],
+  'e.lec.s':            ["Lectures","Readings","Lecturas","Lesarten"],
+  'e.lec.pied':         ["Des constats, pas des conseils : chaque ligne reformule vos propres chiffres. Aucune ne recommande d'acheter, de vendre ou de conserver quoi que ce soit.","Observations, not advice: each line restates your own figures. None of them recommends buying, selling or holding anything.","Constataciones, no consejos: cada línea reformula sus propias cifras. Ninguna recomienda comprar, vender ni conservar nada.","Feststellungen, keine Ratschläge: jede Zeile formuliert Ihre eigenen Zahlen um. Keine empfiehlt, etwas zu kaufen, zu verkaufen oder zu halten."],
+  'e.lec.pro':          ["Les lectures font partie de la formule Pro.","Readings are part of the Pro plan.","Las lecturas forman parte del plan Pro.","Die Lesarten gehören zum Pro-Tarif."],
+  'e.lec.conc.k':       ["Concentration","Concentration","Concentración","Konzentration"],
+  'e.lec.conc':         ["{{n}} pèse {{p}} du portefeuille. Une baisse de 10 % sur cette seule ligne retirerait {{e}} au total.","{{n}} accounts for {{p}} of the portfolio. A 10% drop on that single line would take {{e}} off the total.","{{n}} representa {{p}} de la cartera. Una caída del 10 % en esa sola línea restaría {{e}} al total.","{{n}} macht {{p}} des Portfolios aus. Ein Rückgang von 10 % auf dieser einen Position würde {{e}} vom Gesamtwert nehmen."],
+  'e.lec.trois.k':      ["Le haut du portefeuille","The top of the portfolio","La cima de la cartera","Die Spitze des Portfolios"],
+  'e.lec.trois.une':    ["Les trois premières lignes font {{p}} de la valeur. La dernière en pèse {{r}}.","The top three lines make up {{p}} of the value. The remaining one accounts for {{r}}.","Las tres primeras líneas suman {{p}} del valor. La última representa {{r}}.","Die drei größten Positionen machen {{p}} des Werts aus. Die letzte macht {{r}} aus."],
+  'e.lec.trois.plus':   ["Les trois premières lignes font {{p}} de la valeur. Les {{k}} autres réunies en pèsent {{r}}.","The top three lines make up {{p}} of the value. The other {{k}} together account for {{r}}.","Las tres primeras líneas suman {{p}} del valor. Las otras {{k}} juntas representan {{r}}.","Die drei größten Positionen machen {{p}} des Werts aus. Die anderen {{k}} zusammen {{r}}."],
+  'e.lec.liq.k':        ["Ce qui est disponible","What is available","Lo que está disponible","Was verfügbar ist"],
+  'e.lec.liq.bas':      ["Mobilisable en quelques jours : {{m}}, soit {{p}} du total. Le reste demande une vente pour devenir disponible.","Available within days: {{m}}, which is {{p}} of the total. The rest requires a sale before it becomes available.","Movilizable en unos días: {{m}}, es decir {{p}} del total. El resto exige una venta para estar disponible.","In wenigen Tagen verfügbar: {{m}}, also {{p}} des Gesamtwerts. Der Rest wird erst durch einen Verkauf verfügbar."],
+  'e.lec.liq.haut':     ["Mobilisable en quelques jours : {{m}}, soit {{p}} du total.","Available within days: {{m}}, which is {{p}} of the total.","Movilizable en unos días: {{m}}, es decir {{p}} del total.","In wenigen Tagen verfügbar: {{m}}, also {{p}} des Gesamtwerts."],
+  'e.lec.ecart.k':      ["L'écart","The spread","La diferencia","Die Spanne"],
+  'e.lec.ecart':        ["{{a}} et {{b}} sont séparées de {{n}} points de performance. La performance d'ensemble, {{p}}, est leur moyenne pondérée : elle ne dit rien de cet écart.","{{a}} and {{b}} are {{n}} points apart. The overall performance, {{p}}, is their weighted average: it says nothing about that gap.","{{a}} y {{b}} están separadas por {{n}} puntos. El rendimiento global, {{p}}, es su media ponderada: no dice nada de esa diferencia.","{{a}} und {{b}} liegen {{n}} Punkte auseinander. Die Gesamtentwicklung, {{p}}, ist ihr gewichteter Mittelwert: über diese Spanne sagt sie nichts."],
+  'e.lec.perte.k':      ["Ce qui est en perte","What is down","Lo que está en pérdida","Was im Minus liegt"],
+  'e.lec.perte.une':    ["Une ligne sur {{n}} vaut moins que ce qui y a été mis. Elle pèse {{p}} du portefeuille.","One line out of {{n}} is worth less than what went into it. It accounts for {{p}} of the portfolio.","Una línea de {{n}} vale menos de lo que se puso en ella. Representa {{p}} de la cartera.","Eine von {{n}} Positionen ist weniger wert als das, was hineinging. Sie macht {{p}} des Portfolios aus."],
+  'e.lec.perte.plus':   ["{{k}} lignes sur {{n}} valent moins que ce qui y a été mis. Elles pèsent ensemble {{p}} du portefeuille.","{{k}} lines out of {{n}} are worth less than what went into them. Together they account for {{p}} of the portfolio.","{{k}} líneas de {{n}} valen menos de lo que se puso en ellas. Juntas representan {{p}} de la cartera.","{{k}} von {{n}} Positionen sind weniger wert als das, was hineinging. Zusammen machen sie {{p}} des Portfolios aus."],
+  'e.lec.cat.k':        ["La catégorie qui décide","The deciding category","La categoría que decide","Die entscheidende Kategorie"],
+  'e.lec.cat':          ["{{c}} représente {{p}} de la valeur. La performance d'ensemble suit d'abord celle de cette catégorie.","{{c}} accounts for {{p}} of the value. The overall performance follows that category before any other.","{{c}} representa {{p}} del valor. El rendimiento global sigue ante todo el de esa categoría.","{{c}} macht {{p}} des Werts aus. Die Gesamtentwicklung folgt vor allem dieser Kategorie."],
+  'e.lec.source.k':     ["D'où vient le résultat","Where the result comes from","De dónde viene el resultado","Woher das Ergebnis kommt"],
+  'e.lec.source':       ["{{n}} apporte {{p}} de la plus-value totale.","{{n}} provides {{p}} of the total gain.","{{n}} aporta {{p}} de la plusvalía total.","{{n}} liefert {{p}} des Gesamtgewinns."],
+  'e.lec.mult.k':       ["Le rapport au capital","Against the capital","La relación con el capital","Verhältnis zum Kapital"],
+  'e.lec.mult':         ["Le portefeuille vaut {{m}} × ce qui y a été mis : {{v}} pour {{i}} investis.","The portfolio is worth {{m}} × what went into it: {{v}} for {{i}} invested.","La cartera vale {{m}} × lo que se puso en ella: {{v}} por {{i}} invertidos.","Das Portfolio ist {{m}} × dessen wert, was hineinging: {{v}} bei {{i}} investiert."],
+  'cmp.lectures':       ["Les lectures : vos chiffres commentés en clair", "Readings: your figures explained plainly", "Las lecturas: sus cifras comentadas con claridad", "Die Lesarten: Ihre Zahlen klar kommentiert"],
   'cmp.histo':          ["Historique conservé (mois)", "History kept (months)", "Historial conservado (meses)", "Aufbewahrter Verlauf (Monate)"],
   'cmp.revenus':        ["Suivi des revenus : loyers, dividendes, intérêts", "Income tracking: rent, dividends, interest", "Seguimiento de ingresos: alquileres, dividendos, intereses", "Ertragsverfolgung: Mieten, Dividenden, Zinsen"],
   'cmp.pf':             ["Portefeuilles séparés (perso, société, famille)", "Separate portfolios (personal, company, family)", "Carteras separadas (personal, empresa, familia)", "Getrennte Portfolios (privat, Firma, Familie)"],
@@ -5008,8 +5058,8 @@ window.PC = (function(){
         <ul class="offre__liste">
           <li data-i18n="off.1.l1">Jusqu'à 15 actifs suivis</li>
           <li data-i18n="off.1.l2">Répartition, performance et cours en direct</li>
-          <li data-i18n="off.1.l3">Historique sur 12 mois</li>
-          <li data-i18n="off.1.l4">Vos chiffres sur tous vos appareils</li>
+          <li data-i18n="off.1.l3">Les quatorze indicateurs, concentration et liquidité comprises</li>
+          <li data-i18n="off.1.l4">Historique sur 12 mois</li>
         </ul>
         <div class="offre__actions">
           <button class="offre__ghost" type="button" data-souscrire="normal" data-i18n="off.souscrire">Souscrire</button>
@@ -5022,7 +5072,7 @@ window.PC = (function(){
         <p class="offre__prix"><span data-i18n="off.2.prix">9,99 €</span> <small data-i18n="off.2.prix.s">par mois</small></p>
         <ul class="offre__liste">
           <li data-i18n="off.2.l1">Actifs en nombre illimité, regroupés par catégorie</li>
-          <li data-i18n-html="off.2.l2">Tous les indicateurs&nbsp;: concentration, liquidité, volatilité, meilleure et pire ligne</li>
+          <li data-i18n-html="off.2.l2">Les lectures&nbsp;: vos chiffres commentés en clair&nbsp;— des constats, pas des conseils</li>
           <li data-i18n="off.2.l3">Historique complet et comparaison entre périodes</li>
           <li data-i18n-html="off.2.l4">Suivi des revenus : loyers, dividendes, intérêts</li>
         </ul>
@@ -5570,6 +5620,22 @@ window.PC = (function(){
         <div class="carte__t"><h3 data-i18n="e.comp.t">Composition</h3><span data-i18n="e.comp.s">Repères</span></div>
         <div class="reperes" id="reperes"></div>
       </div>
+    </div>
+
+    <!-- LES LECTURES (Pro et Max)
+         Des constats, pas des conseils : chaque ligne reformule un
+         chiffre deja affiche au-dessus et dit ce qu'il implique
+         mecaniquement. Aucune ne recommande d'acheter, de vendre ou de
+         conserver — la page n'a aucun statut de conseil en
+         investissement et n'en veut pas. test62 relit les phrases
+         produites et cherche ces verbes dans les quatre langues. -->
+    <div class="carte" id="carte-lectures" style="margin-bottom:30px" hidden>
+      <div class="carte__t">
+        <h3 data-i18n="e.lec.t">Ce que disent vos chiffres</h3>
+        <span data-i18n="e.lec.s">Lectures</span>
+      </div>
+      <div class="lectures" id="lectures"></div>
+      <p class="lectures__pied" id="lectures-pied" data-i18n="e.lec.pied">Des constats, pas des conseils&nbsp;: chaque ligne reformule vos propres chiffres. Aucune ne recommande d'acheter, de vendre ou de conserver quoi que ce soit.</p>
     </div>
 
 
@@ -6257,6 +6323,7 @@ window.PC = (function(){
   const CMP_LIGNES = [
     {cle:'actifs',        k:'cmp.actifs'},
     {cle:'indicateurs',   k:'cmp.indicateurs'},
+    {cle:'lectures',      k:'cmp.lectures'},
     {cle:'moisHisto',     k:'cmp.histo'},
     {cle:'revenus',       k:'cmp.revenus'},
     {cle:'portefeuilles', k:'cmp.pf'},
@@ -7620,10 +7687,26 @@ window.PC = (function(){
        L'export est dans les TROIS formules, y compris la premiere.
        Retenir les donnees de quelqu'un pour lui vendre la formule
        au-dessus se retourne toujours : un client qui sait qu'il
-       peut partir avec ses chiffres est un client qui reste. */
-    normal:{ actifs:15,       indicateurs:false, moisHisto:12,       portefeuilles:1,        revenus:false, rapport:false, fichier:true  },
-    pro:   { actifs:Infinity, indicateurs:true,  moisHisto:Infinity, portefeuilles:1,        revenus:true,  rapport:false, fichier:true  },
-    max:   { actifs:Infinity, indicateurs:true,  moisHisto:Infinity, portefeuilles:Infinity, revenus:true,  rapport:true,  fichier:true  }
+       peut partir avec ses chiffres est un client qui reste.
+
+       Les QUATORZE indicateurs sont eux aussi dans les trois. Ils
+       etaient reserves a Pro, et la vitrine s'en servait pourtant
+       pour convaincre : cinq des six chiffres du bloc « Ce qu'un
+       tableur ne vous dira pas » n'etaient pas livres a 5 EUR. On
+       vend avec, donc on livre avec. Et ils ne coutent rien a
+       servir : ce sont des divisions faites dans le navigateur, sur
+       des chiffres que le client a tapes lui-meme. Ce qui separe les
+       formules porte desormais sur ce que le client UTILISE — combien
+       de lignes, combien d'historique, les revenus, les
+       portefeuilles — et jamais sur un calcul retenu.
+
+       « lectures » est ce que Pro ajoute a la place : les constats
+       ecrits en clair (voir LECTURES plus bas). Des constats, pas des
+       conseils — la page ne recommande aucun placement, et le
+       generateur est ecrit pour ne pas pouvoir en formuler un. */
+    normal:{ actifs:15,       indicateurs:true, moisHisto:12,       portefeuilles:1,        revenus:false, lectures:false, rapport:false, fichier:true  },
+    pro:   { actifs:Infinity, indicateurs:true, moisHisto:Infinity, portefeuilles:1,        revenus:true,  lectures:true,  rapport:false, fichier:true  },
+    max:   { actifs:Infinity, indicateurs:true, moisHisto:Infinity, portefeuilles:Infinity, revenus:true,  lectures:true,  rapport:true,  fichier:true  }
   };
   const NOMS_FORMULES = ['normal','pro','max'];
 
@@ -8166,10 +8249,12 @@ window.PC = (function(){
     const catRentable = cats.slice().sort(function(x, y){ return y.perf - x.perf; })[0];
     const ecartExtremes = (t.meilleur && t.pire) ? t.meilleur.p - t.pire.p : null;
 
-    /* Formule Normal : les quatre repères de base. Les dix autres —
-       concentration, liquidité, extrêmes, palmarès par catégorie —
-       sont précisément ce que Pro ajoute, et le dire vaut mieux que
-       de les afficher grisés. */
+    /* Les quatorze, dans les trois formules. Le bridage à quatre
+       existait, et il était incohérent : la vitrine vendait la
+       concentration et le mobilisable, qui n'étaient pas livrés à
+       5 €. La garde reste écrite — elle lit la règle, elle ne la
+       décide pas — pour qu'un seul mot suffise à rebrider si le
+       tarif change un jour. Aujourd'hui elle laisse tout passer. */
     const tousReperes = [
       [PC.t('e.r.multiple'), t.inv ? PC.nombre(t.val / t.inv, 2) + ' ×' : '—'],
       [PC.t('e.r.plusvalue'), actifs.length ? marque(t.gain, eur.format(Math.abs(t.gain))) : '—'],
@@ -8191,6 +8276,117 @@ window.PC = (function(){
       vusReperes.map(r => '<div class="repere"><span class="repere__k">' + r[0] + '</span><span class="repere__v">' + r[1] + '</span></div>').join('') +
       (droit('indicateurs') ? ''
         : '<div class="repere"><span class="repere__k">' + PC.t('e.form.limind') + '</span><span class="repere__v">Pro</span></div>');
+
+    /* ============================================================
+       LES LECTURES (formules Pro et Max)
+       ------------------------------------------------------------
+       « Des conseils mais pas vraiment des conseils. » La demande est
+       juste : un chiffre seul ne dit pas ce qu'il implique. La limite
+       l'est aussi, et elle est stricte — cette page n'a aucun statut
+       de conseil en investissement et n'en veut pas.
+
+       Une lecture REFORMULE un chiffre deja affiche au-dessus et dit
+       ce qu'il implique mecaniquement. « Une baisse de 10 % sur cette
+       ligne retirerait 4 200 EUR au total » est une multiplication,
+       pas un avis. Ce qu'aucune lecture ne fait jamais : recommander
+       d'acheter, de vendre, de conserver, d'alleger, de renforcer, de
+       diversifier. test62 relit les phrases produites et cherche ces
+       verbes dans les quatre langues ; s'il en trouve un, il tombe.
+
+       Chaque regle porte un SEUIL. Sur un portefeuille equilibre la
+       plupart ne se declenchent pas et le bloc reste court : un bloc
+       qui dit toujours la meme chose ne se lit pas deux fois. La
+       derniere — le rapport au capital — n'a pas de seuil, pour que
+       le bloc ne soit jamais vide des qu'il y a un montant investi.
+
+       Les noms passent par echap() : ils viennent de la saisie du
+       client, et la phrase est posee en HTML. */
+    function lesLectures(){
+      const L = [];
+      const n = actifs.length;
+      if (!n || !t.val) return L;
+
+      if (t.grosse && t.concentration >= 35){
+        L.push(['e.lec.conc.k', PC.t('e.lec.conc', {
+          n: echap(t.grosse.nom), p: part0(t.concentration),
+          e: eur.format(t.grosse.val * 0.10)
+        })]);
+      }
+      if (n > 3){
+        const pTrois = troisPremiers / t.val * 100;
+        if (pTrois >= 70){
+          L.push(['e.lec.trois.k', PC.t(n === 4 ? 'e.lec.trois.une' : 'e.lec.trois.plus', {
+            p: part0(pTrois), k: String(n - 3), r: part0(100 - pTrois)
+          })]);
+        }
+      }
+      /* Deux bornes, deux phrases differentes : entre les deux il n'y
+         a rien a signaler, et le silence est une information. */
+      if (t.partLiquide < 25){
+        L.push(['e.lec.liq.k', PC.t('e.lec.liq.bas', {
+          m: eur.format(t.liquide), p: part0(t.partLiquide)
+        })]);
+      } else if (t.partLiquide >= 60){
+        L.push(['e.lec.liq.k', PC.t('e.lec.liq.haut', {
+          m: eur.format(t.liquide), p: part0(t.partLiquide)
+        })]);
+      }
+      if (ecartExtremes !== null && ecartExtremes >= 40 && t.meilleur && t.pire){
+        L.push(['e.lec.ecart.k', PC.t('e.lec.ecart', {
+          a: echap(t.meilleur.nom), b: echap(t.pire.nom),
+          n: PC.nombre(ecartExtremes, 0), p: pourcent(t.perf)
+        })]);
+      }
+      if (perdantes > 0){
+        const valPerd = actifs.filter(function(a){ return a.val < a.inv; })
+                              .reduce(function(sm, a){ return sm + a.val; }, 0);
+        L.push(['e.lec.perte.k', PC.t(perdantes === 1 ? 'e.lec.perte.une' : 'e.lec.perte.plus', {
+          k: String(perdantes), n: String(n), p: part0(valPerd / t.val * 100)
+        })]);
+      }
+      if (catLourde && catLourde.val / t.val * 100 >= 50 && cats.length > 1){
+        L.push(['e.lec.cat.k', PC.t('e.lec.cat', {
+          c: echap(nomCat(catLourde.nom)), p: part0(catLourde.val / t.val * 100)
+        })]);
+      }
+      if (t.gain > 0 && n > 1){
+        const top = actifs.slice().sort(function(x, y){
+          return (y.val - y.inv) - (x.val - x.inv); })[0];
+        if (top && (top.val - top.inv) / t.gain >= 0.6){
+          L.push(['e.lec.source.k', PC.t('e.lec.source', {
+            n: echap(top.nom), p: part0((top.val - top.inv) / t.gain * 100)
+          })]);
+        }
+      }
+      if (t.inv > 0){
+        L.push(['e.lec.mult.k', PC.t('e.lec.mult', {
+          m: PC.nombre(t.val / t.inv, 2), i: eur.format(t.inv), v: eur.format(t.val)
+        })]);
+      }
+      return L;
+    }
+
+    const carteLec = document.getElementById('carte-lectures');
+    const boiteLec = document.getElementById('lectures');
+    const piedLec  = document.getElementById('lectures-pied');
+    if (carteLec && boiteLec){
+      if (!droit('lectures')){
+        /* On annonce que la rubrique existe, on ne montre aucun
+           constat : afficher un chiffre puis le retenir est exactement
+           ce qu'on vient de corriger sur les indicateurs. */
+        carteLec.hidden = false;
+        boiteLec.innerHTML = '<div class="lectures__non">' + echap(PC.t('e.lec.pro')) + '</div>';
+        if (piedLec) piedLec.hidden = true;
+      } else {
+        const lus = lesLectures();
+        carteLec.hidden = !lus.length;
+        if (piedLec) piedLec.hidden = !lus.length;
+        boiteLec.innerHTML = lus.map(function(l){
+          return '<div class="lecture"><div class="lecture__k">' + echap(PC.t(l[0])) +
+                 '</div><p class="lecture__p">' + l[1] + '</p></div>';
+        }).join('');
+      }
+    }
 
     document.getElementById('ben-info').textContent = cats.length ? cats.length + ' ' + PC.pluriel(cats.length, 'e.cat.une', 'e.cat.plus') : '—';
     document.getElementById('corps-benefs').innerHTML = cats.map(function(c){
@@ -11181,6 +11377,15 @@ window.PC = (function(){
      une SCPI, un livret -- menent directement a la saisie, parce
      qu'aucune liste ne peut contenir VOTRE appartement.
      ============================================================ */
+  /* « Mobilisable » avait un seul defaut pour tout le monde, le
+     premier de la liste : « Rapidement ». Un appartement saisi sans
+     toucher a ce champ etait donc declare disponible en quelques
+     jours, et l'indicateur de liquidite — comme la lecture qui le
+     reformule — annonçait 100 % mobilisable sur un patrimoine
+     immobilier. Le defaut suit desormais la categorie choisie. Il
+     reste un defaut : le champ est a cote, et c'est le client qui
+     tranche. */
+  const LIQ_DEFAUT = {immo:0, scpi:0, minage:0, noncote:0};
   const TUILES = {
     crypto:  {icone:'\u20bf',       marche:'crypto'},
     actions: {icone:'\ud83d\udcc8', marche:'bourse'},
@@ -11374,6 +11579,12 @@ window.PC = (function(){
     const aide = document.getElementById('genre-aide');
     if (aide) aide.textContent = PC.t('e.g.aide.' +
       (surCours ? 'cours' : surTaux ? 'taux' : 'bien'));
+    /* Pose le defaut de liquidite de la categorie. Les quatre appels a
+       cette fonction ouvrent tous une saisie NEUVE — modifier une ligne
+       existante passe par sa fiche, pas par ce formulaire — donc aucun
+       choix deja fait n'est ecrase ici. */
+    const selLiq = document.getElementById('a-liq');
+    if (selLiq) selLiq.value = String(LIQ_DEFAUT[cat] === 0 ? 0 : 1);
     majUnite();
   }
 
