@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260927.2001";</script>
+<script>window.PC_VERSION = "260927.2149";</script>
 </head>
 <body>
 
@@ -1155,26 +1155,52 @@ body.flux-vif .cours__vif::before{
    zone nommee les empilerait toutes les trois au meme endroit. Les
    rangs comptent la position dans le document — le rang masque
    compte, d'ou le decalage a partir de 4. */
+/* Le choix de l'horizon : trois boutons, visibles seulement la ou la
+   ligne n'en montre qu'un. */
+.marches__horizons{display:none; gap:7px; margin:0 0 4px;}
+.marches__h{
+  background:none; border:1px solid var(--rule-strong); border-radius:999px;
+  color:var(--ink-2); cursor:pointer; font-family:'IBM Plex Mono', monospace;
+  font-size:12px; letter-spacing:.05em; padding:7px 14px;
+}
+.marches__h[aria-pressed="true"]{
+  background:var(--accent-soft); border-color:var(--accent); color:var(--accent);
+}
+.marches__h:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+/* Sous 860 px : la forme d'une application de marche. A gauche le
+   logo, le nom, et la capitalisation dessous ; a droite la variation
+   en pastille et le prix dessous.
+
+   UN SEUL horizon a la fois. Trois pourcentages cote a cote sur 390 px
+   tenaient techniquement, mais ils ne se lisaient pas : on ne savait
+   plus lequel regarder, et chacun etait trop petit pour etre compare.
+   Les trois restent dans le document — la feuille de style en laisse
+   passer un, et les boutons au-dessus changent lequel. Rien n'est
+   recalcule, rien n'est redemande. */
 @media (max-width:860px){
   .marches__tete{display:none;}
+  .marches__horizons{display:flex;}
   .marches__l{
-    grid-template-columns:minmax(0,1fr) repeat(3, auto);
-    gap:10px 12px; padding:14px 4px;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:3px 14px; padding:13px 4px; align-items:center;
   }
   .marches__rang{display:none;}
-  .marches__nom{grid-column:1 / span 3; grid-row:1;}
-  .marches__prix{grid-column:4; grid-row:1;}
-  .marches__l > :nth-child(4){grid-column:1; grid-row:2;}
-  .marches__l > :nth-child(5){grid-column:2; grid-row:2;}
-  .marches__l > :nth-child(6){grid-column:3; grid-row:2;}
-  .marches__cap{grid-column:4; grid-row:2; text-align:right; font-size:12px;}
-  /* L'etiquette au-dessus du chiffre, en petit. */
-  .marches__var{display:flex; flex-direction:column; align-items:flex-start; gap:1px;}
-  .marches__var::before{
-    content:attr(data-h);
-    font-size:9.5px; letter-spacing:.11em; text-transform:uppercase;
-    color:var(--ink-3); font-weight:400;
+  .marches__nom{grid-column:1; grid-row:1; gap:10px;}
+  .marches__cap{grid-column:1; grid-row:2; text-align:left; font-size:12.5px; padding-left:36px;}
+  .marches__prix{grid-column:2; grid-row:2; font-size:15px;}
+  /* La pastille, comme le chiffre du solde : la couleur porte le sens
+     avec le glyphe, jamais seule. */
+  .marches__var{
+    grid-column:2; grid-row:1; justify-self:end;
+    display:none; font-size:12.5px; padding:4px 9px; border-radius:999px;
+    background:var(--paper-2);
   }
+  .marches__var[data-dir="up"]{background:color-mix(in srgb, var(--gain) 16%, transparent);}
+  .marches__var[data-dir="down"]{background:color-mix(in srgb, var(--loss) 16%, transparent);}
+  .marches__liste[data-h="24h"] .marches__var[data-k="24h"],
+  .marches__liste[data-h="7j"]  .marches__var[data-k="7j"],
+  .marches__liste[data-h="30j"] .marches__var[data-k="30j"]{display:inline-block;}
 }
 
 .marches__pages{
@@ -3417,6 +3443,44 @@ body:not(.espace-ouvert) .barre-app{display:none;}
 @media (max-width:360px){
   .kpis{grid-template-columns:1fr;}
 }
+
+/* ===== Les tables larges sur telephone =====
+   « Vos benefices par categorie » a huit colonnes et une largeur
+   minimale de 720 px. Sur un ecran de 390 elle defile — et en
+   defilant, la colonne des NOMS sort par la gauche : on lit
+   « +16,9 %  ·  49,8 %  ·  45 % » sans savoir de quelle categorie il
+   s'agit. Des chiffres sans leur etiquette ne valent rien.
+
+   La premiere colonne se fige donc a gauche. On garde toutes les
+   donnees, le defilement reste possible, et la ligne dit toujours de
+   quoi elle parle. C'est ce que fait n'importe quel tableur digne de
+   ce nom, et c'est moins destructeur que de retirer des colonnes. */
+@media (max-width:700px){
+  /* Les blocs que seule la vue detaillee ajoute : leur en-tete devient
+     le bouton qui les ouvre. */
+  .carte__plier > summary{list-style:none; cursor:pointer;}
+  .carte__plier > summary::-webkit-details-marker{display:none;}
+  .carte__plier > summary .carte__t{border-bottom:none;}
+  .carte__plier[open] > summary .carte__t{border-bottom:1px solid var(--rule);}
+  .carte__plier > summary .carte__t::after{
+    content:"+"; color:var(--accent); font-family:'IBM Plex Mono', monospace;
+    font-size:17px; line-height:1; margin-left:auto; padding-left:12px;
+  }
+  .carte__plier[open] > summary .carte__t::after{content:"\2013";}
+  .carte__plier > summary:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+
+  .tab-zone{overscroll-behavior-x:contain;}
+  table.actifs{min-width:620px;}
+  table.actifs th:first-child, table.actifs td:first-child{
+    position:sticky; left:0; z-index:2;
+    background:var(--paper);
+    /* Un filet marque la separation : sans lui, les chiffres qui
+       passent dessous semblent appartenir a la colonne figee. */
+    box-shadow:1px 0 0 var(--rule);
+  }
+  table.actifs thead th:first-child{background:var(--paper-2);}
+  table.actifs tbody tr:hover td:first-child{background:var(--accent-soft);}
+}
 </style>
 <script>
   /* Posé avant le rendu : conditionne l'état « avant animation ».
@@ -4591,6 +4655,7 @@ window.PC = (function(){
   'm.fdv':                ["Valorisation totale","Fully diluted","Valoraci\u00f3n total","Vollst\u00e4ndig verw\u00e4ssert"],
   'm.52':                 ["Sur un an","Over one year","En un a\u00f1o","\u00dcber ein Jahr"],
   'm.capabs':             ["La capitalisation d'une action n'est pas servie par le fournisseur gratuit. Le volume du jour et les extr\u00eames de l'ann\u00e9e, si.","Market cap for a share is not served by the free provider. Today's volume and the year's extremes are.","La capitalizaci\u00f3n de una acci\u00f3n no la sirve el proveedor gratuito. El volumen del d\u00eda y los extremos del a\u00f1o, s\u00ed.","Die Marktkapitalisierung einer Aktie liefert der kostenlose Anbieter nicht. Das Tagesvolumen und die Jahresextreme schon."],
+  'm.horizon':          ["Période de comparaison","Comparison period","Periodo de comparación","Vergleichszeitraum"],
   'm.7j':                 ["7\u00a0jours","7 days","7\u00a0d\u00edas","7\u00a0Tage"],
   'm.retour':             ["Retour aux march\u00e9s","Back to markets","Volver a los mercados","Zur\u00fcck zu den M\u00e4rkten"],
   'm.suivant':            ["Page suivante","Next page","P\u00e1gina siguiente","N\u00e4chste Seite"],
@@ -6316,7 +6381,16 @@ window.PC = (function(){
           <span data-i18n="m.30j">30 jours</span>
           <span id="tete-cap" data-i18n="m.cap">Capitalisation</span>
         </div>
-        <div class="marches__liste" id="mar-liste"></div>
+        <!-- Le choix de l'horizon. Sur telephone la ligne n'en montre
+             qu'UN : trois pourcentages cote a cote sur 390 px se
+             lisaient mal et ne se comparaient pas. Sur grand ecran les
+             trois restent affiches et ces boutons disparaissent. -->
+        <div class="marches__horizons" id="mar-horizons" role="group" data-i18n-aria="m.horizon">
+          <button class="marches__h" type="button" data-h="24h" aria-pressed="true">24 h</button>
+          <button class="marches__h" type="button" data-h="7j" aria-pressed="false">7 j</button>
+          <button class="marches__h" type="button" data-h="30j" aria-pressed="false">30 j</button>
+        </div>
+        <div class="marches__liste" id="mar-liste" data-h="24h"></div>
         <div class="marches__pages">
           <button class="btn-ghost" type="button" id="mar-moins" data-i18n="m.precedent">Page précédente</button>
           <span class="mono" id="mar-page">1</span>
@@ -12275,8 +12349,58 @@ window.PC = (function(){
   const CLE_VUE = 'pierrelco.vue.v1';
   const basculeVue = document.getElementById('bascule-vue');
 
+  /* ============================================================
+     LA VUE DETAILLEE, SUR TELEPHONE
+     ------------------------------------------------------------
+     Mesure : la vue d'ensemble montre six blocs sur 3,2 ecrans — c'est
+     lisible. La vue detaillee en empile QUATORZE sur 7,4 ecrans, sans
+     hierarchie : repartition, composition, releves, revenus, benefices
+     par categorie... On ne lit plus, on defile.
+
+     Sur telephone, les blocs que SEULE la vue detaillee ajoute se
+     replient donc derriere leur propre titre. Rien n'est retire : un
+     doigt les ouvre. Les six blocs de la vue d'ensemble, eux, ne
+     bougent pas — ils sont ce qu'on vient voir.
+
+     On DEPLACE les noeuds au lieu de les recreer : ce sont les memes
+     objets, donc les graphiques deja dessines et leurs ecouteurs
+     survivent. Et l'ouverture redessine, parce qu'un graphique trace
+     dans un bloc ferme n'a aucune largeur : il en sortirait vide.
+     ============================================================ */
+  function plieAvance(){
+    if (!window.matchMedia('(max-width:700px)').matches) return;
+    /* Les cartes marquees « avance », ET celles que porte une grille
+       marquee « avance » — c'est la que se trouvent les deux plus
+       gros blocs, la repartition par categorie et la composition, a
+       elles deux 1 800 px. */
+    document.querySelectorAll('#pan-general .carte.avance, #pan-general .grille.avance > .carte').forEach(function(c){
+      if (c.dataset.plie) return;
+      const tete = c.querySelector('.carte__t');
+      if (!tete) return;
+      const corps = [];
+      let x = tete.nextSibling;
+      while (x){ corps.push(x); x = x.nextSibling; }
+      if (!corps.length) return;
+      const d = document.createElement('details');
+      d.className = 'carte__plier';
+      const r = document.createElement('summary');
+      c.insertBefore(d, tete);
+      r.appendChild(tete);
+      d.appendChild(r);
+      corps.forEach(function(n){ d.appendChild(n); });
+      c.dataset.plie = '1';
+    });
+  }
+  document.addEventListener('toggle', function(e){
+    const d = e.target;
+    if (!d || !d.classList || !d.classList.contains('carte__plier') || !d.open) return;
+    /* Redessiner ce qui n'avait pas de largeur quand c'etait ferme. */
+    rendre();
+  }, true);
+
   function poseVueDetail(on){
     document.body.classList.toggle('detaille', on);
+    if (on) plieAvance();
     if (basculeVue){
       basculeVue.setAttribute('aria-pressed', String(on));
       document.getElementById('bascule-vue-txt').textContent =
@@ -13950,8 +14074,11 @@ window.PC = (function(){
      L'etiquette voyage avec la case, dans « data-h » : sur telephone
      l'en-tete du tableau disparait, et trois pourcentages nus cote a
      cote ne voudraient rien dire. */
-  function caseVar(v, etiquette){
-    const h = ' data-h="' + ech(etiquette) + '"';
+  function caseVar(v, etiquette, cle){
+    /* La cle est STABLE et independante de la langue : « 7 j » devient
+       « 7 d » en anglais, et choisir l'horizon par son libelle casserait
+       a la premiere traduction. */
+    const h = ' data-h="' + ech(etiquette) + '" data-k="' + ech(cle || '') + '"';
     if (v === null) return '<span class="marches__var"' + h + ' data-dir="rien">\u2014</span>';
     const monte = !(v < 0);
     return '<span class="marches__var"' + h + ' data-dir="' + (monte ? 'up' : 'down') + '">' +
@@ -13969,9 +14096,9 @@ window.PC = (function(){
         '<span class="marches__tic">' + ech(c.unite || c.symbol) + '</span>' +
       '</span>' +
       '<span class="marches__prix">' + prix(c.current_price) + '</span>' +
-      caseVar(v, PC.t('actu.h.24h')) +
-      caseVar(varOf(c, H7), PC.t('actu.h.7j')) +
-      caseVar(varOf(c, H30), PC.t('actu.h.30j')) +
+      caseVar(v, PC.t('actu.h.24h'), '24h') +
+      caseVar(varOf(c, H7), PC.t('actu.h.7j'), '7j') +
+      caseVar(varOf(c, H30), PC.t('actu.h.30j'), '30j') +
       /* En bourse la capitalisation n'est pas servie : on montre le
          volume plutot qu'une colonne de tirets, et l'en-tete change
          de nom pour ne pas mentir sur ce qu'on lit. */
@@ -13979,6 +14106,24 @@ window.PC = (function(){
         gros(marcheSource === 'crypto' ? c.market_cap : c.total_volume) + '</span>' +
     '</button>';
   }
+
+  /* L'horizon choisi ne change QUE ce qu'on montre : les trois
+     variations sont deja dans la ligne, et la feuille de style en
+     laisse passer une. Pas de re-rendu, pas d'appel reseau — changer
+     de periode est instantane et ne coute rien au fournisseur. */
+  (function(){
+    const groupe = document.getElementById('mar-horizons');
+    const liste = document.getElementById('mar-liste');
+    if (!groupe || !liste) return;
+    groupe.addEventListener('click', function(e){
+      const b = e.target.closest ? e.target.closest('[data-h]') : null;
+      if (!b) return;
+      liste.setAttribute('data-h', b.getAttribute('data-h'));
+      groupe.querySelectorAll('[data-h]').forEach(function(x){
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+    });
+  })();
 
   function dit(t, doux){
     etat.textContent = t || '';
