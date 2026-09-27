@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260927.1700";</script>
+<script>window.PC_VERSION = "260927.1758";</script>
 </head>
 <body>
 
@@ -1804,6 +1804,65 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 }
 .an-m__d{font-size:12.5px; line-height:1.5; color:var(--ink-3); margin:0; text-wrap:pretty;}
 .an-m[data-ton="attention"] .an-m__v{color:var(--accent);}
+
+/* ===== Les visuels de l'analyse =====
+   Meme vocabulaire que l'actualite : on montre d'abord, on chiffre
+   ensuite. Un ecart-type se lit mal ; une courbe se voit.
+
+   Tous ces dessins sont DECORATIFS : chaque chiffre reste ecrit a cote
+   en toutes lettres. Un lecteur d'ecran n'a rien a tirer d'un trace,
+   et il ne doit rien y perdre non plus. */
+.an-sp{
+  display:block; width:100%; height:64px; margin:14px 0 2px;
+  overflow:visible;
+}
+.an-sp__t{
+  fill:none; stroke:var(--accent); stroke-width:1.6;
+  stroke-linecap:round; stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+}
+/* La zone du pire recul, ombree sur la courbe : « du 20 nov. au
+   7 janv. » devient un segment qu'on voit, au lieu d'une phrase. */
+.an-sp__z{fill:var(--loss); opacity:.13;}
+.an-sp__lg{
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'IBM Plex Mono', monospace; font-size:10px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3);
+}
+/* La position dans l'annee : le plus bas a gauche, le plus haut a
+   droite, un repere la ou en est le cours. */
+.an-bar{
+  position:relative; height:6px; border-radius:3px; margin:10px 0 6px;
+  background:linear-gradient(to right, var(--paper-3), var(--rule-strong));
+}
+.an-bar__p{
+  position:absolute; top:50%; width:11px; height:11px; border-radius:50%;
+  background:var(--accent); border:2px solid var(--paper);
+  transform:translate(-50%, -50%);
+}
+/* La jauge de volatilite : cinq crans, le niveau toujours ecrit a cote. */
+.an-j{display:flex; gap:3px; margin:8px 0 4px;}
+.an-j i{flex:1; height:7px; border-radius:2px; background:var(--paper-3);}
+.an-j i[data-on="1"]{background:var(--accent);}
+.an-m[data-ton="baisse"] .an-j i[data-on="1"]{background:var(--loss);}
+/* La correlation : −1 a gauche, +1 a droite, zero au milieu. */
+.an-echelle{
+  font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 10px;
+}
+.an-cb{
+  position:relative; height:6px; border-radius:3px; margin-top:6px;
+  background:var(--paper-3); grid-column:2;
+}
+.an-cb::before{
+  content:""; position:absolute; left:50%; top:-3px; bottom:-3px;
+  width:1px; background:var(--rule-strong);
+}
+.an-cb__p{
+  position:absolute; top:50%; width:10px; height:10px; border-radius:50%;
+  background:var(--ink-3); transform:translate(-50%, -50%);
+}
+.an-paire[data-force="forte"] .an-cb__p{background:var(--accent);}
 .an-m[data-ton="baisse"] .an-m__v{color:var(--loss);}
 /* Les paires correlees. Le chiffre a gauche, les deux noms a droite :
    on lit la force avant de lire qui. */
@@ -3923,7 +3982,7 @@ window.PC = (function(){
   'an.recul.d':         ["La plus forte baisse entre un sommet et le point bas qui a suivi, du {{a}} au {{b}}. C'est ce qu'il a fallu traverser sans vendre.","The steepest fall from a peak to the low that followed, from {{a}} to {{b}}. That is what had to be sat through without selling.","La mayor caída entre un máximo y el mínimo siguiente, del {{a}} al {{b}}. Es lo que hubo que atravesar sin vender.","Der stärkste Rückgang von einem Hoch zum darauffolgenden Tief, vom {{a}} bis {{b}}. Das musste ohne Verkauf durchgehalten werden."],
   'an.sommet.k':        ["Dans l'année","Within the year","En el año","Im Jahr"],
   'an.pos.sommet':      ["Au plus haut","At the high","En el máximo","Auf dem Hoch"],
-  'an.pos.k':            ["Sous le plus haut de l'année","Below the year's high","Por debajo del máximo del año","Unter dem Jahreshoch"],
+  'an.pos.k':           ["Sous le plus haut","Below the high","Bajo el máximo","Unter dem Hoch"],
   'an.pos.d':            ["Et {{b}} au-dessus du plus bas des douze mois.","And {{b}} above the twelve-month low.","Y {{b}} por encima del mínimo de doce meses.","Und {{b}} über dem Zwölfmonatstief."],
   'an.seance.k':        ["Plus forte séance","Biggest single session","Mayor sesión","Stärkster Handelstag"],
   'an.seance.d':        ["Le plus grand écart d'un jour sur l'autre, le {{d}}.","The largest day-to-day move, on {{d}}.","La mayor variación de un día a otro, el {{d}}.","Die größte Veränderung von einem Tag zum nächsten, am {{d}}."],
@@ -3932,6 +3991,7 @@ window.PC = (function(){
   /* La correlation : le chiffre qui justifie l'abonnement. */
   'an.cor.t':           ["Ce qui bouge ensemble","What moves together","Lo que se mueve junto","Was sich zusammen bewegt"],
   'an.cor.d':           ["Deux lignes qui montent et descendent en même temps ne sont pas deux placements : c'est le même pari, tenu deux fois. Mesuré sur les variations quotidiennes des douze derniers mois.","Two lines that rise and fall together are not two investments: they are the same bet, held twice. Measured on daily moves over the last twelve months.","Dos líneas que suben y bajan a la vez no son dos inversiones: son la misma apuesta, hecha dos veces. Medido sobre las variaciones diarias de los últimos doce meses.","Zwei Positionen, die gleichzeitig steigen und fallen, sind nicht zwei Anlagen: es ist dieselbe Wette, zweimal gehalten."],
+  'an.cor.echelle':     ["\u22121 en sens contraire  \u00b7  0 indépendantes  \u00b7  +1 ensemble","\u22121 opposite  \u00b7  0 independent  \u00b7  +1 together","\u22121 en sentido contrario  \u00b7  0 independientes  \u00b7  +1 juntas","\u22121 gegenläufig  \u00b7  0 unabhängig  \u00b7  +1 gemeinsam"],
   'an.cor.paire':       ["{{a}} et {{b}}","{{a}} and {{b}}","{{a}} y {{b}}","{{a}} und {{b}}"],
   'an.cor.forte':       ["bougent presque ensemble","move almost together","se mueven casi juntas","bewegen sich fast gemeinsam"],
   'an.cor.nette':       ["bougent souvent dans le même sens","often move the same way","suelen moverse en el mismo sentido","bewegen sich oft gleich"],
@@ -6184,6 +6244,9 @@ window.PC = (function(){
           <h3 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h3>
           <p class="an-sous" data-i18n="an.cor.d">Deux lignes qui montent et descendent en même
             temps ne sont pas deux placements&nbsp;: c'est le même pari, tenu deux fois.</p>
+          <!-- L'echelle, dite une fois : sans elle le curseur montre une
+               position sans dire de quoi. -->
+          <p class="an-echelle mono" data-i18n="an.cor.echelle">−1 en sens contraire · 0 indépendantes · +1 ensemble</p>
           <div class="an-paires" id="an-cor-paires"></div>
           <p class="analyse__q" id="an-cor-n"></p>
         </div>
@@ -9964,10 +10027,72 @@ window.PC = (function(){
      ne monte pas de 17 %, ca bouge de 17 %. Idem pour une distance. */
   function anAmpleur(x, d){ return PC.pourcent(Math.abs(x), d === undefined ? 0 : d).replace(/^[+\u2212-]\s?/, ''); }
 
-  function anMesure(cle, valeur, detail, ton){
+  /* ============================================================
+     LES DESSINS
+     ------------------------------------------------------------
+     Un ecart-type se lit mal ; une courbe se voit. Tout ce qui suit
+     est DECORATIF au sens strict : chaque chiffre reste ecrit a cote
+     en toutes lettres, et les traces portent aria-hidden. Un lecteur
+     d'ecran n'a rien a tirer d'un chemin SVG, et il ne doit rien y
+     perdre non plus.
+     ============================================================ */
+
+  /* La courbe des douze mois, avec la zone du pire recul ombree :
+     « du 20 nov. au 7 janv. » devient un segment qu'on voit. */
+  function anCourbe(pts, rec){
+    if (!pts || pts.length < 2) return '';
+    const L = 300, H = 60, m = 5;
+    let bas = Infinity, haut = -Infinity;
+    pts.forEach(function(x){ if (x[1] < bas) bas = x[1]; if (x[1] > haut) haut = x[1]; });
+    const ec = (haut - bas) || 1;
+    const X = function(i){ return i * L / (pts.length - 1); };
+    const Y = function(v){ return m + (1 - (v - bas) / ec) * (H - 2 * m); };
+    const d = pts.map(function(x, i){
+      return (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(x[1]).toFixed(1);
+    }).join(' ');
+    let zone = '';
+    if (rec && rec.debut != null && rec.fin != null){
+      let i0 = -1, i1 = -1;
+      for (let i = 0; i < pts.length; i++){
+        if (i0 < 0 && pts[i][0] >= rec.debut) i0 = i;
+        if (pts[i][0] <= rec.fin) i1 = i;
+      }
+      if (i0 >= 0 && i1 > i0){
+        zone = '<rect class="an-sp__z" x="' + X(i0).toFixed(1) + '" y="0" width="' +
+               (X(i1) - X(i0)).toFixed(1) + '" height="' + H + '"/>';
+      }
+    }
+    /* preserveAspectRatio="none" etire le trace sur toute la largeur ;
+       non-scaling-stroke garde le trait d'epaisseur constante malgre
+       l'etirement. Les deux vont ensemble. */
+    return '<svg class="an-sp" viewBox="0 0 ' + L + ' ' + H +
+      '" preserveAspectRatio="none" aria-hidden="true">' + zone +
+      '<path class="an-sp__t" d="' + d + '"/></svg>';
+  }
+
+  /* Le curseur dans l'ecart de l'annee : plus bas a gauche, plus haut
+     a droite. Borne, parce qu'un cours arrive apres coup peut sortir
+     de l'ecart mesure sur la serie. */
+  function anBarre(part){
+    const x = Math.max(0, Math.min(100, part));
+    return '<div class="an-bar"><i class="an-bar__p" style="left:' + x.toFixed(1) + '%"></i></div>';
+  }
+
+  /* Cinq crans pour la volatilite. Les bornes sont des reperes, pas une
+     science : elles disent « peu », « beaucoup », rien de plus — et le
+     chiffre exact reste ecrit au-dessus. */
+  function anJauge(vol){
+    const n = vol < 10 ? 1 : vol < 25 ? 2 : vol < 40 ? 3 : vol < 60 ? 4 : 5;
+    let out = '<div class="an-j" aria-hidden="true">';
+    for (let i = 1; i <= 5; i++) out += '<i data-on="' + (i <= n ? 1 : 0) + '"></i>';
+    return out + '</div>';
+  }
+
+  function anMesure(cle, valeur, detail, ton, dessin){
     return '<div class="an-m"' + (ton ? ' data-ton="' + ton + '"' : '') + '>' +
       '<div class="an-m__k">' + echap(PC.t(cle + '.k')) + '</div>' +
       '<div class="an-m__v">' + valeur + '</div>' +
+      (dessin || '') +
       '<p class="an-m__d">' + detail + '</p></div>';
   }
 
@@ -10012,7 +10137,7 @@ window.PC = (function(){
       let m = '';
       if (vol !== null){
         m += anMesure('an.vol', anAmpleur(vol), echap(PC.t('an.vol.d')),
-                      vol >= 50 ? 'attention' : '');
+                      vol >= 50 ? 'attention' : '', anJauge(vol));
       }
       if (rec){
         m += anMesure('an.recul', '\u2212' + anAmpleur(rec.part),
@@ -10028,12 +10153,14 @@ window.PC = (function(){
            surtout ca perd l'information. Ce cas a ses propres mots. */
         /* Et le libelle change avec : « Sous le plus haut = Au plus
            haut » se lisait deux fois la meme chose. */
+        const dansEcart = anBarre((prix - bas) / ((haut - bas) || 1) * 100);
         m += (sousHaut < 0.5)
           ? anMesure('an.sommet', echap(PC.t('an.pos.sommet')),
-                     echap(PC.t('an.pos.d', {b: anAmpleur((prix - bas) / bas * 100)})), 'attention')
+                     echap(PC.t('an.pos.d', {b: anAmpleur((prix - bas) / bas * 100)})),
+                     'attention', dansEcart)
           : anMesure('an.pos', '\u2212' + anAmpleur(sousHaut),
                      echap(PC.t('an.pos.d', {b: anAmpleur((prix - bas) / bas * 100)})),
-                     sousHaut >= 25 ? 'baisse' : '');
+                     sousHaut >= 25 ? 'baisse' : '', dansEcart);
       }
       if (forte){
         m += anMesure('an.seance', PC.pourcent(forte.r * 100, 1),
@@ -10042,10 +10169,15 @@ window.PC = (function(){
       m += anMesure('an.sens', PC.nombre(hausses / L.v.length * 100, 0) + ' %',
                     echap(PC.t('an.sens.d', {h:String(hausses), b:String(L.v.length - hausses)})));
 
+      /* La courbe d'abord, les chiffres ensuite : on voit l'annee en
+         un coup d'oeil, puis on lit ce qu'elle valait. */
+      const bornes = '<div class="an-sp__lg"><span>' + eur.format(bas) +
+        '</span><span>' + eur.format(haut) + '</span></div>';
       return '<div class="an-ligne">' +
         '<div><span class="an-ligne__n">' + echap(L.nom) + '</span>' +
         '<span class="an-ligne__c">' + echap(L.code.toUpperCase()) + ' \u00b7 ' +
         echap(PC.t('an.jours', {n:String(L.pts.length)})) + '</span></div>' +
+        anCourbe(L.pts, rec) + bornes +
         '<div class="an-mes">' + m + '</div></div>';
     }).join('');
 
@@ -10084,9 +10216,14 @@ window.PC = (function(){
         const quoi = p.c <= -0.3 ? 'an.cor.inverse'
                    : ab >= 0.8 ? 'an.cor.forte'
                    : ab >= 0.5 ? 'an.cor.nette' : 'an.cor.faible';
+        /* De −1 a gauche a +1 a droite, zero au milieu : la position du
+           point dit la force avant qu'on ait lu le chiffre. */
+        const x = Math.max(0, Math.min(100, (p.c + 1) / 2 * 100));
         return '<div class="an-paire" data-force="' + (ab >= 0.8 ? 'forte' : 'normale') + '">' +
           '<span class="an-paire__c">' + PC.nombre(p.c, 2).replace(/^-/, '\u2212') + '</span>' +
           '<span class="an-paire__n">' + echap(PC.t('an.cor.paire', {a:p.a, b:p.b})) + '</span>' +
+          '<div class="an-cb" aria-hidden="true"><i class="an-cb__p" style="left:' +
+            x.toFixed(1) + '%"></i></div>' +
           '<span class="an-paire__q">' + echap(PC.t(quoi)) + '</span>' +
         '</div>';
       }).join('');
