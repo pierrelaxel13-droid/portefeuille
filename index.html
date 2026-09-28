@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260927.2149";</script>
+<script>window.PC_VERSION = "260928.2001";</script>
 </head>
 <body>
 
@@ -1190,14 +1190,21 @@ body.flux-vif .cours__vif::before{
   .marches__cap{grid-column:1; grid-row:2; text-align:left; font-size:12.5px; padding-left:36px;}
   .marches__prix{grid-column:2; grid-row:2; font-size:15px;}
   /* La pastille, comme le chiffre du solde : la couleur porte le sens
-     avec le glyphe, jamais seule. */
-  .marches__var{
+     avec le glyphe, jamais seule.
+
+     DANS LA LISTE SEULEMENT. Cette regle etait ecrite sur
+     « .marches__var » tout court, et elle portait un « display:none »
+     leve uniquement par la cle d'horizon. Or la fiche d'une crypto
+     reutilise cette classe pour sa variation du jour, sans cle : sous
+     860 px elle disparaissait purement et simplement. On ouvrait une
+     ligne et la variation n'etait plus la. */
+  .marches__liste .marches__var{
     grid-column:2; grid-row:1; justify-self:end;
     display:none; font-size:12.5px; padding:4px 9px; border-radius:999px;
     background:var(--paper-2);
   }
-  .marches__var[data-dir="up"]{background:color-mix(in srgb, var(--gain) 16%, transparent);}
-  .marches__var[data-dir="down"]{background:color-mix(in srgb, var(--loss) 16%, transparent);}
+  .marches__liste .marches__var[data-dir="up"]{background:color-mix(in srgb, var(--gain) 16%, transparent);}
+  .marches__liste .marches__var[data-dir="down"]{background:color-mix(in srgb, var(--loss) 16%, transparent);}
   .marches__liste[data-h="24h"] .marches__var[data-k="24h"],
   .marches__liste[data-h="7j"]  .marches__var[data-k="7j"],
   .marches__liste[data-h="30j"] .marches__var[data-k="30j"]{display:inline-block;}
@@ -1850,13 +1857,26 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   color:var(--ink-3); margin:0 0 6px;
 }
 .an-sous{color:var(--ink-2); margin:0 0 18px; font-size:15px; text-wrap:pretty; max-width:70ch;}
+/* Le choix de la ligne. Un <select> natif, comme la langue et la
+   devise : sur telephone c'est la liste du systeme qui s'ouvre, la
+   seule qui reste utilisable a une main. */
+.an-choix{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 18px;}
+.an-choix__k{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
+.an-choix__s{max-width:min(100%, 320px); flex:1 1 200px;}
+/* D'ou vient la suite de valeurs. Ecrit a cote du nom, parce qu'une
+   mesure ne veut pas dire la meme chose selon qu'elle porte sur des
+   cours reels ou sur vos relevés. */
+.an-ligne__s{
+  display:block; font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+  letter-spacing:.04em; color:var(--ink-3); margin-top:3px;
+}
+.an-note{
+  margin:12px 0 0; font-family:'IBM Plex Mono', monospace; font-size:12px;
+  line-height:1.6; color:var(--ink-3); text-wrap:pretty; max-width:74ch;
+}
 .an-lignes{display:flex; flex-direction:column; gap:1px; background:var(--rule); border:1px solid var(--rule);}
 .an-ligne{background:var(--paper); padding:clamp(16px,2.2vw,22px);}
 .an-ligne__n{font-weight:700; font-size:16.5px; letter-spacing:-.01em;}
-.an-ligne__c{
-  font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-3);
-  margin-left:9px; letter-spacing:.04em;
-}
 .an-mes{
   margin-top:14px; display:grid; gap:1px; background:var(--rule);
   grid-template-columns:repeat(auto-fit, minmax(min(100%, 196px), 1fr));
@@ -4173,7 +4193,7 @@ window.PC = (function(){
   'an.onglet':          ["Analyse","Analysis","Análisis","Analyse"],
   'an.eyebrow':         ["L'analyse","The analysis","El análisis","Die Analyse"],
   'an.h2':              ["Vos chiffres, dans le marché d'aujourd'hui.","Your figures, in today's market.","Sus cifras, en el mercado de hoy.","Ihre Zahlen, im heutigen Markt."],
-  'an.intro':           ["Douze mois de cours réels, mesurés ligne par ligne : ce que ça bouge, le pire recul qu'il a fallu traverser, et ce qui bouge ensemble dans votre portefeuille. Aucune estimation, aucun modèle. La formule Max ajoute un commentaire écrit par une intelligence artificielle, qui ne recommande jamais rien.","Twelve months of real prices, measured line by line: how much it swings, the worst drawdown that had to be sat through, and what moves together in your portfolio. No estimate, no model. The Max plan adds a write-up by an artificial intelligence, which never recommends anything.","Doce meses de cotizaciones reales, medidas línea por línea: cuánto se mueve, la peor caída que hubo que atravesar, y lo que se mueve junto en su cartera. Sin estimaciones ni modelos. El plan Max añade un comentario escrito por una inteligencia artificial, que nunca recomienda nada.","Zwölf Monate echter Kurse, Position für Position gemessen: wie stark es schwankt, der schlimmste durchgestandene Rückgang, und was sich in Ihrem Portfolio zusammen bewegt. Keine Schätzung, kein Modell. Der Max-Tarif ergänzt einen von einer künstlichen Intelligenz geschriebenen Kommentar, der nie etwas empfiehlt."],
+  'an.intro':           ["Toutes vos lignes, mesurées une par une : ce que ça bouge, le pire recul qu'il a fallu traverser, et ce qui bouge ensemble dans votre portefeuille. Les lignes cotées sur douze mois de cours réels, les autres sur vos relevés — et celles dont la valeur sort d'un taux garanti le disent, plutôt que d'afficher une volatilité nulle qui passerait pour un constat. Aucune estimation, aucun modèle. La formule Max ajoute un commentaire écrit par une intelligence artificielle, qui ne recommande jamais rien.","All your lines, measured one by one: how much it swings, the worst drawdown that had to be sat through, and what moves together in your portfolio. Listed lines on twelve months of real prices, the others on your statements — and those whose value comes from a guaranteed rate say so, rather than showing a nil volatility that would read as an observation. No estimate, no model. The Max plan adds a write-up by an artificial intelligence, which never recommends anything.","Todas sus líneas, medidas una a una: cuánto se mueve, la peor caída que hubo que atravesar, y lo que se mueve junto en su cartera. Las líneas cotizadas sobre doce meses de cotizaciones reales, las demás sobre sus informes — y las que sacan su valor de un tipo garantizado lo dicen, en vez de mostrar una volatilidad nula que pasaría por una constatación. Sin estimaciones ni modelos. El plan Max añade un comentario escrito por una inteligencia artificial, que nunca recomienda nada.","Alle Ihre Positionen, einzeln gemessen: wie stark es schwankt, der schlimmste durchgestandene Rückgang, und was sich in Ihrem Portfolio zusammen bewegt. Notierte Positionen auf zwölf Monaten echter Kurse, die übrigen auf Ihren Auszügen — und jene, deren Wert aus einem garantierten Zins stammt, sagen es, statt eine Null-Volatilität zu zeigen, die wie eine Feststellung wirkte. Keine Schätzung, kein Modell. Der Max-Tarif ergänzt einen von einer künstlichen Intelligenz geschriebenen Kommentar, der nie etwas empfiehlt."],
   'an.lancer':          ["Analyser mes chiffres","Analyse my figures","Analizar mis cifras","Meine Zahlen analysieren"],
   'an.refaire':         ["Refaire l'analyse","Run it again","Repetir el análisis","Analyse wiederholen"],
   'an.encours':         ["L'analyse est en cours. Elle prend une vingtaine de secondes : le modèle lit vos chiffres, les cours du jour et les titres de presse avant d'écrire.","The analysis is running. It takes about twenty seconds: the model reads your figures, today's prices and the news headlines before writing.","El análisis está en marcha. Tarda unos veinte segundos: el modelo lee sus cifras, las cotizaciones del día y los titulares antes de escribir.","Die Analyse läuft. Sie dauert etwa zwanzig Sekunden: das Modell liest Ihre Zahlen, die Tageskurse und die Schlagzeilen, bevor es schreibt."],
@@ -4200,10 +4220,23 @@ window.PC = (function(){
      qui montent et descendent ensemble ne sont pas une
      diversification, et personne ne le calcule a la main. */
   'an.calc.t':          ["Ce que disent les cours","What the prices say","Lo que dicen las cotizaciones","Was die Kurse sagen"],
-  'an.calc.d':          ["Calculé sur douze mois de cours réels, ligne par ligne. Aucune estimation, aucun modèle : des écarts-types et des maximums.","Computed on twelve months of real prices, line by line. No estimate, no model: standard deviations and maxima.","Calculado sobre doce meses de cotizaciones reales, línea por línea. Sin estimaciones ni modelos: desviaciones típicas y máximos.","Berechnet auf zwölf Monaten echter Kurse, Position für Position. Keine Schätzung, kein Modell: Standardabweichungen und Maxima."],
+  'an.calc.d':          ["Chaque ligne est mesurée sur ce qu'elle a de plus sûr\u00a0: douze mois de cours réels quand elle en a, vos relevés datés sinon. Aucune estimation, aucun modèle — et chaque ligne dit d'où elle parle.","Every line is measured on the soundest thing it has: twelve months of real prices where there are any, your dated statements otherwise. No estimate, no model — and every line says where it speaks from.","Cada línea se mide sobre lo más sólido que tiene: doce meses de cotizaciones reales cuando las hay, sus informes fechados si no. Sin estimaciones ni modelos — y cada línea dice desde dónde habla.","Jede Position wird an dem Belastbarsten gemessen, was sie hat: zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge. Keine Schätzung, kein Modell — und jede Position sagt, woher sie spricht."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
-  'an.aucune':          ["Aucune de vos lignes ne suit un cours de marché : il n'y a pas d'historique à analyser. Liez une ligne à une action, un ETF ou une crypto et son analyse apparaîtra ici.","None of your lines follows a market price: there is no history to analyse. Link a line to a stock, an ETF or a crypto and its analysis will appear here.","Ninguna de sus líneas sigue una cotización: no hay historial que analizar. Vincule una línea a una acción, un ETF o una cripto y su análisis aparecerá aquí.","Keine Ihrer Positionen folgt einem Marktkurs: es gibt keinen Verlauf zu analysieren. Verknüpfen Sie eine Position mit einer Aktie, einem ETF oder einer Krypto, und ihre Analyse erscheint hier."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
+  'an.choix':           ["Quelle ligne analyser\u00a0?","Which line to analyse?","\u00bfQu\u00e9 l\u00ednea analizar?","Welche Position analysieren?"],
+  'an.choix.tout':      ["Toutes les lignes","All lines","Todas las l\u00edneas","Alle Positionen"],
+  'an.n.releves':       ["{{n}} relev\u00e9s lus","{{n}} statements read","{{n}} informes le\u00eddos","{{n}} Ausz\u00fcge gelesen"],
+  'an.src.taux':        ["valeur calcul\u00e9e au taux garanti","value computed from the guaranteed rate","valor calculado al tipo garantizado","Wert aus dem garantierten Zins berechnet"],
+  'an.rel.note':        ["Mesur\u00e9 sur vos relev\u00e9s, pas sur des cours quotidiens. Un recul et une position se lisent sur n'importe quelle suite de valeurs\u00a0; une amplitude annuelle, non — elle se calcule sur des s\u00e9ances, et il n'y en a pas ici.","Measured on your statements, not on daily prices. A drawdown and a position can be read on any series of values; an annual amplitude cannot — it is computed on trading sessions, and there are none here.","Medido sobre sus informes, no sobre cotizaciones diarias. Una ca\u00edda y una posici\u00f3n se leen en cualquier serie de valores; una amplitud anual no — se calcula sobre sesiones, y aqu\u00ed no las hay.","Gemessen an Ihren Ausz\u00fcgen, nicht an Tageskursen. Ein R\u00fcckgang und eine Position lassen sich an jeder Wertreihe ablesen; eine Jahresamplitude nicht — sie wird auf Handelstagen berechnet, und die gibt es hier nicht."],
+  'an.reculr.k':        ["Pire recul","Worst drawdown","Peor ca\u00edda","Schlimmster R\u00fcckgang"],
+  'an.posr.d':          ["Et {{b}} au-dessus du plus bas relev\u00e9.","And {{b}} above the lowest statement.","Y {{b}} por encima del informe m\u00e1s bajo.","Und {{b}} \u00fcber dem niedrigsten Auszug."],
+  'an.prog.k':          ["Depuis le premier point","Since the first point","Desde el primer punto","Seit dem ersten Punkt"],
+  'an.prog.d':          ["De {{a}} le {{d}} \u00e0 {{b}} aujourd'hui.","From {{a}} on {{d}} to {{b}} today.","De {{a}} el {{d}} a {{b}} hoy.","Von {{a}} am {{d}} auf {{b}} heute."],
+  'an.taux.k':          ["Taux garanti","Guaranteed rate","Tipo garantizado","Garantierter Zins"],
+  'an.taux.d':          ["{{t}} par an depuis le {{d}}.","{{t}} per year since {{d}}.","{{t}} anual desde el {{d}}.","{{t}} pro Jahr seit dem {{d}}."],
+  'an.taux.note':       ["La valeur de cette ligne est calcul\u00e9e \u00e0 partir du taux\u00a0: elle n'est relev\u00e9e sur aucun march\u00e9. Il n'y a donc rien \u00e0 mesurer de ses variations — elle n'en a pas. \u00c9crire ici «\u00a0volatilit\u00e9 0\u00a0%\u00a0» donnerait \u00e0 une formule l'air d'un constat.","This line's value is computed from the rate: it is not observed on any market. So there is nothing to measure about its moves — it has none. Writing \u201cvolatility 0%\u201d here would make a formula look like an observation.","El valor de esta l\u00ednea se calcula a partir del tipo: no se observa en ning\u00fan mercado. No hay pues nada que medir de sus variaciones — no las tiene. Escribir aqu\u00ed \u00abvolatilidad 0\u00a0%\u00bb har\u00eda pasar una f\u00f3rmula por una constataci\u00f3n.","Der Wert dieser Position wird aus dem Zins berechnet: er wird an keinem Markt erhoben. Es gibt also nichts an ihren Schwankungen zu messen — sie hat keine. Hier \u201eVolatilit\u00e4t 0\u00a0%\u201c zu schreiben, lie\u00dfe eine Formel wie eine Feststellung aussehen."],
+  'an.rien.k':          ["Rien \u00e0 mesurer pour l'instant","Nothing to measure yet","Nada que medir por ahora","Noch nichts zu messen"],
+  'an.rien.d':          ["Cette ligne ne suit aucun cours et ne porte pas encore assez de relev\u00e9s. Il en faut trois, ou un code de march\u00e9, pour qu'une mesure veuille dire quelque chose.","This line follows no price and does not carry enough statements yet. Three are needed, or a market code, for a measurement to mean anything.","Esta l\u00ednea no sigue ninguna cotizaci\u00f3n y a\u00fan no tiene suficientes informes. Hacen falta tres, o un c\u00f3digo de mercado, para que una medida signifique algo.","Diese Position folgt keinem Kurs und tr\u00e4gt noch nicht genug Ausz\u00fcge. Es braucht drei davon oder ein Marktk\u00fcrzel, damit eine Messung etwas bedeutet."],
   'an.vol.k':           ["Volatilité","Volatility","Volatilidad","Volatilität"],
   'an.vol.d':           ["Amplitude annuelle des variations. Plus elle est haute, plus la valeur bouge — dans les deux sens.","Annual amplitude of the moves. The higher it is, the more the value swings — both ways.","Amplitud anual de las variaciones. Cuanto más alta, más se mueve el valor — en ambos sentidos.","Jährliche Schwankungsbreite. Je höher, desto stärker bewegt sich der Wert — in beide Richtungen."],
   'an.recul.k':         ["Pire recul sur douze mois","Worst drawdown over twelve months","Peor caída en doce meses","Schlimmster Rückgang in zwölf Monaten"],
@@ -6463,10 +6496,13 @@ window.PC = (function(){
             <p class="eyebrow" data-i18n="an.eyebrow">L'analyse</p>
             <h2 data-i18n="an.h2">Vos chiffres, dans le marché d'aujourd'hui.</h2>
           </div>
-          <p class="section__intro" data-i18n="an.intro">Une intelligence artificielle met votre
-            portefeuille en regard de ce que font les marchés en ce moment, et explique les
-            mécanismes. Elle ne recommande rien&nbsp;: ni d'acheter, ni de vendre, ni de conserver.
-            Cette limite est vérifiée sur chaque texte avant qu'il vous parvienne.</p>
+          <p class="section__intro" data-i18n="an.intro">Toutes vos lignes, mesurées une par une&nbsp;:
+            ce que ça bouge, le pire recul qu'il a fallu traverser, et ce qui bouge ensemble dans
+            votre portefeuille. Les lignes cotées sur douze mois de cours réels, les autres sur vos
+            relevés — et celles dont la valeur sort d'un taux garanti le disent, plutôt que
+            d'afficher une volatilité nulle qui passerait pour un constat. Aucune estimation, aucun
+            modèle. La formule Max ajoute un commentaire écrit par une intelligence artificielle,
+            qui ne recommande jamais rien.</p>
         </div>
 
         <!-- L'ANALYSE CALCULEE. Rien d'ecrit par un modele ici : des
@@ -6475,8 +6511,17 @@ window.PC = (function(){
              et elle ne peut pas se tromper. -->
         <div class="an-bloc" id="an-calc">
           <h3 class="an-titre mono" data-i18n="an.calc.t">Ce que disent les cours</h3>
-          <p class="an-sous" data-i18n="an.calc.d">Calculé sur douze mois de cours réels, ligne par
-            ligne. Aucune estimation, aucun modèle&nbsp;: des écarts-types et des maximums.</p>
+          <p class="an-sous" data-i18n="an.calc.d">Chaque ligne est mesurée sur ce qu'elle a de plus
+            sûr&nbsp;: douze mois de cours réels quand elle en a, vos relevés datés sinon. Aucune
+            estimation, aucun modèle — et chaque ligne dit d'où elle parle.</p>
+          <!-- Choisir la ligne. Toutes a la fois se lisait a trois
+               lignes et plus du tout a douze — et sur telephone, ou
+               chaque ligne fait une courbe et cinq mesures, c'etait
+               une page de defilement par actif. -->
+          <div class="an-choix" id="an-choix-boite" hidden>
+            <label class="an-choix__k mono" for="an-choix" data-i18n="an.choix">Quelle ligne analyser&nbsp;?</label>
+            <select class="reglage an-choix__s" id="an-choix"></select>
+          </div>
           <p class="analyse__m" id="an-calc-mot" hidden></p>
           <div class="an-lignes" id="an-calc-lignes"></div>
         </div>
@@ -10299,6 +10344,79 @@ window.PC = (function(){
     return out;
   }
 
+  /* ============================================================
+     TOUTES LES LIGNES, PAS SEULEMENT LES COTEES
+     ------------------------------------------------------------
+     L'analyse ne parlait que des lignes liees a un cours de marche.
+     Sur un portefeuille fait d'immobilier, d'une assurance-vie et
+     d'un PEA, elle en montrait deux sur sept et se taisait sur le
+     reste — sans meme dire pourquoi. Une ligne absente ne dit pas
+     qu'elle manque de donnees : elle a l'air oubliee.
+
+     Il y a pourtant de quoi mesurer partout. Simplement pas la meme
+     chose, et surtout pas avec la meme force. Trois provenances,
+     dans cet ordre de priorite, et JAMAIS melangees :
+
+     - « marche » : douze mois de cours quotidiens reels. Tout se
+       mesure, volatilite annualisee comprise.
+     - « releve » : vos relevés datés. Un recul et une position se
+       lisent sur n'importe quelle suite de valeurs. Une amplitude
+       annualisee, non : 252 est un nombre de SEANCES, et en prendre
+       la racine sur des ecarts mensuels rendrait un chiffre environ
+       trois fois trop gros. On ne l'affiche donc pas, et on dit
+       pourquoi plutot que de la calculer quand meme.
+     - « taux » : la valeur ne vient d'aucun marche, elle sort d'une
+       formule. Son mouvement n'existe pas. Ecrire « volatilite 0 % »
+       serait exact et trompeur : ca donnerait a une formule l'air
+       d'un constat de marche.
+
+     Un relevé reel l'emporte sur un taux, comme partout ailleurs
+     dans cette page : ce qui a ete constate prime sur ce qui a ete
+     deduit.
+     ============================================================ */
+  function anSerieReleves(id){
+    const out = [];
+    if (!id) return out;
+    (historique || []).forEach(function(r){
+      const v = r && r.lignes ? r.lignes[id] : null;
+      if (typeof v === 'number' && isFinite(v) && v > 0){
+        const t = Date.parse(r.d + 'T00:00:00Z');
+        if (!isNaN(t)) out.push([t, v]);
+      }
+    });
+    out.sort(function(x, y){ return x[0] - y[0]; });
+    return out;
+  }
+
+  function anLignes(){
+    const out = [];
+    actifs.forEach(function(a){
+      const base = {id:a.id, nom:a.nom, val:a.val || 0};
+      const c = a.sym && String(a.sym).trim().toLowerCase();
+      if (c && SERIES[c] && SERIES[c].length >= 40){
+        out.push(Object.assign(base, {src:'marche', code:c,
+                                      pts:SERIES[c], v:anVariations(SERIES[c])}));
+        return;
+      }
+      /* Trois points : le minimum pour qu'un recul puisse exister,
+         c'est-a-dire pour qu'un sommet puisse preceder un creux. A
+         deux points il n'y a qu'une pente, et la mesurer reviendrait
+         a rehabiller la performance en analyse. */
+      const rel = anSerieReleves(a.id);
+      if (rel.length >= 3){ out.push(Object.assign(base, {src:'releve', pts:rel})); return; }
+      if (a.taux && a.depuis){
+        out.push(Object.assign(base, {src:'taux', pts:null, taux:a.taux,
+                                      depuis:a.depuis, inv:a.inv || 0}));
+        return;
+      }
+      out.push(Object.assign(base, {src:'rien', pts:null}));
+    });
+    /* La plus grosse ligne d'abord : c'est celle dont le recul pese le
+       plus sur le total. L'ordre de saisie n'apprend rien. */
+    out.sort(function(x, y){ return y.val - x.val; });
+    return out;
+  }
+
   /* PC.pourcent signe toujours : c'est juste pour une performance, faux
      pour une amplitude. « +17 % de volatilite » ne veut rien dire — ca
      ne monte pas de 17 %, ca bouge de 17 %. Idem pour une distance. */
@@ -10373,45 +10491,72 @@ window.PC = (function(){
       '<p class="an-m__d">' + detail + '</p></div>';
   }
 
-  function anCalcule(){
-    const bloc = document.getElementById('an-calc');
-    const hote = document.getElementById('an-calc-lignes');
-    const mot  = document.getElementById('an-calc-mot');
-    const bcor = document.getElementById('an-cor');
-    if (!bloc || !hote) return;
-    if (!droit('analyse')){ bloc.hidden = true; if (bcor) bcor.hidden = true; return; }
-    bloc.hidden = false;
-
-    const lignes = anCotees();
-    if (!lignes.length){
-      hote.innerHTML = '';
-      if (mot){
-        /* Deux silences differents : « ca arrive » et « il n'y a rien a
-           analyser ». Les confondre ferait attendre pour rien. */
-        mot.textContent = PC.t(serieEnAttente() ? 'an.attente' : 'an.aucune');
-        mot.hidden = false;
-        mot.dataset.ton = serieEnAttente() ? 'attente' : '';
-      }
-      if (bcor) bcor.hidden = true;
-      return;
+  /* Le selecteur. Il se refait a chaque rendu parce que les lignes
+     bougent, mais le choix, lui, survit : le reconstruire en
+     reinitialisant la selection ramenerait a « toutes » toutes les
+     quarante-cinq secondes, pendant qu'on lit. */
+  let anChoix = '';
+  /* Le defaut n'est pose QU'UNE FOIS. Sans ce temoin, le telephone
+     reviendrait a sa ligne par defaut a chaque rendu — donc toutes les
+     quarante-cinq secondes — et « toutes les lignes » y serait
+     inchoisissable. */
+  let anChoixPose = false;
+  function anPoseChoix(lignes){
+    const boite = document.getElementById('an-choix-boite');
+    const sel = document.getElementById('an-choix');
+    if (!boite || !sel) return;
+    /* A une seule ligne, choisir n'a pas de sens. */
+    if (!sel.dataset.branche){
+      sel.dataset.branche = '1';
+      sel.addEventListener('change', function(){
+        anChoix = sel.value || '';
+        anCalcule();
+      });
     }
-    if (mot){
-      /* Il en manque peut-etre encore : on le dit sans effacer ce qui
-         est deja calcule. */
-      if (serieEnAttente()){ mot.textContent = PC.t('an.attente'); mot.hidden = false; mot.dataset.ton = 'attente'; }
-      else mot.hidden = true;
+    boite.hidden = lignes.length < 2;
+    if (lignes.length < 2){ anChoix = ''; return; }
+    if (anChoix && !lignes.some(function(L){ return L.id === anChoix; })){
+      anChoix = ''; anChoixPose = false;
     }
+    /* SUR TELEPHONE, UNE LIGNE A LA FOIS.
+       Chaque ligne porte une courbe et jusqu'a cinq mesures. A sept
+       lignes, l'onglet faisait 6,1 ecrans de defilement — la meme
+       bouillie que la vue detaillee avant qu'on la replie. Sur grand
+       ecran les mesures se rangent en colonnes et tout se compare d'un
+       coup d'oeil : le defaut y reste « toutes ».
+       La plus grosse ligne d'abord, parce que c'est celle dont le recul
+       pese le plus sur le total. */
+    if (!anChoixPose && !anChoix && window.matchMedia('(max-width:700px)').matches){
+      anChoix = lignes[0].id;
+    }
+    anChoixPose = true;
+    const veut = '\u0000' + anChoix + '\u0000' +
+      lignes.map(function(L){ return L.id + '\u0001' + L.nom; }).join('\u0002');
+    if (sel.dataset.etat === veut) return;
+    sel.dataset.etat = veut;
+    sel.innerHTML = '<option value="">' + echap(PC.t('an.choix.tout')) + '</option>' +
+      lignes.map(function(L){
+        return '<option value="' + echap(L.id) + '"' + (L.id === anChoix ? ' selected' : '') +
+          '>' + echap(L.nom) + '</option>';
+      }).join('');
+    sel.value = anChoix;
+  }
 
-    hote.innerHTML = lignes.map(function(L){
+  /* Une ligne, ses mesures, et d'ou elles sortent. Les quatre
+     provenances ne partagent que la courbe : ce qu'on peut affirmer
+     d'une suite de cours quotidiens n'a rien a voir avec ce qu'on
+     peut affirmer de douze relevés. */
+  function anRendLigne(L){
+    let m = '', sous = '', note = '';
+
+    if (L.src === 'marche'){
       const vol = anVolatilite(L.v);
       const rec = anRecul(L.pts);
       const prix = L.pts[L.pts.length - 1][1];
       let haut = -Infinity, bas = Infinity;
       L.pts.forEach(function(p){ if (p[1] > haut) haut = p[1]; if (p[1] < bas) bas = p[1]; });
-      const forte = L.v.reduce(function(m, x){ return (!m || Math.abs(x.r) > Math.abs(m.r)) ? x : m; }, null);
+      const forte = L.v.reduce(function(x, y){ return (!x || Math.abs(y.r) > Math.abs(x.r)) ? y : x; }, null);
       const hausses = L.v.filter(function(x){ return x.r > 0; }).length;
-
-      let m = '';
       if (vol !== null){
         m += anMesure('an.vol', anAmpleur(vol), echap(PC.t('an.vol.d')),
                       vol >= 50 ? 'attention' : '', anJauge(vol));
@@ -10421,48 +10566,132 @@ window.PC = (function(){
                       echap(PC.t('an.recul.d', {a:anDate(rec.debut), b:anDate(rec.fin)})),
                       rec.part >= 30 ? 'baisse' : '');
       }
-      if (haut > 0 && bas > 0){
-        /* La distance au plus haut en gros, le reste en dessous. « Dans
-           l'annee = 100 % » — la position dans l'ecart — etait exact et
-           illisible : personne ne pense son portefeuille en centiles. */
-        const sousHaut = (haut - prix) / haut * 100;
-        /* Une ligne AU plus haut ne se dit pas « −0 % » : c'est laid, et
-           surtout ca perd l'information. Ce cas a ses propres mots. */
-        /* Et le libelle change avec : « Sous le plus haut = Au plus
-           haut » se lisait deux fois la meme chose. */
-        const dansEcart = anBarre((prix - bas) / ((haut - bas) || 1) * 100);
-        m += (sousHaut < 0.5)
-          ? anMesure('an.sommet', echap(PC.t('an.pos.sommet')),
-                     echap(PC.t('an.pos.d', {b: anAmpleur((prix - bas) / bas * 100)})),
-                     'attention', dansEcart)
-          : anMesure('an.pos', '\u2212' + anAmpleur(sousHaut),
-                     echap(PC.t('an.pos.d', {b: anAmpleur((prix - bas) / bas * 100)})),
-                     sousHaut >= 25 ? 'baisse' : '', dansEcart);
-      }
+      m += anPosition(prix, haut, bas);
       if (forte){
         m += anMesure('an.seance', PC.pourcent(forte.r * 100, 1),
                       echap(PC.t('an.seance.d', {d:anDate(forte.t)})));
       }
       m += anMesure('an.sens', PC.nombre(hausses / L.v.length * 100, 0) + ' %',
                     echap(PC.t('an.sens.d', {h:String(hausses), b:String(L.v.length - hausses)})));
+      sous = echap(L.code.toUpperCase()) + ' \u00b7 ' +
+             echap(PC.t('an.jours', {n:String(L.pts.length)}));
 
-      /* La courbe d'abord, les chiffres ensuite : on voit l'annee en
-         un coup d'oeil, puis on lit ce qu'elle valait. */
-      const bornes = '<div class="an-sp__lg"><span>' + eur.format(bas) +
+    } else if (L.src === 'releve'){
+      const rec = anRecul(L.pts);
+      const prem = L.pts[0], der = L.pts[L.pts.length - 1];
+      let haut = -Infinity, bas = Infinity;
+      L.pts.forEach(function(p){ if (p[1] > haut) haut = p[1]; if (p[1] < bas) bas = p[1]; });
+      if (prem[1] > 0){
+        const prog = (der[1] / prem[1] - 1) * 100;
+        m += anMesure('an.prog', PC.pourcent(prog, 1),
+                      echap(PC.t('an.prog.d', {a:eur.format(prem[1]), b:eur.format(der[1]),
+                                               d:anDate(prem[0])})),
+                      prog < 0 ? 'baisse' : '');
+      }
+      if (rec){
+        m += anMesure('an.reculr', '\u2212' + anAmpleur(rec.part),
+                      echap(PC.t('an.recul.d', {a:anDate(rec.debut), b:anDate(rec.fin)})),
+                      rec.part >= 30 ? 'baisse' : '');
+      }
+      m += anPosition(der[1], haut, bas, 'an.posr.d');
+      sous = echap(PC.t('an.n.releves', {n:String(L.pts.length)}));
+      note = '<p class="an-note">' + echap(PC.t('an.rel.note')) + '</p>';
+
+    } else if (L.src === 'taux'){
+      m += anMesure('an.taux', anAmpleur(L.taux, 2),
+                    echap(PC.t('an.taux.d', {t:anAmpleur(L.taux, 2), d:anDate(Date.parse(L.depuis + 'T00:00:00Z'))})));
+      if (L.inv > 0){
+        m += anMesure('an.prog', PC.pourcent((L.val / L.inv - 1) * 100, 1),
+                      echap(PC.t('an.prog.d', {a:eur.format(L.inv), b:eur.format(L.val),
+                                               d:anDate(Date.parse(L.depuis + 'T00:00:00Z'))})));
+      }
+      sous = echap(PC.t('an.src.taux'));
+      note = '<p class="an-note">' + echap(PC.t('an.taux.note')) + '</p>';
+
+    } else {
+      m += anMesure('an.rien', '\u2014', echap(PC.t('an.rien.d')), 'attente');
+    }
+
+    let dessin = '';
+    if (L.pts && L.pts.length >= 2){
+      let haut = -Infinity, bas = Infinity;
+      L.pts.forEach(function(p){ if (p[1] > haut) haut = p[1]; if (p[1] < bas) bas = p[1]; });
+      dessin = anCourbe(L.pts, anRecul(L.pts)) +
+        '<div class="an-sp__lg"><span>' + eur.format(bas) +
         '</span><span>' + eur.format(haut) + '</span></div>';
-      return '<div class="an-ligne">' +
-        '<div><span class="an-ligne__n">' + echap(L.nom) + '</span>' +
-        '<span class="an-ligne__c">' + echap(L.code.toUpperCase()) + ' \u00b7 ' +
-        echap(PC.t('an.jours', {n:String(L.pts.length)})) + '</span></div>' +
-        anCourbe(L.pts, rec) + bornes +
-        '<div class="an-mes">' + m + '</div></div>';
-    }).join('');
+    }
+
+    return '<div class="an-ligne" data-src="' + L.src + '">' +
+      '<div><span class="an-ligne__n">' + echap(L.nom) + '</span>' +
+      (sous ? '<span class="an-ligne__s">' + sous + '</span>' : '') + '</div>' +
+      dessin +
+      '<div class="an-mes">' + m + '</div>' + note + '</div>';
+  }
+
+  /* Ou se situe la derniere valeur entre le plus bas et le plus haut
+     connus. Le detail change de mots selon la provenance — « des douze
+     mois » n'a aucun sens sur une suite de relevés. */
+  function anPosition(prix, haut, bas, cleDetail){
+    if (!(haut > 0) || !(bas > 0)) return '';
+    const d = cleDetail || 'an.pos.d';
+    const sousHaut = (haut - prix) / haut * 100;
+    const barre = anBarre((prix - bas) / ((haut - bas) || 1) * 100);
+    const detail = echap(PC.t(d, {b: anAmpleur((prix - bas) / bas * 100)}));
+    /* Une ligne AU plus haut ne se dit pas « −0 % » : c'est laid, et
+       surtout ca perd l'information. Ce cas a ses propres mots, et son
+       propre libelle — « Sous le plus haut = Au plus haut » se lisait
+       deux fois la meme chose. */
+    return (sousHaut < 0.5)
+      ? anMesure('an.sommet', echap(PC.t('an.pos.sommet')), detail, 'attention', barre)
+      : anMesure('an.pos', '\u2212' + anAmpleur(sousHaut), detail,
+                 sousHaut >= 25 ? 'baisse' : '', barre);
+  }
+
+  function anCalcule(){
+    const bloc = document.getElementById('an-calc');
+    const hote = document.getElementById('an-calc-lignes');
+    const mot  = document.getElementById('an-calc-mot');
+    const bcor = document.getElementById('an-cor');
+    if (!bloc || !hote) return;
+    if (!droit('analyse')){ bloc.hidden = true; if (bcor) bcor.hidden = true; return; }
+    bloc.hidden = false;
+
+    /* Les correlations restent sur les lignes COTEES : elles se
+       mesurent sur des variations quotidiennes communes, et deux
+       suites de relevés mensuels n'en partagent jamais assez pour
+       qu'un coefficient veuille dire quelque chose. */
+    const lignes = anLignes();
+    anPoseChoix(lignes);
+    if (!lignes.length){
+      hote.innerHTML = '';
+      if (mot){ mot.textContent = PC.t('an.vide'); mot.hidden = false; mot.dataset.ton = ''; }
+      if (bcor) bcor.hidden = true;
+      return;
+    }
+    if (mot){
+      /* Il manque peut-etre encore des cours : on le dit sans effacer
+         ce qui est deja calcule. */
+      if (serieEnAttente()){ mot.textContent = PC.t('an.attente'); mot.hidden = false; mot.dataset.ton = 'attente'; }
+      else mot.hidden = true;
+    }
+
+    /* Un choix qui ne designe plus rien — la ligne a ete retiree, ou
+       l'exemple recharge avec de nouveaux identifiants — ne doit pas
+       rendre une page vide : on retombe sur tout. */
+    const vues = anChoix ? lignes.filter(function(L){ return L.id === anChoix; }) : [];
+    hote.innerHTML = (vues.length ? vues : lignes).map(anRendLigne).join('');
 
     /* ---------- Ce qui bouge ensemble ---------- */
     if (!bcor) return;
     const hcor = document.getElementById('an-cor-paires');
     const ncor = document.getElementById('an-cor-n');
-    if (lignes.length < 2){
+    /* Les COTEES, pas toutes : un coefficient de correlation se calcule
+       sur des variations quotidiennes partagees. Deux suites de
+       relevés mensuels n'en ont jamais assez, et un taux garanti n'a
+       pas de variations du tout — le correler a quoi que ce soit
+       rendrait soit 0, soit 1, et les deux seraient des artefacts. */
+    const cotees = anCotees();
+    if (cotees.length < 2){
       bcor.hidden = false;
       if (hcor) hcor.innerHTML = '<div class="an-paire"><span class="an-paire__n" style="grid-column:1/-1">' +
         echap(PC.t('an.cor.peu')) + '</span></div>';
@@ -10470,10 +10699,10 @@ window.PC = (function(){
       return;
     }
     const paires = [];
-    for (let i = 0; i < lignes.length; i++){
-      for (let j = i + 1; j < lignes.length; j++){
-        const r = anCorrelation(lignes[i].v, lignes[j].v);
-        if (r) paires.push({a:lignes[i].nom, b:lignes[j].nom, c:r.c, n:r.n});
+    for (let i = 0; i < cotees.length; i++){
+      for (let j = i + 1; j < cotees.length; j++){
+        const r = anCorrelation(cotees[i].v, cotees[j].v);
+        if (r) paires.push({a:cotees[i].nom, b:cotees[j].nom, c:r.c, n:r.n});
       }
     }
     if (!paires.length){
@@ -10581,19 +10810,32 @@ window.PC = (function(){
        que le client lit juste au-dessus. Une phrase et un chiffre qui
        se contredisent sur le meme ecran, c'est pire que pas de phrase. */
     const cot = anCotees();
-    base.mesures = cot.map(function(L){
-      const vol = anVolatilite(L.v);
+    /* TOUTES les lignes affichees, avec leur provenance. Envoyer les
+       seules lignes cotees laissait le modele commenter deux lignes sur
+       neuf pendant que le client en lisait neuf — et surtout, rien ne
+       lui disait qu'un recul mesure sur des relevés mensuels n'est pas
+       un recul mesure sur des seances. La volatilite reste vide quand
+       elle n'a pas ete calculee : un champ vide se commente mal, un
+       champ invente se commente tres bien. */
+    base.mesures = anLignes().map(function(L){
+      const o = {nom: String(L.nom || '').slice(0, 60), source: L.src,
+                 volatilite: '', pireRecul: '', sousLePlusHaut: '', points: ''};
+      if (!L.pts || L.pts.length < 2){
+        if (L.src === 'taux') o.volatilite = '0';
+        return o;
+      }
       const rec = anRecul(L.pts);
-      let haut = -Infinity, bas = Infinity;
-      L.pts.forEach(function(x){ if (x[1] > haut) haut = x[1]; if (x[1] < bas) bas = x[1]; });
+      let haut = -Infinity;
+      L.pts.forEach(function(x){ if (x[1] > haut) haut = x[1]; });
       const prix = L.pts[L.pts.length - 1][1];
-      return {
-        nom: String(L.nom || '').slice(0, 60),
-        volatilite: vol === null ? '' : vol.toFixed(0),
-        pireRecul: rec ? rec.part.toFixed(0) : '',
-        sousLePlusHaut: (haut > 0) ? ((haut - prix) / haut * 100).toFixed(0) : '',
-        seances: String(L.pts.length)
-      };
+      if (L.src === 'marche'){
+        const vol = anVolatilite(L.v);
+        if (vol !== null) o.volatilite = vol.toFixed(0);
+      }
+      o.pireRecul = rec ? rec.part.toFixed(0) : '';
+      o.sousLePlusHaut = (haut > 0) ? ((haut - prix) / haut * 100).toFixed(0) : '';
+      o.points = String(L.pts.length);
+      return o;
     });
     base.correlations = [];
     for (let i = 0; i < cot.length; i++){
@@ -14151,16 +14393,34 @@ window.PC = (function(){
     if (!memes){ boite.innerHTML = liste.map(ligne).join(''); return; }
     liste.forEach(function(c, i){
       const b = boutons[i];
-      const v = c.price_change_percentage_24h;
-      const monte = !(v < 0);
+      /* Meme lecture et meme precision que `caseVar` au premier
+         trace : la variation passait de « −0,32 % » a « −0,3 % » au
+         premier rafraichissement, et le champ lu n'etait pas le meme
+         non plus. Deux ecritures d'un meme chiffre, c'est une de trop. */
+      const v = varOf(c, H24);
       const p = b.querySelector('.marches__prix');
-      const va = b.querySelector('.marches__var');
       const ca = b.querySelector('.marches__cap');
       if (p) p.textContent = prix(c.current_price);
-      if (va){
-        va.setAttribute('data-dir', monte ? 'up' : 'down');
-        va.textContent = (monte ? '▲' : '▼') + ' ' + PC.pourcent(v || 0, 2);
-      }
+      /* LES TROIS, pas seulement la premiere. Ce raccourci ne portait
+         a consequence que tant qu'un seul horizon etait montre a la
+         fois et que c'etait celui-la : depuis que le telephone laisse
+         choisir 7 j ou 30 j, le chiffre affiche restait celui du
+         premier chargement pendant que le prix, lui, avancait toutes
+         les quarante-cinq secondes. Un cours fige a cote d'un prix qui
+         bouge, c'est exactement ce qui se lit comme un bogue. */
+      [['24h', v], ['7j', varOf(c, H7)], ['30j', varOf(c, H30)]].forEach(function(paire){
+        const el = b.querySelector('.marches__var[data-k="' + paire[0] + '"]');
+        if (!el) return;
+        const x = paire[1];
+        if (x === null || x === undefined){
+          el.setAttribute('data-dir', 'rien');
+          el.textContent = '\u2014';
+          return;
+        }
+        const h = !(x < 0);
+        el.setAttribute('data-dir', h ? 'up' : 'down');
+        el.textContent = (h ? '\u25b2' : '\u25bc') + ' ' + PC.pourcent(x, 1);
+      });
       if (ca) ca.textContent =
         gros(marcheSource === 'crypto' ? c.market_cap : c.total_volume);
     });
