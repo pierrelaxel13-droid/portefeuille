@@ -22,8 +22,12 @@ Un outil de suivi, pas un conseil : il ne recommande aucun placement.
 
 👉 [LIEN]
 
-## Script vidéo (20 s)
-- [Écran : un tableur qui déborde de colonnes] « Un tableur, ça additionne. »
-- [Graphique de trajectoire] « Pierrel & Co vous dit où vous en êtes : ce que vous avez mis, ce que ça vaut, ce que ça rapporte. »
-- [Icône sur l'écran d'accueil] « Sur votre téléphone, même hors ligne. »
-- [Titre] « Sachez ce que vous détenez, et pourquoi. »
+## Script vidéo (28 s, `video.mp4`)
+1. 0–4 s : la valeur totale s'emballe jusqu'à « 248 630 € » (▲ +12,3 %). Mention : portefeuille d'exemple, chiffres fictifs.
+2. 4–8 s : « Livret. Assurance-vie. PEA. Immobilier. Bitcoin. » puis « Un seul écran. »
+3. 8–15 s : « Tout se recalcule. » : anneau de répartition, courbe, investi / valeur / gain.
+4. 15–19 s : « 14 indicateurs » : tuiles qui s'allument une à une.
+5. 19–23 s : « Sur votre téléphone. » : maquette, icône, « Même hors ligne ».
+6. 23–28 s : « Votre argent, enfin lisible. », bouton, « Un outil de suivi, pas un conseil ».
+
+Pour la refaire : `node rendre-video.mjs video.mp4` (Chromium + ffmpeg + Node 22).
