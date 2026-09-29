@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260929.1318";</script>
+<script>window.PC_VERSION = "260929.1802";</script>
 </head>
 <body>
 
@@ -1860,6 +1860,10 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 /* Le choix de la ligne. Un <select> natif, comme la langue et la
    devise : sur telephone c'est la liste du systeme qui s'ouvre, la
    seule qui reste utilisable a une main. */
+/* Les trois periodes du bloc des marches. La liste des marches ne les
+   montre que sous 860 px ; ici elles servent a toutes les largeurs,
+   parce qu'il n'y a qu'un jeu de chiffres a la fois. */
+.an-mar__h{display:flex; margin:0 0 16px;}
 .an-choix{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 18px;}
 .an-choix__k{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 /* Le champ et sa liste : la liste se pose PAR-DESSUS ce qui suit,
@@ -1973,6 +1977,9 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 
 
 .an-m[data-ton="baisse"] .an-m__v{color:var(--loss);}
+/* La couleur ne porte jamais seule : PC.pourcent signe deja le nombre,
+   le vert ne fait que confirmer ce que le « + » a deja dit. */
+.an-m[data-ton="hausse"] .an-m__v{color:var(--gain);}
 /* Les paires correlees. Le chiffre a gauche, les deux noms a droite :
    on lit la force avant de lire qui. */
 .an-paires{display:flex; flex-direction:column; gap:1px; background:var(--rule); border:1px solid var(--rule);}
@@ -4238,7 +4245,25 @@ window.PC = (function(){
      seul — la correlation entre deux lignes surtout. Deux placements
      qui montent et descendent ensemble ne sont pas une
      diversification, et personne ne le calcule a la main. */
-  'an.calc.t':          ["Ce que disent les cours","What the prices say","Lo que dicen las cotizaciones","Was die Kurse sagen"],
+  'an.mar.t':           ["Les march\u00e9s aujourd'hui","The markets today","Los mercados hoy","Die M\u00e4rkte heute"],
+  'an.mar.d':           ["Les douze plus grosses capitalisations, relev\u00e9es \u00e0 {{h}}. Rien n'est estim\u00e9\u00a0: ce sont les variations servies par le fournisseur, et le calcul de chaque chiffre est \u00e9crit sous lui.","The twelve largest capitalisations, read at {{h}}. Nothing is estimated: these are the moves served by the provider, and how each figure is computed is written under it.","Las doce mayores capitalizaciones, tomadas a las {{h}}. Nada se estima: son las variaciones servidas por el proveedor, y bajo cada cifra se explica su c\u00e1lculo.","Die zw\u00f6lf gr\u00f6\u00dften Kapitalisierungen, erhoben um {{h}}. Nichts wird gesch\u00e4tzt: das sind die vom Anbieter gelieferten Ver\u00e4nderungen, und unter jeder Zahl steht, wie sie berechnet wird."],
+  'an.mar.charge':      ["On rel\u00e8ve les cours du jour\u2026","Reading today's prices\u2026","Leyendo las cotizaciones del d\u00eda\u2026","Die Tageskurse werden erhoben\u2026"],
+  'an.mar.ko':          ["Le fournisseur de cours n'a pas r\u00e9pondu. Vos chiffres, eux, sont intacts\u00a0: rien de ce qui suit n'en d\u00e9pend.","The price provider did not answer. Your figures are untouched: nothing below depends on it.","El proveedor de cotizaciones no respondi\u00f3. Sus cifras est\u00e1n intactas: nada de lo que sigue depende de \u00e9l.","Der Kursanbieter hat nicht geantwortet. Ihre Zahlen sind unber\u00fchrt: nichts weiter unten h\u00e4ngt davon ab."],
+  'an.mar.ens.k':       ["Le march\u00e9 dans son ensemble","The market as a whole","El mercado en conjunto","Der Markt insgesamt"],
+  'an.mar.ens.d':       ["Moyenne des {{n}} lignes, pond\u00e9r\u00e9e par leur capitalisation. Sans cette pond\u00e9ration, la plus petite p\u00e8serait autant que la plus grosse.","Average of the {{n}} lines, weighted by capitalisation. Without that weighting the smallest would count as much as the largest.","Media de las {{n}} l\u00edneas, ponderada por su capitalizaci\u00f3n. Sin esa ponderaci\u00f3n la m\u00e1s peque\u00f1a pesar\u00eda tanto como la mayor.","Durchschnitt der {{n}} Werte, nach Marktkapitalisierung gewichtet. Ohne diese Gewichtung z\u00e4hlte der kleinste so viel wie der gr\u00f6\u00dfte."],
+  'an.mar.sens.k':      ["En hausse","Up","Al alza","Im Plus"],
+  'an.mar.sens.d':      ["{{h}} lignes sur {{n}} montent. Tout ensemble, c'est un mouvement de march\u00e9\u00a0; une seule qui bouge, c'est l'histoire d'une ligne.","{{h}} of {{n}} lines are up. All together, that is a market move; a single one moving is the story of one line.","{{h}} de {{n}} l\u00edneas suben. Todas a la vez es un movimiento de mercado; una sola que se mueve es la historia de una l\u00ednea.","{{h}} von {{n}} Werten steigen. Alle zusammen ist eine Marktbewegung; ein einzelner ist die Geschichte einer Position."],
+  'an.mar.haut.k':      ["Ce qui monte le plus","Biggest riser","Lo que m\u00e1s sube","Gr\u00f6\u00dfter Gewinner"],
+  'an.mar.bas.k':       ["Ce qui baisse le plus","Biggest faller","Lo que m\u00e1s baja","Gr\u00f6\u00dfter Verlierer"],
+  'an.mar.qui.d':       ["{{q}}, sur la p\u00e9riode choisie.","{{q}}, over the chosen period.","{{q}}, en el periodo elegido.","{{q}}, im gew\u00e4hlten Zeitraum."],
+  'an.mar.ecart.k':     ["L'\u00e9cart du jour","Today's spread","La horquilla del d\u00eda","Die Tagesspanne"],
+  'an.mar.ecart.d':     ["Entre la plus forte hausse et la plus forte baisse. Un \u00e9cart serr\u00e9 dit que tout a boug\u00e9 ensemble\u00a0; un \u00e9cart large, que chaque ligne a sa propre raison.","Between the biggest rise and the biggest fall. A narrow spread says everything moved together; a wide one, that each line has its own reason.","Entre la mayor subida y la mayor bajada. Una horquilla estrecha dice que todo se movi\u00f3 junto; una amplia, que cada l\u00ednea tiene su raz\u00f3n.","Zwischen dem gr\u00f6\u00dften Anstieg und dem gr\u00f6\u00dften R\u00fcckgang. Eine enge Spanne sagt, dass sich alles gemeinsam bewegt hat; eine weite, dass jede Position ihren eigenen Grund hat."],
+  'an.mar.pt':          ["{{n}} points","{{n}} points","{{n}} puntos","{{n}} Punkte"],
+  'an.mar.actif.k':     ["Le plus \u00e9chang\u00e9","Most traded","El m\u00e1s negociado","Am meisten gehandelt"],
+  'an.mar.actif.d':     ["{{q}}\u00a0: le volume du jour vaut {{p}} de sa capitalisation. C'est ce qui change de mains, pas ce que \u00e7a vaut.","{{q}}: today's volume is worth {{p}} of its capitalisation. That is what changes hands, not what it is worth.","{{q}}: el volumen del d\u00eda vale {{p}} de su capitalizaci\u00f3n. Es lo que cambia de manos, no lo que vale.","{{q}}: das Tagesvolumen entspricht {{p}} seiner Kapitalisierung. Das ist, was den Besitzer wechselt, nicht was es wert ist."],
+  'an.mar.vous.k':      ["Vos lignes l\u00e0-dedans","Your lines in it","Sus l\u00edneas en todo esto","Ihre Positionen darin"],
+  'an.mar.vous.d':      ["{{n}} de vos lignes suivent une de ces cotations. Le reste de votre portefeuille ne bouge pas avec ce march\u00e9.","{{n}} of your lines follow one of these quotes. The rest of your portfolio does not move with this market.","{{n}} de sus l\u00edneas siguen una de estas cotizaciones. El resto de su cartera no se mueve con este mercado.","{{n}} Ihrer Positionen folgen einer dieser Notierungen. Der Rest Ihres Portfolios bewegt sich nicht mit diesem Markt."],
+  'an.calc.t':          ["Et vos lignes là-dedans","And your lines in it","Y sus líneas en todo esto","Und Ihre Positionen darin"],
   'an.calc.d':          ["Chaque ligne est mesurée sur ce qu'elle a de plus sûr\u00a0: douze mois de cours réels quand elle en a, vos relevés datés sinon. Aucune estimation, aucun modèle — et chaque ligne dit d'où elle parle.","Every line is measured on the soundest thing it has: twelve months of real prices where there are any, your dated statements otherwise. No estimate, no model — and every line says where it speaks from.","Cada línea se mide sobre lo más sólido que tiene: doce meses de cotizaciones reales cuando las hay, sus informes fechados si no. Sin estimaciones ni modelos — y cada línea dice desde dónde habla.","Jede Position wird an dem Belastbarsten gemessen, was sie hat: zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge. Keine Schätzung, kein Modell — und jede Position sagt, woher sie spricht."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
@@ -4291,8 +4316,8 @@ window.PC = (function(){
   'an.cor.inverse':     ["bougent en sens contraire","move in opposite directions","se mueven en sentido contrario","bewegen sich gegenläufig"],
   'an.cor.peu':         ["Il faut au moins deux lignes cotées, et leur historique chargé, pour mesurer ce qui bouge ensemble.","At least two listed lines are needed, with their history loaded, to measure what moves together.","Hacen falta al menos dos líneas cotizadas, con su historial cargado, para medir lo que se mueve junto.","Es braucht mindestens zwei notierte Positionen mit geladenem Verlauf, um zu messen, was sich zusammen bewegt."],
   'an.cor.n':           ["Mesuré sur {{n}} séances communes.","Measured on {{n}} shared sessions.","Medido sobre {{n}} sesiones comunes.","Gemessen an {{n}} gemeinsamen Handelstagen."],
-  'an.ia.t':            ["Le même, écrit en clair","The same, written up plainly","Lo mismo, redactado con claridad","Dasselbe, klar formuliert"],
-  'an.ia.d':            ["Une intelligence artificielle reprend ces mesures et celles du marché du jour, et explique les mécanismes. Elle ne recommande rien, et cette limite est vérifiée sur chaque texte avant qu'il vous parvienne.","An artificial intelligence takes these measurements and today's market, and explains the mechanisms. It recommends nothing, and that limit is checked on every text before it reaches you.","Una inteligencia artificial retoma estas medidas y el mercado del día, y explica los mecanismos. No recomienda nada, y ese límite se verifica en cada texto antes de llegarle.","Eine künstliche Intelligenz nimmt diese Messungen und den heutigen Markt und erklärt die Mechanismen. Sie empfiehlt nichts, und diese Grenze wird an jedem Text geprüft."],
+  'an.ia.t':            ["Le marché du jour, écrit en clair","Today's market, written up plainly","El mercado del día, redactado con claridad","Der heutige Markt, klar formuliert"],
+  'an.ia.d':            ["Une intelligence artificielle part des chiffres du marché ci-dessus, y ajoute vos lignes et les titres du jour, et explique les mécanismes. Elle ne recommande rien, et cette limite est vérifiée sur chaque texte avant qu'il vous parvienne.","An artificial intelligence starts from the market figures above, adds your lines and the day's headlines, and explains the mechanisms. It recommends nothing, and that limit is checked on every text before it reaches you.","Una inteligencia artificial parte de las cifras del mercado de arriba, añade sus líneas y los titulares del día, y explica los mecanismos. No recomienda nada, y ese límite se verifica en cada texto antes de llegarle.","Eine künstliche Intelligenz geht von den Marktzahlen oben aus, nimmt Ihre Positionen und die Schlagzeilen des Tages hinzu und erklärt die Mechanismen. Sie empfiehlt nichts, und diese Grenze wird an jedem Text geprüft."],
   'cmp.analyse':        ["L'analyse de vos lignes cotées : volatilité, pire recul, ce qui bouge ensemble", "Analysis of your listed lines: volatility, worst drawdown, what moves together", "El análisis de sus líneas cotizadas: volatilidad, peor caída, lo que se mueve junto", "Die Analyse Ihrer notierten Positionen: Volatilität, schlimmster Rückgang, was sich zusammen bewegt"],
   'cmp.analyseIA':      ["La même analyse commentée en clair par une IA", "The same analysis written up plainly by an AI", "El mismo análisis comentado con claridad por una IA", "Dieselbe Analyse, von einer KI klar kommentiert"],
   'cmp.lectures':       ["Les lectures : vos chiffres commentés en clair", "Readings: your figures explained plainly", "Las lecturas: sus cifras comentadas con claridad", "Die Lesarten: Ihre Zahlen klar kommentiert"],
@@ -6536,12 +6561,51 @@ window.PC = (function(){
             qui ne recommande jamais rien.</p>
         </div>
 
+        <!-- LES MARCHES D'ABORD. C'est ce qu'on vient voir : l'etat
+             du monde, avant l'etat de son propre portefeuille. Tout y
+             est calcule sur les cours deja servis par le fournisseur —
+             aucun appel de plus que la liste des marches, et chaque
+             chiffre porte la phrase qui dit comment il est obtenu. -->
+        <div class="an-bloc" id="an-marche">
+          <h3 class="an-titre mono" data-i18n="an.mar.t">Les marchés aujourd'hui</h3>
+          <p class="an-sous" id="an-mar-sous"></p>
+          <div class="marches__horizons an-mar__h" id="an-mar-horizons" role="group"
+               data-i18n-aria="m.horizon">
+            <button class="marches__h" type="button" data-h="24h" aria-pressed="true">24 h</button>
+            <button class="marches__h" type="button" data-h="7j" aria-pressed="false">7 j</button>
+            <button class="marches__h" type="button" data-h="30j" aria-pressed="false">30 j</button>
+          </div>
+          <p class="analyse__m" id="an-mar-mot" hidden></p>
+          <div class="an-mes" id="an-mar-mes"></div>
+        </div>
+
+        <div class="an-bloc" id="an-ia" hidden>
+          <h3 class="an-titre mono" data-i18n="an.ia.t">Le marché du jour, écrit en clair</h3>
+          <p class="an-sous" data-i18n="an.ia.d">Une intelligence artificielle part des chiffres
+            du marché ci-dessus, y ajoute vos lignes et les titres du jour, et explique les
+            mécanismes. Elle ne recommande rien, et cette limite est vérifiée sur chaque texte
+            avant qu'il vous parvienne.</p>
+          <div class="analyse__b">
+            <button class="pill" type="button" id="an-lancer" data-i18n="an.lancer">Analyser mes chiffres</button>
+          </div>
+          <p class="analyse__m" id="an-mot" hidden></p>
+          <div class="analyse__t" id="an-texte" hidden></div>
+          <p class="analyse__q" id="an-quand" hidden></p>
+          <!-- L'avertissement vit DANS le bloc de l'IA : il parle du
+               texte ecrit par la machine, pas des ecarts-types du bloc
+               au-dessus, qui n'ont besoin d'aucune reserve. -->
+          <p class="lectures__pied" id="an-pied" data-i18n="an.pied" hidden>Ce texte est écrit par une
+            machine et il peut se tromper. Il ne constitue pas un conseil en investissement, et
+            Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers.
+            Vérifiez tout chiffre avant de vous en servir.</p>
+        </div>
+
         <!-- L'ANALYSE CALCULEE. Rien d'ecrit par un modele ici : des
              ecarts-types, des maximums et des correlations, tires des
              douze mois de cours deja en memoire. Gratuite, instantanee,
              et elle ne peut pas se tromper. -->
         <div class="an-bloc" id="an-calc">
-          <h3 class="an-titre mono" data-i18n="an.calc.t">Ce que disent les cours</h3>
+          <h3 class="an-titre mono" data-i18n="an.calc.t">Et vos lignes là-dedans</h3>
           <p class="an-sous" data-i18n="an.calc.d">Chaque ligne est mesurée sur ce qu'elle a de plus
             sûr&nbsp;: douze mois de cours réels quand elle en a, vos relevés datés sinon. Aucune
             estimation, aucun modèle — et chaque ligne dit d'où elle parle.</p>
@@ -6583,25 +6647,6 @@ window.PC = (function(){
         </div>
 
         <!-- Le commentaire ecrit par l'IA : formule Max seulement. -->
-        <div class="an-bloc" id="an-ia" hidden>
-          <h3 class="an-titre mono" data-i18n="an.ia.t">Le même, écrit en clair</h3>
-          <p class="an-sous" data-i18n="an.ia.d">Une intelligence artificielle reprend ces mesures
-            et celles du marché du jour, et explique les mécanismes. Elle ne recommande rien, et
-            cette limite est vérifiée sur chaque texte avant qu'il vous parvienne.</p>
-          <div class="analyse__b">
-            <button class="pill" type="button" id="an-lancer" data-i18n="an.lancer">Analyser mes chiffres</button>
-          </div>
-          <p class="analyse__m" id="an-mot" hidden></p>
-          <div class="analyse__t" id="an-texte" hidden></div>
-          <p class="analyse__q" id="an-quand" hidden></p>
-          <!-- L'avertissement vit DANS le bloc de l'IA : il parle du
-               texte ecrit par la machine, pas des ecarts-types du bloc
-               au-dessus, qui n'ont besoin d'aucune reserve. -->
-          <p class="lectures__pied" id="an-pied" data-i18n="an.pied" hidden>Ce texte est écrit par une
-            machine et il peut se tromper. Il ne constitue pas un conseil en investissement, et
-            Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers.
-            Vérifiez tout chiffre avant de vous en servir.</p>
-        </div>
       </section>
     </div>
 
@@ -9019,6 +9064,7 @@ window.PC = (function(){
        une ligne a la fois, et chaque arrivee doit se voir. Le bloc de
        l'IA, lui, ne depend que du droit. */
     if (typeof anCalcule === 'function') anCalcule();
+    if (typeof anMarche === 'function'){ anMarche(); anMarcheCharge(); }
     const blocIA = document.getElementById('an-ia');
     if (blocIA) blocIA.hidden = !droit('analyseIA');
 
@@ -10839,6 +10885,174 @@ window.PC = (function(){
                  sousHaut >= 25 ? 'baisse' : '', barre);
   }
 
+  /* ============================================================
+     LES MARCHES AUJOURD'HUI
+     ------------------------------------------------------------
+     L'onglet s'ouvrait sur le portefeuille. Or ce qu'on vient voir
+     d'abord, c'est l'etat du monde : ses propres chiffres se lisent
+     APRES, et ils ne veulent pas dire la meme chose selon que le
+     marche entier a recule ou qu'une seule ligne a decroche.
+
+     Tout ce bloc se calcule sur la liste deja servie par le
+     fournisseur pour l'onglet des marches. Aucun appel de plus, aucune
+     estimation : chaque chiffre porte, sous lui, la phrase qui dit
+     comment il est obtenu. C'est la seule facon de parler d'un marche
+     sans faire de la voyance.
+
+     La moyenne est PONDEREE par la capitalisation. Une moyenne simple
+     donnerait a la douzieme ligne le meme poids qu'a la premiere, et
+     rendrait « le marche a monte » sur un mouvement qui n'a touche que
+     les plus petites.
+     ============================================================ */
+  let marLus = null, marQuand = 0, marEnVol = false, marH = '24h';
+
+  const MAR_H = {
+    '24h': ['price_change_percentage_24h_in_currency', 'price_change_percentage_24h'],
+    '7j':  ['price_change_percentage_7d_in_currency',  'price_change_percentage_7d'],
+    '30j': ['price_change_percentage_30d_in_currency', 'price_change_percentage_30d']
+  };
+  function marVar(c, h){
+    const k = MAR_H[h] || MAR_H['24h'];
+    for (let i = 0; i < k.length; i++){
+      const v = c[k[i]];
+      if (typeof v === 'number' && isFinite(v)) return v;
+    }
+    return null;
+  }
+
+  /* Cinq minutes de repos entre deux relevés : l'analyse se refait a
+     chaque rendu, et redemander la liste toutes les quarante-cinq
+     secondes bruleraient le quota du fournisseur pour reecrire les
+     memes six chiffres. */
+  function anMarcheCharge(){
+    if (marEnVol || !droit('analyse') || vueCourante !== 'analyse') return;
+    if (marLus && Date.now() - marQuand < 300000) return;
+    if (!window.PC_MARCHES || !PC_MARCHES.dix) return;
+    if (PC_MARCHES.occupe && PC_MARCHES.occupe()) return;
+    marEnVol = true;
+    PC_MARCHES.dix('crypto').then(function(l){
+      marEnVol = false;
+      if (Array.isArray(l) && l.length){ marLus = l; marQuand = Date.now(); }
+      else if (!marLus) marLus = [];
+      anMarche();
+    }, function(){
+      marEnVol = false;
+      if (!marLus) marLus = [];
+      anMarche();
+    });
+  }
+
+  /* Le calcul, separe de l'affichage : l'ecran et le message envoye a
+     l'IA doivent porter EXACTEMENT les memes chiffres. Deux calculs
+     paralleles finiraient par diverger, et le texte contredirait le
+     bloc qui le surmonte. */
+  function marResume(vus, h){
+    let poids = 0, somme = 0, hausses = 0, haut = null, bas = null, actif = null;
+    vus.forEach(function(c){
+      const v = marVar(c, h);
+      if (v === null) return;
+      const cap = (typeof c.market_cap === 'number' && c.market_cap > 0) ? c.market_cap : 0;
+      poids += cap; somme += v * cap;
+      if (v > 0) hausses++;
+      if (!haut || v > haut.v) haut = {v:v, n:c.name};
+      if (!bas || v < bas.v) bas = {v:v, n:c.name};
+      if (cap > 0 && typeof c.total_volume === 'number' && c.total_volume > 0){
+        const r = c.total_volume / cap;
+        if (!actif || r > actif.r) actif = {r:r, n:c.name};
+      }
+    });
+    return {poids:poids, hausses:hausses, haut:haut, bas:bas, actif:actif,
+            n:vus.length, ensemble: poids > 0 ? somme / poids : null};
+  }
+
+  function anMarche(){
+    const bloc = document.getElementById('an-marche');
+    const hote = document.getElementById('an-mar-mes');
+    const sous = document.getElementById('an-mar-sous');
+    const mot  = document.getElementById('an-mar-mot');
+    if (!bloc || !hote) return;
+    if (!droit('analyse')){ bloc.hidden = true; return; }
+    bloc.hidden = false;
+
+    const groupe = document.getElementById('an-mar-horizons');
+    if (groupe && !groupe.dataset.branche){
+      groupe.dataset.branche = '1';
+      groupe.addEventListener('click', function(e){
+        const b = e.target.closest ? e.target.closest('[data-h]') : null;
+        if (!b) return;
+        marH = b.getAttribute('data-h');
+        groupe.querySelectorAll('[data-h]').forEach(function(x){
+          x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+        });
+        /* Changer de periode ne redemande RIEN : les trois variations
+           sont dans la meme reponse. */
+        anMarche();
+      });
+    }
+
+    if (!marLus){
+      if (mot){ mot.hidden = false; mot.dataset.ton = 'attente'; mot.textContent = PC.t('an.mar.charge'); }
+      hote.innerHTML = '';
+      return;
+    }
+    const vus = marLus.filter(function(c){ return marVar(c, marH) !== null; });
+    if (!vus.length){
+      if (mot){ mot.hidden = false; mot.dataset.ton = ''; mot.textContent = PC.t('an.mar.ko'); }
+      hote.innerHTML = '';
+      return;
+    }
+    if (mot) mot.hidden = true;
+    if (sous){
+      let h = '';
+      try { h = new Date(marQuand).toLocaleTimeString(PC.locale(), {hour:'2-digit', minute:'2-digit'}); }
+      catch (e){ h = ''; }
+      sous.textContent = PC.t('an.mar.d', {h:h});
+    }
+
+    const R = marResume(vus, marH);
+    const poids = R.poids, hausses = R.hausses, haut = R.haut, bas = R.bas, actif = R.actif;
+
+    let m = '';
+    if (poids > 0){
+      const ens = R.ensemble;
+      m += anMesure('an.mar.ens', PC.pourcent(ens, 1),
+                    echap(PC.t('an.mar.ens.d', {n:String(vus.length)})),
+                    ens < 0 ? 'baisse' : 'hausse');
+    }
+    m += anMesure('an.mar.sens', hausses + ' / ' + vus.length,
+                  echap(PC.t('an.mar.sens.d', {h:String(hausses), n:String(vus.length)})),
+                  '', anBarre(hausses / vus.length * 100));
+    if (haut){
+      m += anMesure('an.mar.haut', PC.pourcent(haut.v, 1),
+                    echap(PC.t('an.mar.qui.d', {q:haut.n})), haut.v < 0 ? 'baisse' : 'hausse');
+    }
+    if (bas){
+      m += anMesure('an.mar.bas', PC.pourcent(bas.v, 1),
+                    echap(PC.t('an.mar.qui.d', {q:bas.n})), bas.v > 0 ? 'hausse' : 'baisse');
+    }
+    if (haut && bas){
+      /* Un ecart est une amplitude : il ne se signe pas. Et il se
+         compte en POINTS, pas en pourcent — un pourcentage de
+         pourcentage ne veut rien dire. */
+      m += anMesure('an.mar.ecart', PC.t('an.mar.pt', {n:PC.nombre(haut.v - bas.v, 1)}),
+                    echap(PC.t('an.mar.ecart.d')));
+    }
+    if (actif){
+      m += anMesure('an.mar.actif', echap(actif.n),
+                    echap(PC.t('an.mar.actif.d', {q:actif.n, p:anAmpleur(actif.r * 100, 1)})));
+    }
+    /* Combien de VOS lignes suivent une de ces cotations. C'est ce qui
+       relie le bloc du dessus a celui du dessous : sans lui, on passe
+       d'un marche a un portefeuille sans savoir ce qui les touche. */
+    const miennes = actifs.filter(function(a){
+      const c = a.sym && String(a.sym).trim().toLowerCase();
+      return c && vus.some(function(x){ return String(x.id).toLowerCase() === c; });
+    }).length;
+    m += anMesure('an.mar.vous', String(miennes),
+                  echap(PC.t('an.mar.vous.d', {n:String(miennes)})));
+    hote.innerHTML = m;
+  }
+
   function anCalcule(){
     const bloc = document.getElementById('an-calc');
     const hote = document.getElementById('an-calc-lignes');
@@ -11066,9 +11280,14 @@ window.PC = (function(){
     base.correlations.sort(function(x, y){ return Math.abs(+y.c) - Math.abs(+x.c); });
     base.correlations = base.correlations.slice(0, 10);
 
-    const cours = (window.PC_MARCHES && PC_MARCHES.dix)
-      ? PC_MARCHES.dix('crypto').catch(function(){ return []; })
-      : Promise.resolve([]);
+    /* La liste est deja relevee pour le bloc des marches : la
+       redemander couterait un appel et, pire, pourrait rendre des
+       chiffres legerement differents de ceux affiches au-dessus du
+       texte que l'IA va ecrire. */
+    const cours = (marLus && marLus.length) ? Promise.resolve(marLus)
+      : (window.PC_MARCHES && PC_MARCHES.dix)
+        ? PC_MARCHES.dix('crypto').catch(function(){ return []; })
+        : Promise.resolve([]);
     const presse = fetch('/api/actu', {credentials:'omit'})
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(d){
@@ -11090,6 +11309,22 @@ window.PC = (function(){
           j30: nb(c.price_change_percentage_30d_in_currency)
         };
       }).filter(function(m){ return m.nom; });
+      /* Le resume AFFICHE, envoye tel quel. La consigne demande au
+         modele de reprendre ces chiffres plutot que d'en recalculer
+         d'autres : deux valeurs differentes pour « le marche » sur un
+         meme ecran valent moins que pas de texte du tout. */
+      const vus = lus.filter(function(c){ return marVar(c, marH) !== null; });
+      if (vus.length){
+        const R = marResume(vus, marH);
+        base.marcheResume = {
+          horizon: marH,
+          lignes: String(R.n),
+          ensemble: R.ensemble === null ? '' : R.ensemble.toFixed(1),
+          hausses: String(R.hausses),
+          haut: R.haut ? {nom:R.haut.n, v:R.haut.v.toFixed(1)} : null,
+          bas:  R.bas  ? {nom:R.bas.n,  v:R.bas.v.toFixed(1)}  : null
+        };
+      }
       base.presse = r[1] || [];
       return base;
     });
