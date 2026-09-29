@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pierrel &amp; Co — affiche</title>
+<style>
+:root{--paper:#F2F0E9;--ink:#131310;--ink-2:#56544C;--rule:#BDB7A3;--accent:#4B21E8;--gain:#0A8A4A}
+*{box-sizing:border-box;margin:0}
+html,body{margin:0;background:#ddd;overflow:hidden}
+.affiche{width:1080px;height:1350px;background:var(--paper);color:var(--ink);padding:72px 84px;display:flex;flex-direction:column;justify-content:space-between;font-family:'Archivo','Helvetica Neue',Arial,sans-serif;position:relative;overflow:hidden}
+.affiche::after{content:"";position:absolute;right:-220px;top:-220px;width:620px;height:620px;border-radius:50%;background:var(--accent);opacity:.09}
+.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;letter-spacing:.19em;text-transform:uppercase;font-size:22px;color:var(--ink-2)}
+h1{font-family:'Archivo Black','Arial Black',Impact,sans-serif;font-weight:900;font-size:132px;line-height:.9;letter-spacing:-.05em}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{font-size:34px;line-height:1.35;max-width:820px;margin-top:32px}
+ul{list-style:none;padding:0;border-top:2px solid var(--ink)}
+li{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--rule);font-size:32px}
+li b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:500;font-size:26px;color:var(--accent)}
+.bas{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.cta{background:var(--accent);color:#fff;padding:26px 40px;font-size:32px;font-weight:700;white-space:nowrap}
+.note{font-size:20px;color:var(--ink-2);max-width:420px;line-height:1.4;text-align:right}
+</style></head><body>
+<div class="affiche">
+ <div>
+  <p class="mono">Pierrel &amp; Co · portefeuille</p>
+  <h1 style="margin-top:40px">Votre argent,<br>enfin <em>lisible.</em></h1>
+  <p class="lead">Livret, assurance-vie, PEA, immobilier, bitcoin. Vous saisissez, la page calcule ce que vous avez mis, ce que ça vaut et ce que ça rapporte.</p>
+ </div>
+ <ul>
+  <li>Répartition et performance dans le temps <b>▲</b></li>
+  <li>Concentration, liquidité, poids de chaque ligne <b>14</b></li>
+  <li>Loyers, dividendes, intérêts <b>+</b></li>
+  <li>Plusieurs portefeuilles : perso, société, famille <b>∞</b></li>
+  <li>S’installe sur le téléphone, marche hors ligne <b>◱</b></li>
+ </ul>
+ <div class="bas">
+  <div class="cta">Ouvrir mon portefeuille →</div>
+  <p class="note">Un outil de suivi, pas un conseil : il ne recommande aucun placement.</p>
+ </div>
+</div>
+</body></html>
