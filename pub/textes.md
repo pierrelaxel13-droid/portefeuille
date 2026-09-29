@@ -39,4 +39,10 @@ Pour la refaire : `node rendre-video.mjs video.mp4` (Chromium + ffmpeg + Node 22
 | `video-15s.mp4` | 1080×1920 | 15 s | Stories courtes, publicité (valeur, tableau de bord, 14 indicateurs, final) |
 | `video-16x9.mp4` | 1920×1080 | 28 s | YouTube, LinkedIn, site |
 
-Régénérer : `node rendre-video.mjs sortie.mp4 [--cut=15] [--fmt=16x9]`
+Les trois vidéos ont une bande-son synthétisée (`son.py`, sans échantillon ni droits à gérer) et un flou de mouvement.
+
+Régénérer :
+```
+python3 son.py son.wav [--cut=15]
+node rendre-video.mjs sortie.mp4 [--cut=15] [--fmt=16x9] [--blur=4] [--audio=son.wav]
+```

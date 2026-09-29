@@ -29,7 +29,7 @@ const PART=Array.from({length:70},()=>({x:rnd()*W,y:rnd()*H,v:20+rnd()*60,r:1+rn
 
 function T(s,x,y,o={}){const{size=48,font=BODY,weight=400,color=C.ink,align='left',ls=0,alpha=1}=o;
  ctx.save();ctx.globalAlpha*=alpha;ctx.font=`${weight} ${size}px ${font}`;ctx.letterSpacing=ls+'px';
- ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillStyle=color;ctx.fillText(s,x,y);ctx.restore()}
+ ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillStyle=o.fill||color;ctx.fillText(s,x,y);ctx.restore()}
 function H1(s,x,y,size,color,o={}){T(s,x,y,{size,font:HEAD,weight:900,color,ls:-size*.045,...o})}
 function rise(s,x,y,p,o){const size=o.size;ctx.save();ctx.beginPath();ctx.rect(0,y-size*.98,W,size*1.3);ctx.clip();
  T(s,x,y+(1-eo5(p))*size*1.15,o);ctx.restore()}
@@ -47,8 +47,17 @@ function background(t){
  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
  g=ctx.createRadialGradient(W-gx,H-gy,0,W-gx,H-gy,800);g.addColorStop(0,'rgba(42,169,107,.10)');g.addColorStop(1,'rgba(42,169,107,0)');
  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- ctx.strokeStyle='rgba(244,242,232,.05)';ctx.lineWidth=2;const o=(t*22)%90;
- ctx.beginPath();for(let x=-o;x<W;x+=90){ctx.moveTo(x,0);ctx.lineTo(x,H)}for(let y=-o;y<H;y+=90){ctx.moveTo(0,y);ctx.lineTo(W,y)}ctx.stroke();
+ const hz=H*(LS?.6:.68);
+ ctx.save();ctx.beginPath();ctx.rect(0,0,W,hz);ctx.clip();ctx.strokeStyle='rgba(244,242,232,.05)';ctx.lineWidth=2;const o=(t*22)%90;
+ ctx.beginPath();for(let x=-o;x<W;x+=90){ctx.moveTo(x,0);ctx.lineTo(x,H)}for(let y=-o;y<H;y+=90){ctx.moveTo(0,y);ctx.lineTo(W,y)}ctx.stroke();ctx.restore();
+ ctx.save();ctx.beginPath();ctx.rect(0,hz,W,H-hz);ctx.clip();
+ const fg=ctx.createLinearGradient(0,hz,0,H);fg.addColorStop(0,'rgba(139,116,242,0)');fg.addColorStop(1,'rgba(139,116,242,.34)');
+ ctx.strokeStyle=fg;ctx.lineWidth=2.5;ctx.beginPath();
+ for(let i=-16;i<=16;i++){ctx.moveTo(W/2+i*36,hz);ctx.lineTo(W/2+i*(LS?300:230),H)}
+ for(let k=0;k<14;k++){const z=(k+(t*.7)%1)/14,y=hz+(H-hz)*z*z;ctx.moveTo(0,y);ctx.lineTo(W,y)}
+ ctx.stroke();
+ const hg=ctx.createLinearGradient(0,hz-60,0,hz+60);hg.addColorStop(0,'rgba(139,116,242,0)');hg.addColorStop(.5,'rgba(139,116,242,.22)');hg.addColorStop(1,'rgba(139,116,242,0)');
+ ctx.fillStyle=hg;ctx.fillRect(0,hz-60,W,120);ctx.restore();
  PART.forEach(p=>{const y=((p.y-t*p.v)%H+H)%H;ctx.globalAlpha=p.a;ctx.fillStyle=C.ink;ctx.beginPath();ctx.arc(p.x,y,p.r,0,7);ctx.fill()});
  ctx.globalAlpha=1}
 
@@ -79,6 +88,12 @@ function chip(txt,cx,cy,color,size,p){if(p<=0)return;ctx.save();ctx.translate(cx
  ctx.font=`500 ${size}px ${MONO}`;ctx.letterSpacing='1px';const w=ctx.measureText(txt).width+size*2;
  rr(-w/2,-size*.95,w,size*1.9,size);ctx.fillStyle=color+'26';ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
  T(txt,0,size*.32,{size,font:MONO,weight:500,color,align:'center',ls:1});ctx.restore()}
+function burst(t,t0,cx,cy,n,seed,sz){const dt=t-t0;if(dt<0||dt>2)return;let q=seed;const r=()=>{q=(q*16807)%2147483647;return q/2147483647};
+ ctx.save();ctx.globalCompositeOperation='lighter';
+ for(let i=0;i<n;i++){const a=r()*6.283,v=250+r()*800,col=[C.acc,C.gain,'#E0A63A','#F4F2E8','#5FB3D9'][i%5],rot=r()*6,k=2.2;
+  const d=v*(1-Math.exp(-k*dt))/k,x=cx+Math.cos(a)*d,y=cy+Math.sin(a)*d+300*dt*dt;
+  ctx.globalAlpha=clamp(1-dt/1.7)*.95;ctx.fillStyle=col;ctx.save();ctx.translate(x,y);ctx.rotate(rot+dt*7);ctx.fillRect(-sz/2,-sz/4,sz,sz/2);ctx.restore()}
+ ctx.restore()}
 function cam(z,cx,cy,f){ctx.save();ctx.translate(cx,cy);ctx.scale(z,z);ctx.translate(-cx,-cy);f();ctx.restore()}
 
 /* ---------- A : la valeur totale ---------- */
@@ -190,8 +205,10 @@ function sceneF(t){
  for(let i=0;i<3;i++){const p=seg(t,.1+i*.25,1.6+i*.25);ctx.strokeStyle=`rgba(139,116,242,${.5*(1-p)})`;ctx.lineWidth=4;ctx.beginPath();ctx.arc(W/2,cy,60+eo(p)*800,0,7);ctx.stroke()}
  cam(1+.03*seg(t,0,4.6),W/2,cy,()=>{
   rise('Votre argent,',W/2,Y[0],seg(t,.2,.9),{size:S,font:HEAD,weight:900,color:C.ink,align:'center',ls:-S*.046});
-  rise('enfin lisible.',W/2,Y[1],seg(t,.45,1.15),{size:S,font:HEAD,weight:900,color:C.acc,align:'center',ls:-S*.046});
-  if(t>1.15){ctx.save();glow(C.acc,70*seg(t,1.15,1.9),()=>T('enfin lisible.',W/2,Y[1],{size:S,font:HEAD,weight:900,color:C.acc,align:'center',ls:-S*.046}));ctx.restore()}
+  const sx=W/2-700+(t-1.2)*1700,sh=ctx.createLinearGradient(sx-260,0,sx+260,0);sh.addColorStop(0,C.acc);sh.addColorStop(.5,'#fff');sh.addColorStop(1,C.acc);
+  const fillT=t>1.2&&t<2.9?sh:C.acc;
+  rise('enfin lisible.',W/2,Y[1],seg(t,.45,1.15),{size:S,font:HEAD,weight:900,color:C.acc,fill:fillT,align:'center',ls:-S*.046});
+  if(t>1.15){ctx.save();glow(C.acc,70*seg(t,1.15,1.9),()=>T('enfin lisible.',W/2,Y[1],{size:S,font:HEAD,weight:900,color:C.acc,fill:fillT,align:'center',ls:-S*.046}));ctx.restore()}
   T('Sachez ce que vous détenez, et pourquoi.',W/2,Y[2],{size:40,color:C.ink2,align:'center',alpha:seg(t,1.3,1.9)})});
  const cp=seg(t,1.8,2.4);if(cp>0){const pulse=1+.025*Math.sin(t*5);ctx.save();ctx.translate(W/2,Y[3]);ctx.scale(eb(cp)*pulse,eb(cp)*pulse);ctx.globalAlpha=clamp(cp*3);
   glow(C.acc2,50,()=>{rr(-400,-62,800,124,20);ctx.fillStyle=C.acc2;ctx.fill()});
@@ -203,10 +220,21 @@ function sceneF(t){
 const SC=CUT
  ?[[0,sceneA,1.3],[2.9,sceneC,1.1],[8.5,sceneD,1.6],[11.2,sceneF,1.15]]
  :[[0,sceneA,1],[3.8,sceneB,1],[8.4,sceneC,1],[14.6,sceneD,1],[19.4,sceneE,1],[23.4,sceneF,1]];
+/* Temps « réels » des chocs : bords de scène, pop de la pastille, impact du titre final. */
+const rt=(i,lt)=>SC[i][0]+lt/SC[i][2];
+const IMP=SC.slice(1).map(s=>[s[0],16]);
+IMP.push([rt(0,2.4),9],[rt(SC.length-1,1.0),28]);
+const BURSTS=[[rt(0,2.4),W/2,LS?520:880,90,11,8],[rt(SC.length-1,1.0),W/2,LS?520:850,150,13,10]];
 function draw(t){
  t=clamp(t,0,DUR);background(t);
+ let sx=0,sy=0,fl=0;
+ IMP.forEach(([ti,a])=>{const d=t-ti;if(d<0||d>1.2)return;const e=Math.exp(-9*d);sx+=a*e*Math.sin(d*62+ti*13);sy+=a*e*Math.cos(d*53+ti*7);fl+=a/28*.16*Math.exp(-11*d)});
+ ctx.save();ctx.translate(sx,sy);
  let i=SC.length-1;while(SC[i][0]>t)i--;
  SC[i][1]((t-SC[i][0])*SC[i][2]);
+ ctx.restore();
+ BURSTS.forEach(b=>burst(t,...b));
+ if(fl>.004){ctx.fillStyle=`rgba(210,200,255,${Math.min(.3,fl)})`;ctx.fillRect(0,0,W,H)}
  SC.slice(1).forEach(s=>wipe(t,s[0]));
  ctx.fillStyle=C.acc;ctx.fillRect(0,H-8,W*t/DUR,8)}
 
