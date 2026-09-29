@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260928.2001";</script>
+<script>window.PC_VERSION = "260929.1318";</script>
 </head>
 <body>
 
@@ -1862,7 +1862,26 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
    seule qui reste utilisable a une main. */
 .an-choix{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 18px;}
 .an-choix__k{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
-.an-choix__s{max-width:min(100%, 320px); flex:1 1 200px;}
+/* Le champ et sa liste : la liste se pose PAR-DESSUS ce qui suit,
+   sinon chaque frappe pousse l'analyse vers le bas. */
+.an-q{position:relative; flex:1 1 260px; max-width:min(100%, 380px);}
+.an-q__c{width:100%; max-width:none; padding-right:12px;}
+.an-q__s{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:var(--z-sticky);
+  margin-top:0; background:var(--paper); box-shadow:0 18px 40px -22px var(--shadow);
+  max-height:min(56vh, 420px); overflow:auto;
+}
+/* Ce qui est analysé, et le moyen de revenir a tout. */
+.an-sujet{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 12px;
+  margin:0 0 16px; font-size:12.5px; color:var(--ink-3);
+}
+.an-sujet b{color:var(--ink); font-weight:600;}
+.an-sujet button{
+  background:none; border:none; padding:0; cursor:pointer; color:var(--accent);
+  font-family:'IBM Plex Mono', monospace; font-size:12px;
+  text-decoration:underline; text-underline-offset:3px;
+}
 /* D'ou vient la suite de valeurs. Ecrit a cote du nom, parce qu'une
    mesure ne veut pas dire la meme chose selon qu'elle porte sur des
    cours reels ou sur vos relevés. */
@@ -4223,8 +4242,20 @@ window.PC = (function(){
   'an.calc.d':          ["Chaque ligne est mesurée sur ce qu'elle a de plus sûr\u00a0: douze mois de cours réels quand elle en a, vos relevés datés sinon. Aucune estimation, aucun modèle — et chaque ligne dit d'où elle parle.","Every line is measured on the soundest thing it has: twelve months of real prices where there are any, your dated statements otherwise. No estimate, no model — and every line says where it speaks from.","Cada línea se mide sobre lo más sólido que tiene: doce meses de cotizaciones reales cuando las hay, sus informes fechados si no. Sin estimaciones ni modelos — y cada línea dice desde dónde habla.","Jede Position wird an dem Belastbarsten gemessen, was sie hat: zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge. Keine Schätzung, kein Modell — und jede Position sagt, woher sie spricht."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
-  'an.choix':           ["Quelle ligne analyser\u00a0?","Which line to analyse?","\u00bfQu\u00e9 l\u00ednea analizar?","Welche Position analysieren?"],
-  'an.choix.tout':      ["Toutes les lignes","All lines","Todas las l\u00edneas","Alle Positionen"],
+  'an.choix':           ["Quoi analyser\u00a0?","What to analyse?","\u00bfQu\u00e9 analizar?","Was analysieren?"],
+  'an.choix.tout':      ["Toutes vos lignes","All your lines","Todas sus l\u00edneas","Alle Ihre Positionen"],
+  'an.cherche.t':       ["Une de vos lignes, ou n'importe quelle crypto ou action","One of your lines, or any crypto or share","Una de sus l\u00edneas, o cualquier cripto o acci\u00f3n","Eine Ihrer Positionen, oder eine beliebige Krypto oder Aktie"],
+  'an.cherche.vos':     ["Vos lignes","Your lines","Sus l\u00edneas","Ihre Positionen"],
+  'an.cherche.marche':  ["Sur les march\u00e9s","On the markets","En los mercados","An den M\u00e4rkten"],
+  'an.cherche.rien':    ["Rien trouv\u00e9 \u00e0 ce nom.","Nothing found under that name.","No se ha encontrado nada con ese nombre.","Unter diesem Namen nichts gefunden."],
+  'an.sujet.tout':      ["Voir toutes vos lignes","See all your lines","Ver todas sus l\u00edneas","Alle Ihre Positionen ansehen"],
+  'an.sujet.sur':       ["une de vos {{n}} lignes","one of your {{n}} lines","una de sus {{n}} l\u00edneas","eine Ihrer {{n}} Positionen"],
+  'an.src.marche':      ["cours quotidiens du march\u00e9","daily market prices","cotizaciones diarias del mercado","t\u00e4gliche Marktkurse"],
+  'an.src.releve':      ["vos relev\u00e9s dat\u00e9s","your dated statements","sus informes fechados","Ihre datierten Ausz\u00fcge"],
+  'an.src.rien':        ["pas encore de quoi mesurer","nothing to measure yet","a\u00fan nada que medir","noch nichts zu messen"],
+  'an.ext.charge':      ["On charge douze mois de cours pour {{n}}\u2026","Loading twelve months of prices for {{n}}\u2026","Cargando doce meses de cotizaciones de {{n}}\u2026","Zw\u00f6lf Monate Kurse f\u00fcr {{n}} werden geladen\u2026"],
+  'an.ext.vain':        ["Le fournisseur ne sert pas d'historique pour {{n}}. Rien n'a \u00e9t\u00e9 mesur\u00e9, et rien n'a \u00e9t\u00e9 devin\u00e9.","The provider serves no history for {{n}}. Nothing was measured, and nothing was guessed.","El proveedor no sirve historial de {{n}}. No se ha medido nada, y no se ha adivinado nada.","Der Anbieter liefert keinen Verlauf f\u00fcr {{n}}. Es wurde nichts gemessen und nichts geraten."],
+  'an.ext.hors':        ["{{n}} n'est pas dans votre portefeuille\u00a0: ce sont les mesures du cours, pas les v\u00f4tres. Ni montant, ni part, ni corr\u00e9lation avec vos lignes.","{{n}} is not in your portfolio: these are the price's measurements, not yours. No amount, no share, no correlation with your lines.","{{n}} no est\u00e1 en su cartera: son las medidas de la cotizaci\u00f3n, no las suyas. Ni importe, ni parte, ni correlaci\u00f3n con sus l\u00edneas.","{{n}} liegt nicht in Ihrem Portfolio: das sind die Messungen des Kurses, nicht Ihre. Kein Betrag, kein Anteil, keine Korrelation mit Ihren Positionen."],
   'an.n.releves':       ["{{n}} relev\u00e9s lus","{{n}} statements read","{{n}} informes le\u00eddos","{{n}} Ausz\u00fcge gelesen"],
   'an.src.taux':        ["valeur calcul\u00e9e au taux garanti","value computed from the guaranteed rate","valor calculado al tipo garantizado","Wert aus dem garantierten Zins berechnet"],
   'an.rel.note':        ["Mesur\u00e9 sur vos relev\u00e9s, pas sur des cours quotidiens. Un recul et une position se lisent sur n'importe quelle suite de valeurs\u00a0; une amplitude annuelle, non — elle se calcule sur des s\u00e9ances, et il n'y en a pas ici.","Measured on your statements, not on daily prices. A drawdown and a position can be read on any series of values; an annual amplitude cannot — it is computed on trading sessions, and there are none here.","Medido sobre sus informes, no sobre cotizaciones diarias. Una ca\u00edda y una posici\u00f3n se leen en cualquier serie de valores; una amplitud anual no — se calcula sobre sesiones, y aqu\u00ed no las hay.","Gemessen an Ihren Ausz\u00fcgen, nicht an Tageskursen. Ein R\u00fcckgang und eine Position lassen sich an jeder Wertreihe ablesen; eine Jahresamplitude nicht — sie wird auf Handelstagen berechnet, und die gibt es hier nicht."],
@@ -6518,9 +6549,20 @@ window.PC = (function(){
                lignes et plus du tout a douze — et sur telephone, ou
                chaque ligne fait une courbe et cinq mesures, c'etait
                une page de defilement par actif. -->
+          <!-- UN SEUL SUJET A LA FOIS, ET ON LE CHERCHE.
+               Le menu deroulant ne savait proposer que ce qu'on possede,
+               et afficher les neuf lignes a la suite redonnait la page de
+               defilement qu'on venait de retirer ailleurs. Un champ de
+               recherche fait les deux : vide, il liste vos lignes ; rempli,
+               il va chercher n'importe quelle crypto ou action chez le
+               fournisseur de cours et en mesure les douze mois. -->
           <div class="an-choix" id="an-choix-boite" hidden>
-            <label class="an-choix__k mono" for="an-choix" data-i18n="an.choix">Quelle ligne analyser&nbsp;?</label>
-            <select class="reglage an-choix__s" id="an-choix"></select>
+            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Quoi analyser&nbsp;?</label>
+            <div class="an-q">
+              <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
+                     spellcheck="false" data-i18n-titre="an.cherche.t">
+              <div class="sug an-q__s" id="an-sug" hidden></div>
+            </div>
           </div>
           <p class="analyse__m" id="an-calc-mot" hidden></p>
           <div class="an-lignes" id="an-calc-lignes"></div>
@@ -10491,55 +10533,205 @@ window.PC = (function(){
       '<p class="an-m__d">' + detail + '</p></div>';
   }
 
-  /* Le selecteur. Il se refait a chaque rendu parce que les lignes
-     bougent, mais le choix, lui, survit : le reconstruire en
-     reinitialisant la selection ramenerait a « toutes » toutes les
-     quarante-cinq secondes, pendant qu'on lit. */
-  let anChoix = '';
-  /* Le defaut n'est pose QU'UNE FOIS. Sans ce temoin, le telephone
+  /* ============================================================
+     CHERCHER CE QU'ON VEUT ANALYSER
+     ------------------------------------------------------------
+     Un menu deroulant ne sait proposer que ce qu'on possede, et
+     empiler les neuf lignes a la suite redonnait la page de
+     defilement qu'on venait de retirer de l'accueil. Un champ de
+     recherche fait les deux : vide, il liste vos lignes ; rempli, il
+     interroge le fournisseur de cours et permet de mesurer une
+     crypto ou une action que vous n'avez PAS.
+
+     Un seul sujet a la fois, donc, et une facon de le designer.
+
+     Ce qui vient de l'exterieur est marque comme tel, et le reste :
+     ce sont les mesures d'un cours, pas les votres. Il n'y a ni
+     montant, ni part du portefeuille, ni correlation avec vos lignes
+     — les afficher reviendrait a faire passer une recherche pour une
+     position.
+     ============================================================ */
+  let anChoix = '';        /* l'identifiant d'une de vos lignes */
+  let anExterne = null;    /* {code, nom, vain} cherche sur le marche */
+  let anCharge = '';       /* le code dont la serie est en route */
+  /* Le defaut n'est pose QU'UNE FOIS. Sans ce temoin, l'ecran
      reviendrait a sa ligne par defaut a chaque rendu — donc toutes les
-     quarante-cinq secondes — et « toutes les lignes » y serait
+     quarante-cinq secondes — et « toutes vos lignes » serait
      inchoisissable. */
   let anChoixPose = false;
-  function anPoseChoix(lignes){
-    const boite = document.getElementById('an-choix-boite');
-    const sel = document.getElementById('an-choix');
-    if (!boite || !sel) return;
-    /* A une seule ligne, choisir n'a pas de sens. */
-    if (!sel.dataset.branche){
-      sel.dataset.branche = '1';
-      sel.addEventListener('change', function(){
-        anChoix = sel.value || '';
-        anCalcule();
+
+  function anSujet(v){
+    anChoix = v && v.id ? v.id : '';
+    anExterne = v && v.code ? {code:String(v.code).toLowerCase(), nom:v.nom || v.code} : null;
+    anChoixPose = true;
+    const q = document.getElementById('an-q');
+    if (q) q.value = '';
+    anFermeSug();
+    anCalcule();
+    if (anExterne) anChargeExterne();
+  }
+
+  /* Douze mois de cours pour une ligne qu'on ne possede pas. Le module
+     des marches garde ses points quelques heures : chercher deux fois
+     la meme crypto ne coute qu'un appel. */
+  function anChargeExterne(){
+    const c = anExterne && anExterne.code;
+    if (!c || SERIES[c] || anCharge === c) return;
+    if (!window.PC_MARCHES || !PC_MARCHES.serie) return;
+    anCharge = c;
+    PC_MARCHES.serie(c).then(function(pts){
+      anCharge = '';
+      if (pts && pts.length > 1) SERIES[c] = pts;
+      else if (anExterne && anExterne.code === c) anExterne.vain = true;
+      anCalcule();
+    }, function(){
+      anCharge = '';
+      if (anExterne && anExterne.code === c) anExterne.vain = true;
+      anCalcule();
+    });
+  }
+
+  function anFermeSug(){
+    const h = document.getElementById('an-sug');
+    if (h){ h.hidden = true; h.innerHTML = ''; }
+  }
+
+  /* Les propositions : VOS lignes d'abord, instantanees et gratuites,
+     puis le marche. L'ordre n'est pas cosmetique — ce qu'on possede est
+     presque toujours ce qu'on cherche, et l'afficher sans attendre le
+     reseau evite de taper dans le vide. */
+  let anJeton = 0;
+  function anPeintSug(q, lignes){
+    const h = document.getElementById('an-sug');
+    if (!h) return;
+    const t = String(q || '').trim().toLowerCase();
+    const sans = function(x){
+      return String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    };
+    const vus = lignes.filter(function(L){ return !t || sans(L.nom).indexOf(sans(t)) !== -1; });
+    const jeton = ++anJeton;
+
+    const tete = (t ? '' :
+      '<button class="sug__i" type="button" data-an-tout="1">' +
+        '<span class="sug__n">' + echap(PC.t('an.choix.tout')) + '</span></button>');
+    const mien = vus.length
+      ? '<div class="sug__t">' + echap(PC.t('an.cherche.vos')) + '</div>' +
+        vus.map(function(L, i){
+          return '<button class="sug__i" type="button" data-an-mien="' + i + '">' +
+            '<span class="sug__n">' + echap(L.nom) + '</span>' +
+            '<span class="sug__m">' + echap(PC.t('an.src.' + L.src) || L.src) + '</span></button>';
+        }).join('')
+      : '';
+    h.hidden = false;
+    h.innerHTML = tete + mien +
+      (t.length >= 2 ? '<p class="sug__mot">' + echap(PC.t('e.sug.cherche')) + '</p>' : '');
+    anBrancheSug(vus, []);
+
+    if (t.length < 2) return;
+    chercheTitres(t).then(function(r){
+      const g = document.getElementById('an-sug');
+      if (!g || jeton !== anJeton) return;
+      const loin = (r.liste || []).filter(function(x){
+        /* Ce qu'on possede deja est propose au-dessus : le reproposer
+           ferait deux entrees pour la meme chose, dont une qui perdrait
+           vos montants. */
+        return !lignes.some(function(L){ return L.code && L.code === String(x.code).toLowerCase(); });
       });
+      g.innerHTML = tete + mien + (loin.length
+        ? '<div class="sug__t">' + echap(PC.t('an.cherche.marche')) + '</div>' +
+          loin.map(function(x, i){
+            return '<button class="sug__i" type="button" data-an-loin="' + i + '">' +
+              '<span class="sug__n">' + echap(x.nom) + '</span>' +
+              '<span class="sug__m">' + echap(x.code) +
+                (x.place ? ' \u00b7 ' + echap(x.place) : '') +
+                (x.genre ? ' \u00b7 ' + echap(x.genre) : '') + '</span></button>';
+          }).join('')
+        : (vus.length ? '' : '<p class="sug__mot">' + echap(PC.t('an.cherche.rien')) + '</p>'));
+      anBrancheSug(vus, loin);
+    }, function(){ /* Le reseau a refuse : vos lignes restent la. */ });
+  }
+
+  function anBrancheSug(vus, loin){
+    const h = document.getElementById('an-sug');
+    if (!h) return;
+    h.querySelectorAll('[data-an-tout]').forEach(function(b){
+      b.addEventListener('click', function(){ anSujet(null); });
+    });
+    h.querySelectorAll('[data-an-mien]').forEach(function(b){
+      b.addEventListener('click', function(){
+        const L = vus[+b.getAttribute('data-an-mien')];
+        if (L) anSujet({id:L.id});
+      });
+    });
+    h.querySelectorAll('[data-an-loin]').forEach(function(b){
+      b.addEventListener('click', function(){
+        const x = loin[+b.getAttribute('data-an-loin')];
+        if (x) anSujet({code:x.code, nom:x.nom});
+      });
+    });
+  }
+
+  function anPoseCherche(lignes){
+    const boite = document.getElementById('an-choix-boite');
+    const q = document.getElementById('an-q');
+    if (!boite || !q) return;
+    /* Chercher n'a de sens qu'avec quelque chose a chercher — mais des
+       une seule ligne, on peut vouloir mesurer une crypto qu'on ne
+       possede pas : le champ reste donc des qu'il y a un portefeuille. */
+    boite.hidden = !lignes.length;
+    if (!lignes.length){ anChoix = ''; anExterne = null; return; }
+
+    if (!q.dataset.branche){
+      q.dataset.branche = '1';
+      const tard = retarde(function(){ anPeintSug(q.value, anLignes()); }, 420);
+      q.addEventListener('input', tard);
+      q.addEventListener('focus', function(){ anPeintSug(q.value, anLignes()); });
+      /* Un clic ailleurs referme : une liste qui reste ouverte recouvre
+         l'analyse qu'on vient de demander. */
+      document.addEventListener('click', function(e){
+        if (!e.target.closest || !e.target.closest('.an-q')) anFermeSug();
+      });
+      q.addEventListener('keydown', function(e){ if (e.key === 'Escape') anFermeSug(); });
     }
-    boite.hidden = lignes.length < 2;
-    if (lignes.length < 2){ anChoix = ''; return; }
+
     if (anChoix && !lignes.some(function(L){ return L.id === anChoix; })){
       anChoix = ''; anChoixPose = false;
     }
-    /* SUR TELEPHONE, UNE LIGNE A LA FOIS.
-       Chaque ligne porte une courbe et jusqu'a cinq mesures. A sept
-       lignes, l'onglet faisait 6,1 ecrans de defilement — la meme
-       bouillie que la vue detaillee avant qu'on la replie. Sur grand
-       ecran les mesures se rangent en colonnes et tout se compare d'un
-       coup d'oeil : le defaut y reste « toutes ».
-       La plus grosse ligne d'abord, parce que c'est celle dont le recul
-       pese le plus sur le total. */
-    if (!anChoixPose && !anChoix && window.matchMedia('(max-width:700px)').matches){
+    /* UN SUJET, PAS NEUF. Chaque ligne porte une courbe et jusqu'a cinq
+       mesures : a sept lignes l'onglet faisait plusieurs ecrans de
+       defilement, et on ne savait plus ou regarder. La plus grosse
+       d'abord, parce que c'est celle dont le recul pese le plus sur le
+       total. « Toutes vos lignes » reste a un geste. */
+    if (!anChoixPose && !anChoix && !anExterne){
       anChoix = lignes[0].id;
+      anChoixPose = true;
     }
-    anChoixPose = true;
-    const veut = '\u0000' + anChoix + '\u0000' +
-      lignes.map(function(L){ return L.id + '\u0001' + L.nom; }).join('\u0002');
-    if (sel.dataset.etat === veut) return;
-    sel.dataset.etat = veut;
-    sel.innerHTML = '<option value="">' + echap(PC.t('an.choix.tout')) + '</option>' +
-      lignes.map(function(L){
-        return '<option value="' + echap(L.id) + '"' + (L.id === anChoix ? ' selected' : '') +
-          '>' + echap(L.nom) + '</option>';
-      }).join('');
-    sel.value = anChoix;
+  }
+
+  function anBrancheTout(){
+    const hote = document.getElementById('an-calc-lignes');
+    if (!hote) return;
+    hote.querySelectorAll('[data-an-tout]').forEach(function(b){
+      b.addEventListener('click', function(){ anSujet(null); });
+    });
+  }
+
+  /* Ce qui est analysé, écrit au-dessus des mesures. Sans cette ligne,
+     un écran montrant une seule mesure ne dit pas s'il en manque. */
+  function anDitSujet(lignes, montre){
+    const hote = document.getElementById('an-calc-lignes');
+    if (!hote) return '';
+    if (anExterne){
+      return '<p class="an-sujet"><span>' +
+        echap(PC.t('an.ext.hors', {n:anExterne.nom})) + '</span>' +
+        '<button type="button" data-an-tout="1">' +
+        echap(PC.t('an.sujet.tout')) + '</button></p>';
+    }
+    if (!anChoix) return '';
+    return '<p class="an-sujet"><b>' + echap(montre) + '</b>' +
+      '<span>' + echap(PC.t('an.sujet.sur', {n:String(lignes.length)})) + '</span>' +
+      '<button type="button" data-an-tout="1">' +
+      echap(PC.t('an.sujet.tout')) + '</button></p>';
   }
 
   /* Une ligne, ses mesures, et d'ou elles sortent. Les quatre
@@ -10661,13 +10853,37 @@ window.PC = (function(){
        suites de relevés mensuels n'en partagent jamais assez pour
        qu'un coefficient veuille dire quelque chose. */
     const lignes = anLignes();
-    anPoseChoix(lignes);
-    if (!lignes.length){
+    anPoseCherche(lignes);
+    if (!lignes.length && !anExterne){
       hote.innerHTML = '';
       if (mot){ mot.textContent = PC.t('an.vide'); mot.hidden = false; mot.dataset.ton = ''; }
       if (bcor) bcor.hidden = true;
       return;
     }
+
+    /* ---------- UNE LIGNE CHERCHEE SUR LE MARCHE ----------
+       Elle n'appartient pas au portefeuille : on mesure son cours et
+       rien d'autre. Tant que les douze mois ne sont pas arrives, on le
+       dit — et s'ils ne viennent jamais, on le dit aussi, au lieu de
+       laisser un cadre vide qui passerait pour une panne. */
+    if (anExterne){
+      const pts = SERIES[anExterne.code];
+      if (mot){
+        const attend = !pts && !anExterne.vain;
+        mot.hidden = !(attend || anExterne.vain);
+        mot.dataset.ton = attend ? 'attente' : '';
+        mot.textContent = attend ? PC.t('an.ext.charge', {n:anExterne.nom})
+                        : anExterne.vain ? PC.t('an.ext.vain', {n:anExterne.nom}) : '';
+      }
+      hote.innerHTML = anDitSujet(lignes, anExterne.nom) + (pts && pts.length >= 40
+        ? anRendLigne({id:'', nom:anExterne.nom, val:0, src:'marche',
+                       code:anExterne.code, pts:pts, v:anVariations(pts)})
+        : '');
+      anBrancheTout();
+      if (bcor) bcor.hidden = true;
+      return;
+    }
+
     if (mot){
       /* Il manque peut-etre encore des cours : on le dit sans effacer
          ce qui est deja calcule. */
@@ -10679,7 +10895,10 @@ window.PC = (function(){
        l'exemple recharge avec de nouveaux identifiants — ne doit pas
        rendre une page vide : on retombe sur tout. */
     const vues = anChoix ? lignes.filter(function(L){ return L.id === anChoix; }) : [];
-    hote.innerHTML = (vues.length ? vues : lignes).map(anRendLigne).join('');
+    const montre = vues.length ? vues : lignes;
+    hote.innerHTML = (vues.length ? anDitSujet(lignes, vues[0].nom) : '') +
+      montre.map(anRendLigne).join('');
+    anBrancheTout();
 
     /* ---------- Ce qui bouge ensemble ---------- */
     if (!bcor) return;
