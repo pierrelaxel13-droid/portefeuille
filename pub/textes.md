@@ -31,3 +31,12 @@ Un outil de suivi, pas un conseil : il ne recommande aucun placement.
 6. 23–28 s : « Votre argent, enfin lisible. », bouton, « Un outil de suivi, pas un conseil ».
 
 Pour la refaire : `node rendre-video.mjs video.mp4` (Chromium + ffmpeg + Node 22).
+
+## Fichiers vidéo
+| Fichier | Format | Durée | Usage |
+|---|---|---|---|
+| `video.mp4` | 1080×1920 | 28 s | Reels, TikTok, Stories (version complète) |
+| `video-15s.mp4` | 1080×1920 | 15 s | Stories courtes, publicité (valeur, tableau de bord, 14 indicateurs, final) |
+| `video-16x9.mp4` | 1920×1080 | 28 s | YouTube, LinkedIn, site |
+
+Régénérer : `node rendre-video.mjs sortie.mp4 [--cut=15] [--fmt=16x9]`

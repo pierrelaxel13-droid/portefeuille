@@ -4,16 +4,18 @@
 <title>Pierrel &amp; Co — vidéo</title>
 <style>
 html,body{margin:0;height:100%;background:#000;overflow:hidden}
-#c{position:absolute;left:50%;top:50%;width:1080px;height:1920px;transform-origin:center;cursor:pointer}
+#c{position:absolute;left:50%;top:50%;transform-origin:center;cursor:pointer}
 #hint{position:fixed;left:0;right:0;bottom:10px;text-align:center;font:12px Arial;color:#8A8677;pointer-events:none}
 </style></head><body>
-<canvas id="c" width="1080" height="1920"></canvas>
+<canvas id="c"></canvas>
 <div id="hint">Touchez pour rejouer</div>
 <script>
-/* Vidéo de 28 s, 1080×1920, dessinée en fonction du temps : draw(t).
+/* Vidéo de 28 s (ou 15 s avec ?cut=15), 1080×1920 (ou 1920×1080 avec ?fmt=16x9), dessinée en fonction du temps : draw(t).
    Les chiffres affichés sont ceux d'un portefeuille d'exemple. */
-const W=1080,H=1920,DUR=28;
-const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const QS=new URLSearchParams(location.search);
+const LS=QS.get('fmt')==='16x9',CUT=QS.get('cut')==='15';
+const W=LS?1920:1080,H=LS?1080:1920,DUR=CUT?15:28;
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');cv.width=W;cv.height=H;cv.style.width=W+'px';cv.style.height=H+'px';
 const C={bg:'#0E0D0A',bg2:'#201E15',bg3:'#2A2719',ink:'#F4F2E8',ink2:'#B5B1A0',ink3:'#8A8677',rule:'#3A3623',acc:'#8B74F2',acc2:'#4B21E8',gain:'#2AA96B',loss:'#D96A4E'};
 const HEAD='"Archivo Black","Arial Black",Impact,sans-serif',BODY='Archivo,"Helvetica Neue",Arial,sans-serif',MONO='"IBM Plex Mono",ui-monospace,Menlo,monospace';
 const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),lerp=(a,b,t)=>a+(b-a)*t;
@@ -81,51 +83,56 @@ function cam(z,cx,cy,f){ctx.save();ctx.translate(cx,cy);ctx.scale(z,z);ctx.trans
 
 /* ---------- A : la valeur totale ---------- */
 function sceneA(t){
- cam(1+.06*seg(t,0,3.8),W/2,900,()=>{
-  for(let i=0;i<3;i++){const p=(t*.5+i/3)%1;ctx.strokeStyle=`rgba(139,116,242,${.35*(1-p)})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(W/2,900,150+p*620,0,7);ctx.stroke()}
-  T('VALEUR TOTALE DU PORTEFEUILLE',W/2,700,{size:27,font:MONO,weight:500,color:C.ink3,align:'center',ls:6,alpha:eo(seg(t,.15,.7))});
+ const cy=LS?540:900,dy=cy-900;
+ cam(1+.06*seg(t,0,3.8),W/2,cy,()=>{
+  for(let i=0;i<3;i++){const p=(t*.5+i/3)%1;ctx.strokeStyle=`rgba(139,116,242,${.35*(1-p)})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(W/2,cy,150+p*620,0,7);ctx.stroke()}
+  T('VALEUR TOTALE DU PORTEFEUILLE',W/2,700+dy,{size:27,font:MONO,weight:500,color:C.ink3,align:'center',ls:6,alpha:eo(seg(t,.15,.7))});
   const v=eexp(seg(t,.35,2.7))*248630,a=eo(seg(t,.2,.6));
-  ctx.save();ctx.globalAlpha=a;glow(C.acc,70*seg(t,.3,2.7),()=>num(fmt(v)+' €',W/2,930,168,C.ink));ctx.restore();
-  chip('▲ +12,3 % depuis le départ',W/2,1070,C.gain,34,seg(t,2.4,3.0));
-  T('Portefeuille d’exemple : chiffres fictifs',W/2,1560,{size:24,font:MONO,color:C.ink3,align:'center',ls:1,alpha:seg(t,.8,1.4)*.9});
+  ctx.save();ctx.globalAlpha=a;glow(C.acc,70*seg(t,.3,2.7),()=>num(fmt(v)+' €',W/2,930+dy,LS?190:168,C.ink));ctx.restore();
+  chip('▲ +12,3 % depuis le départ',W/2,1070+dy+(LS?20:0),C.gain,34,seg(t,2.4,3.0));
+  T('Portefeuille d\u2019exemple : chiffres fictifs',W/2,LS?1010:1560,{size:24,font:MONO,color:C.ink3,align:'center',ls:1,alpha:seg(t,.8,1.4)*.9});
  });
- T('PIERREL & CO',84,130,{size:28,font:MONO,weight:500,color:C.ink2,ls:7,alpha:seg(t,.2,.8)})}
+ T('PIERREL & CO',LS?100:84,LS?110:130,{size:28,font:MONO,weight:500,color:C.ink2,ls:7,alpha:seg(t,.2,.8)})}
 
 /* ---------- B : cinq façons ---------- */
 function sceneB(t){
- T('CINQ FAÇONS DE FAIRE TRAVAILLER LE CAPITAL',W/2,330,{size:23,font:MONO,weight:500,color:C.ink3,align:'center',ls:4,alpha:seg(t,0,.5)});
+ T('CINQ FAÇONS DE FAIRE TRAVAILLER LE CAPITAL',LS?120:W/2,LS?140:330,{size:23,font:MONO,weight:500,color:C.ink3,align:LS?'left':'center',ls:4,alpha:seg(t,0,.5)});
  const words=['Livret.','Assurance-vie.','PEA.','Immobilier.','Bitcoin.'],dim=seg(t,3.05,3.5);
  words.forEach((w,i)=>{const p=seg(t,.25+i*.32,.25+i*.32+.55);
   ctx.save();ctx.globalAlpha=lerp(1,.22,dim);
-  rise(w,84+(i%2)*40,520+i*168,p,{size:118,font:HEAD,weight:900,color:i%2?C.acc:C.ink,ls:-5});ctx.restore()});
- const p=seg(t,3.15,3.85);
+  rise(w,(LS?120:84)+(i%2)*40,LS?290+i*160:520+i*168,p,{size:LS?112:118,font:HEAD,weight:900,color:i%2?C.acc:C.ink,ls:-5});ctx.restore()});
+ const p=seg(t,3.15,3.85),X=LS?1040:84,Y1=LS?560:1300,Y2=LS?760:1490,S=LS?200:190;
  ctx.save();ctx.globalAlpha=p;
- rise('Un seul',84,1300,seg(t,3.15,3.8),{size:190,font:HEAD,weight:900,color:C.ink,ls:-9});
- rise('écran.',84,1490,seg(t,3.35,4.0),{size:190,font:HEAD,weight:900,color:C.acc,ls:-9});
+ rise('Un seul',X,Y1,seg(t,3.15,3.8),{size:S,font:HEAD,weight:900,color:C.ink,ls:-9});
+ rise('écran.',X,Y2,seg(t,3.35,4.0),{size:S,font:HEAD,weight:900,color:C.acc,ls:-9});
  ctx.restore();
- ctx.fillStyle=C.acc;ctx.fillRect(84,1525,eo5(seg(t,3.8,4.4))*912,10)}
+ ctx.fillStyle=C.acc;ctx.fillRect(X,Y2+35,eo5(seg(t,3.8,4.4))*(LS?700:912),10)}
 
 /* ---------- C : tout se recalcule ---------- */
 const VALS=[48,20,14,10,8],COLS=['#8B74F2','#2AA96B','#E0A63A','#D96A4E','#5FB3D9'],NAMES=['Immobilier','PEA','Assurance-vie','Bitcoin','Livret'];
 function sceneC(t){
- rise('Tout se recalcule.',84,340,seg(t,0,.7),{size:100,font:HEAD,weight:900,color:C.ink,ls:-4.5});
- const sw=eio(seg(t,.4,2.5));
- ctx.save();ctx.globalAlpha=seg(t,.3,.7);glow(C.acc,30,()=>donut(W/2,730,240,74,VALS,COLS,sw));ctx.restore();
- num(fmt(eexp(seg(t,.5,2.5))*248630)+' €',W/2,742,66,C.ink);
- T('VALEUR TOTALE',W/2,800,{size:22,font:MONO,color:C.ink3,align:'center',ls:5,alpha:seg(t,1,1.5)});
- NAMES.forEach((n,i)=>{const p=seg(t,1.2+i*.18,1.7+i*.18),col=i%2,row=Math.floor(i/2),x=120+col*470,y=1040+row*62;if(p<=0)return;
+ rise('Tout se recalcule.',LS?100:84,LS?190:340,seg(t,0,.7),{size:LS?96:100,font:HEAD,weight:900,color:C.ink,ls:-4.5});
+ const sw=eio(seg(t,.4,2.5)),dcx=LS?400:W/2,dcy=LS?650:730,R=LS?230:240;
+ ctx.save();ctx.globalAlpha=seg(t,.3,.7);glow(C.acc,30,()=>donut(dcx,dcy,R,LS?70:74,VALS,COLS,sw));ctx.restore();
+ num(fmt(eexp(seg(t,.5,2.5))*248630)+' €',dcx,dcy+12,LS?58:66,C.ink);
+ T('VALEUR TOTALE',dcx,dcy+70,{size:22,font:MONO,color:C.ink3,align:'center',ls:5,alpha:seg(t,1,1.5)});
+ NAMES.forEach((n,i)=>{const p=seg(t,1.2+i*.18,1.7+i*.18);if(p<=0)return;
+  const x=LS?760:120+(i%2)*470,y=LS?440+i*76:1040+Math.floor(i/2)*62,vx=LS?430:390;
   ctx.save();ctx.globalAlpha=p;ctx.translate(0,(1-eo(p))*20);
   ctx.fillStyle=COLS[i];rr(x,y-22,26,26,8);ctx.fill();
-  T(n,x+44,y,{size:32,weight:600});T(VALS[i]+' %',x+390,y,{size:30,font:MONO,color:C.ink2,align:'right'});ctx.restore()});
- const x0=84,y0=1240,w=912,h=270;
+  T(n,x+44,y,{size:32,weight:600});T(VALS[i]+' %',x+vx,y,{size:30,font:MONO,color:C.ink2,align:'right'});ctx.restore()});
+ const x0=LS?1290:84,y0=LS?320:1240,w=LS?530:912,h=LS?250:270;
  ctx.strokeStyle='rgba(244,242,232,.07)';ctx.lineWidth=2;for(let i=0;i<=3;i++){ctx.beginPath();ctx.moveTo(x0,y0+h*i/3);ctx.lineTo(x0+w,y0+h*i/3);ctx.stroke()}
  const last=linechart(x0,y0,w,h,eio(seg(t,2.4,4.6)),C.acc);
  if(last){const pu=(t*1.6)%1;ctx.strokeStyle=`rgba(139,116,242,${.6*(1-pu)})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(last[0],last[1],14+pu*34,0,7);ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(last[0],last[1],11,0,7);ctx.fill()}
  const st=[['INVESTI',221400,C.ink,''],['VALEUR',248630,C.ink,''],['GAIN',27230,C.gain,'▲ +']],sp=seg(t,4.4,5.6);
- st.forEach((s,i)=>{const p=seg(t,4.3+i*.15,4.9+i*.15);if(p<=0)return;const x=84+i*320;ctx.save();ctx.globalAlpha=p;ctx.translate(0,(1-eo(p))*24);
-  T(s[0],x,1590,{size:21,font:MONO,color:C.ink3,ls:4});
-  ctx.save();ctx.font=`900 46px ${HEAD}`;T(s[3],x,1648,{size:44,font:HEAD,weight:900,color:s[2]});const off=s[3]?ctx.measureText(s[3]).width+8:0;ctx.restore();
-  ctx.save();ctx.textAlign='left';T(fmt(eexp(sp)*s[1])+' €',x+off,1648,{size:44,font:HEAD,weight:900,color:s[2],ls:-1});ctx.restore();ctx.restore()})}
+ st.forEach((s,i)=>{const p=seg(t,4.3+i*.15,4.9+i*.15);if(p<=0)return;
+  const lx=LS?1290:84+i*320,ly=LS?700+i*110:1590,vx=LS?1290+250:lx,vy=LS?ly+4:1648;
+  ctx.save();ctx.globalAlpha=p;ctx.translate(0,(1-eo(p))*24);
+  T(s[0],lx,ly,{size:21,font:MONO,color:C.ink3,ls:4});
+  ctx.save();ctx.font=`900 44px ${HEAD}`;const off=s[3]?ctx.measureText(s[3]).width+8:0;ctx.restore();
+  T(s[3],vx,vy+(LS?0:0),{size:44,font:HEAD,weight:900,color:s[2]});
+  T(fmt(eexp(sp)*s[1])+' €',vx+off,vy,{size:44,font:HEAD,weight:900,color:s[2],ls:-1});ctx.restore()})}
 
 /* ---------- D : quatorze indicateurs ---------- */
 function glyph(k,x,y,s,p,t){ctx.save();ctx.translate(x,y);ctx.strokeStyle=C.acc;ctx.fillStyle=C.acc;ctx.lineWidth=7;ctx.lineCap='round';
@@ -136,25 +143,25 @@ function glyph(k,x,y,s,p,t){ctx.save();ctx.translate(x,y);ctx.strokeStyle=C.acc;
  else{for(let i=0;i<9;i++){const on=(i*5+3)%7<4&&eo(p)>i/9;ctx.globalAlpha=on?1:.22;ctx.beginPath();ctx.arc((i%3)*s/2.6+10,Math.floor(i/3)*s/2.6+10,7,0,7);ctx.fill()}}
  ctx.restore()}
 function sceneD(t){
- const shown=clamp(Math.floor((t-.6)/.22)+1,0,14);
- ctx.save();ctx.globalAlpha=eo(seg(t,0,.5));glow(C.acc,50,()=>num(String(shown),240,530,270,C.acc));ctx.restore();
- rise('indicateurs',450,460,seg(t,.1,.7),{size:96,font:HEAD,weight:900,color:C.ink,ls:-4});
- T('concentration, liquidité, meilleure',450,520,{size:30,color:C.ink2,alpha:seg(t,.5,1)});
- T('et pire ligne…',450,562,{size:30,color:C.ink2,alpha:seg(t,.5,1)});
- const vals=['62 %','+8,4 %','3,1 j','17 %','− 4,2 %','5 / 9','1,8 ×'];
+ const shown=clamp(Math.floor((t-.6)/.22)+1,0,14),nx=LS?300:240,ny=LS?480:530,tx=LS?100:450,ty=LS?640:460;
+ ctx.save();ctx.globalAlpha=eo(seg(t,0,.5));glow(C.acc,50,()=>num(String(shown),nx,ny,LS?300:270,C.acc));ctx.restore();
+ rise('indicateurs',tx,ty,seg(t,.1,.7),{size:96,font:HEAD,weight:900,color:C.ink,ls:-4});
+ T('concentration, liquidité, meilleure',tx,ty+60,{size:30,color:C.ink2,alpha:seg(t,.5,1)});
+ T('et pire ligne…',tx,ty+102,{size:30,color:C.ink2,alpha:seg(t,.5,1)});
+ const vals=['62 %','+8,4 %','3,1 j','17 %','− 4,2 %','5 / 9','1,8 ×'],tw=LS?350:456;
  for(let i=0;i<14;i++){const p=seg(t,.6+i*.22,.6+i*.22+.45);if(p<=0)continue;
-  const col=i%2,row=Math.floor(i/2),x=72+col*480,y=650+row*152;
-  ctx.save();ctx.translate(x+228,y+62);const sc=lerp(.85,1,eb(p));ctx.scale(sc,sc);ctx.translate(-228,-62);ctx.globalAlpha=clamp(p*3);
-  rr(0,0,456,124,26);ctx.fillStyle=C.bg2;ctx.fill();
+  const cols=LS?3:2,col=i%cols,row=Math.floor(i/cols),x=LS?730+col*370:72+col*480,y=LS?190+row*148:650+row*152;
+  ctx.save();ctx.translate(x+tw/2,y+62);const sc=lerp(.85,1,eb(p));ctx.scale(sc,sc);ctx.translate(-tw/2,-62);ctx.globalAlpha=clamp(p*3);
+  rr(0,0,tw,124,26);ctx.fillStyle=C.bg2;ctx.fill();
   const fl=1-seg(p,0,.9);ctx.strokeStyle=fl>0?C.acc:C.rule;ctx.lineWidth=2+3*fl;ctx.stroke();
   glyph(i%5,34,20,82,seg(p,.15,1),t);
   T(vals[i%7],140,78,{size:44,font:HEAD,weight:900,color:i%4===3?C.loss:C.ink,ls:-1.5});
   rr(140,94,150,8,4);ctx.fillStyle=C.bg3;ctx.fill();ctx.restore()}}
 
 /* ---------- E : sur le téléphone ---------- */
-function phone(t,lt){
+function phone(t,lt,px,py){
  const a=.32*Math.sin(lt*1.1),ca=Math.cos(a);
- ctx.save();ctx.translate(W/2,930);ctx.transform(ca,Math.sin(a)*.1,0,1,0,0);
+ ctx.save();ctx.translate(px,py);ctx.transform(ca,Math.sin(a)*.1,0,1,0,0);
  ctx.shadowColor='rgba(139,116,242,.45)';ctx.shadowBlur=90;rr(-250,-480,500,960,84);ctx.fillStyle='#050504';ctx.fill();ctx.shadowBlur=0;
  ctx.strokeStyle='#3A3623';ctx.lineWidth=5;ctx.stroke();
  rr(-232,-462,464,924,70);ctx.save();ctx.clip();ctx.fillStyle=C.bg2;ctx.fillRect(-240,-470,480,940);
@@ -169,40 +176,43 @@ function wifiOff(cx,cy,s,col){ctx.save();ctx.translate(cx,cy);ctx.strokeStyle=co
  [1,.66,.33].forEach(k=>{ctx.beginPath();ctx.arc(0,s*.5,s*k,-Math.PI*.75,-Math.PI*.25);ctx.stroke()});
  ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,s*.5,4.5,0,7);ctx.fill();ctx.beginPath();ctx.moveTo(-s*.75,-s*.3);ctx.lineTo(s*.75,s*.75);ctx.stroke();ctx.restore()}
 function sceneE(t){
- rise('Sur votre',84,300,seg(t,0,.6),{size:112,font:HEAD,weight:900,color:C.ink,ls:-5});
- rise('téléphone.',84,410,seg(t,.15,.75),{size:112,font:HEAD,weight:900,color:C.acc,ls:-5});
- const p=seg(t,.2,1.1);ctx.save();ctx.globalAlpha=eo(p);ctx.translate(0,(1-eo5(p))*260);phone(t,t);ctx.restore();
- const ip=seg(t,1.2,1.8);if(ip>0){ctx.save();ctx.translate(W-170,300);ctx.scale(eb(ip),eb(ip));ctx.rotate((1-ip)*-.4);ctx.shadowColor='rgba(75,33,232,.6)';ctx.shadowBlur=50;appIcon(0,0,170);ctx.restore()}
- const bp=seg(t,1.9,2.5);if(bp>0){ctx.save();ctx.globalAlpha=bp;ctx.translate(0,(1-eo(bp))*30);
-  rr(W/2-290,1520,580,110,55);ctx.fillStyle=C.bg2;ctx.fill();ctx.strokeStyle=C.acc;ctx.lineWidth=3;ctx.stroke();
-  wifiOff(W/2-215,1560,32,C.acc);T('Même hors ligne',W/2-150,1590,{size:44,weight:700});ctx.restore()}}
+ rise('Sur votre',LS?120:84,LS?400:300,seg(t,0,.6),{size:LS?130:112,font:HEAD,weight:900,color:C.ink,ls:-5});
+ rise('téléphone.',LS?120:84,LS?540:410,seg(t,.15,.75),{size:LS?130:112,font:HEAD,weight:900,color:C.acc,ls:-5});
+ const p=seg(t,.2,1.1);ctx.save();ctx.globalAlpha=eo(p);ctx.translate(0,(1-eo5(p))*260);phone(t,t,LS?1400:W/2,LS?540:930);ctx.restore();
+ const ip=seg(t,1.2,1.8);if(ip>0){ctx.save();ctx.translate(LS?205:W-170,LS?760:300);ctx.scale(eb(ip),eb(ip));ctx.rotate((1-ip)*-.4);ctx.shadowColor='rgba(75,33,232,.6)';ctx.shadowBlur=50;appIcon(0,0,170);ctx.restore()}
+ const bp=seg(t,1.9,2.5);if(bp>0){const bx=LS?120:W/2-290,by=LS?880:1520;ctx.save();ctx.globalAlpha=bp;ctx.translate(0,(1-eo(bp))*30);
+  rr(bx,by,580,110,55);ctx.fillStyle=C.bg2;ctx.fill();ctx.strokeStyle=C.acc;ctx.lineWidth=3;ctx.stroke();
+  wifiOff(bx+75,by+40,32,C.acc);T('Même hors ligne',bx+140,by+70,{size:44,weight:700});ctx.restore()}}
 
 /* ---------- F : final ---------- */
 function sceneF(t){
- for(let i=0;i<3;i++){const p=seg(t,.1+i*.25,1.6+i*.25);ctx.strokeStyle=`rgba(139,116,242,${.5*(1-p)})`;ctx.lineWidth=4;ctx.beginPath();ctx.arc(W/2,900,60+eo(p)*800,0,7);ctx.stroke()}
- cam(1+.03*seg(t,0,4.6),W/2,900,()=>{
-  rise('Votre argent,',W/2,780,seg(t,.2,.9),{size:140,font:HEAD,weight:900,color:C.ink,align:'center',ls:-6.5});
-  rise('enfin lisible.',W/2,930,seg(t,.45,1.15),{size:140,font:HEAD,weight:900,color:C.acc,align:'center',ls:-6.5});
-  if(t>1.15){ctx.save();glow(C.acc,70*seg(t,1.15,1.9),()=>T('enfin lisible.',W/2,930,{size:140,font:HEAD,weight:900,color:C.acc,align:'center',ls:-6.5}));ctx.restore()}
-  T('Sachez ce que vous détenez, et pourquoi.',W/2,1050,{size:40,color:C.ink2,align:'center',alpha:seg(t,1.3,1.9)})});
- const cp=seg(t,1.8,2.4);if(cp>0){const pulse=1+.025*Math.sin(t*5);ctx.save();ctx.translate(W/2,1290);ctx.scale(eb(cp)*pulse,eb(cp)*pulse);ctx.globalAlpha=clamp(cp*3);
+ const cy=LS?540:900,S=LS?170:140,Y=LS?[430,600,700,840,955,1035]:[780,930,1050,1290,1500,1640];
+ for(let i=0;i<3;i++){const p=seg(t,.1+i*.25,1.6+i*.25);ctx.strokeStyle=`rgba(139,116,242,${.5*(1-p)})`;ctx.lineWidth=4;ctx.beginPath();ctx.arc(W/2,cy,60+eo(p)*800,0,7);ctx.stroke()}
+ cam(1+.03*seg(t,0,4.6),W/2,cy,()=>{
+  rise('Votre argent,',W/2,Y[0],seg(t,.2,.9),{size:S,font:HEAD,weight:900,color:C.ink,align:'center',ls:-S*.046});
+  rise('enfin lisible.',W/2,Y[1],seg(t,.45,1.15),{size:S,font:HEAD,weight:900,color:C.acc,align:'center',ls:-S*.046});
+  if(t>1.15){ctx.save();glow(C.acc,70*seg(t,1.15,1.9),()=>T('enfin lisible.',W/2,Y[1],{size:S,font:HEAD,weight:900,color:C.acc,align:'center',ls:-S*.046}));ctx.restore()}
+  T('Sachez ce que vous détenez, et pourquoi.',W/2,Y[2],{size:40,color:C.ink2,align:'center',alpha:seg(t,1.3,1.9)})});
+ const cp=seg(t,1.8,2.4);if(cp>0){const pulse=1+.025*Math.sin(t*5);ctx.save();ctx.translate(W/2,Y[3]);ctx.scale(eb(cp)*pulse,eb(cp)*pulse);ctx.globalAlpha=clamp(cp*3);
   glow(C.acc2,50,()=>{rr(-400,-62,800,124,20);ctx.fillStyle=C.acc2;ctx.fill()});
   T('Ouvrir mon portefeuille  →',0,16,{size:42,weight:700,color:'#fff',align:'center'});ctx.restore()}
- const lp=seg(t,2.4,3);if(lp>0){ctx.save();ctx.globalAlpha=lp;appIcon(W/2-215,1500,84);
-  T('PIERREL & CO · PORTEFEUILLE',W/2-150,1512,{size:24,font:MONO,weight:500,color:C.ink,ls:4});ctx.restore()}
- T('Un outil de suivi, pas un conseil : il ne recommande aucun placement.',W/2,1640,{size:23,color:C.ink3,align:'center',alpha:seg(t,3,3.6)})}
+ const lp=seg(t,2.4,3);if(lp>0){ctx.save();ctx.globalAlpha=lp;appIcon(W/2-215,Y[4]-12,84);
+  T('PIERREL & CO · PORTEFEUILLE',W/2-150,Y[4],{size:24,font:MONO,weight:500,color:C.ink,ls:4});ctx.restore()}
+ T('Un outil de suivi, pas un conseil : il ne recommande aucun placement.',W/2,Y[5],{size:23,color:C.ink3,align:'center',alpha:seg(t,3,3.6)})}
 
-const SC=[[0,sceneA],[3.8,sceneB],[8.4,sceneC],[14.6,sceneD],[19.4,sceneE],[23.4,sceneF]];
+const SC=CUT
+ ?[[0,sceneA,1.3],[2.9,sceneC,1.1],[8.5,sceneD,1.6],[11.2,sceneF,1.15]]
+ :[[0,sceneA,1],[3.8,sceneB,1],[8.4,sceneC,1],[14.6,sceneD,1],[19.4,sceneE,1],[23.4,sceneF,1]];
 function draw(t){
  t=clamp(t,0,DUR);background(t);
  let i=SC.length-1;while(SC[i][0]>t)i--;
- SC[i][1](t-SC[i][0]);
+ SC[i][1]((t-SC[i][0])*SC[i][2]);
  SC.slice(1).forEach(s=>wipe(t,s[0]));
  ctx.fillStyle=C.acc;ctx.fillRect(0,H-8,W*t/DUR,8)}
 
 function fit(){const k=Math.min(innerWidth/W,innerHeight/H);cv.style.transform=`translate(-50%,-50%) scale(${k})`}
 addEventListener('resize',fit);fit();
-const qs=new URLSearchParams(location.search);
+const qs=QS;
 if(qs.has('render'))document.getElementById('hint').remove();
 if(qs.has('t'))draw(+qs.get('t'));
 else if(!qs.has('render')){let t0=performance.now();const loop=n=>{let t=(n-t0)/1000;if(t>DUR+1.2){t0=n;t=0}draw(t);requestAnimationFrame(loop)};
