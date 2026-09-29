@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pierrel &amp; Co — vidéo</title>
+<style>
+:root{--paper:#F2F0E9;--ink:#131310;--ink-2:#56544C;--rule:#BDB7A3;--accent:#4B21E8;--gain:#0A8A4A}
+html,body{margin:0;height:100%;background:#111;overflow:hidden;font-family:'Archivo','Helvetica Neue',Arial,sans-serif}
+#stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;background:var(--paper);color:var(--ink);transform-origin:center;overflow:hidden}
+.s{position:absolute;inset:0;padding:150px 84px;box-sizing:border-box;opacity:0;transition:opacity .5s;display:flex;flex-direction:column;justify-content:center;gap:50px}
+.s.on{opacity:1}
+.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;letter-spacing:.19em;text-transform:uppercase;font-size:24px;color:var(--ink-2)}
+h1,h2{font-family:'Archivo Black','Arial Black',Impact,sans-serif;font-weight:900;letter-spacing:-.05em;line-height:.92;margin:0}
+h1{font-size:150px}h2{font-size:110px}
+em{font-style:normal;color:var(--accent)}
+p{font-size:44px;line-height:1.3;margin:0}
+.up{opacity:0;transform:translateY(40px);transition:opacity .6s,transform .6s}
+.on .up{opacity:1;transform:none}.on .d1{transition-delay:.5s}.on .d2{transition-delay:1.2s}.on .d3{transition-delay:1.9s}
+/* scène 1 : tableur */
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border:2px solid var(--ink);font-family:'IBM Plex Mono',monospace;font-size:26px}
+.grid span{padding:16px 8px;border:1px solid var(--rule);text-align:right;color:var(--ink-2)}
+.grid span.h{background:var(--paper);color:var(--ink);font-weight:700;text-align:center}
+.grid span.t{color:var(--loss,#A5341F);font-weight:700}
+/* scène 2 : courbe */
+svg{width:100%;height:520px}
+.line{fill:none;stroke:var(--accent);stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400}
+.on .line{transition:stroke-dashoffset 3s ease .3s;stroke-dashoffset:0}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;border-top:2px solid var(--ink);padding-top:24px}
+.kp div{font-size:26px;color:var(--ink-2)}.kp b{display:block;font-family:'Archivo Black','Arial Black',sans-serif;font-size:56px;letter-spacing:-.04em;color:var(--ink)}.kp b.g{color:var(--gain)}
+/* scène 3 : icône */
+.ico{width:260px;height:260px;border-radius:60px;box-shadow:0 30px 60px rgba(75,33,232,.3)}
+.off{display:inline-block;border:2px solid var(--ink);padding:12px 26px;font-family:'IBM Plex Mono',monospace;font-size:28px}
+.cta{background:var(--accent);color:#fff;padding:34px;font-size:40px;font-weight:700;text-align:center}
+#bar{position:absolute;left:0;bottom:0;height:8px;background:var(--accent);width:0}
+#play{position:fixed;right:16px;bottom:16px;font:600 14px Arial;padding:10px 16px;border:0;background:#fff;color:#111;border-radius:6px;cursor:pointer;z-index:9}
+</style></head><body>
+<div id="stage">
+ <section class="s" id="s1"><p class="mono up">Pierrel &amp; Co</p>
+  <h1 class="up d1">Un tableur, ça <em>additionne.</em></h1>
+  <div class="grid up d2" id="g"></div></section>
+ <section class="s" id="s2"><p class="mono up">Pierrel &amp; Co · portefeuille</p>
+  <h2 class="up">Où vous en êtes.</h2>
+  <svg viewBox="0 0 900 520"><path class="line" d="M10 470 L110 430 L210 445 L310 340 L410 360 L510 250 L610 270 L710 150 L810 120 L890 60"/></svg>
+  <div class="kp up d2"><div><b>Mis</b>ce que vous avez mis</div><div><b>Vaut</b>ce que ça vaut</div><div><b class="g">▲ Rend</b>ce que ça rapporte</div></div></section>
+ <section class="s" id="s3" style="align-items:flex-start"><img class="ico up" src="icone-192.png" alt="">
+  <h2 class="up d1">Sur votre <em>téléphone.</em></h2>
+  <span class="off up d2">◱ même hors ligne</span></section>
+ <section class="s" id="s4"><p class="mono up">Pierrel &amp; Co · portefeuille</p>
+  <h1 class="up d1" style="font-size:120px">Sachez ce que vous détenez, et <em>pourquoi.</em></h1>
+  <div class="cta up d3">Ouvrir mon portefeuille →</div>
+  <p class="up d3" style="font-size:22px;color:var(--ink-2);text-align:center">Un outil de suivi, pas un conseil.</p></section>
+ <div id="bar"></div>
+</div>
+<button id="play">↻ Rejouer</button>
+<script>
+const g=document.getElementById('g');
+'A B C D E F'.split(' ').forEach(x=>{g.insertAdjacentHTML('beforeend','<span class="h">'+x+'</span>')});
+const v=['12 480','3 210','8 745','1 050','9 999','2 674'];
+for(let i=0;i<30;i++)g.insertAdjacentHTML('beforeend','<span'+(i>=24?' class="t"':'')+'>'+(i>=24?'?':v[(i*7)%6])+'</span>');
+const T=[0,5,10,15,22]; const ss=[...document.querySelectorAll('.s')];
+let t0;if(new URLSearchParams(location.search).has("still"))document.head.insertAdjacentHTML("beforeend","<style>*{transition:none!important}.line{stroke-dashoffset:0!important}</style>");
+function fit(){const k=Math.min(innerWidth/1080,innerHeight/1920);stage.style.transform='translate(-50%,-50%) scale('+k+')'}
+addEventListener('resize',fit);fit();
+const skip=+new URLSearchParams(location.search).get("t")||0;
+function run(){t0=performance.now()-skip*1000;ss.forEach(s=>s.classList.remove('on'));last=-1;requestAnimationFrame(tick)}
+let last=-1;
+function tick(now){const t=(now-t0)/1000;let i=T.findIndex((x,k)=>t>=x&&t<T[k+1]);
+ if(t>=T[4]){bar.style.width='100%';return}
+ if(i!==last){ss.forEach((s,k)=>s.classList.toggle('on',k===i));last=i}
+ bar.style.width=(t/T[4]*100)+'%';requestAnimationFrame(tick)}
+play.onclick=()=>{history.replaceState(null,"",location.pathname);location.reload()};run();
+</script></body></html>
