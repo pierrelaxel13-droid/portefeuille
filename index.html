@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260929.1802";</script>
+<script>window.PC_VERSION = "260930.1602";</script>
 </head>
 <body>
 
@@ -1864,6 +1864,19 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
    montre que sous 860 px ; ici elles servent a toutes les largeurs,
    parce qu'il n'y a qu'un jeu de chiffres a la fois. */
 .an-mar__h{display:flex; margin:0 0 16px;}
+.an-mar__s{margin:0 0 14px;}
+/* Le point qui bat pendant que les cours arrivent. Il ne dit pas « ca
+   marche » dans l'absolu : il dit « ces prix-la arrivent en ce
+   moment ». Sans flux, pas de point — et la phrase change avec. */
+.an-sous[data-vif="1"]{color:var(--accent);}
+.an-sous[data-vif="1"]::before{
+  content:""; display:inline-block; width:7px; height:7px; margin-right:8px;
+  border-radius:50%; background:currentColor; vertical-align:middle;
+  animation:bat 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .an-sous[data-vif="1"]::before{animation:none;}
+}
 .an-choix{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 18px;}
 .an-choix__k{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 /* Le champ et sa liste : la liste se pose PAR-DESSUS ce qui suit,
@@ -4246,7 +4259,10 @@ window.PC = (function(){
      qui montent et descendent ensemble ne sont pas une
      diversification, et personne ne le calcule a la main. */
   'an.mar.t':           ["Les march\u00e9s aujourd'hui","The markets today","Los mercados hoy","Die M\u00e4rkte heute"],
-  'an.mar.d':           ["Les douze plus grosses capitalisations, relev\u00e9es \u00e0 {{h}}. Rien n'est estim\u00e9\u00a0: ce sont les variations servies par le fournisseur, et le calcul de chaque chiffre est \u00e9crit sous lui.","The twelve largest capitalisations, read at {{h}}. Nothing is estimated: these are the moves served by the provider, and how each figure is computed is written under it.","Las doce mayores capitalizaciones, tomadas a las {{h}}. Nada se estima: son las variaciones servidas por el proveedor, y bajo cada cifra se explica su c\u00e1lculo.","Die zw\u00f6lf gr\u00f6\u00dften Kapitalisierungen, erhoben um {{h}}. Nichts wird gesch\u00e4tzt: das sind die vom Anbieter gelieferten Ver\u00e4nderungen, und unter jeder Zahl steht, wie sie berechnet wird."],
+  'an.mar.d':           ["{{n}} lignes de ce marché, relevées à {{h}}. Rien n'est estimé : ce sont les variations servies par le fournisseur, et le calcul de chaque chiffre est écrit sous lui.","{{n}} lines of this market, read at {{h}}. Nothing is estimated: these are the moves served by the provider, and how each figure is computed is written under it.","{{n}} líneas de este mercado, tomadas a las {{h}}. Nada se estima: son las variaciones servidas por el proveedor, y bajo cada cifra se explica su cálculo.","{{n}} Werte dieses Marktes, erhoben um {{h}}. Nichts wird geschätzt: das sind die vom Anbieter gelieferten Veränderungen, und unter jeder Zahl steht, wie sie berechnet wird."],
+  'an.mar.vif':         ["En direct de {{s}}. Le prix et la variation sur 24\u00a0h bougent pendant que vous lisez ; les colonnes 7\u00a0jours et 30\u00a0jours restent celles du dernier relevé, à {{h}}.","Live from {{s}}. The price and the 24-hour move change as you read; the 7-day and 30-day figures are those of the last reading, at {{h}}.","En directo desde {{s}}. El precio y la variación a 24\u00a0h cambian mientras lee; las cifras de 7 y 30 días son las de la última toma, a las {{h}}.","Live von {{s}}. Preis und 24-Stunden-Veränderung bewegen sich, während Sie lesen; die Werte für 7 und 30 Tage stammen von der letzten Erhebung um {{h}}."],
+  'an.mar.fige':        ["Ce marché n'a pas de cotation continue accessible : ses cours viennent d'un relevé, pas d'un flux. C'est pour ça qu'ils ne bougent pas sous vos yeux.","This market has no continuous quote available: its prices come from a reading, not a stream. That is why they do not move before your eyes.","Este mercado no tiene cotización continua accesible: sus precios vienen de una toma, no de un flujo. Por eso no se mueven ante sus ojos.","Für diesen Markt ist keine fortlaufende Notierung zugänglich: seine Kurse stammen aus einer Erhebung, nicht aus einem Strom. Deshalb bewegen sie sich nicht vor Ihren Augen."],
+  'an.mar.relais':      ["La bourse passe par le relais de cours, et il n'est pas configuré sur cette page. Les cryptos et les métaux, eux, se lisent sans lui.","Shares go through the price relay, and it is not configured on this page. Cryptos and metals are read without it.","La bolsa pasa por el relé de cotizaciones, y no está configurado en esta página. Las criptos y los metales se leen sin él.","Aktien laufen über das Kurs-Relais, das auf dieser Seite nicht eingerichtet ist. Kryptos und Metalle kommen ohne es aus."],
   'an.mar.charge':      ["On rel\u00e8ve les cours du jour\u2026","Reading today's prices\u2026","Leyendo las cotizaciones del d\u00eda\u2026","Die Tageskurse werden erhoben\u2026"],
   'an.mar.ko':          ["Le fournisseur de cours n'a pas r\u00e9pondu. Vos chiffres, eux, sont intacts\u00a0: rien de ce qui suit n'en d\u00e9pend.","The price provider did not answer. Your figures are untouched: nothing below depends on it.","El proveedor de cotizaciones no respondi\u00f3. Sus cifras est\u00e1n intactas: nada de lo que sigue depende de \u00e9l.","Der Kursanbieter hat nicht geantwortet. Ihre Zahlen sind unber\u00fchrt: nichts weiter unten h\u00e4ngt davon ab."],
   'an.mar.ens.k':       ["Le march\u00e9 dans son ensemble","The market as a whole","El mercado en conjunto","Der Markt insgesamt"],
@@ -6569,6 +6585,17 @@ window.PC = (function(){
         <div class="an-bloc" id="an-marche">
           <h3 class="an-titre mono" data-i18n="an.mar.t">Les marchés aujourd'hui</h3>
           <p class="an-sous" id="an-mar-sous"></p>
+          <!-- Les trois marches, comme dans l'onglet Marches. Ce sont
+               les memes sources : il n'y avait aucune raison que
+               l'analyse ne parle que des cryptos. -->
+          <div class="sous-onglets an-mar__s" id="an-mar-sources" role="tablist">
+            <button class="sous-onglet" type="button" role="tab" data-src="crypto"
+                    aria-selected="true" data-i18n="b.sous.crypto">Cryptos</button>
+            <button class="sous-onglet" type="button" role="tab" data-src="bourse"
+                    aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
+            <button class="sous-onglet" type="button" role="tab" data-src="matieres"
+                    aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
+          </div>
           <div class="marches__horizons an-mar__h" id="an-mar-horizons" role="group"
                data-i18n-aria="m.horizon">
             <button class="marches__h" type="button" data-h="24h" aria-pressed="true">24 h</button>
@@ -9064,7 +9091,13 @@ window.PC = (function(){
        une ligne a la fois, et chaque arrivee doit se voir. Le bloc de
        l'IA, lui, ne depend que du droit. */
     if (typeof anCalcule === 'function') anCalcule();
-    if (typeof anMarche === 'function'){ anMarche(); anMarcheCharge(); }
+    if (typeof anMarche === 'function'){
+      anMarche(); anMarcheCharge();
+      /* Le flux ne vit que sur cet onglet : la fonction se coupe
+         elle-meme des qu'on est ailleurs, ce qui evite d'ouvrir une
+         connexion pour un ecran que personne ne regarde. */
+      marOuvreFlux();
+    }
     const blocIA = document.getElementById('an-ia');
     if (blocIA) blocIA.hidden = !droit('analyseIA');
 
@@ -10904,7 +10937,21 @@ window.PC = (function(){
      rendrait « le marche a monte » sur un mouvement qui n'a touche que
      les plus petites.
      ============================================================ */
-  let marLus = null, marQuand = 0, marEnVol = false, marH = '24h';
+  /* Un cache par marche : passer des cryptos a la bourse et revenir ne
+     doit pas redemander ce qu'on vient de lire. */
+  const marCache = {};
+  let marSrc = 'crypto', marH = '24h', marEnVol = '';
+  /* Les cryptos ont une cotation continue accessible ; la bourse et les
+     metaux, non. On ne fait donc pas semblant : la phrase sous le titre
+     change avec, et le point qui bat n'apparait que la ou il y a
+     vraiment quelque chose qui bat. */
+  let marFlux = null, marFluxPaires = '', marFluxPeint = null,
+      marFluxVif = false, marFluxRetard = 0;
+  const MAR_VIF = {crypto:1};
+
+  function marEtat(){ return marCache[marSrc] || null; }
+  Object.defineProperty(window, 'PC_MAR_LUS', {get:function(){
+    const e = marEtat(); return e ? e.l : null; }});
 
   const MAR_H = {
     '24h': ['price_change_percentage_24h_in_currency', 'price_change_percentage_24h'],
@@ -10925,22 +10972,140 @@ window.PC = (function(){
      secondes bruleraient le quota du fournisseur pour reecrire les
      memes six chiffres. */
   function anMarcheCharge(){
-    if (marEnVol || !droit('analyse') || vueCourante !== 'analyse') return;
-    if (marLus && Date.now() - marQuand < 300000) return;
+    const src = marSrc;
+    if (marEnVol === src || !droit('analyse') || vueCourante !== 'analyse') return;
+    const e = marCache[src];
+    if (e && e.l && e.l.length && Date.now() - e.t < 300000) return;
     if (!window.PC_MARCHES || !PC_MARCHES.dix) return;
     if (PC_MARCHES.occupe && PC_MARCHES.occupe()) return;
-    marEnVol = true;
-    PC_MARCHES.dix('crypto').then(function(l){
-      marEnVol = false;
-      if (Array.isArray(l) && l.length){ marLus = l; marQuand = Date.now(); }
-      else if (!marLus) marLus = [];
+    marEnVol = src;
+    PC_MARCHES.dix(src).then(function(l){
+      marEnVol = '';
+      /* `null` ne veut pas dire « rien » : c'est le relais qui manque.
+         Les confondre ferait croire que la bourse est vide. */
+      const lu = Array.isArray(l) ? l : [];
+      /* LE COURS D'OUVERTURE DES 24 HEURES, deduit du relevé lui-meme :
+         si le prix vaut P et que la variation du jour vaut v %, alors
+         l'ouverture valait P / (1 + v/100). C'est de l'arithmetique
+         exacte sur deux chiffres qu'on a deja.
+
+         Il sert a recalculer la variation quand un prix arrive en
+         direct. Sans lui, il faudrait que le flux porte son propre
+         cours d'ouverture — la plupart le font, certains non, et on ne
+         veut pas d'un « en direct » qui ne bouge que chez les uns. */
+      lu.forEach(function(c){
+        const v = marVar(c, '24h');
+        c.ouv24 = (typeof c.current_price === 'number' && c.current_price > 0 &&
+                   v !== null && (1 + v / 100) > 0)
+          ? c.current_price / (1 + v / 100) : null;
+      });
+      marCache[src] = (l === null)
+        ? {l:[], t:Date.now(), relais:false}
+        : {l:lu, t:Date.now(), relais:true};
       anMarche();
+      marOuvreFlux();
     }, function(){
-      marEnVol = false;
-      if (!marLus) marLus = [];
+      marEnVol = '';
+      if (!marCache[src]) marCache[src] = {l:[], t:Date.now(), relais:true};
       anMarche();
     });
   }
+
+  /* ===== LES COURS EN DIRECT =====
+     Le bloc affichait un releve : six chiffres justes, et immobiles.
+     « En direct » veut dire que le prix bouge pendant qu'on regarde,
+     sinon le mot ne vaut rien.
+
+     Ce flux-ci est SEPARE de celui du portefeuille. Celui-la suit les
+     paires que le client detient et ecrit dans ses donnees ; celui-ci
+     ne suit que les lignes affichees et n'ecrit NULLE PART. Les
+     melanger aurait fait dependre l'enregistrement d'un portefeuille
+     de l'onglet ouvert.
+
+     Ce qui bouge vraiment : le prix, et la variation sur 24 h, que le
+     miniTicker donne par son cours d'ouverture. Les colonnes 7 jours
+     et 30 jours ne peuvent pas suivre — aucun flux ne les porte — et
+     la page le dit plutot que de laisser croire que tout est vivant. */
+  function marCoupeFlux(){
+    if (marFlux){ const x = marFlux; marFlux = null; marFluxPaires = ''; try { x.close(); } catch (e){} }
+    marFluxVif = false;
+  }
+
+  function marOuvreFlux(){
+    if (!MAR_VIF[marSrc] || vueCourante !== 'analyse' || !droit('analyse') || document.hidden){
+      marCoupeFlux(); return;
+    }
+    const e = marEtat();
+    if (!e || !e.l || !e.l.length) return;
+    const q = CONTREPARTIE[PC.devise];
+    if (!q){ marCoupeFlux(); return; }
+    const parPaire = {};
+    e.l.forEach(function(c){
+      const base = PAIRES[String(c.id || '').toLowerCase()];
+      if (base) parPaire[(base + q).toLowerCase()] = String(c.id).toLowerCase();
+    });
+    const paires = Object.keys(parPaire).sort();
+    if (!paires.length){ marCoupeFlux(); return; }
+    const cle = paires.join('/');
+    if (marFlux && cle === marFluxPaires) return;
+    marCoupeFlux();
+    const u = FLUX_SOURCE + (FLUX_SOURCE.indexOf('?') === -1 ? '?' : '&') +
+      'streams=' + paires.map(function(x){ return x + '@miniTicker'; }).join('/');
+    let x;
+    try { x = new WebSocket(u); } catch (err){ return; }
+    marFlux = x; marFluxPaires = cle;
+    let recu = false;
+    x.onopen = function(){ recu = false; };
+    x.onmessage = function(ev){
+      if (marFlux !== x) return;
+      if (!recu){ recu = true; marFluxRetard = 0; marFluxVif = true; }
+      let o;
+      try { o = JSON.parse(ev.data); } catch (err){ return; }
+      const d = o && (o.data || o);
+      if (!d || !d.s || typeof d.c === 'undefined') return;
+      const id = parPaire[String(d.s).toLowerCase()];
+      const prix = parseFloat(d.c), ouv = parseFloat(d.o);
+      if (!id || !isFinite(prix) || !(prix > 0)) return;
+      const etat = marEtat();
+      if (!etat || !etat.l) return;
+      etat.l.forEach(function(c){
+        if (String(c.id || '').toLowerCase() !== id) return;
+        c.current_price = prix;
+        /* La variation sur 24 h se recalcule a partir du cours
+           d'ouverture que le flux porte lui-meme. Sans `o`, on laisse
+           la valeur du relevé : une variation inventee serait pire
+           qu'une variation un peu vieille. */
+        const base = (isFinite(ouv) && ouv > 0) ? ouv : c.ouv24;
+        if (base > 0){
+          c.price_change_percentage_24h_in_currency = (prix - base) / base * 100;
+          c.price_change_percentage_24h = c.price_change_percentage_24h_in_currency;
+        }
+      });
+      /* On ne repeint pas a chaque tick : douze paires en font des
+         dizaines par seconde, et l'oeil n'en lit aucune. */
+      if (!marFluxPeint) marFluxPeint = setTimeout(function(){
+        marFluxPeint = null; anMarche();
+      }, 600);
+    };
+    x.onclose = function(){
+      if (marFlux === x){ marFlux = null; marFluxPaires = ''; }
+      marFluxVif = false;
+      anMarche();
+      if (vueCourante !== 'analyse' || document.hidden) return;
+      /* Trois tentatives espacees, puis on renonce : le relevé HTTP
+         reste juste, et s'acharner ne fera pas accepter un serveur qui
+         refuse. */
+      if (marFluxRetard >= 3) return;
+      const attente = [2000, 5000, 15000][marFluxRetard++];
+      setTimeout(marOuvreFlux, attente);
+    };
+    x.onerror = function(){};
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) marCoupeFlux();
+    else { marFluxRetard = 0; marOuvreFlux(); }
+  });
 
   /* Le calcul, separe de l'affichage : l'ecran et le message envoye a
      l'IA doivent porter EXACTEMENT les memes chiffres. Deux calculs
@@ -10974,6 +11139,34 @@ window.PC = (function(){
     if (!droit('analyse')){ bloc.hidden = true; return; }
     bloc.hidden = false;
 
+    /* Le choix du marche. Changer de marche redemande une liste — elle
+       n'a rien a voir avec la precedente — mais la garde ensuite en
+       cache : revenir sur les cryptos ne coute rien. */
+    const sources = document.getElementById('an-mar-sources');
+    if (sources && !sources.dataset.branche){
+      sources.dataset.branche = '1';
+      sources.addEventListener('click', function(e){
+        const b = e.target.closest ? e.target.closest('[data-src]') : null;
+        if (!b) return;
+        marSrc = b.getAttribute('data-src');
+        sources.querySelectorAll('[data-src]').forEach(function(x){
+          x.setAttribute('aria-selected', x === b ? 'true' : 'false');
+        });
+        /* Le flux d'un marche ne vaut rien pour un autre : on le coupe
+           avant de changer, et on ne le rouvre que si le nouveau en a
+           un. */
+        marCoupeFlux();
+        anMarche();
+        anMarcheCharge();
+        marOuvreFlux();
+      });
+    }
+    if (sources){
+      sources.querySelectorAll('[data-src]').forEach(function(x){
+        x.setAttribute('aria-selected', x.getAttribute('data-src') === marSrc ? 'true' : 'false');
+      });
+    }
+
     const groupe = document.getElementById('an-mar-horizons');
     if (groupe && !groupe.dataset.branche){
       groupe.dataset.branche = '1';
@@ -10990,23 +11183,38 @@ window.PC = (function(){
       });
     }
 
-    if (!marLus){
+    const etat = marEtat();
+    if (!etat){
       if (mot){ mot.hidden = false; mot.dataset.ton = 'attente'; mot.textContent = PC.t('an.mar.charge'); }
+      if (sous){ sous.textContent = ''; sous.removeAttribute('data-vif'); }
       hote.innerHTML = '';
       return;
     }
-    const vus = marLus.filter(function(c){ return marVar(c, marH) !== null; });
+    const vus = (etat.l || []).filter(function(c){ return marVar(c, marH) !== null; });
     if (!vus.length){
-      if (mot){ mot.hidden = false; mot.dataset.ton = ''; mot.textContent = PC.t('an.mar.ko'); }
+      if (mot){
+        mot.hidden = false; mot.dataset.ton = '';
+        /* Un relais absent n'est pas un marche vide : les confondre
+           ferait croire que la bourse ne cote rien. */
+        mot.textContent = PC.t(etat.relais === false ? 'an.mar.relais' : 'an.mar.ko');
+      }
+      if (sous){ sous.textContent = ''; sous.removeAttribute('data-vif'); }
       hote.innerHTML = '';
       return;
     }
     if (mot) mot.hidden = true;
     if (sous){
       let h = '';
-      try { h = new Date(marQuand).toLocaleTimeString(PC.locale(), {hour:'2-digit', minute:'2-digit'}); }
+      try { h = new Date(etat.t).toLocaleTimeString(PC.locale(), {hour:'2-digit', minute:'2-digit'}); }
       catch (e){ h = ''; }
-      sous.textContent = PC.t('an.mar.d', {h:h});
+      if (marFluxVif){
+        sous.dataset.vif = '1';
+        sous.textContent = PC.t('an.mar.vif', {s:fluxNom, h:h});
+      } else {
+        sous.removeAttribute('data-vif');
+        sous.textContent = PC.t('an.mar.d', {n:String(vus.length), h:h}) +
+          (MAR_VIF[marSrc] ? '' : ' ' + PC.t('an.mar.fige'));
+      }
     }
 
     const R = marResume(vus, marH);
@@ -11284,7 +11492,8 @@ window.PC = (function(){
        redemander couterait un appel et, pire, pourrait rendre des
        chiffres legerement differents de ceux affiches au-dessus du
        texte que l'IA va ecrire. */
-    const cours = (marLus && marLus.length) ? Promise.resolve(marLus)
+    const etatMar = marEtat();
+    const cours = (etatMar && etatMar.l && etatMar.l.length) ? Promise.resolve(etatMar.l)
       : (window.PC_MARCHES && PC_MARCHES.dix)
         ? PC_MARCHES.dix('crypto').catch(function(){ return []; })
         : Promise.resolve([]);
