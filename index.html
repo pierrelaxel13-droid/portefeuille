@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "260930.1602";</script>
+<script>window.PC_VERSION = "260930.1728";</script>
 </head>
 <body>
 
@@ -1167,6 +1167,11 @@ body.flux-vif .cours__vif::before{
   background:var(--accent-soft); border-color:var(--accent); color:var(--accent);
 }
 .marches__h:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+/* Une periode que le fournisseur ne sert pas. Elle reste visible —
+   savoir qu'elle existe ailleurs fait partie de l'information — mais
+   elle ne se clique plus, et son titre dit pourquoi. */
+.marches__h:disabled{opacity:.4; cursor:not-allowed;}
+.marches__h:disabled:hover{background:none; border-color:var(--rule-strong); color:var(--ink-2);}
 
 /* Sous 860 px : la forme d'une application de marche. A gauche le
    logo, le nom, et la capitalisation dessous ; a droite la variation
@@ -1865,6 +1870,116 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
    parce qu'il n'y a qu'un jeu de chiffres a la fois. */
 .an-mar__h{display:flex; margin:0 0 16px;}
 .an-mar__s{margin:0 0 14px;}
+
+/* ===== Les lignes du marche, ouvrables =====
+   Une liste a puces avec un filet sous chaque rangee est la solution
+   paresseuse, et la plus laide. Ici chaque ligne est un bouton : le nom
+   et son code a gauche, le prix et sa variation a droite, et toute la
+   rangee se clique. La colonne de droite est en chiffres tabulaires
+   pour que les prix s'alignent a la virgule. */
+.an-mar-l{margin-top:30px;}
+.an-mar-l__t{
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 6px; list-style:none;
+}
+.an-mar-l__t::-webkit-details-marker{display:none;}
+/* Sur grand ecran, ce n'est pas un repli : le titre ne se clique pas et
+   la liste est toujours la. Sur telephone elle s'ouvre d'un doigt —
+   dix rangees y faisaient 691 px, soit presque un ecran entier avant
+   d'avoir rien choisi. */
+@media (max-width:700px){
+  .an-mar-l__t{cursor:pointer; color:var(--accent); font-size:11.5px;}
+  .an-mar-l__t::after{content:" +";}
+  .an-mar-l[open] > .an-mar-l__t::after{content:" \2013";}
+  .an-mar-l__t:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+}
+.an-mar-l__d{font-size:13.5px; line-height:1.55; color:var(--ink-2); margin:0 0 14px; max-width:62ch;}
+.an-mar-l__c{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 268px), 1fr));
+  gap:0 34px; border-top:1px solid var(--rule-strong);
+}
+.an-mar-i{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:baseline;
+  gap:2px 14px; width:100%; text-align:left; cursor:pointer;
+  background:none; border:none; border-bottom:1px solid var(--rule);
+  padding:12px 4px 13px; font-family:inherit; color:inherit;
+  transition:background .15s, padding-left .15s;
+}
+.an-mar-i:hover{background:var(--accent-soft); padding-left:9px;}
+.an-mar-i:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+.an-mar-i__n{font-size:15px; font-weight:600; letter-spacing:-.01em;}
+.an-mar-i__c{
+  grid-column:1; font-family:'IBM Plex Mono', monospace; font-size:11px;
+  letter-spacing:.05em; color:var(--ink-3); text-transform:uppercase;
+}
+.an-mar-i__p{
+  grid-column:2; grid-row:1; justify-self:end;
+  font-family:'IBM Plex Mono', monospace; font-size:14px;
+  font-variant-numeric:tabular-nums;
+}
+.an-mar-i__v{
+  grid-column:2; grid-row:2; justify-self:end;
+  font-family:'IBM Plex Mono', monospace; font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+.an-mar-i__v[data-dir="up"]{color:var(--gain);}
+.an-mar-i__v[data-dir="down"]{color:var(--loss);}
+.an-mar-i__v[data-dir="rien"]{color:var(--ink-3);}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .an-mar-i{transition:none;}
+}
+
+/* ===== Les mesures du marche : un champ de donnees, pas des cartes =====
+   Sept tuiles encadrees de poids egal ne disent pas quoi lire en
+   premier, et l'encadrement n'apporte rien : il n'y a aucune hierarchie
+   a communiquer entre une boite et sa voisine. On retire donc les
+   boites et on laisse les filets faire le travail — c'est ce que fait
+   une page de cotation imprimee depuis cent ans.
+
+   La mesure de tete, elle, garde le haut de l'affiche : elle repond a
+   la question qu'on se pose en arrivant. */
+#an-mar-mes{
+  margin-top:18px; gap:0; background:none;
+  border-top:1px solid var(--rule-strong);
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, 208px), 1fr));
+}
+#an-mar-mes .an-m{
+  background:none; padding:15px 18px 17px 0;
+  border-bottom:1px solid var(--rule);
+}
+#an-mar-mes .an-m__v{font-family:'IBM Plex Mono', monospace; font-weight:500;}
+#an-mar-mes .an-m--tete{
+  grid-column:1 / -1; padding:20px 0 22px;
+  border-bottom:1px solid var(--rule-strong);
+}
+#an-mar-mes .an-m--tete .an-m__v{
+  font-family:'Archivo Black', system-ui, sans-serif; font-weight:400;
+  font-size:clamp(40px, 7vw, 76px); letter-spacing:-.045em; line-height:.92;
+  margin:10px 0 8px;
+}
+#an-mar-mes .an-m--tete .an-m__d{font-size:13.5px; max-width:62ch;}
+/* Sur telephone les mesures passent en une colonne : les rembourrages
+   pensés pour une grille de trois y ajoutent sept fois le meme vide.
+   On les resserre — c'est de la densite, aucune information ne part. */
+@media (max-width:700px){
+  #an-mar-mes .an-m{padding:11px 0 12px;}
+  #an-mar-mes .an-m--tete{padding:14px 0 16px;}
+  #an-mar-mes .an-m--tete .an-m__v{font-size:34px; margin:6px 0 6px;}
+  #an-mar-mes .an-m--tete .an-m__d{font-size:12.5px;}
+  #an-mar-mes .an-m__d{font-size:12px;}
+}
+@media (min-width:860px){
+  /* Le detail de la mesure de tete se range a cote du chiffre plutot
+     que dessous : le nombre est court, la phrase est longue, et les
+     empiler laissait une bande vide a droite. */
+  #an-mar-mes .an-m--tete{
+    display:grid; grid-template-columns:minmax(0,auto) minmax(0,1fr);
+    align-items:baseline; gap:6px 40px;
+  }
+  #an-mar-mes .an-m--tete .an-m__k{grid-column:1 / -1;}
+  #an-mar-mes .an-m--tete .an-m__v{margin:6px 0 0;}
+  #an-mar-mes .an-m--tete .an-m__d{margin:0;}
+}
 /* Le point qui bat pendant que les cours arrivent. Il ne dit pas « ca
    marche » dans l'absolu : il dit « ces prix-la arrivent en ce
    moment ». Sans flux, pas de point — et la phrase change avec. */
@@ -4267,6 +4382,11 @@ window.PC = (function(){
   'an.mar.ko':          ["Le fournisseur de cours n'a pas r\u00e9pondu. Vos chiffres, eux, sont intacts\u00a0: rien de ce qui suit n'en d\u00e9pend.","The price provider did not answer. Your figures are untouched: nothing below depends on it.","El proveedor de cotizaciones no respondi\u00f3. Sus cifras est\u00e1n intactas: nada de lo que sigue depende de \u00e9l.","Der Kursanbieter hat nicht geantwortet. Ihre Zahlen sind unber\u00fchrt: nichts weiter unten h\u00e4ngt davon ab."],
   'an.mar.ens.k':       ["Le march\u00e9 dans son ensemble","The market as a whole","El mercado en conjunto","Der Markt insgesamt"],
   'an.mar.ens.d':       ["Moyenne des {{n}} lignes, pond\u00e9r\u00e9e par leur capitalisation. Sans cette pond\u00e9ration, la plus petite p\u00e8serait autant que la plus grosse.","Average of the {{n}} lines, weighted by capitalisation. Without that weighting the smallest would count as much as the largest.","Media de las {{n}} l\u00edneas, ponderada por su capitalizaci\u00f3n. Sin esa ponderaci\u00f3n la m\u00e1s peque\u00f1a pesar\u00eda tanto como la mayor.","Durchschnitt der {{n}} Werte, nach Marktkapitalisierung gewichtet. Ohne diese Gewichtung z\u00e4hlte der kleinste so viel wie der gr\u00f6\u00dfte."],
+  'an.mar.ens.ds':      ["Moyenne simple des {{n}} lignes. Ce fournisseur ne sert pas la capitalisation des actions\u00a0: aucune pond\u00e9ration n'est possible, et chaque ligne pèse donc autant que les autres.","Plain average of the {{n}} lines. This provider does not serve share capitalisation: no weighting is possible, so every line counts the same.","Media simple de las {{n}} líneas. Este proveedor no sirve la capitalización de las acciones: no es posible ponderar, así que cada línea pesa igual.","Einfacher Durchschnitt der {{n}} Werte. Dieser Anbieter liefert keine Aktien-Marktkapitalisierung: eine Gewichtung ist nicht möglich, jede Position zählt gleich viel."],
+  'an.mar.actif.dv':    ["{{q}}\u00a0: {{p}} échangés dans la journée, le plus gros volume de cette liste. C'est ce qui change de mains, pas ce que ça vaut.","{{q}}: {{p}} traded during the day, the largest volume in this list. That is what changes hands, not what it is worth.","{{q}}: {{p}} negociados en el día, el mayor volumen de esta lista. Es lo que cambia de manos, no lo que vale.","{{q}}: {{p}} am Tag gehandelt, das größte Volumen dieser Liste. Das ist, was den Besitzer wechselt, nicht was es wert ist."],
+  'an.mar.liste.t':     ["Ou une ligne en particulier","Or one line in particular","O una línea en particular","Oder eine einzelne Position"],
+  'an.mar.liste.d':     ["Douze mois de cours réels, mesurés ligne par ligne. Choisissez-en une et son analyse s'ouvre plus bas.","Twelve months of real prices, measured line by line. Pick one and its analysis opens below.","Doce meses de cotizaciones reales, medidas línea por línea. Elija una y su análisis se abre más abajo.","Zwölf Monate echter Kurse, Position für Position gemessen. Wählen Sie eine, und ihre Analyse öffnet sich weiter unten."],
+  'an.mar.h.non':       ["Ce fournisseur ne sert pas cette période pour ce marché.","This provider does not serve this period for this market.","Este proveedor no sirve este periodo para este mercado.","Dieser Anbieter liefert diesen Zeitraum für diesen Markt nicht."],
   'an.mar.sens.k':      ["En hausse","Up","Al alza","Im Plus"],
   'an.mar.sens.d':      ["{{h}} lignes sur {{n}} montent. Tout ensemble, c'est un mouvement de march\u00e9\u00a0; une seule qui bouge, c'est l'histoire d'une ligne.","{{h}} of {{n}} lines are up. All together, that is a market move; a single one moving is the story of one line.","{{h}} de {{n}} l\u00edneas suben. Todas a la vez es un movimiento de mercado; una sola que se mueve es la historia de una l\u00ednea.","{{h}} von {{n}} Werten steigen. Alle zusammen ist eine Marktbewegung; ein einzelner ist die Geschichte einer Position."],
   'an.mar.haut.k':      ["Ce qui monte le plus","Biggest riser","Lo que m\u00e1s sube","Gr\u00f6\u00dfter Gewinner"],
@@ -6604,6 +6724,15 @@ window.PC = (function(){
           </div>
           <p class="analyse__m" id="an-mar-mot" hidden></p>
           <div class="an-mes" id="an-mar-mes"></div>
+          <!-- Les lignes du marche, une par une. Le bloc du dessus dit
+               ce que fait l'ensemble ; celui-ci laisse ouvrir n'importe
+               laquelle et en mesurer les douze mois. -->
+          <details class="an-mar-l" id="an-mar-liste" hidden open>
+            <summary class="an-mar-l__t mono" data-i18n="an.mar.liste.t">Ou une ligne en particulier</summary>
+            <p class="an-mar-l__d" data-i18n="an.mar.liste.d">Douze mois de cours réels, mesurés
+              ligne par ligne. Choisissez-en une et son analyse s'ouvre plus bas.</p>
+            <div class="an-mar-l__c" id="an-mar-lignes"></div>
+          </details>
         </div>
 
         <div class="an-bloc" id="an-ia" hidden>
@@ -10604,8 +10733,9 @@ window.PC = (function(){
     return out + '</div>';
   }
 
-  function anMesure(cle, valeur, detail, ton, dessin){
-    return '<div class="an-m"' + (ton ? ' data-ton="' + ton + '"' : '') + '>' +
+  function anMesure(cle, valeur, detail, ton, dessin, cls){
+    return '<div class="an-m' + (cls ? ' ' + cls : '') + '"' +
+      (ton ? ' data-ton="' + ton + '"' : '') + '>' +
       '<div class="an-m__k">' + echap(PC.t(cle + '.k')) + '</div>' +
       '<div class="an-m__v">' + valeur + '</div>' +
       (dessin || '') +
@@ -11112,7 +11242,8 @@ window.PC = (function(){
      paralleles finiraient par diverger, et le texte contredirait le
      bloc qui le surmonte. */
   function marResume(vus, h){
-    let poids = 0, somme = 0, hausses = 0, haut = null, bas = null, actif = null;
+    let poids = 0, somme = 0, hausses = 0, haut = null, bas = null;
+    let actifR = null, actifV = null;
     vus.forEach(function(c){
       const v = marVar(c, h);
       if (v === null) return;
@@ -11121,12 +11252,40 @@ window.PC = (function(){
       if (v > 0) hausses++;
       if (!haut || v > haut.v) haut = {v:v, n:c.name};
       if (!bas || v < bas.v) bas = {v:v, n:c.name};
-      if (cap > 0 && typeof c.total_volume === 'number' && c.total_volume > 0){
-        const r = c.total_volume / cap;
-        if (!actif || r > actif.r) actif = {r:r, n:c.name};
+      /* Deux candidats tenus separement, et le bon choisi a la fin.
+         Rapporte a la capitalisation quand elle existe : c'est la vraie
+         mesure d'agitation, « combien de la ligne a change de mains ».
+         Sinon le volume brut — moins parlant, mais vrai, et dit comme
+         tel. Melanger les deux dans un seul maximum comparerait un
+         rapport a des euros. */
+      if (typeof c.total_volume === 'number' && c.total_volume > 0){
+        if (cap > 0){
+          const r = c.total_volume / cap;
+          if (!actifR || r > actifR.r) actifR = {r:r, n:c.name};
+        }
+        if (!actifV || c.total_volume > actifV.v) actifV = {v:c.total_volume, n:c.name};
       }
     });
-    return {poids:poids, hausses:hausses, haut:haut, bas:bas, actif:actif,
+    /* SANS CAPITALISATION, pas de ponderation possible. Le relais de
+       bourse ne la sert pas : elle vaut `null` sur chaque action. Le
+       bloc perdait alors sa mesure principale en silence — et « en
+       silence » est le mot qui fait mal : rien ne disait pourquoi.
+
+       On rend donc la moyenne SIMPLE, et on le dit. Une moyenne simple
+       n'est pas fausse, elle repond juste a une autre question : ce que
+       fait la ligne moyenne de cette liste, et non ce que fait le
+       marche. La difference doit etre ecrite, pas devinee. */
+    const actif = actifR || actifV;
+    if (!(poids > 0) && vus.length){
+      let ss = 0, nn = 0;
+      vus.forEach(function(c){
+        const v = marVar(c, h);
+        if (v !== null){ ss += v; nn++; }
+      });
+      return {poids:0, simple:true, hausses:hausses, haut:haut, bas:bas, actif:actif,
+              n:vus.length, ensemble: nn ? ss / nn : null};
+    }
+    return {poids:poids, simple:false, hausses:hausses, haut:haut, bas:bas, actif:actif,
             n:vus.length, ensemble: poids > 0 ? somme / poids : null};
   }
 
@@ -11183,11 +11342,43 @@ window.PC = (function(){
       });
     }
 
+    /* LES PERIODES REELLEMENT SERVIES. Le relais de bourse ne rend que
+       la variation du jour : choisir « 7 j » vidait le bloc, et la page
+       accusait le fournisseur de n'avoir pas repondu — alors qu'il
+       avait parfaitement repondu, sans cette colonne. Un message faux
+       sur une cause fausse : on ne propose donc que ce qui existe. */
+    const dispo = (function(){
+      const e = marEtat(), o = {};
+      ['24h', '7j', '30j'].forEach(function(h){
+        o[h] = !!(e && e.l && e.l.some(function(c){ return marVar(c, h) !== null; }));
+      });
+      return o;
+    })();
+    if (groupe && marEtat() && marEtat().l && marEtat().l.length){
+      if (!dispo[marH]){
+        marH = ['24h', '7j', '30j'].filter(function(h){ return dispo[h]; })[0] || '24h';
+      }
+      groupe.querySelectorAll('[data-h]').forEach(function(x){
+        const h = x.getAttribute('data-h');
+        x.disabled = !dispo[h];
+        x.setAttribute('aria-pressed', h === marH ? 'true' : 'false');
+        if (dispo[h]) x.removeAttribute('title');
+        else x.setAttribute('title', PC.t('an.mar.h.non'));
+      });
+    }
+
+    /* Les sorties anticipees doivent emporter la liste avec elles :
+       sinon on change de marche, le bloc dit « on charge », et les
+       lignes du marche PRECEDENT restent affichees dessous. */
+    const cacheListe = function(){
+      const b = document.getElementById('an-mar-liste');
+      if (b) b.hidden = true;
+    };
     const etat = marEtat();
     if (!etat){
       if (mot){ mot.hidden = false; mot.dataset.ton = 'attente'; mot.textContent = PC.t('an.mar.charge'); }
       if (sous){ sous.textContent = ''; sous.removeAttribute('data-vif'); }
-      hote.innerHTML = '';
+      hote.innerHTML = ''; cacheListe();
       return;
     }
     const vus = (etat.l || []).filter(function(c){ return marVar(c, marH) !== null; });
@@ -11199,7 +11390,7 @@ window.PC = (function(){
         mot.textContent = PC.t(etat.relais === false ? 'an.mar.relais' : 'an.mar.ko');
       }
       if (sous){ sous.textContent = ''; sous.removeAttribute('data-vif'); }
-      hote.innerHTML = '';
+      hote.innerHTML = ''; cacheListe();
       return;
     }
     if (mot) mot.hidden = true;
@@ -11221,11 +11412,18 @@ window.PC = (function(){
     const poids = R.poids, hausses = R.hausses, haut = R.haut, bas = R.bas, actif = R.actif;
 
     let m = '';
-    if (poids > 0){
+    if (R.ensemble !== null){
       const ens = R.ensemble;
+      /* LA MESURE DE TETE. Sept tuiles de meme poids ne disent pas
+         quoi regarder en premier : c'est la meme faute que trois
+         cartes identiques alignees. Celle-ci repond a la question
+         qu'on se pose en arrivant — « le marche, il fait quoi ? » — et
+         elle prend la place que ca merite. Les six autres la
+         precisent. */
       m += anMesure('an.mar.ens', PC.pourcent(ens, 1),
-                    echap(PC.t('an.mar.ens.d', {n:String(vus.length)})),
-                    ens < 0 ? 'baisse' : 'hausse');
+                    echap(PC.t(R.simple ? 'an.mar.ens.ds' : 'an.mar.ens.d',
+                               {n:String(vus.length)})),
+                    ens < 0 ? 'baisse' : 'hausse', '', 'an-m--tete');
     }
     m += anMesure('an.mar.sens', hausses + ' / ' + vus.length,
                   echap(PC.t('an.mar.sens.d', {h:String(hausses), n:String(vus.length)})),
@@ -11247,7 +11445,9 @@ window.PC = (function(){
     }
     if (actif){
       m += anMesure('an.mar.actif', echap(actif.n),
-                    echap(PC.t('an.mar.actif.d', {q:actif.n, p:anAmpleur(actif.r * 100, 1)})));
+                    echap(actif.r !== undefined && actif.r !== null
+                      ? PC.t('an.mar.actif.d', {q:actif.n, p:anAmpleur(actif.r * 100, 1)})
+                      : PC.t('an.mar.actif.dv', {q:actif.n, p:PC.compact(actif.v)})));
     }
     /* Combien de VOS lignes suivent une de ces cotations. C'est ce qui
        relie le bloc du dessus a celui du dessous : sans lui, on passe
@@ -11259,6 +11459,62 @@ window.PC = (function(){
     m += anMesure('an.mar.vous', String(miennes),
                   echap(PC.t('an.mar.vous.d', {n:String(miennes)})));
     hote.innerHTML = m;
+
+    /* ---------- LES LIGNES, UNE PAR UNE ----------
+       Le bloc du dessus dit ce que fait l'ensemble. Celui-ci laisse en
+       ouvrir une : c'est le meme chemin que la recherche plus bas, sans
+       avoir a taper un nom qu'on a sous les yeux. */
+    const boiteL = document.getElementById('an-mar-liste');
+    const hoteL = document.getElementById('an-mar-lignes');
+    if (!boiteL || !hoteL) return;
+    boiteL.hidden = false;
+    /* Le mode ne se repose QU'AU CHANGEMENT de largeur : sinon chaque
+       rendu — toutes les quarante-cinq secondes — refermerait la liste
+       sous les doigts de quelqu'un qui vient de l'ouvrir. */
+    const tel = window.matchMedia('(max-width:700px)').matches ? 'tel' : 'large';
+    if (boiteL.dataset.pose !== tel){
+      boiteL.dataset.pose = tel;
+      boiteL.open = (tel === 'large');
+    }
+    hoteL.innerHTML = vus.map(function(c){
+      const v = marVar(c, marH);
+      const dir = v === null ? 'rien' : (v < 0 ? 'down' : 'up');
+      return '<button class="an-mar-i" type="button" data-mar-i="' + echap(c.id) + '">' +
+        '<span class="an-mar-i__n">' + echap(c.name || c.id) + '</span>' +
+        '<span class="an-mar-i__c">' + echap(c.unite || c.symbol || '') + '</span>' +
+        '<span class="an-mar-i__p">' + echap(eur.format(c.current_price || 0)) + '</span>' +
+        '<span class="an-mar-i__v" data-dir="' + dir + '">' +
+          (v === null ? '\u2014' : (v < 0 ? '\u25bc ' : '\u25b2 ') + PC.pourcent(v, 1)) +
+        '</span></button>';
+    }).join('');
+    if (!hoteL.dataset.branche){
+      hoteL.dataset.branche = '1';
+      hoteL.addEventListener('click', function(e){
+        const b = e.target.closest ? e.target.closest('[data-mar-i]') : null;
+        if (!b) return;
+        const id = b.getAttribute('data-mar-i');
+        const etat2 = marEtat();
+        const c = etat2 && etat2.l
+          ? etat2.l.filter(function(x){ return String(x.id) === id; })[0] : null;
+        if (!c) return;
+        /* SI LA LIGNE EST DEJA A VOUS, c'est VOTRE ligne qu'on ouvre,
+           avec vos montants. Passer par le chemin « exterieur »
+           affichait « Bitcoin n'est pas dans votre portefeuille » a
+           quelqu'un qui en detient : faux, et vexant. */
+        const code = String(c.id || '').toLowerCase();
+        const mien = actifs.filter(function(a){
+          return a.sym && String(a.sym).trim().toLowerCase() === code;
+        })[0];
+        anSujet(mien ? {id:mien.id} : {code:c.id, nom:c.name || c.id});
+        /* L'analyse s'ouvre plus bas : sans ce deplacement, on aurait
+           clique et rien ne bougerait a l'ecran. */
+        const cible = document.getElementById('an-calc');
+        if (cible && cible.scrollIntoView){
+          const doux = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          cible.scrollIntoView({behavior: doux ? 'smooth' : 'auto', block:'start'});
+        }
+      });
+    }
   }
 
   function anCalcule(){
