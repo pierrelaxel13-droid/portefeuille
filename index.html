@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261001.1602";</script>
+<script>window.PC_VERSION = "261001.1648";</script>
 </head>
 <body>
 
@@ -4435,6 +4435,8 @@ window.PC = (function(){
   'an.relecart.d':      ["D'un relevé à l'autre, le {{d}}.","From one statement to the next, on {{d}}.","De un informe al siguiente, el {{d}}.","Von einem Auszug zum nächsten, am {{d}}."],
   'an.n.releves':       ["{{n}} relev\u00e9s lus","{{n}} statements read","{{n}} informes le\u00eddos","{{n}} Ausz\u00fcge gelesen"],
   'an.src.taux':        ["valeur calcul\u00e9e au taux garanti","value computed from the guaranteed rate","valor calculado al tipo garantizado","Wert aus dem garantierten Zins berechnet"],
+  'an.recul.aucun':     ["Jamais","Never","Nunca","Nie"],
+  'an.recul.aucun.d':   ["La valeur n'est jamais repassée sous un sommet précédent.","The value never fell back below an earlier peak.","El valor nunca volvió a caer por debajo de un máximo anterior.","Der Wert fiel nie unter ein früheres Hoch zurück."],
   'an.reculr.k':        ["Pire recul","Worst drawdown","Peor ca\u00edda","Schlimmster R\u00fcckgang"],
   'an.posr.d':          ["{{b}} au-dessus du plus bas relevé.","{{b}} above the lowest statement.","{{b}} por encima del informe más bajo.","{{b}} über dem niedrigsten Auszug."],
   'an.prog.k':          ["Depuis le premier point","Since the first point","Desde el primer punto","Seit dem ersten Punkt"],
@@ -10983,11 +10985,18 @@ window.PC = (function(){
         m += anMesure('an.vol', anAmpleur(vol), '',
                       vol >= 50 ? 'attention' : '', anJauge(vol));
       }
-      if (rec){
-        m += anMesure('an.recul', '\u2212' + anAmpleur(rec.part),
-                      echap(PC.t('an.recul.d', {a:anDate(rec.debut), b:anDate(rec.fin)})),
-                      rec.part >= 30 ? 'baisse' : '');
-      }
+      /* PAS DE RECUL EST UNE REPONSE. anRecul rend null quand la valeur
+         n'est jamais repassee sous un sommet — une serie qui ne fait
+         que monter. La mesure disparaissait alors, et la rangee se
+         retrouvait courte d'une case : un trou se lit comme une panne,
+         alors que c'est le constat le plus fort que la serie puisse
+         rendre. On l'ecrit. */
+      m += rec
+        ? anMesure('an.recul', '\u2212' + anAmpleur(rec.part),
+                   echap(PC.t('an.recul.d', {a:anDate(rec.debut), b:anDate(rec.fin)})),
+                   rec.part >= 30 ? 'baisse' : '')
+        : anMesure('an.recul', echap(PC.t('an.recul.aucun')),
+                   echap(PC.t('an.recul.aucun.d')));
       m += anPosition(prix, haut, bas);
       if (forte){
         m += anMesure('an.seance', PC.pourcent(forte.r * 100, 1),
@@ -11010,11 +11019,12 @@ window.PC = (function(){
                                                d:anDate(prem[0])})),
                       prog < 0 ? 'baisse' : '');
       }
-      if (rec){
-        m += anMesure('an.reculr', '\u2212' + anAmpleur(rec.part),
-                      echap(PC.t('an.recul.d', {a:anDate(rec.debut), b:anDate(rec.fin)})),
-                      rec.part >= 30 ? 'baisse' : '');
-      }
+      m += rec
+        ? anMesure('an.reculr', '\u2212' + anAmpleur(rec.part),
+                   echap(PC.t('an.recul.d', {a:anDate(rec.debut), b:anDate(rec.fin)})),
+                   rec.part >= 30 ? 'baisse' : '')
+        : anMesure('an.reculr', echap(PC.t('an.recul.aucun')),
+                   echap(PC.t('an.recul.aucun.d')));
       m += anPosition(der[1], haut, bas, 'an.posr.d');
       /* DEUX MESURES DE PLUS, pour que la ligne soit aussi pleine
          qu'une ligne cotee : trois cases sur une rangee qui en porte
