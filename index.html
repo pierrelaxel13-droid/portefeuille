@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261001.2126";</script>
+<script>window.PC_VERSION = "261001.2213";</script>
 </head>
 <body>
 
@@ -70,6 +70,32 @@
   --filtre-oeuvre:saturate(.9) contrast(1) brightness(1.02);
   --pad:clamp(20px,5vw,72px);
   --maxw:1320px;
+
+  /* ===== Rayons =====
+     Il y en avait quatorze valeurs differentes, de 2 a 28 px, chacune
+     choisie sur le moment. Aucun oeil ne distingue 18 de 20, mais
+     l'accumulation se voit : c'est elle qui fait lire « assemble a la
+     machine ». Quatre pas, et un seul principe pour choisir — LE RAYON
+     SUIT LA TAILLE DE LA SURFACE. Une pastille de 22 px et une carte de
+     600 px ne peuvent pas avoir le meme angle : au meme rayon, la
+     petite parait ronde et la grande parait carree.
+
+     --r-1  pastilles et marques (jusqu'a ~24 px)
+     --r-2  tuiles, vignettes, blocs internes
+     --r-3  cartes
+     --r-4  grandes surfaces posees sur la page (solde, barre d'app)
+     --r-pill  tout ce qui est plus large que haut : barres, puces, jetons
+
+     Et une regle pour l'imbrication : un bloc pose DANS un autre prend
+     le rayon du parent moins l'ecart qui les separe. C'est pour cela
+     que la grille de mesures reste a angle vif a l'interieur d'une
+     tuile arrondie — a 22 px de marge sous un rayon de 20, le rayon
+     concentrique vaut zero, et l'arrondir la decollerait du cadre. */
+  --r-1:8px;
+  --r-2:14px;
+  --r-3:20px;
+  --r-4:26px;
+  --r-pill:999px;
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
@@ -684,7 +710,7 @@ body.flux-vif .cours__vif::before{
    posée dessus. Les chiffres flottaient jusqu'ici sur le papier nu, et
    la colonne de repères alignée à droite n'avait rien qui la tienne. */
 .vitre{
-  border:1px solid var(--verre-filet); border-radius:18px;
+  border:1px solid var(--verre-filet); border-radius:var(--r-3);
   background:var(--verre);
   backdrop-filter:var(--flou); -webkit-backdrop-filter:var(--flou);
   box-shadow:var(--verre-haut),
@@ -859,10 +885,10 @@ body.flux-vif .cours__vif::before{
 }
 .alloc__row:hover{background:var(--accent-soft);}
 .alloc__name{font-weight:600; font-size:15.5px;}
-.alloc__track{position:relative; height:26px; background:var(--paper-2); border-radius:3px; overflow:hidden;}
+.alloc__track{position:relative; height:26px; background:var(--paper-2); border-radius:var(--r-1); overflow:hidden;}
 .alloc__bar{
   position:absolute; inset:0 auto 0 0; width:0;
-  background:var(--accent); border-radius:0 4px 4px 0;
+  background:var(--accent); border-radius:0 var(--r-1) var(--r-1) 0;
   transition:width 1.05s cubic-bezier(.22,.68,.15,1);
 }
 .alloc__val{font-family:'IBM Plex Mono', monospace; font-variant-numeric:tabular-nums; font-size:15px; min-width:8ch; text-align:right;}
@@ -900,7 +926,7 @@ body.flux-vif .cours__vif::before{
 .tab{
   position:relative; background:none; border:none; cursor:pointer;
   font-family:inherit; font-size:15.5px; font-weight:600; color:var(--ink-3);
-  padding:12px 18px 14px; border-radius:8px 8px 0 0;
+  padding:12px 18px 14px; border-radius:var(--r-1) var(--r-1) 0 0;
   transition:color .22s, background .22s;
 }
 .tab:hover{color:var(--ink); background:var(--accent-soft);}
@@ -950,7 +976,7 @@ body.flux-vif .cours__vif::before{
 .gauge__v{font-size:14px; font-weight:700;}
 .gauge__track{display:flex; gap:3px;}
 .gauge__seg{
-  flex:1; height:8px; background:var(--paper-3); border-radius:2px;
+  flex:1; height:8px; background:var(--paper-3); border-radius:var(--r-pill);
   transform:scaleY(.55); transform-origin:50% 100%;
   transition:transform .45s cubic-bezier(.2,.7,.2,1), background .45s;
   transition-delay:calc(var(--s) * 60ms);
@@ -959,12 +985,12 @@ body.flux-vif .cours__vif::before{
 
 /* Barre part-à-tout : deux parts, séparées par un filet de fond */
 .split{margin-top:24px;}
-.split__bar{display:flex; height:26px; gap:2px; border-radius:3px; overflow:hidden;}
+.split__bar{display:flex; height:26px; gap:2px; border-radius:var(--r-1); overflow:hidden;}
 .split__a{background:var(--accent); transition:flex-grow .8s cubic-bezier(.22,.68,.15,1);}
 .split__b{background:var(--paper-3); transition:flex-grow .8s cubic-bezier(.22,.68,.15,1);}
 .split__key{display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:10px; font-size:13.5px; color:var(--ink-2);}
 .split__key span{display:inline-flex; align-items:center; gap:7px;}
-.split__chip{width:11px; height:11px; border-radius:2px; flex:none;}
+.split__chip{width:11px; height:11px; border-radius:3px; flex:none;}
 
 /* Camembert : deux parts seulement, donc le chiffre est écrit au centre
    et chaque part directement étiquetée — pas de légende à décoder. */
@@ -999,7 +1025,7 @@ body.flux-vif .cours__vif::before{
 .hold__tic{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-3); margin-left:8px;}
 .hold__val{font-family:'IBM Plex Mono', monospace; font-size:15px; font-variant-numeric:tabular-nums; text-align:right;}
 .hold__qte{font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-3);}
-.hold__bar{grid-column:1 / -1; height:5px; background:var(--paper-3); border-radius:3px; overflow:hidden; margin-top:4px;}
+.hold__bar{grid-column:1 / -1; height:5px; background:var(--paper-3); border-radius:var(--r-pill); overflow:hidden; margin-top:4px;}
 .hold__fill{display:block; height:100%; background:var(--accent); width:0; transition:width .8s cubic-bezier(.22,.68,.15,1);}
 .holds__note{padding:11px 16px; border-top:1px solid var(--rule); font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--loss);}
 
@@ -1772,7 +1798,7 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
     min-width:0; width:auto; max-height:min(82dvh, calc(100dvh - 56px));
     padding:8px 8px calc(10px + env(safe-area-inset-bottom, 0px));
     border:none; border-top:1px solid var(--rule-strong);
-    border-radius:18px 18px 0 0;
+    border-radius:var(--r-3) var(--r-3) 0 0;
     box-shadow:0 -22px 60px -20px var(--shadow);
     overflow-y:auto; overscroll-behavior:contain;
     -webkit-overflow-scrolling:touch;
@@ -1868,7 +1894,7 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 .cat__h{display:flex; justify-content:space-between; align-items:baseline; gap:14px; font-size:14.5px;}
 .cat__h b{font-weight:600;}
 .cat__h span{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--ink-2); font-variant-numeric:tabular-nums;}
-.cat__b{height:9px; background:var(--paper-3); border-radius:3px; overflow:hidden;}
+.cat__b{height:9px; background:var(--paper-3); border-radius:var(--r-pill); overflow:hidden;}
 .cat__f{display:block; height:100%; background:var(--accent); width:0; transition:width .7s cubic-bezier(.22,.68,.15,1);}
 
 .reperes{display:flex; flex-direction:column; gap:1px; background:var(--rule); border-top:1px solid var(--rule);}
@@ -1965,9 +1991,13 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   gap:2px 14px; width:100%; text-align:left; cursor:pointer;
   background:none; border:none; border-bottom:1px solid var(--rule);
   padding:12px 4px 13px; font-family:inherit; color:inherit;
-  transition:background .15s, padding-left .15s;
+  /* Le decalage du survol se faisait sur `padding-left` : une propriete
+     de mise en page, donc un recalcul de la rangee a chaque image. Le
+     meme deplacement par `transform` ne coute rien au-dela du
+     compositeur, et il ne peut pas pousser le texte a la ligne. */
+  transition:background .15s, transform .15s cubic-bezier(.22,.68,.15,1);
 }
-.an-mar-i:hover{background:var(--accent-soft); padding-left:9px;}
+.an-mar-i:hover{background:var(--accent-soft); transform:translateX(5px);}
 .an-mar-i:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
 .an-mar-i__n{font-size:15px; font-weight:600; letter-spacing:-.01em;}
 .an-mar-i__c{
@@ -2145,7 +2175,7 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 /* La position dans l'annee : le plus bas a gauche, le plus haut a
    droite, un repere la ou en est le cours. */
 .an-bar{
-  position:relative; height:6px; border-radius:3px; margin:10px 0 6px;
+  position:relative; height:6px; border-radius:var(--r-pill); margin:10px 0 6px;
   background:linear-gradient(to right, var(--paper-3), var(--rule-strong));
 }
 .an-bar__p{
@@ -2155,7 +2185,7 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 }
 /* La jauge de volatilite : cinq crans, le niveau toujours ecrit a cote. */
 .an-j{display:flex; gap:3px; margin:8px 0 4px;}
-.an-j i{flex:1; height:7px; border-radius:2px; background:var(--paper-3);}
+.an-j i{flex:1; height:7px; border-radius:var(--r-pill); background:var(--paper-3);}
 .an-j i[data-on="1"]{background:var(--accent);}
 .an-m[data-ton="baisse"] .an-j i[data-on="1"]{background:var(--loss);}
 /* La correlation : −1 a gauche, +1 a droite, zero au milieu. */
@@ -2164,7 +2194,7 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   color:var(--ink-3); margin:0 0 10px;
 }
 .an-cb{
-  position:relative; height:6px; border-radius:3px; margin-top:6px;
+  position:relative; height:6px; border-radius:var(--r-pill); margin-top:6px;
   background:var(--paper-3); grid-column:2;
 }
 .an-cb::before{
@@ -2268,7 +2298,7 @@ table.actifs tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--accent
 .jauge-l__h{display:flex; justify-content:space-between; align-items:baseline; gap:14px;}
 .jauge-l__k{font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 .jauge-l__v{font-family:'IBM Plex Mono', monospace; font-size:14px; font-weight:500; font-variant-numeric:tabular-nums;}
-.jauge-l__b{height:10px; background:var(--paper-3); border-radius:3px; overflow:hidden;}
+.jauge-l__b{height:10px; background:var(--paper-3); border-radius:var(--r-pill); overflow:hidden;}
 .jauge-l__f{display:block; height:100%; background:var(--accent); width:0; transition:width .8s cubic-bezier(.22,.68,.15,1);}
 
 @keyframes surgit{from{opacity:0; transform:translate3d(0,20px,0);} to{opacity:1; transform:none;}}
@@ -2322,7 +2352,7 @@ table.actifs tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--accent
    Tout ce qui suit est cantonné à `.espace` : la page d'accueil
    n'en voit rien.
    ============================================================ */
-.espace{--r-carte:20px; --r-tuile:15px;}
+.espace{--r-carte:var(--r-3); --r-tuile:var(--r-2);}
 
 /* ===== Matière =====
    Déclarée sur `:root` et non plus sur `.espace` : la bande de chiffres
@@ -2357,7 +2387,8 @@ table.actifs tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--accent
    surface à 52 % posée sur un papier de la même couleur ne montre
    rigoureusement rien. La vitrine garde son fond d'origine. */
 body.vue-espace .field{opacity:.95;}
-.espace .carte{
+.espace .carte,
+.espace .an-ligne{
   border:1px solid var(--verre-filet); border-radius:var(--r-carte);
   background:var(--verre);
   backdrop-filter:var(--flou); -webkit-backdrop-filter:var(--flou);
@@ -2389,12 +2420,64 @@ body.vue-espace .field{opacity:.95;}
   box-shadow:var(--verre-haut);
 }
 
+/* ===== Les blocs internes =====
+   Il restait, DANS l'espace, des boites heritees de la vitrine : un
+   filet d'un pixel et quatre angles vifs. Posees sur des cartes
+   arrondies, elles ne lisaient pas comme un choix mais comme un
+   oubli — deux vocabulaires sur le meme ecran.
+
+   L'analyse par ligne etait le cas le plus visible : sept lignes
+   soudees en une seule dalle rectangulaire par un filet partage. Elles
+   se detachent, et chacune prend la matiere de la carte (regle
+   ci-dessus, ou `.an-ligne` rejoint `.espace .carte`) : c'est la meme
+   chose qu'un releve, donc la meme surface.
+
+   Ce qu'elles contiennent, en revanche, reste a angle vif, et c'est
+   voulu : a 22 px de marge sous un rayon de 20, le rayon concentrique
+   vaut zero (voir --r-1..4 sur :root). Un bloc arrondi dans un bloc
+   arrondi a la meme distance se decolle au lieu de s'emboiter. */
+.espace .an-lignes{background:none; border:none; gap:14px;}
+
+/* Les mesures d'une ligne parlaient un autre langage que celles du
+   marche, trente pixels plus haut : la-haut un champ de donnees a
+   filets, ici des cases cernees. Deux grilles pour la meme chose, sur
+   le meme ecran, c'est ce qui donne l'impression d'un assemblage. Elles
+   adoptent donc le champ. Les cases cernees posaient en plus un carre
+   de papier opaque au milieu d'une surface translucide, ce qui creve le
+   verre. */
+.espace .an-mes{background:none; gap:0 28px; margin-top:16px;}
+.espace .an-m{
+  background:none; padding:14px 0 15px;
+  border-top:1px solid var(--verre-filet);
+}
+
+/* Les tableaux repliables du detail : memes angles, meme filet. Ici
+   `overflow` peut rogner — ces blocs n'ont ni infobulle ni courbe qui
+   depasse, contrairement aux cartes. */
+/* Les paires correlees : meme dalle soudee que les lignes, meme
+   remede. Une liste de deux a cinq rangees n'a pas besoin d'un cadre
+   pour qu'on voie qu'elle en est une. */
+.espace .an-paires{background:none; border:none; gap:0;}
+.espace .an-paire{
+  background:none; border-top:1px solid var(--verre-filet);
+  padding:15px 2px 16px 0;
+}
+
+.espace .prod,
+.espace .holds,
+.espace .panel__plier{
+  border-color:var(--verre-filet); border-radius:var(--r-2); overflow:hidden;
+}
+.espace .prod__row + .prod__row,
+.espace .hold + .hold,
+.espace .holds__note{border-top-color:var(--verre-filet);}
+
 /* ===== Solde =====
    La première chose qu'on vient voir, seule sur sa surface. */
 .solde{
   background:var(--verre); border:1px solid var(--verre-filet);
   backdrop-filter:var(--flou); -webkit-backdrop-filter:var(--flou);
-  border-radius:24px;
+  border-radius:var(--r-4);
   padding:clamp(24px,3.4vw,36px) clamp(20px,3vw,28px);
   margin-bottom:14px;
   box-shadow:var(--verre-haut),
@@ -2432,7 +2515,7 @@ body.vue-espace .field{opacity:.95;}
   /* Un message d'etat n'est pas un titre : il se lit, il ne domine pas. */
   .msg{font-size:12px; line-height:1.5; margin-bottom:10px;}
 
-  .solde{padding:26px 20px 24px; border-radius:22px;}
+  .solde{padding:26px 20px 24px; border-radius:var(--r-3);}
   .solde__k{font-size:10.5px;}
   .solde__v{font-size:clamp(40px,11.5vw,54px); margin-top:10px;}
   .solde__d{margin-top:14px; font-size:15px; gap:10px;}
@@ -2470,7 +2553,7 @@ body.vue-espace .field{opacity:.95;}
 .ligne:hover{background:color-mix(in srgb, var(--accent) 7%, transparent);}
 .ligne:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
 .ligne__p{
-  width:42px; height:42px; border-radius:14px; flex:none; display:grid; place-items:center;
+  width:42px; height:42px; border-radius:var(--r-2); flex:none; display:grid; place-items:center;
   background:var(--accent-soft); color:var(--accent);
   font-family:'Archivo Black', sans-serif; font-size:16px; letter-spacing:-.02em;
 }
@@ -2530,7 +2613,7 @@ body.vue-espace .barre-app{
   background:color-mix(in srgb, var(--paper) 66%, transparent);
   backdrop-filter:var(--flou); -webkit-backdrop-filter:var(--flou);
   border:1px solid var(--verre-filet);
-  border-radius:28px;
+  border-radius:var(--r-4);
   box-shadow:var(--verre-haut),
              0 1px 2px color-mix(in srgb, var(--shadow) 50%, transparent),
              0 22px 44px -24px var(--shadow);
@@ -2542,7 +2625,7 @@ body.vue-espace .barre-app{
   flex:1 0 auto; min-width:74px; max-width:116px; scroll-snap-align:center;
   display:flex; flex-direction:column; align-items:center; gap:4px;
   background:none; border:none; cursor:pointer; font:inherit; color:var(--ink-3);
-  padding:9px 2px 8px; border-radius:22px;
+  padding:9px 2px 8px; border-radius:var(--r-3);
   transition:background .2s, color .2s;
 }
 .barre-app__i span{
@@ -2574,7 +2657,7 @@ body.vue-espace .barre-app{
 .barre-app__i[aria-current="page"]{background:var(--accent-soft); color:var(--accent);}
 /* Pastille d'un actif : même vocabulaire que la liste, en plus petit. */
 .barre-app__p{
-  width:22px; height:22px; border-radius:8px; display:grid; place-items:center;
+  width:22px; height:22px; border-radius:var(--r-1); display:grid; place-items:center;
   background:var(--accent-soft); color:var(--accent);
   font-family:'Archivo Black', sans-serif; font-size:11px; letter-spacing:-.02em;
 }
