@@ -235,8 +235,16 @@ async function taux(de, vers, env){
 async function chezYahoo(symbole){
   let r, texte;
   try {
+    /* UN MOIS, pas un jour. La meme adresse, le meme appel, le meme
+       cout : mais la reponse porte alors les clotures quotidiennes du
+       mois ecoule, et on en tire les variations a 7 et 30 jours.
+
+       Sans elles, l'ecran d'analyse grisait ces deux periodes pour la
+       bourse : le fournisseur ne les servait pas, la page le disait
+       honnetement, et le resultat etait deux boutons morts. Les
+       donnees etaient pourtant a un parametre d'ici. */
     r = await fetch(YAHOO + encodeURIComponent(symbole) +
-                    '?interval=1d&range=1d',
+                    '?interval=1d&range=1mo',
                     {headers:Object.assign({'Accept':'application/json'}, ENTETES),
                      cf:{cacheTtl:FRAICHE, cacheEverything:true}});
     texte = await r.text();
@@ -296,6 +304,42 @@ async function chezYahoo(symbole){
       var24 = (v - brut) / brut * 100;
     }
   }
+  /* ===== Les variations a 7 et 30 jours =====
+     Tirees des clotures que la fenetre d'un mois vient d'apporter. On
+     cherche la cloture la plus proche de « il y a N jours » PAR SA
+     DATE, et non le N-ieme point en partant de la fin : une bourse
+     ferme le week-end et les jours feries, et compter des points
+     rendrait « 7 jours » long de neuf ou dix jours reels, sans que
+     rien ne le signale.
+
+     Le point d'arrivee est le cours du moment, pas la derniere
+     cloture : c'est lui qui est affiche a cote. */
+  function variationSur(jours){
+    const res = o.chart.result[0];
+    const ts = res && res.timestamp;
+    const q0 = res && res.indicators && res.indicators.quote &&
+               res.indicators.quote[0];
+    const cl = q0 && q0.close;
+    if (!Array.isArray(ts) || !Array.isArray(cl) || ts.length !== cl.length) return null;
+    const vise = (Date.now() / 1000) - jours * 86400;
+    let base = null, ecart = Infinity;
+    for (let i = 0; i < ts.length; i++){
+      const c = parseFloat(cl[i]);
+      if (!isFinite(c) || c <= 0) continue;
+      const d = Math.abs(ts[i] - vise);
+      if (d < ecart){ ecart = d; base = c; }
+    }
+    /* Trop loin de la date visee, on ne rend rien : une variation
+       « sur 30 jours » calculee sur douze n'est pas une approximation,
+       c'est une autre mesure portant un faux nom. */
+    if (base === null || ecart > jours * 0.35 * 86400) return null;
+    const fin = String(m.currency) === 'GBp' ? v * 100 : v;
+    const deb = base;
+    return Math.round(((fin - deb) / deb * 100) * 100) / 100;
+  }
+  const var7 = variationSur(7);
+  const var30 = variationSur(30);
+
   /* Volume et capitalisation : on prend ce que la reponse porte, et
      rien de plus. Les deux manquent souvent -- notamment pour un ETF,
      qui n'a pas de capitalisation mais un encours. On rend alors null,
@@ -305,7 +349,8 @@ async function chezYahoo(symbole){
   const vol = parseFloat(m.regularMarketVolume);
   const cap = parseFloat(m.marketCap);
   const h52 = parseFloat(m.fiftyTwoWeekHigh), b52 = parseFloat(m.fiftyTwoWeekLow);
-  return {valeur:v, dev:dev, var24:var24, nom:(m.shortName || m.longName || ''),
+  return {valeur:v, dev:dev, var24:var24, var7:var7, var30:var30,
+          nom:(m.shortName || m.longName || ''),
           /* Le volume est un nombre de titres : en monnaie, il se
              compare a celui des autres lignes. */
           volume:(isFinite(vol) && vol > 0) ? vol * v : null,
@@ -666,6 +711,13 @@ async function marche(devise, env, codes){
       fully_diluted_valuation: null,
       total_volume: q.volume === null ? null : Math.round(q.volume * t),
       price_change_percentage_24h: q.var24,
+      /* Les deux autres horizons, tires des clotures du mois. Le nom
+         du champ est celui du fournisseur de cryptos : la page n'a
+         ainsi qu'une seule facon de lire une variation, quel que soit
+         le marche. Null quand la fenetre ne remonte pas assez loin —
+         une action tout juste cotee, par exemple. */
+      price_change_percentage_7d_in_currency: q.var7,
+      price_change_percentage_30d_in_currency: q.var30,
       /* Les extremes de l'annee : la source les porte, et ils disent
          quelque chose la ou la capitalisation manque. */
       haut_52s: q.haut52 === null ? null : Math.round(q.haut52 * t * 1e4) / 1e4,

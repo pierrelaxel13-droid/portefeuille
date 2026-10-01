@@ -82,24 +82,37 @@ globalThis.fetch = async (url, opts) => {
   }
   if (u.hostname === 'query1.finance.yahoo.com'){
     if (mode === 'yahoo429') return new Response('Too Many Requests', {status:429});
-    /* Une demande d'historique porte un « range » : on rend alors des
-       points, dont quelques trous, comme le vrai. */
-    if (u.searchParams.get('range') && u.searchParams.get('range') !== '1d'){
-      const n = {'5d':40, '1mo':30, '3mo':90, '1y':365}[u.searchParams.get('range')] || 30;
-      const t = [], c = [];
-      for (let i = 0; i < n; i++){
-        t.push(Math.floor(Date.now()/1000) - (n-1-i)*86400);
-        /* Un trou tous les dix points : seance fermee. */
-        c.push(i % 10 === 4 ? null : 500 + i);
-      }
-      return new Response(JSON.stringify({chart:{result:[{timestamp:t,
-        indicators:{quote:[{close:c}]}, meta:{currency:'EUR'}}], error:null}}), {status:200});
-    }
-    const sym = decodeURIComponent(u.pathname.split('/chart/')[1] || '');
+    /* LA MEME ADRESSE SERT LES DEUX. Yahoo rend « meta » (la cotation)
+       ET les points, dans une seule reponse : c'est pour ca que la
+       cotation peut demander une fenetre d'un mois sans appel de plus.
+
+       Ce faux-ci les separait par l'URL — « range=1d » voulait dire
+       cotation, tout le reste voulait dire courbe. Des que la cotation
+       a demande un mois, elle est tombee du mauvais cote et a perdu
+       son « meta ». Un faux serveur qui tranche la ou le vrai ne
+       tranche pas fabrique des pannes qui n'existent pas. */
+    const sym = decodeURIComponent((u.pathname.split('/chart/')[1] || '').split('?')[0]);
     const m = YH[sym];
-    if (!m) return new Response(JSON.stringify({chart:{result:null,
-      error:{description:'No data found, symbol may be delisted'}}}), {status:404});
-    return new Response(JSON.stringify({chart:{result:[{meta:m}], error:null}}), {status:200});
+    const range = u.searchParams.get('range') || '1d';
+    const n = {'1d':2, '5d':40, '1mo':30, '3mo':90, '1y':365}[range] || 30;
+    const t = [], c = [];
+    for (let i = 0; i < n; i++){
+      t.push(Math.floor(Date.now()/1000) - (n-1-i)*86400);
+      /* Un trou tous les dix points : seance fermee. */
+      c.push(i % 10 === 4 ? null : 500 + i);
+    }
+    const pts = {timestamp:t, indicators:{quote:[{close:c}]}};
+    if (!m){
+      /* Symbole inconnu : pour une cotation c'est une absence, pour
+         une courbe c'est la serie generique dont se servent les tests
+         de trace. */
+      if (range === '1d') return new Response(JSON.stringify({chart:{result:null,
+        error:{description:'No data found, symbol may be delisted'}}}), {status:404});
+      return new Response(JSON.stringify({chart:{result:[Object.assign({meta:{currency:'EUR'}}, pts)],
+        error:null}}), {status:200});
+    }
+    return new Response(JSON.stringify({chart:{result:[Object.assign({meta:m}, pts)],
+      error:null}}), {status:200});
   }
   if (mode === '429') return new Response('{}', {status:429});
   if (mode === '500') return new Response('{}', {status:500});
@@ -538,6 +551,36 @@ dit('la capitalisation vaut null, pas zero', un.market_cap === null,
     JSON.stringify(un.market_cap));
 dit('les rangs se suivent', (o||[]).every((x,i) => x.market_cap_rank === i+1),
     (o||[]).map(x=>x.market_cap_rank).join(','));
+
+/* [36 bis] LES TROIS HORIZONS.
+   La cotation ne demandait qu'un jour, donc seule la variation du jour
+   sortait d'ici. L'ecran d'analyse grisait alors « 7 j » et « 30 j »
+   pour la bourse : deux boutons morts, alors que les donnees etaient a
+   un parametre de distance. La fenetre passe a un mois — meme adresse,
+   meme appel, meme cout — et les clotures quotidiennes arrivent avec.
+
+   Ce qui est verifie ici, c'est que les deux colonnes SORTENT et
+   qu'elles portent les noms que la page lit deja chez le fournisseur
+   de cryptos : un seul vocabulaire pour toutes les sources. */
+dit('les deux autres horizons sortent aussi',
+    typeof un.price_change_percentage_7d_in_currency === 'number' &&
+    typeof un.price_change_percentage_30d_in_currency === 'number',
+    JSON.stringify({j7:un.price_change_percentage_7d_in_currency,
+                    j30:un.price_change_percentage_30d_in_currency}));
+/* Et ce ne sont pas trois fois le meme nombre : trois colonnes
+   identiques ne valent pas mieux que deux colonnes absentes. */
+dit('et ce sont trois chiffres distincts',
+    new Set([un.price_change_percentage_24h,
+             un.price_change_percentage_7d_in_currency,
+             un.price_change_percentage_30d_in_currency]).size === 3,
+    JSON.stringify([un.price_change_percentage_24h,
+                    un.price_change_percentage_7d_in_currency,
+                    un.price_change_percentage_30d_in_currency]));
+/* La fenetre est bien celle d'un mois : sans ca, « 30 jours » se
+   calculerait sur ce qui traine et porterait un faux nom. */
+dit('la cotation demande un mois de clotures',
+    vus.some(x => x.includes('range=1mo')),
+    JSON.stringify(vus.filter(x => x.includes('/chart/')).slice(0, 2)));
 
 // [37] La variation du jour vient de la cloture precedente.
 YH['CW8.PA'].chartPreviousClose = 500;
