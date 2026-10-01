@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261001.1648";</script>
+<script>window.PC_VERSION = "261001.2126";</script>
 </head>
 <body>
 
@@ -206,6 +206,42 @@ body.flux-vif .cours__vif::before{
   animation:bat 1.6s ease-in-out infinite;
 }
 @keyframes bat{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:.35; transform:scale(.72);}}
+
+/* ===== UN CHIFFRE QUI CHANGE DOIT SE VOIR CHANGER =====
+   Le flux remplacait le texte d'un coup : la valeur n'etait pas la
+   meme qu'une seconde avant, et rien ne le disait. On regardait un
+   nombre immobile qui mentait sur son immobilite.
+
+   La marque est posee au moment CAUSAL — l'arrivee du prix — et elle
+   dit le sens : monte en vert, baisse en rouge. Elle dure le temps
+   d'etre vue et s'efface : une surbrillance qui reste devient du
+   decor, et on cesse de la lire.
+
+   Rien ne bouge de place. Un chiffre qui saute dans une colonne de
+   chiffres alignes casse la lecture plus qu'il n'informe : c'est la
+   couleur qui porte le changement, pas le deplacement. */
+@keyframes vif-monte{
+  0%   {background:color-mix(in srgb, var(--gain) 30%, transparent);}
+  100% {background:transparent;}
+}
+@keyframes vif-baisse{
+  0%   {background:color-mix(in srgb, var(--loss) 30%, transparent);}
+  100% {background:transparent;}
+}
+.vif-up, .vif-down{
+  border-radius:5px;
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+  margin-inline:-4px; padding-inline:4px;
+}
+.vif-up{animation:vif-monte 1100ms ease-out;}
+.vif-down{animation:vif-baisse 1100ms ease-out;}
+@media (prefers-reduced-motion: reduce){
+  /* Mouvement reduit ne veut pas dire aucun retour : un fondu de
+     couleur n'agresse pas le systeme vestibulaire, et c'est lui qui
+     porte l'information. On le garde, on le ralentit. */
+  html:not([data-anim="force"]) .vif-up{animation-duration:1600ms;}
+  html:not([data-anim="force"]) .vif-down{animation-duration:1600ms;}
+}
 @media (prefers-reduced-motion: reduce){
   html:not([data-anim="force"]) body.flux-vif .cours__vif::before{animation:none;}
 }
@@ -1869,6 +1905,32 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
    montre que sous 860 px ; ici elles servent a toutes les largeurs,
    parce qu'il n'y a qu'un jeu de chiffres a la fois. */
 .an-mar__h{display:flex; margin:0 0 16px;}
+
+/* ===== CHANGER DE MARCHE OU DE PERIODE =====
+   Le contenu se substituait d'un coup : l'ecran « sautait », et on ne
+   savait pas si c'etait le meme bloc avec d'autres chiffres ou un
+   autre bloc. Une entree courte, montante et sans rebond le dit — le
+   geste qui l'a declenchee n'avait aucun elan, donc rien ne doit
+   rebondir.
+
+   Le mouvement est de six pixels. Assez pour etre percu, trop peu pour
+   qu'on ait a l'attendre : ce qu'on veut lire est deja lisible pendant
+   qu'il finit. */
+@keyframes an-arrive{
+  from{opacity:0; transform:translate3d(0, 6px, 0);}
+  to  {opacity:1; transform:none;}
+}
+#an-mar-mes[data-neuf], #an-mar-lignes[data-neuf]{
+  animation:an-arrive 260ms cubic-bezier(.22,.68,.15,1) both;
+}
+@media (prefers-reduced-motion: reduce){
+  /* Pas de deplacement, mais pas rien non plus : le fondu dit encore
+     que le contenu a ete remplace. */
+  html:not([data-anim="force"]) #an-mar-mes[data-neuf],
+  html:not([data-anim="force"]) #an-mar-lignes[data-neuf]{
+    animation:none; transition:opacity 180ms ease;
+  }
+}
 .an-mar__s{margin:0 0 14px;}
 
 /* ===== Les lignes du marche, ouvrables =====
@@ -11342,6 +11404,35 @@ window.PC = (function(){
             n:vus.length, ensemble: poids > 0 ? somme / poids : null};
   }
 
+  /* Rejouer l'entree, mais seulement quand ON A CHANGE DE SUJET.
+
+     Premiere version : comparer le HTML a produire avec `innerHTML`.
+     Faux — le navigateur re-serialise ce qu'on lui donne, les deux
+     chaines ne coincident presque jamais, et le bloc rejouait son
+     entree a chaque rendu.
+
+     Deuxieme version : comparer au dernier HTML qu'on a ecrit. Exact,
+     et pourtant faux aussi, et c'est le test qui l'a montre : les
+     cryptos arrivent EN DIRECT, donc le contenu change pour de bon
+     toutes les secondes. Le bloc se remettait a glisser a chaque prix
+     recu. Une animation declenchee par la donnee devient un tic.
+
+     Ce que l'entree doit dire, c'est « vous avez change de sujet » —
+     de marche ou de periode. Un prix qui bouge, lui, a deja sa propre
+     marque, posee sur le chiffre et nulle part ailleurs. La cle est
+     donc le SUJET, pas le contenu. */
+  const anSujetVu = {};
+  function anRejoue(hote){
+    if (!hote) return;
+    const cle = hote.id || '';
+    const sujet = marSrc + '|' + marH;
+    if (anSujetVu[cle] === sujet) return;
+    anSujetVu[cle] = sujet;
+    hote.removeAttribute('data-neuf');
+    void hote.offsetWidth;
+    hote.setAttribute('data-neuf', '1');
+  }
+
   function anMarche(){
     const bloc = document.getElementById('an-marche');
     const hote = document.getElementById('an-mar-mes');
@@ -11511,6 +11602,11 @@ window.PC = (function(){
     }).length;
     m += anMesure('an.mar.vous', String(miennes),
                   echap(PC.t('an.mar.vous.d', {n:String(miennes)})));
+    /* Le marqueur ne se pose que si le contenu a VRAIMENT change. Pose
+       a chaque rendu, l'animation se rejouerait toutes les
+       quarante-cinq secondes et a chaque tick du flux : un bloc qui
+       clignote sans raison, ce qui est pire que pas d'animation. */
+    anRejoue(hote);
     hote.innerHTML = m;
 
     /* ---------- LES LIGNES, UNE PAR UNE ----------
@@ -11529,7 +11625,7 @@ window.PC = (function(){
       boiteL.dataset.pose = tel;
       boiteL.open = (tel === 'large');
     }
-    hoteL.innerHTML = vus.map(function(c){
+    const htmlL = vus.map(function(c){
       const v = marVar(c, marH);
       const dir = v === null ? 'rien' : (v < 0 ? 'down' : 'up');
       return '<button class="an-mar-i" type="button" data-mar-i="' + echap(c.id) + '">' +
@@ -11540,6 +11636,8 @@ window.PC = (function(){
           (v === null ? '\u2014' : (v < 0 ? '\u25bc ' : '\u25b2 ') + PC.pourcent(v, 1)) +
         '</span></button>';
     }).join('');
+    anRejoue(hoteL);
+    hoteL.innerHTML = htmlL;
     if (!hoteL.dataset.branche){
       hoteL.dataset.branche = '1';
       hoteL.addEventListener('click', function(e){
@@ -12830,22 +12928,47 @@ window.PC = (function(){
 
   /* Réécrit les quelques nombres qui bougent. Volontairement court :
      tout ce qui n'est pas ici attendra le prochain rendu complet. */
+  /* Ecrit un nombre ET marque qu'il a change, dans le sens ou il a
+     change. Le sens vient des VALEURS, pas du texte : « 95 170 € » et
+     « 95 180 € » se comparent mal en chaines, et un espace insecable
+     suffirait a faire croire a un changement qui n'a pas eu lieu.
+
+     Le retrait de la classe avant de la reposer force le navigateur a
+     rejouer l'animation : sans ca, deux hausses de suite n'en
+     montreraient qu'une. */
+  window.PC_VIF = function(el, texte, avant, apres){
+    if (!el) return;
+    const meme = el.textContent === texte;
+    el.textContent = texte;
+    if (meme) return;
+    if (!(typeof avant === 'number' && typeof apres === 'number' && avant !== apres)) return;
+    el.classList.remove('vif-up', 'vif-down');
+    void el.offsetWidth;
+    el.classList.add(apres > avant ? 'vif-up' : 'vif-down');
+  };
+  const ecritVif = window.PC_VIF;
+
   function peintVif(){
     const t = totaux();
     const sv = document.getElementById('solde-v');
-    if (sv) sv.textContent = eur.format(t.val);
+    if (sv){
+      ecritVif(sv, eur.format(t.val), +sv.dataset.vu || null, t.val);
+      sv.dataset.vu = t.val;
+    }
     document.querySelectorAll('#lignes .ligne').forEach(function(el){
       const a = actifs[+el.getAttribute('data-ligne')];
       if (!a) return;
       const b = el.querySelector('.ligne__m b');
-      if (b) b.textContent = eur.format(a.val);
+      if (!b) return;
+      ecritVif(b, eur.format(a.val), +b.dataset.vu || null, a.val);
+      b.dataset.vu = a.val;
     });
     if (ouvert !== null && actifs[ouvert]){
       const a = actifs[ouvert];
       const pu = document.getElementById('co-prix');
-      if (pu) pu.textContent = eur.format(a.pu);
+      if (pu){ ecritVif(pu, eur.format(a.pu), +pu.dataset.vu || null, a.pu); pu.dataset.vu = a.pu; }
       const pv = document.getElementById('pa-val');
-      if (pv) pv.textContent = eur.format(a.val);
+      if (pv){ ecritVif(pv, eur.format(a.val), +pv.dataset.vu || null, a.val); pv.dataset.vu = a.val; }
     }
   }
 
@@ -15372,7 +15495,14 @@ window.PC = (function(){
       const v = varOf(c, H24);
       const p = b.querySelector('.marches__prix');
       const ca = b.querySelector('.marches__cap');
-      if (p) p.textContent = prix(c.current_price);
+      if (p){
+        /* Meme marque que dans l'espace : le prix dit qu'il a change,
+           et dans quel sens. Le poseur est partage — deux copies de
+           cette logique finiraient par ne plus dire la meme chose. */
+        if (window.PC_VIF) PC_VIF(p, prix(c.current_price), +p.dataset.vu || null, c.current_price);
+        else p.textContent = prix(c.current_price);
+        p.dataset.vu = c.current_price;
+      }
       /* LES TROIS, pas seulement la premiere. Ce raccourci ne portait
          a consequence que tant qu'un seul horizon etait montre a la
          fois et que c'etait celui-la : depuis que le telephone laisse
