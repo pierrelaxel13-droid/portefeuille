@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.0838";</script>
+<script>window.PC_VERSION = "261002.0936";</script>
 </head>
 <body>
 
@@ -4043,6 +4043,128 @@ body:not(.espace-ouvert) .barre-app{display:none;}
     transform:none; background:var(--presse-fond);
   }
 }
+
+/* ============================================================
+   BANC D'ESSAI DES MOUVEMENTS — variante 1
+   ------------------------------------------------------------
+   Trois propositions de mouvement montees sur la meme page, pour
+   qu'on les compare la ou elles vont vivre. Une seule est active a la
+   fois, choisie par `data-variante` sur <html> — depuis le menu des
+   trois points, ou par `?anim=1` dans l'adresse. « Actuel »
+   (variante 0) est le mouvement d'aujourd'hui : sans point de
+   comparaison, on ne choisit pas, on opine.
+
+   Ce qui est repris d'une proposition, c'est le MOUVEMENT : courbes,
+   durees, decalages, amplitudes. Pas la page qui l'accompagnait, ni
+   ses couleurs, ni sa typographie, ni sa pile technique. Une
+   animation se juge sur la matiere qu'elle anime.
+
+   ------------------------------------------------------------
+   VARIANTE 1 — « montee echelonnee »
+   Chaque bloc arrive de 28 px plus bas, l'un apres l'autre, sur une
+   courbe qui part vite et s'arrete longuement. Le decalage est de
+   150 ms — DIX FOIS celui d'aujourd'hui. C'est le caractere de cette
+   proposition, et c'est precisement ce qu'il faut sentir pour
+   trancher : sur un ecran qu'on rouvre vingt fois par jour, l'attente
+   se paie a chaque fois.
+
+   La feuille du bas garde ses DEUX courbes, differentes a l'aller et
+   au retour. Les entrees du menu arrivent de la droite, 70 ms d'ecart.
+   Les boutons grossissent de 4 % et s'eclaircissent au survol,
+   retombent a 96 % a l'appui.
+   ============================================================ */
+@keyframes v1-arrive{
+  from{opacity:0; transform:translate3d(0, 28px, 0);}
+  to  {opacity:1; transform:none;}
+}
+@keyframes v1-droite{
+  from{opacity:0; transform:translate3d(24px, 0, 0);}
+  to  {opacity:1; transform:none;}
+}
+@keyframes v1-feuille{
+  from{transform:translate3d(0, 100%, 0);}
+  to  {transform:none;}
+}
+/* Les blocs vises ne sont PAS les enfants directs du panneau : ceux-la
+   sont deux ou trois enveloppes, et la cascade n'aurait anime que des
+   boites vides. Le script marque les vrais blocs — le solde, les
+   tuiles, chaque carte, chaque bloc d'analyse — et leur donne leur
+   rang dans `--i`. Chaque variante n'a plus qu'a choisir son pas. */
+html[data-variante="1"] .pan.entre > *{animation:none;}
+html[data-variante="1"] .pan.entre [data-bloc]{
+  animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) backwards;
+  animation-delay:calc(var(--i, 0) * .15s);
+}
+
+html[data-variante="1"] .menu[open] .menu__p{
+  animation:v1-feuille .45s cubic-bezier(.22, 1, .36, 1);
+}
+@media (min-width:701px){
+  /* Au-dessus de 700 px ce n'est plus une feuille mais un menu
+     accroche sous son bouton : il ne peut pas monter du bas de
+     l'ecran, il descend de son bouton. Une entree doit venir de la ou
+     l'objet est. */
+  html[data-variante="1"] .menu[open] .menu__p{
+    animation:v1-arrive .3s cubic-bezier(.22, 1, .36, 1);
+  }
+}
+html[data-variante="1"] .menu[open] .menu__i{
+  animation:v1-droite .4s cubic-bezier(.22, 1, .36, 1) backwards;
+}
+html[data-variante="1"] .menu[open] .menu__i:nth-child(1){animation-delay:.18s;}
+html[data-variante="1"] .menu[open] .menu__i:nth-child(2){animation-delay:.25s;}
+html[data-variante="1"] .menu[open] .menu__i:nth-child(3){animation-delay:.32s;}
+html[data-variante="1"] .menu[open] .menu__i:nth-child(4){animation-delay:.39s;}
+html[data-variante="1"] .menu[open] .menu__i:nth-child(n+5){animation-delay:.46s;}
+
+html[data-variante="1"] .btn:hover,
+html[data-variante="1"] .pill:hover{
+  transform:scale(1.04); filter:brightness(1.1);
+}
+html[data-variante="1"] .btn:active,
+html[data-variante="1"] .pill:active,
+html[data-variante="1"] .icon-btn:active,
+html[data-variante="1"] .marches__h:active,
+html[data-variante="1"] .sous-onglet:active,
+html[data-variante="1"] .barre-app__i:active{
+  transform:scale(.96);
+}
+
+/* Le selecteur du banc d'essai, dans le menu des trois points. */
+.menu__k{
+  margin:4px 12px 6px; font-family:'IBM Plex Mono', monospace;
+  font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+.menu__choix{display:flex; gap:5px; padding:0 12px 6px;}
+.menu__v{
+  flex:1 1 auto; font:inherit; font-size:12.5px; cursor:pointer;
+  padding:7px 4px; border-radius:var(--r-1); color:var(--ink-2);
+  border:1px solid var(--rule-strong); background:none;
+  transition:background .18s, color .18s, border-color .18s;
+}
+.menu__v:hover{background:var(--paper-2); color:var(--ink);}
+.menu__v[aria-pressed="true"]{
+  background:var(--accent-soft); border-color:var(--accent); color:var(--accent);
+}
+.menu__v:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+/* AUCUNE VARIANTE NE PASSE OUTRE LE MOUVEMENT REDUIT. Une proposition
+   qui ne le respecterait pas ne serait pas une proposition a comparer,
+   ce serait un defaut a corriger apres coup. */
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"])[data-variante="1"] .pan.entre [data-bloc],
+  html:not([data-anim="force"])[data-variante="1"] .menu[open] .menu__p,
+  html:not([data-anim="force"])[data-variante="1"] .menu[open] .menu__i{
+    animation:none;
+  }
+  html:not([data-anim="force"])[data-variante="1"] .btn:hover,
+  html:not([data-anim="force"])[data-variante="1"] .pill:hover,
+  html:not([data-anim="force"])[data-variante="1"] .btn:active,
+  html:not([data-anim="force"])[data-variante="1"] .pill:active{
+    transform:none; filter:none;
+  }
+}
 </style>
 <script>
   /* Posé avant le rendu : conditionne l'état « avant animation ».
@@ -4586,6 +4708,8 @@ window.PC = (function(){
   'e.exemple':          ["Charger un exemple","Load a sample","Cargar un ejemplo","Beispiel laden"],
   'e.exporter':         ["Exporter","Export","Exportar","Exportieren"],
   'e.importer':         ["Importer","Import","Importar","Importieren"],
+  'e.anim':             ["Mouvement","Motion","Movimiento","Bewegung"],
+  'e.anim.0':           ["Actuel","Current","Actual","Aktuell"],
   'e.vider':            ["Tout effacer","Erase everything","Borrar todo","Alles löschen"],
   /* --- Le compte, quand un serveur repond --- */
   'c.onglet.entrer':    ["Se connecter","Sign in","Iniciar sesión","Anmelden"],
@@ -6611,6 +6735,19 @@ window.PC = (function(){
                  pour ce compte. Le bouton ne donne aucun droit : les
                  deux routes reverifient le drapeau en base a chaque
                  appel. -->
+            <!-- BANC D'ESSAI DES MOUVEMENTS. Trois propositions montees
+                 sur la meme page, pour les comparer la ou elles vont
+                 vivre plutot que sur des captures. Ce bloc disparait
+                 avec les deux variantes non retenues. -->
+            <div class="menu__sep" id="menu-anim">
+              <p class="menu__k" data-i18n="e.anim">Mouvement</p>
+              <div class="menu__choix" role="group" data-i18n-aria="e.anim">
+                <button class="menu__v" type="button" data-variante="0" data-i18n="e.anim.0">Actuel</button>
+                <button class="menu__v" type="button" data-variante="1">1</button>
+                <button class="menu__v" type="button" data-variante="2">2</button>
+                <button class="menu__v" type="button" data-variante="3">3</button>
+              </div>
+            </div>
             <div class="menu__sep" id="menu-adm" hidden>
               <button class="menu__i" type="button" id="adm-btn" data-i18n="adm.ouvrir">Les comptes…</button>
             </div>
@@ -10513,6 +10650,96 @@ window.PC = (function(){
     /* Une feuille rouverte repart toujours de sa place. */
     menuBoard.addEventListener('toggle', function(){
       if (!menuBoard.open){ lache(); p.style.transform = ''; pos = 0; }
+    });
+  })();
+
+  /* ===== BANC D'ESSAI DES MOUVEMENTS =====
+     Trois propositions montees sur la meme page. On en change sans
+     recharger et on reste la ou on etait : une animation ne se compare
+     pas de memoire, elle se compare en basculant de l'une a l'autre
+     sous les yeux, sur les memes chiffres.
+
+     Le choix tient d'une visite a l'autre, et `?anim=1` dans l'adresse
+     l'emporte — c'est ce qui permet d'ouvrir les trois cote a cote
+     dans trois onglets.
+
+     Tout ce bloc, le selecteur et les deux variantes non retenues
+     partent le jour ou vous aurez choisi. */
+  (function bancMouvements(){
+    const bloc = document.getElementById('menu-anim');
+    if (!bloc) return;
+    const VALIDES = ['0', '1', '2', '3'];
+    const bon = function(v){ return VALIDES.indexOf(v) !== -1; };
+
+    const lit = function(){
+      const u = new URLSearchParams(location.search).get('anim');
+      if (bon(u)) return u;
+      let m = null;
+      try { m = localStorage.getItem('pc-mouvement'); } catch(e){}
+      return bon(m) ? m : '0';
+    };
+
+    const pose = function(v, rejoue){
+      document.documentElement.setAttribute('data-variante', v);
+      try { localStorage.setItem('pc-mouvement', v); } catch(e){}
+      bloc.querySelectorAll('.menu__v').forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-variante') === v ? 'true' : 'false');
+      });
+      /* On rejoue l'entree du panneau ouvert : sans cela on choisit un
+         mouvement et il ne se passe rien jusqu'au prochain changement
+         d'onglet. */
+      if (rejoue){
+        const pan = document.querySelector('.pan:not([hidden])');
+        if (pan){
+          pan.classList.remove('entre');
+          indexe(pan);
+          void pan.offsetWidth;
+          pan.classList.add('entre');
+        }
+      }
+    };
+
+    /* LES BLOCS A ANIMER. Les enfants directs d'un panneau sont des
+       enveloppes de mise en page ; ce qu'on voit arriver, ce sont le
+       solde, la rangee de reperes, les cartes et les blocs d'analyse.
+       On ne garde que les plus englobants : une carte DANS un bloc
+       d'analyse n'est pas un bloc de plus, c'est le meme objet qui
+       arriverait deux fois. */
+    const BLOCS = '.solde, .kpis, .carte, .an-bloc, .section__head, .marches__vue';
+    const indexe = function(pan){
+      if (!pan) return;
+      const tous = [].slice.call(pan.querySelectorAll(BLOCS));
+      let n = 0;
+      tous.forEach(function(e){
+        const par = e.parentElement && e.parentElement.closest(BLOCS);
+        if (par && pan.contains(par)){ e.removeAttribute('data-bloc'); return; }
+        e.setAttribute('data-bloc', '');
+        e.style.setProperty('--i', n++);
+      });
+    };
+
+    /* Le rang doit etre pose AVANT que la cascade parte. On observe
+       donc l'arrivee de la classe plutot que de modifier le code qui
+       la pose : le banc d'essai est temporaire, le reste ne l'est
+       pas. */
+    const oeil = new MutationObserver(function(l){
+      l.forEach(function(m){
+        if (m.target.classList.contains('entre')) indexe(m.target);
+      });
+    });
+    document.querySelectorAll('.pan').forEach(function(e){
+      indexe(e);
+      oeil.observe(e, {attributes:true, attributeFilter:['class']});
+    });
+
+    pose(lit(), false);
+    bloc.addEventListener('click', function(e){
+      const b = e.target.closest ? e.target.closest('.menu__v') : null;
+      if (!b) return;
+      /* Le menu se referme : sur telephone il couvre l'ecran, et on
+         choisirait un mouvement sans jamais le voir. */
+      menuBoard.open = false;
+      pose(b.getAttribute('data-variante'), true);
     });
   })();
 
