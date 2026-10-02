@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.1024";</script>
+<script>window.PC_VERSION = "261002.1124";</script>
 </head>
 <body>
 
@@ -4131,6 +4131,111 @@ html[data-variante="1"] .barre-app__i:active{
 }
 
 /* ------------------------------------------------------------
+   VARIANTE 1 — LE PREMIER ECRAN EN ENTIER
+   La proposition ne porte pas que son mouvement : elle porte une
+   FORME. Contenu centre sur 660 px, titre court avec des pictogrammes
+   DANS la phrase, un sous-titre, un bouton. L'actuel fait le contraire
+   — editorial, aligne a gauche, un titre qui prend tout l'ecran et
+   aucun bouton. Les deux tiennent dans la page, on bascule, on tranche.
+
+   Ce qui vient de la proposition : la structure, les tailles, les
+   marges, le mouvement. Ce qui reste de la maison : la toile plutot
+   qu'une video, le papier, l'encre, l'accent, la typographie et les
+   mots — on ne compare pas deux maquettes, on compare deux facons de
+   presenter LA MEME chose.
+   ------------------------------------------------------------ */
+.hero__in--v1{display:none;}
+html[data-variante="1"] .hero__in--v1{display:block;}
+html[data-variante="1"] .hero__in:not(.hero__in--v1){display:none;}
+/* Le heros centre n'a pas besoin de toute la hauteur d'un ecran : la
+   proposition le pose sur un rembourrage court, et ce qui suit remonte
+   d'autant. */
+html[data-variante="1"] .hero{
+  min-height:auto;
+  padding:calc(var(--h-tete) + clamp(40px, 8vw, 72px)) 0 48px;
+  align-items:flex-start;
+}
+.v1h{max-width:660px; margin:0 auto; text-align:center;}
+/* `.hero h1` borne le titre a 13ch et l'emporte sur une simple classe :
+   la ligne insecable debordait de sa boite, et la page defilait
+   lateralement de 36 px sous 360. On nomme donc le heros dans le
+   selecteur. */
+.hero .v1h__t{max-width:none;}
+.v1h__t{
+  font-family:'Archivo Black', system-ui, sans-serif; font-weight:400;
+  /* La proposition part de 1,65rem au minimum. En francais, « Tout
+     votre argent, » est plus long que l'anglais d'origine : a 320 px,
+     la ligne insecable mesurait 316 px pour 280 disponibles, et la
+     page defilait lateralement. 1,4rem la ramene a 272. Le plancher
+     d'une echelle depend de la langue qu'on y met. */
+  font-size:clamp(1.4rem, 5vw, 3rem);
+  line-height:1.05; letter-spacing:-.01em;
+  color:var(--ink); margin:0; max-width:none;
+}
+/* Chaque ligne est insecable : un pictogramme reste colle au mot qui
+   le precede, sinon il se retrouve seul en tete de ligne et ne veut
+   plus rien dire. */
+.v1h__l{display:block; white-space:nowrap;}
+.v1h__i{
+  display:inline; vertical-align:middle; position:relative; top:-2px;
+  margin:0 4px; color:var(--ink);
+}
+.v1h__p{
+  font-size:clamp(0.9rem, 2.5vw, 1.1rem); line-height:1.65;
+  color:var(--ink); opacity:.8; max-width:560px;
+  margin:18px auto 0; text-wrap:pretty;
+}
+.v1h__cta{
+  display:inline-flex; align-items:center; justify-content:space-between;
+  gap:32px; min-width:210px; margin-top:28px;
+  padding:17px 24px; border-radius:50px; text-decoration:none;
+  background:var(--accent); color:#fff; font-weight:600;
+  font-size:clamp(0.9rem, 2vw, 1rem);
+  box-shadow:0 4px 24px color-mix(in srgb, var(--accent) 28%, transparent);
+  transition:transform .18s cubic-bezier(.22, 1, .36, 1), filter .18s;
+}
+.v1h__cta:hover{transform:scale(1.04); filter:brightness(1.1);}
+.v1h__cta:active{transform:scale(.96); transition-duration:0s;}
+.v1h__cta:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+/* Sur un ecran de telephone, 210 px de large pour un bouton centre
+   laissent deux colonnes de vide : il prend la largeur du texte. */
+@media (max-width:560px){
+  .v1h__cta{width:100%; max-width:340px; justify-content:center; gap:14px;}
+}
+/* Le titre centre n'a plus besoin du voile lateral de la toile : il
+   est au milieu, pas a gauche. Le voile monte donc du bas aux deux
+   largeurs, comme sur telephone. */
+html[data-variante="1"] .hero__oeuvre::after{
+  background:
+    linear-gradient(to bottom,
+      color-mix(in srgb, var(--paper) 30%, transparent) 0%,
+      color-mix(in srgb, var(--paper) 72%, transparent) 46%,
+      var(--paper) 96%);
+}
+
+/* L'entree : le titre, le sous-titre, le bouton, 150 ms d'ecart. */
+html[data-variante="1"].js-anim .v1h__t,
+html[data-variante="1"].js-anim .v1h__p,
+html[data-variante="1"].js-anim .v1h__cta{opacity:0;}
+html[data-variante="1"].intro-run .v1h__t{
+  animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+html[data-variante="1"].intro-run .v1h__p{
+  animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) .15s forwards;
+}
+html[data-variante="1"].intro-run .v1h__cta{
+  animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) .3s forwards;
+}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"])[data-variante="1"].js-anim .v1h__t,
+  html:not([data-anim="force"])[data-variante="1"].js-anim .v1h__p,
+  html:not([data-anim="force"])[data-variante="1"].js-anim .v1h__cta{opacity:1;}
+  html:not([data-anim="force"])[data-variante="1"].intro-run .v1h__t,
+  html:not([data-anim="force"])[data-variante="1"].intro-run .v1h__p,
+  html:not([data-anim="force"])[data-variante="1"].intro-run .v1h__cta{animation:none;}
+}
+
+/* ------------------------------------------------------------
    VARIANTE 1 SUR LA VITRINE — c'est la qu'elle a ete pensee : le
    prompt decrit un premier ecran de page d'accueil, titre, sous-titre,
    bouton, et le menu du telephone.
@@ -4178,6 +4283,69 @@ html[data-variante="1"] .split-h{
 }
 html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
 
+/* ===== LE MENU EN FEUILLE LATERALE (proposition 1) =====
+   La proposition remplace le panneau deroulant par une feuille qui
+   entre par la DROITE sur toute la hauteur, avec sa propre tete — le
+   logo et une croix — et un bouton d'action en bas. Deux courbes
+   differentes a l'aller et au retour, et un voile floute derriere.
+
+   Ce qui est adapte : la couleur de la feuille vient de notre papier,
+   pas du beige de la proposition ; et il n'y a qu'UN bouton d'action
+   au lieu de deux. « Commencer » et « Se connecter » menent ici a la
+   meme porte — l'espace s'ouvre sans compte — et deux boutons vers le
+   meme endroit ne sont pas une proposition, c'est un doublon. */
+.nav__tete, .nav__cta{display:none;}
+@media (max-width:900px){
+  html[data-variante="1"] .site-nav{
+    position:fixed; inset:0 0 auto auto; top:0; left:auto;
+    width:min(88vw, 360px); height:100dvh;
+    padding:0 0 calc(18px + env(safe-area-inset-bottom, 0px));
+    background:var(--paper-2); border:none;
+    border-left:1px solid var(--rule);
+    box-shadow:-12px 0 48px color-mix(in srgb, var(--ink) 18%, transparent);
+    overflow-y:auto; overscroll-behavior:contain;
+    z-index:var(--z-overlay);
+  }
+  html[data-variante="1"] .site-nav[data-ouvert="true"]{
+    animation:v1-feuille-d .45s cubic-bezier(.22, 1, .36, 1);
+  }
+  html[data-variante="1"] .nav__tete{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px 16px;
+  }
+  html[data-variante="1"] .nav__logo{
+    font-family:'Archivo Black', sans-serif; font-size:15px; line-height:.92;
+    letter-spacing:-.02em; text-transform:uppercase; color:var(--ink);
+  }
+  html[data-variante="1"] .nav__x{
+    width:40px; height:40px; flex:none; display:grid; place-items:center;
+    border:none; border-radius:50%; cursor:pointer; color:var(--ink);
+    background:color-mix(in srgb, var(--ink) 10%, transparent);
+    transition:transform .17s cubic-bezier(.22, 1, .36, 1), background .2s;
+  }
+  html[data-variante="1"] .nav__x:active{transform:scale(.9); transition-duration:0s;}
+  html[data-variante="1"] .nav__x:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  /* Le filet de la proposition : un trait d'un pixel, en retrait des
+     deux bords. */
+  html[data-variante="1"] .site-nav > a:first-of-type{
+    border-top:1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    margin-top:0; padding-top:18px;
+  }
+  html[data-variante="1"] .site-nav a{
+    font-size:1.1rem; margin:0 12px; padding:12px 14px;
+    border-radius:var(--r-2);
+  }
+  html[data-variante="1"] .site-nav a:hover{
+    background:color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  html[data-variante="1"] .nav__cta{display:block; padding:14px 20px 4px;}
+  html[data-variante="1"] .nav__cta__b{width:100%; justify-content:center; gap:14px; margin-top:0;}
+}
+@keyframes v1-feuille-d{
+  from{transform:translate3d(100%, 0, 0);}
+  to  {transform:none;}
+}
+
 /* Le menu du site. Il descend de son bouton — une entree vient de la
    ou l'objet est — et ses liens arrivent de la droite a 70 ms d'ecart,
    comme la proposition le demande. */
@@ -4204,6 +4372,10 @@ html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(n+6){animati
    couleur etrangere sur la page. */
 html[data-variante="1"] body:has(.site-nav[data-ouvert="true"])::after{
   content:""; position:fixed; inset:0; pointer-events:none;
+  /* SOUS l'en-tete, pas juste sous la feuille. La feuille vit dans
+     l'en-tete, qui forme son propre plan : un voile pose plus haut que
+     lui le recouvrait, et le flou s'appliquait a la feuille elle-meme
+     — tout le menu etait illisible. */
   z-index:calc(var(--z-sticky) - 1);
   /* Un voile ASSOMBRIT, dans les deux themes. Tire de `--ink` il
      devenait clair en theme sombre — l'encre y est claire — et
@@ -4802,6 +4974,10 @@ window.PC = (function(){
   'e.exemple':          ["Charger un exemple","Load a sample","Cargar un ejemplo","Beispiel laden"],
   'e.exporter':         ["Exporter","Export","Exportar","Exportieren"],
   'e.importer':         ["Importer","Import","Importar","Importieren"],
+  'v1.h1a':             ["Tout","All","Todo","Ihr"],
+  'v1.h1b':             ["votre argent,","your money,","su dinero,","ganzes Geld,"],
+  'v1.h1c':             ["enfin réuni.","finally in one place.","por fin reunido.","endlich vereint."],
+  'v1.cta':             ["Commencer gratuitement","Get started free","Empezar gratis","Kostenlos starten"],
   'e.anim':             ["Mouvement","Motion","Movimiento","Bewegung"],
   'e.anim.0':           ["Actuel","Current","Actual","Aktuell"],
   'e.vider':            ["Tout effacer","Erase everything","Borrar todo","Alles löschen"],
@@ -5901,6 +6077,11 @@ window.PC = (function(){
     btn.addEventListener('click', function(){
       pose(nav.getAttribute('data-ouvert') !== 'true');
     });
+    /* La croix de la feuille laterale (proposition 1). Elle est DANS
+       le panneau, donc le clic « a cote » ne la voit pas : il faut la
+       brancher pour elle-meme. */
+    const croix = document.getElementById('nav-x');
+    if (croix) croix.addEventListener('click', function(){ pose(false); btn.focus(); });
     nav.addEventListener('click', function(e){
       if (e.target.closest('a')) pose(false);
     });
@@ -6033,6 +6214,19 @@ window.PC = (function(){
   <div class="site-head__in">
     <a class="wordmark" href="#top">Pierrel<br>&amp; Co</a>
     <nav class="site-nav" id="site-nav" data-i18n-aria="nav.aria" aria-label="Navigation principale">
+      <!-- Tete et bouton de la feuille laterale (proposition 1). Ils ne
+           se montrent que dans cette variante, et seulement sous la
+           largeur ou le menu devient une feuille. -->
+      <div class="nav__tete">
+        <span class="nav__logo" aria-hidden="true">Pierrel<br>&amp; Co</span>
+        <button class="nav__x" type="button" id="nav-x" data-i18n-aria="nav.menu.fermer"
+                aria-label="Fermer le menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+          </svg>
+        </button>
+      </div>
       <a href="#offres" data-i18n="nav.formules">Formules</a>
       <a href="#citations" data-i18n="nav.reperes">Repères</a>
       <a href="#faq" data-i18n="nav.faq">Questions</a>
@@ -6042,6 +6236,15 @@ window.PC = (function(){
            les variantes animent : il faut pouvoir basculer sans
            quitter l'ecran qu'on regarde. Ce bloc part avec les deux
            variantes non retenues. -->
+      <div class="nav__cta">
+        <a class="v1h__cta nav__cta__b" href="#espace-client">
+          <span data-i18n="v1.cta">Commencer gratuitement</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
+          </svg>
+        </a>
+      </div>
       <div class="menu__sep nav__anim" data-banc>
         <p class="menu__k" data-i18n="e.anim">Mouvement</p>
         <div class="menu__choix" role="group" data-i18n-aria="e.anim">
@@ -6114,6 +6317,59 @@ window.PC = (function(){
       Livret, assurance-vie, PEA, immobilier, bitcoin. Vous saisissez, la page calcule&nbsp;:
       ce que vous avez mis, ce que ça vaut aujourd'hui, et ce que ça vous rapporte.
     </p>
+  </div>
+
+  <!-- ===== PREMIER ECRAN, PROPOSITION 1 =====
+       Le heros de la premiere proposition, monte en entier : contenu
+       centre sur 660 px, titre court avec des pictogrammes dans la
+       phrase, un sous-titre, un bouton. Ce n'est pas le meme parti
+       pris que l'actuel — celui-la est editorial, aligne a gauche, et
+       occupe tout l'ecran de son titre. On ne peut pas trancher entre
+       les deux sans les voir l'un apres l'autre.
+
+       Ce qui vient de la proposition : la structure, les tailles, les
+       marges, le mouvement. Ce qui reste de la maison : la toile de
+       Cabanel plutot qu'une video, le papier creme, l'encre, l'accent,
+       et les mots — on ne compare pas des maquettes, on compare deux
+       facons de presenter LA MEME chose. -->
+  <div class="wrap hero__in hero__in--v1">
+    <div class="v1h">
+      <h1 class="v1h__t">
+        <span class="v1h__l">
+          <span data-i18n="v1.h1a">Tout</span>
+          <svg class="v1h__i" width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/>
+            <path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>
+          </svg>
+          <span data-i18n="v1.h1b">votre argent,</span>
+          <svg class="v1h__i" width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4"/>
+            <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+            <path d="M18 12a2 2 0 0 0 0 4h3v-4Z"/>
+          </svg>
+        </span>
+        <span class="v1h__l">
+          <span data-i18n="v1.h1c">enfin réuni.</span>
+          <svg class="v1h__i" width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>
+          </svg>
+        </span>
+      </h1>
+      <p class="v1h__p" data-i18n="hero.lede"></p>
+      <a class="v1h__cta" href="#espace-client">
+        <span data-i18n="v1.cta">Commencer gratuitement</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
+        </svg>
+      </a>
+    </div>
   </div>
 </section>
 
