@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.1503";</script>
+<script>window.PC_VERSION = "261002.1718";</script>
 </head>
 <body>
 
@@ -4663,10 +4663,23 @@ html[data-variante="1"] body:has(.site-nav[data-ouvert="true"])::after{
   }
   html:not([data-anim="force"])[data-variante="1"].js-anim .hero h1,
   html:not([data-anim="force"])[data-variante="1"].js-anim .split-h{opacity:1; transform:none;}
+  /* Toutes les mises a l'echelle de la variante, pas seulement celles
+     des deux premieres classes : ecrites plus bas que le bloc du
+     retour a l'appui et a specificite egale, elles l'emportaient, et
+     « mouvement reduit » laissait passer une mise a l'echelle sur la
+     barre du bas. */
   html:not([data-anim="force"])[data-variante="1"] .btn:hover,
   html:not([data-anim="force"])[data-variante="1"] .pill:hover,
   html:not([data-anim="force"])[data-variante="1"] .btn:active,
-  html:not([data-anim="force"])[data-variante="1"] .pill:active{
+  html:not([data-anim="force"])[data-variante="1"] .pill:active,
+  html:not([data-anim="force"])[data-variante="1"] .icon-btn:active,
+  html:not([data-anim="force"])[data-variante="1"] .marches__h:active,
+  html:not([data-anim="force"])[data-variante="1"] .sous-onglet:active,
+  html:not([data-anim="force"])[data-variante="1"] .tab:active,
+  html:not([data-anim="force"])[data-variante="1"] .barre-app__i:active,
+  html:not([data-anim="force"])[data-variante="1"] .v1h__cta:hover,
+  html:not([data-anim="force"])[data-variante="1"] .v1h__cta:active,
+  html:not([data-anim="force"])[data-variante="1"] .nav__x:active{
     transform:none; filter:none;
   }
 }
@@ -11279,6 +11292,12 @@ window.PC = (function(){
            notre geste. */
         if (dy < 0 || p.scrollTop > 0){ pris = false; return; }
         engage = true;
+        /* ET ON COUPE L'ANIMATION D'ENTREE. Une animation CSS passe
+           devant un `transform` ecrit en ligne : tant qu'elle dure, la
+           feuille ne suivait pas le doigt — on la prenait, elle ne
+           bougeait pas. Une animation qu'on ne peut pas interrompre
+           n'est pas interruptible, quoi qu'en dise la courbe. */
+        p.style.animation = 'none';
         p.setPointerCapture(pid);
       }
       e.preventDefault();
@@ -11307,7 +11326,12 @@ window.PC = (function(){
 
     /* Une feuille rouverte repart toujours de sa place. */
     menuBoard.addEventListener('toggle', function(){
-      if (!menuBoard.open){ lache(); p.style.transform = ''; pos = 0; }
+      if (!menuBoard.open){
+        lache();
+        p.style.transform = '';
+        p.style.animation = '';   /* elle retrouve son entree */
+        pos = 0;
+      }
     });
   })();
 
@@ -11332,12 +11356,22 @@ window.PC = (function(){
     const VALIDES = ['0', '1', '2', '3'];
     const bon = function(v){ return VALIDES.indexOf(v) !== -1; };
 
+    /* LA PROPOSITION EST ACTIVE PAR DEFAUT, et « Actuel » est a un clic.
+       L'inverse paraissait prudent et ne l'etait pas : on ouvrait la
+       page, on voyait l'ancien premier ecran, et il fallait savoir
+       qu'un selecteur existait, dans un menu, pour voir ce qu'on
+       venait justement regarder. Une proposition qu'il faut aller
+       chercher n'est pas proposee.
+
+       La cle de memoire porte un numero : un « Actuel » enregistre lors
+       d'un essai precedent collait a la page pour toujours, et aucun
+       changement de defaut ne l'aurait decolle. */
     const lit = function(){
       const u = new URLSearchParams(location.search).get('anim');
       if (bon(u)) return u;
       let m = null;
-      try { m = localStorage.getItem('pc-mouvement'); } catch(e){}
-      return bon(m) ? m : '0';
+      try { m = localStorage.getItem('pc-mouvement-2'); } catch(e){}
+      return bon(m) ? m : '1';
     };
 
     /* LES DEUX POLICES DE LA PROPOSITION, aux adresses qu'elle donne.
@@ -11369,7 +11403,7 @@ window.PC = (function(){
     const pose = function(v, rejoue){
       document.documentElement.setAttribute('data-variante', v);
       if (v === '1') posePolices();
-      try { localStorage.setItem('pc-mouvement', v); } catch(e){}
+      try { localStorage.setItem('pc-mouvement-2', v); } catch(e){}
       document.querySelectorAll('[data-banc] .menu__v').forEach(function(b){
         b.setAttribute('aria-pressed', b.getAttribute('data-variante') === v ? 'true' : 'false');
       });
