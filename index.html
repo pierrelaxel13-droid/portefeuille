@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.1844";</script>
+<script>window.PC_VERSION = "261002.2351";</script>
 </head>
 <body>
 
@@ -52,7 +52,7 @@
   --ink-3:#84806F;
   --rule:#D5D0C0;
   --rule-strong:#BDB7A3;
-  --accent:#4B21E8;
+  --accent:#7342E2;
   --accent-soft:rgba(75,33,232,0.09);
   --gain:#0A8A4A;
   --loss:#A5341F;
@@ -107,7 +107,7 @@
     --ink-3:#8A8677;
     --rule:#33301F;
     --rule-strong:#4A4630;
-    --accent:#8B74F2;
+    --accent:#9B7BF0;
     --accent-soft:rgba(139,116,242,0.15);
     --gain:#2AA96B;
     --loss:#D96A4E;
@@ -126,7 +126,7 @@
   --ink-3:#8A8677;
   --rule:#33301F;
   --rule-strong:#4A4630;
-  --accent:#8B74F2;
+  --accent:#9B7BF0;
   --accent-soft:rgba(139,116,242,0.15);
   --gain:#2AA96B;
   --loss:#D96A4E;
@@ -175,7 +175,11 @@ h1,h2,h3{font-family:'Archivo Black', system-ui, sans-serif; font-weight:400; te
    Un titre a une seule ligne ne s'en apercoit pas. C'est pour cela que
    le defaut avait tenu : il ne se voit que sur celui de la devanture,
    c'est-a-dire sur le premier ecran du site. */
-h1{font-size:clamp(52px, min(13vw, 19vh), 216px); line-height:0.98; letter-spacing:-0.05em;}
+/* 1,04 et non 0,98 : la police des titres a change, et l'ancien
+   premier ecran — toujours accessible par « Actuel » — demande
+   desormais 1,0 em d'encre en anglais sur un petit telephone. Un
+   interligne appartient a la police, pas au fichier. */
+h1{font-size:clamp(52px, min(13vw, 19vh), 216px); line-height:1.04; letter-spacing:-0.05em;}
 /* Le plancher de 52 px est calibre sur le francais. L'espagnol dit
    « actividades, » : a 52 px ce mot reclame 316 px, et un ecran de
    320 px n'en offre que 280 — il poussait la page et ouvrait une barre
@@ -193,7 +197,15 @@ h1{font-size:clamp(52px, min(13vw, 19vh), 216px); line-height:0.98; letter-spaci
    francais d'aujourd'hui, faux des qu'une traduction amene une
    majuscule accentuee. 0,96 met un jour franc entre les lignes sans
    qu'on voie la difference. */
-h2{font-size:clamp(30px,5.2vw,68px); line-height:0.96; letter-spacing:-0.035em;}
+/* 0,96 etait cale sur Archivo Black. La neo-grotesque qui l'a
+   remplacee monte plus haut : elle demande 0,962 em d'encre, et les
+   lignes se touchaient de deux millemes. Puis l'espagnol a demande
+   1,022 — « hoja de calculo » porte un accent sur une capitale. On
+   pose 1,06 : la valeur est celle de la LANGUE LA PLUS EXIGEANTE des
+   quatre, pas celle du francais. Un interligne se remesure quand on
+   change de police, et il se verifie dans toutes les langues qu'on
+   sert. */
+h2{font-size:clamp(30px,5.2vw,68px); line-height:1.06; letter-spacing:-0.035em;}
 h3{font-size:clamp(21px,2.4vw,30px); line-height:1.08; letter-spacing:-0.022em;}
 p{margin:0;}
 
@@ -4161,6 +4173,45 @@ html[data-variante="1"] .hero{
   align-items:flex-start;
 }
 /* ============================================================
+   LE RESTE DU SITE SUIT
+   ------------------------------------------------------------
+   Le premier ecran a ete choisi ; tout ce qui vient apres prend la
+   meme langue. Trois choses, et seulement trois — ce sont celles qui
+   font qu'on voit un seul site plutot que deux colles.
+
+   1. LA TYPOGRAPHIE DES TITRES. Les sections etaient en Archivo Black,
+      une grasse d'affichage large et lourde. A trente pixels sous un
+      titre d'accueil en neo-grotesque, le changement de voix s'entend.
+      Elles prennent la meme police que lui.
+
+   2. L'ACCENT. #7342E2 remplace l'ancien violet partout — boutons,
+      liens actifs, courbes, marques. Deux violets voisins sur une
+      meme page ne se lisent pas comme une nuance, ils se lisent comme
+      une erreur.
+
+   3. LES BOUTONS. Les pilules du site prennent la forme, le
+      rembourrage et l'appui de celles de la proposition.
+
+   CE QUI NE SUIT PAS, ET POURQUOI : les themes. La proposition pose
+   des couleurs fixes ; la page, elle, s'adapte au clair et au sombre
+   depuis le debut, et des valeurs figees supprimeraient le theme
+   sombre pour tout le monde. L'encre et le papier restent donc ceux
+   des themes ; c'est l'accent et la typographie qui s'alignent.
+   ============================================================ */
+h1, h2{font-family:var(--v1-titre);}
+h2{font-weight:700;}
+.split-h, .vue__t h3{font-family:var(--v1-titre);}
+
+/* Les pilules du site, a la forme de la proposition. */
+.pill{
+  font-family:var(--v1-corps); font-size:14px; font-weight:600;
+  padding:10px 20px; border-radius:999px; border:none;
+  transition:transform .18s cubic-bezier(.22, 1, .36, 1), box-shadow .2s, filter .18s;
+}
+.pill:hover{box-shadow:0 6px 20px rgba(115, 66, 226, .3); transform:none; filter:none;}
+.pill:active{transform:scale(.95); transition-duration:0s;}
+
+/* ============================================================
    PROPOSITION 1 — LES VALEURS, EN TOUTES LETTRES
    ------------------------------------------------------------
    Les couleurs, les polices et les tailles de la proposition, telles
@@ -4172,7 +4223,18 @@ html[data-variante="1"] .hero{
    Elles ne suivent pas le theme clair/sombre — la proposition pose des
    valeurs fixes, et c'est ainsi qu'elle doit etre jugee.
    ============================================================ */
-html[data-variante="1"]{
+/* Ces valeurs ne sont plus celles d'une variante : ce sont celles du
+   site. Le premier ecran a ete choisi, le reste suit — meme encre,
+   meme accent, meme typographie, memes boutons. Un site ou le premier
+   ecran parle une langue et la suite une autre se lit comme deux sites
+   colles. */
+:root{
+  /* #192837 est l'encre de la proposition, et c'est une encre de theme
+     CLAIR. Tant que la toile portait le heros, un texte sombre tenait
+     sur l'image ; sur le fond sombre nu qui l'a remplacee, il
+     disparaissait. L'encre du heros suit donc le theme, comme le reste
+     de la page — la proposition donne la couleur du clair, la page
+     donne celle du sombre. */
   --v1-texte:#192837;
   --v1-accent:#7342E2;
   --v1-clair:#F2F2EE;
@@ -4188,6 +4250,10 @@ html[data-variante="1"]{
   --v1-titre:'Helvetica Now Display Bold', 'Inter', system-ui, sans-serif;
   --v1-corps:'Inter', system-ui, sans-serif;
 }
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){--v1-texte:var(--ink);}
+}
+:root[data-theme="dark"]{--v1-texte:var(--ink);}
 /* La video de fond : tout l'ecran, recadree, derriere tout le reste. */
 .v1video{display:none;}
 html[data-variante="1"] .v1video{
@@ -4196,83 +4262,12 @@ html[data-variante="1"] .v1video{
   pointer-events:none;
 }
 
-/* ===== LES PIECES QUI FLOTTENT =====
-   La demonstration d'origine pose une VIDEO de huit megaoctets, servie
-   par le CDN d'un autre site. Trois raisons de ne pas la cabler : elle
-   coute une requete, un decodeur et de la batterie sur telephone ; la
-   page est un fichier unique, qu'une video de cette taille ne peut pas
-   contenir ; et un lien vers la demonstration d'un tiers casse le jour
-   ou il la retire. La page les dessine donc elle-meme — dix disques,
-   quelques lignes, zero octet de plus.
-
-   CE QUI FAIT L'EFFET, et qu'un disque immobile n'a pas : la ROTATION
-   DANS L'ESPACE. Un cercle qu'on fait tourner autour de son axe
-   horizontal s'aplatit jusqu'au trait puis se rouvre — c'est ce
-   basculement qui donne l'epaisseur, pas la couleur. Chaque piece a sa
-   duree, son retard negatif (elle est deja en route au chargement,
-   personne ne les voit partir ensemble) et sa derive propre.
-
-   Les durees sont LONGUES — de 17 a 35 secondes. Un fond qui bouge
-   vite attire l'oeil, et l'oeil est attendu sur le titre. */
-.v1fond{
-  position:absolute; inset:0; z-index:1; overflow:hidden;
-  pointer-events:none; perspective:900px;
-}
-.v1fond span{
-  position:absolute;
-  left:var(--x); top:var(--y);
-  width:calc(var(--s) * 104px); height:calc(var(--s) * 104px);
-  margin:calc(var(--s) * -52px) 0 0 calc(var(--s) * -52px);
-  border-radius:50%;
-  opacity:var(--a, .9);
-  background:
-    /* le reflet, petit et haut a gauche : c'est lui qui dit « verre » */
-    radial-gradient(ellipse 38% 26% at 30% 22%,
-      color-mix(in srgb, #fff 85%, transparent) 0%,
-      transparent 70%),
-    /* le corps, plus dense sur le pourtour qu'au centre */
-    radial-gradient(circle at 36% 32%,
-      color-mix(in srgb, var(--c) 26%, transparent) 0%,
-      color-mix(in srgb, var(--c) 52%, transparent) 46%,
-      color-mix(in srgb, var(--c) 78%, transparent) 78%,
-      color-mix(in srgb, var(--c) 52%, transparent) 100%);
-  box-shadow:
-    /* la tranche : un filet clair en haut, un sombre en bas, et le
-       disque cesse d'etre un rond colorie pour devenir un objet */
-    inset 0 calc(var(--s) * 2px) 0 color-mix(in srgb, #fff 62%, transparent),
-    inset 0 calc(var(--s) * -3px) 0 color-mix(in srgb, var(--c) 72%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, #fff 38%, transparent),
-    inset 0 calc(var(--s) * -10px) calc(var(--s) * 16px)
-      color-mix(in srgb, var(--c) 42%, transparent),
-    0 calc(var(--s) * 18px) calc(var(--s) * 30px)
-      color-mix(in srgb, var(--c) 26%, transparent);
-  animation:v1-flotte var(--t, 24s) linear var(--d, 0s) infinite;
-  will-change:transform;
-}
-@keyframes v1-flotte{
-  0%  {transform:translate3d(0, 0, 0) rotate3d(1, .34, 0, 0deg);}
-  50% {transform:translate3d(var(--dx), var(--dy), 0) rotate3d(1, .34, 0, 180deg);}
-  100%{transform:translate3d(0, 0, 0) rotate3d(1, .34, 0, 360deg);}
-}
-/* En theme sombre, les memes pastels deviennent des verres eclaires :
-   on baisse l'opacite, sinon ils brillent plus que le titre. */
-@media (prefers-color-scheme: dark){
-  :root:where(:not([data-theme="light"])) .v1fond span{opacity:calc(var(--a, .9) * .62);}
-}
-:root[data-theme="dark"] .v1fond span{opacity:calc(var(--a, .9) * .62);}
-/* Mouvement reduit : elles restent, immobiles. Un fond qui tourne sans
-   fin est exactement ce que ce reglage demande d'arreter — mais le
-   decor, lui, n'a aucune raison de disparaitre. */
-@media (prefers-reduced-motion: reduce){
-  html:not([data-anim="force"]) .v1fond span{animation:none;}
-}
-/* Elles n'existent que dans la proposition 1. */
-.v1fond{display:none;}
-html[data-variante="1"] .v1fond{display:block;}
-/* Et la, la toile s'efface : la proposition pose ses objets sur un
-   fond calme. Garder les deux reviendrait a comparer un melange avec
-   l'actuel, pas la proposition avec l'actuel. */
-html[data-variante="1"] .hero__oeuvre{display:none;}
+/* Les pieces qui flottaient et la video de fond ont ete retirees : on
+   les a vues, elles ne restent pas. Le premier ecran se tient sur son
+   titre, et la toile de fond de la maison ne revient pas non plus —
+   la proposition pose ses mots sur un fond calme, et c'est ce calme
+   qu'on garde. */
+.hero__oeuvre{display:none;}
 
 .v1h{max-width:660px; margin:0 auto; text-align:center; position:relative; z-index:2;}
 /* `.hero h1` borne le titre a 13ch et l'emporte sur une simple classe :
@@ -4438,56 +4433,59 @@ html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
      compte — et deux pilules vers la meme porte ne sont pas une
      proposition, c'est un doublon. */
 @media (min-width:901px){
-  html[data-variante="1"] .site-head__in{max-width:1280px; padding:20px 32px;}
-  html[data-variante="1"] .site-nav{
+  .site-head__in{max-width:1280px; padding:20px 32px;}
+  .site-nav{
     display:flex; position:static; inset:auto;
     flex-direction:row; align-items:center; justify-content:center;
     width:auto; gap:32px; margin:0 auto; padding:0;
     background:none; border:none; box-shadow:none; border-radius:0;
     overflow:visible;
   }
-  html[data-variante="1"] .site-nav a{
+  .site-nav a{
     font-family:var(--v1-corps); font-size:14px; font-weight:500;
     color:var(--v1-texte); padding:0; margin:0; border:none;
     border-radius:0; background:none; opacity:1;
     transition:opacity .2s;
   }
-  html[data-variante="1"] .site-nav a:hover{opacity:.7; background:none;}
-  html[data-variante="1"] .site-nav a[aria-current="true"]{color:var(--v1-texte); font-weight:700;}
+  .site-nav a:hover{opacity:.7; background:none;}
+  .site-nav a[aria-current="true"]{color:var(--v1-texte); font-weight:700;}
   /* Les reglages restent dans le panneau du bouton a trois barres, pas
      au milieu des liens. */
-  html[data-variante="1"] .site-nav .reglages,
-  html[data-variante="1"] .site-nav .nav__anim{display:none;}
-  html[data-variante="1"] .site-nav[data-ouvert="true"]{
+  .site-nav .reglages,
+  .site-nav .nav__anim{display:none;}
+  .site-nav[data-ouvert="true"]{
     position:absolute; left:auto; right:var(--pad); top:100%;
     flex-direction:column; align-items:stretch; width:min(340px, calc(100vw - 2 * var(--pad)));
     gap:0; margin-top:8px; padding:8px 0 12px;
     background:var(--paper); border:1px solid var(--rule); border-radius:16px;
     box-shadow:0 20px 40px -24px var(--shadow);
   }
-  html[data-variante="1"] .site-nav[data-ouvert="true"] a{padding:12px 20px; font-size:15px;}
-  html[data-variante="1"] .site-nav[data-ouvert="true"] .reglages,
-  html[data-variante="1"] .site-nav[data-ouvert="true"] .nav__anim{display:block;}
-  html[data-variante="1"] .site-nav[data-ouvert="true"] .reglages{display:flex;}
+  .site-nav[data-ouvert="true"] a{padding:12px 20px; font-size:15px;}
+  .site-nav[data-ouvert="true"] .reglages,
+  .site-nav[data-ouvert="true"] .nav__anim{display:block;}
+  .site-nav[data-ouvert="true"] .reglages{display:flex;}
 }
 /* Les deux pilules, aux couleurs de la proposition. */
-html[data-variante="1"] .head-tools .pill{
+.head-tools .pill{
   font-family:var(--v1-corps); font-size:14px; font-weight:600;
   padding:10px 20px; border-radius:999px; border:none;
   background:var(--v1-accent); color:#fff;
   transition:transform .18s cubic-bezier(.22, 1, .36, 1), box-shadow .2s, filter .18s;
 }
-html[data-variante="1"] .head-tools .pill:hover{
+.head-tools .pill:hover{
   box-shadow:0 6px 20px rgba(115, 66, 226, .3); transform:none; filter:none;
 }
-html[data-variante="1"] .head-tools .pill:active{transform:scale(.95); transition-duration:0s;}
-html[data-variante="1"] .head-tools .pill--creux{
-  background:var(--v1-clair); color:var(--v1-texte);
+.head-tools .pill:active{transform:scale(.95); transition-duration:0s;}
+/* La pilule claire garde un fond fixe : son encre doit l'etre aussi.
+   Prise sur le theme, elle devenait blanche sur blanc en theme sombre
+   — un bouton invisible. */
+.head-tools .pill--creux{
+  background:var(--v1-clair); color:#192837;
 }
-html[data-variante="1"] .head-tools .pill--creux:hover{
+.head-tools .pill--creux:hover{
   box-shadow:0 6px 20px rgba(25, 40, 55, .14);
 }
-html[data-variante="1"] .site-head__in{gap:12px;}
+.site-head__in{gap:12px;}
 /* SOUS 900 PX, L'EN-TETE NE GARDE QUE LE BOUTON A TROIS BARRES. C'est
    la lettre de la proposition — les deux pilules y sont marquees
    `md:hidden` et vivent dans la feuille — et c'etait aussi un defaut
@@ -4496,7 +4494,7 @@ html[data-variante="1"] .site-head__in{gap:12px;}
    cote de 61 px. Les deux boutons sont dans la feuille, ils n'ont pas
    a etre deux fois. */
 @media (max-width:900px){
-  html[data-variante="1"] .head-tools .pill{display:none;}
+  .head-tools .pill{display:none;}
 }
 
 /* ===== LE MENU EN FEUILLE LATERALE (proposition 1) =====
@@ -4512,7 +4510,7 @@ html[data-variante="1"] .site-head__in{gap:12px;}
    meme endroit ne sont pas une proposition, c'est un doublon. */
 .nav__tete, .nav__cta{display:none;}
 @media (max-width:900px){
-  html[data-variante="1"] .site-nav{
+  .site-nav{
     position:fixed; inset:0 0 auto auto; top:0; left:auto;
     width:min(88vw, 360px); height:100dvh;
     padding:0 0 calc(18px + env(safe-area-inset-bottom, 0px));
@@ -4521,7 +4519,7 @@ html[data-variante="1"] .site-head__in{gap:12px;}
     overflow-y:auto; overscroll-behavior:contain;
     z-index:var(--z-overlay);
   }
-  html[data-variante="1"] .site-nav[data-ouvert="true"]{
+  .site-nav[data-ouvert="true"]{
     animation:v1-feuille-d .45s cubic-bezier(.22, 1, .36, 1);
   }
   /* LA SORTIE, qui a sa propre courbe : elle part lentement et finit
@@ -4529,42 +4527,42 @@ html[data-variante="1"] .site-head__in{gap:12px;}
      affichee le temps qu'elle s'en aille — un panneau qu'on masque
      d'un coup n'a pas d'animation de sortie, quelle que soit la courbe
      qu'on lui ecrit. */
-  html[data-variante="1"] .site-nav[data-ferme="1"]{
+  .site-nav[data-ferme="1"]{
     display:flex;
     animation:v1-feuille-sort .35s cubic-bezier(.55, 0, 1, .45) both;
   }
-  html[data-variante="1"] .nav__tete{
+  .nav__tete{
     display:flex; align-items:center; justify-content:space-between;
     padding:18px 20px 16px;
   }
-  html[data-variante="1"] .nav__logo{
+  .nav__logo{
     font-family:'Archivo Black', sans-serif; font-size:15px; line-height:.92;
     letter-spacing:-.02em; text-transform:uppercase; color:#192837;
   }
-  html[data-variante="1"] .nav__x{
+  .nav__x{
     width:40px; height:40px; flex:none; display:grid; place-items:center;
     border:none; border-radius:50%; cursor:pointer; color:#192837;
     background:rgba(25, 40, 55, .1);
     transition:transform .17s cubic-bezier(.22, 1, .36, 1), background .2s;
   }
-  html[data-variante="1"] .nav__x:active{transform:scale(.9); transition-duration:0s;}
-  html[data-variante="1"] .nav__x:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .nav__x:active{transform:scale(.9); transition-duration:0s;}
+  .nav__x:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
   /* Le filet de la proposition : un trait d'un pixel, en retrait des
      deux bords. */
   /* Le filet : un pixel, en retrait de 24 px des deux bords. */
-  html[data-variante="1"] .nav__tete{
+  .nav__tete{
     border-bottom:1px solid rgba(25, 40, 55, .12);
     margin:0 24px; padding:18px 0 16px;
   }
-  html[data-variante="1"] .site-nav a{
+  .site-nav a{
     font-family:var(--v1-corps); font-size:1.1rem; color:#192837;
     margin:0 12px; padding:12px 14px; border-radius:12px;
   }
-  html[data-variante="1"] .site-nav a:hover{background:rgba(0, 0, 0, .1);}
-  html[data-variante="1"] .nav__cta{
+  .site-nav a:hover{background:rgba(0, 0, 0, .1);}
+  .nav__cta{
     display:flex; flex-direction:column; gap:10px; padding:14px 20px 4px;
   }
-  html[data-variante="1"] .nav__cta__b{
+  .nav__cta__b{
     width:100%; justify-content:center; gap:14px; margin-top:0;
     padding:14px 24px; font-size:.95rem; border-radius:999px;
     border:none; cursor:pointer; font-family:var(--v1-corps); font-weight:600;
@@ -4572,29 +4570,29 @@ html[data-variante="1"] .site-head__in{gap:12px;}
   /* Le bouton d'action est un LIEN dans la feuille : la regle qui
      colore les liens du menu l'emportait sur la sienne, et son texte
      sortait en encre sombre sur le violet. */
-  html[data-variante="1"] .site-nav a.nav__cta__b{color:#fff;}
-  html[data-variante="1"] .nav__cta__b--clair{
+  .site-nav a.nav__cta__b{color:#fff;}
+  .nav__cta__b--clair{
     background:#F2F2EE; color:#192837; box-shadow:none;
   }
   /* La feuille est claire, quel que soit le theme de la page : ce qui
      vit dedans doit l'etre aussi. Sans cela, en theme sombre, les
      etiquettes et les reglages gardaient leur encre claire et
      disparaissaient sur le beige. */
-  html[data-variante="1"] .site-nav .menu__k{color:rgba(25, 40, 55, .6);}
-  html[data-variante="1"] .site-nav .menu__v{
+  .site-nav .menu__k{color:rgba(25, 40, 55, .6);}
+  .site-nav .menu__v{
     color:rgba(25, 40, 55, .75); border-color:rgba(25, 40, 55, .25);
   }
-  html[data-variante="1"] .site-nav .menu__v[aria-pressed="true"]{
+  .site-nav .menu__v[aria-pressed="true"]{
     color:var(--v1-accent); border-color:var(--v1-accent);
     background:rgba(115, 66, 226, .12);
   }
-  html[data-variante="1"] .site-nav .reglage,
-  html[data-variante="1"] .site-nav .icon-btn{
+  .site-nav .reglage,
+  .site-nav .icon-btn{
     color:#192837; border-color:rgba(25, 40, 55, .25); background:transparent;
   }
-  html[data-variante="1"] .nav__anim{border-top-color:rgba(25, 40, 55, .12);}
-  html[data-variante="1"] .nav__cta__b--clair:active{transform:scale(.96); transition-duration:0s;}
-  html[data-variante="1"] .reglages{padding-inline:20px;}
+  .nav__anim{border-top-color:rgba(25, 40, 55, .12);}
+  .nav__cta__b--clair:active{transform:scale(.96); transition-duration:0s;}
+  .reglages{padding-inline:20px;}
 }
 @keyframes v1-feuille-d{
   from{transform:translate3d(100%, 0, 0);}
@@ -4613,31 +4611,31 @@ html[data-variante="1"] .site-head__in{gap:12px;}
   from{opacity:0; transform:translate3d(0, -14px, 0);}
   to  {opacity:1; transform:none;}
 }
-html[data-variante="1"] .site-nav[data-ouvert="true"]{
+.site-nav[data-ouvert="true"]{
   animation:v1-tombe .45s cubic-bezier(.22, 1, .36, 1);
 }
-html[data-variante="1"] .site-nav[data-ouvert="true"] > *{
+.site-nav[data-ouvert="true"] > *{
   animation:v1-droite .4s cubic-bezier(.22, 1, .36, 1) backwards;
 }
-html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(1){animation-delay:.18s;}
-html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(2){animation-delay:.25s;}
-html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(3){animation-delay:.32s;}
-html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(4){animation-delay:.39s;}
-html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(5){animation-delay:.46s;}
-html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(n+6){animation-delay:.53s;}
+.site-nav[data-ouvert="true"] > *:nth-child(1){animation-delay:.18s;}
+.site-nav[data-ouvert="true"] > *:nth-child(2){animation-delay:.25s;}
+.site-nav[data-ouvert="true"] > *:nth-child(3){animation-delay:.32s;}
+.site-nav[data-ouvert="true"] > *:nth-child(4){animation-delay:.39s;}
+.site-nav[data-ouvert="true"] > *:nth-child(5){animation-delay:.46s;}
+.site-nav[data-ouvert="true"] > *:nth-child(n+6){animation-delay:.53s;}
 
 /* Le voile derriere le menu : il assombrit et floute la page, et
    disparait en meme temps que lui. La proposition le donne en bleu
    ardoise ; ici il est tire de NOTRE encre, sans quoi il poserait une
    couleur etrangere sur la page. */
-html[data-variante="1"] body:has(.site-nav[data-ferme="1"])::after{
+body:has(.site-nav[data-ferme="1"])::after{
   content:""; position:fixed; inset:0; pointer-events:none;
   z-index:calc(var(--z-sticky) - 1);
   background:rgba(25, 40, 55, .35);
   backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
   animation:v1-voile-sort .3s ease both;
 }
-html[data-variante="1"] body:has(.site-nav[data-ouvert="true"])::after{
+body:has(.site-nav[data-ouvert="true"])::after{
   content:""; position:fixed; inset:0; pointer-events:none;
   /* SOUS l'en-tete, pas juste sous la feuille. La feuille vit dans
      l'en-tete, qui forme son propre plan : un voile pose plus haut que
@@ -6645,26 +6643,6 @@ window.PC = (function(){
        Une video de fond coute une requete, un decodeur, de la batterie
        sur telephone, et elle casse le jour ou le CDN d'en face
        disparait — ce qui, pour une demonstration, arrive. -->
-  <!-- LA VIDEO DE FOND de la proposition, a son adresse exacte. Les
-       pieces dessinees restent DERRIERE : si le CDN d'en face ne
-       repond pas — il est hors de portee depuis l'atelier, 403 au
-       tunnel — c'est elles qu'on voit, et le premier ecran ne se
-       retrouve pas vide. -->
-  <video class="v1video" autoplay muted loop playsinline aria-hidden="true"
-         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
-  <div class="v1fond" aria-hidden="true">
-    <span style="--x:14%; --y:68%; --s:.95; --t:23s; --d:-2s;  --dx:26px;  --dy:-34px; --a:1;   --c:#8E7BF2"></span>
-    <span style="--x:28%; --y:86%; --s:1.25;--t:31s; --d:-9s;  --dx:-18px; --dy:-26px; --a:.9;  --c:#6E8FE8"></span>
-    <span style="--x:40%; --y:62%; --s:.62; --t:19s; --d:-5s;  --dx:14px;  --dy:30px;  --a:.8;  --c:#B49BF0"></span>
-    <span style="--x:53%; --y:82%; --s:1.08;--t:27s; --d:-14s; --dx:22px;  --dy:-20px; --a:.95; --c:#7FC8C0"></span>
-    <span style="--x:64%; --y:64%; --s:.78; --t:21s; --d:-3s;  --dx:-24px; --dy:24px;  --a:.85; --c:#9B86EE"></span>
-    <span style="--x:78%; --y:84%; --s:1.14;--t:35s; --d:-17s; --dx:16px;  --dy:28px;  --a:.9;  --c:#6E8FE8"></span>
-    <span style="--x:90%; --y:62%; --s:.7;  --t:25s; --d:-11s; --dx:-20px; --dy:-18px; --a:.8;  --c:#D9A8D2"></span>
-    <span style="--x:7%;  --y:92%; --s:.55; --t:29s; --d:-7s;  --dx:18px;  --dy:-30px; --a:.75; --c:#8E7BF2"></span>
-    <span style="--x:46%; --y:97%; --s:.46; --t:17s; --d:-13s; --dx:-14px; --dy:22px;  --a:.7;  --c:#7FC8C0"></span>
-    <span style="--x:69%; --y:97%; --s:.84; --t:33s; --d:-20s; --dx:20px;  --dy:-24px; --a:.85; --c:#B49BF0"></span>
-  </div>
-
   <div class="wrap hero__in hero__in--v1">
     <div class="v1h">
       <h1 class="v1h__t">
