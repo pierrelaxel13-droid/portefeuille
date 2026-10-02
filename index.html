@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.1124";</script>
+<script>window.PC_VERSION = "261002.1258";</script>
 </head>
 <body>
 
@@ -4151,11 +4151,84 @@ html[data-variante="1"] .hero__in:not(.hero__in--v1){display:none;}
    proposition le pose sur un rembourrage court, et ce qui suit remonte
    d'autant. */
 html[data-variante="1"] .hero{
-  min-height:auto;
+  /* Assez de hauteur pour que les pieces aient un bas d'ecran ou
+     s'etaler : dans la demonstration, elles occupent la moitie basse
+     et le titre se lit sur un fond propre. Sans cette hauteur, elles
+     passent derriere le texte et c'est le texte qui perd. */
+  min-height:clamp(560px, 88dvh, 860px);
   padding:calc(var(--h-tete) + clamp(40px, 8vw, 72px)) 0 48px;
   align-items:flex-start;
 }
-.v1h{max-width:660px; margin:0 auto; text-align:center;}
+/* ===== LES PIECES QUI FLOTTENT =====
+   La demonstration d'origine pose une VIDEO de huit megaoctets, servie
+   par le CDN d'un autre site. Trois raisons de ne pas la cabler : elle
+   coute une requete, un decodeur et de la batterie sur telephone ; la
+   page est un fichier unique, qu'une video de cette taille ne peut pas
+   contenir ; et un lien vers la demonstration d'un tiers casse le jour
+   ou il la retire. La page les dessine donc elle-meme — dix disques,
+   quelques lignes, zero octet de plus.
+
+   CE QUI FAIT L'EFFET, et qu'un disque immobile n'a pas : la ROTATION
+   DANS L'ESPACE. Un cercle qu'on fait tourner autour de son axe
+   horizontal s'aplatit jusqu'au trait puis se rouvre — c'est ce
+   basculement qui donne l'epaisseur, pas la couleur. Chaque piece a sa
+   duree, son retard negatif (elle est deja en route au chargement,
+   personne ne les voit partir ensemble) et sa derive propre.
+
+   Les durees sont LONGUES — de 17 a 35 secondes. Un fond qui bouge
+   vite attire l'oeil, et l'oeil est attendu sur le titre. */
+.v1fond{
+  position:absolute; inset:0; z-index:1; overflow:hidden;
+  pointer-events:none; perspective:900px;
+}
+.v1fond span{
+  position:absolute;
+  left:var(--x); top:var(--y);
+  width:calc(var(--s) * 104px); height:calc(var(--s) * 104px);
+  margin:calc(var(--s) * -52px) 0 0 calc(var(--s) * -52px);
+  border-radius:50%;
+  opacity:var(--a, .9);
+  background:
+    radial-gradient(circle at 32% 28%,
+      color-mix(in srgb, #fff 70%, transparent) 0%,
+      color-mix(in srgb, var(--c) 42%, transparent) 38%,
+      color-mix(in srgb, var(--c) 70%, transparent) 72%,
+      color-mix(in srgb, var(--c) 46%, transparent) 100%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #fff 45%, transparent),
+    inset 0 calc(var(--s) * -8px) calc(var(--s) * 14px)
+      color-mix(in srgb, var(--c) 45%, transparent),
+    0 calc(var(--s) * 16px) calc(var(--s) * 26px)
+      color-mix(in srgb, var(--c) 22%, transparent);
+  animation:v1-flotte var(--t, 24s) linear var(--d, 0s) infinite;
+  will-change:transform;
+}
+@keyframes v1-flotte{
+  0%  {transform:translate3d(0, 0, 0) rotate3d(1, .34, 0, 0deg);}
+  50% {transform:translate3d(var(--dx), var(--dy), 0) rotate3d(1, .34, 0, 180deg);}
+  100%{transform:translate3d(0, 0, 0) rotate3d(1, .34, 0, 360deg);}
+}
+/* En theme sombre, les memes pastels deviennent des verres eclaires :
+   on baisse l'opacite, sinon ils brillent plus que le titre. */
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])) .v1fond span{opacity:calc(var(--a, .9) * .62);}
+}
+:root[data-theme="dark"] .v1fond span{opacity:calc(var(--a, .9) * .62);}
+/* Mouvement reduit : elles restent, immobiles. Un fond qui tourne sans
+   fin est exactement ce que ce reglage demande d'arreter — mais le
+   decor, lui, n'a aucune raison de disparaitre. */
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .v1fond span{animation:none;}
+}
+/* Elles n'existent que dans la proposition 1. */
+.v1fond{display:none;}
+html[data-variante="1"] .v1fond{display:block;}
+/* Et la, la toile s'efface : la proposition pose ses objets sur un
+   fond calme. Garder les deux reviendrait a comparer un melange avec
+   l'actuel, pas la proposition avec l'actuel. */
+html[data-variante="1"] .hero__oeuvre{display:none;}
+
+.v1h{max-width:660px; margin:0 auto; text-align:center; position:relative; z-index:2;}
 /* `.hero h1` borne le titre a 13ch et l'emporte sur une simple classe :
    la ligne insecable debordait de sa boite, et la page defilait
    lateralement de 36 px sous 360. On nomme donc le heros dans le
@@ -6332,6 +6405,26 @@ window.PC = (function(){
        Cabanel plutot qu'une video, le papier creme, l'encre, l'accent,
        et les mots — on ne compare pas des maquettes, on compare deux
        facons de presenter LA MEME chose. -->
+  <!-- Les pieces qui flottent (proposition 1). Dans la demonstration
+       d'origine, c'est une VIDEO de huit megaoctets servie par un CDN
+       tiers. Ici c'est la page qui les dessine : dix disques, une
+       dizaine de lignes de CSS, et le poids ne bouge pas d'un octet.
+       Une video de fond coute une requete, un decodeur, de la batterie
+       sur telephone, et elle casse le jour ou le CDN d'en face
+       disparait — ce qui, pour une demonstration, arrive. -->
+  <div class="v1fond" aria-hidden="true">
+    <span style="--x:14%; --y:68%; --s:.95; --t:23s; --d:-2s;  --dx:26px;  --dy:-34px; --a:1;   --c:#8E7BF2"></span>
+    <span style="--x:28%; --y:86%; --s:1.25;--t:31s; --d:-9s;  --dx:-18px; --dy:-26px; --a:.9;  --c:#6E8FE8"></span>
+    <span style="--x:40%; --y:62%; --s:.62; --t:19s; --d:-5s;  --dx:14px;  --dy:30px;  --a:.8;  --c:#B49BF0"></span>
+    <span style="--x:53%; --y:82%; --s:1.08;--t:27s; --d:-14s; --dx:22px;  --dy:-20px; --a:.95; --c:#7FC8C0"></span>
+    <span style="--x:64%; --y:64%; --s:.78; --t:21s; --d:-3s;  --dx:-24px; --dy:24px;  --a:.85; --c:#9B86EE"></span>
+    <span style="--x:78%; --y:84%; --s:1.14;--t:35s; --d:-17s; --dx:16px;  --dy:28px;  --a:.9;  --c:#6E8FE8"></span>
+    <span style="--x:90%; --y:62%; --s:.7;  --t:25s; --d:-11s; --dx:-20px; --dy:-18px; --a:.8;  --c:#D9A8D2"></span>
+    <span style="--x:7%;  --y:92%; --s:.55; --t:29s; --d:-7s;  --dx:18px;  --dy:-30px; --a:.75; --c:#8E7BF2"></span>
+    <span style="--x:46%; --y:97%; --s:.46; --t:17s; --d:-13s; --dx:-14px; --dy:22px;  --a:.7;  --c:#7FC8C0"></span>
+    <span style="--x:69%; --y:97%; --s:.84; --t:33s; --d:-20s; --dx:20px;  --dy:-24px; --a:.85; --c:#B49BF0"></span>
+  </div>
+
   <div class="wrap hero__in hero__in--v1">
     <div class="v1h">
       <h1 class="v1h__t">
