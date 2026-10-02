@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.1258";</script>
+<script>window.PC_VERSION = "261002.1503";</script>
 </head>
 <body>
 
@@ -4150,6 +4150,7 @@ html[data-variante="1"] .hero__in:not(.hero__in--v1){display:none;}
 /* Le heros centre n'a pas besoin de toute la hauteur d'un ecran : la
    proposition le pose sur un rembourrage court, et ce qui suit remonte
    d'autant. */
+html[data-variante="1"] .hero__in--v1{max-width:1280px; margin:0 auto;}
 html[data-variante="1"] .hero{
   /* Assez de hauteur pour que les pieces aient un bas d'ecran ou
      s'etaler : dans la demonstration, elles occupent la moitie basse
@@ -4159,6 +4160,34 @@ html[data-variante="1"] .hero{
   padding:calc(var(--h-tete) + clamp(40px, 8vw, 72px)) 0 48px;
   align-items:flex-start;
 }
+/* ============================================================
+   PROPOSITION 1 — LES VALEURS, EN TOUTES LETTRES
+   ------------------------------------------------------------
+   Les couleurs, les polices et les tailles de la proposition, telles
+   qu'elle les ecrit, bornees au premier ecran et a son menu. Le reste
+   de la page garde le papier, l'encre et les themes de la maison :
+   c'est un premier ecran qu'on compare, pas un site entier qu'on
+   remplace.
+
+   Elles ne suivent pas le theme clair/sombre — la proposition pose des
+   valeurs fixes, et c'est ainsi qu'elle doit etre jugee.
+   ============================================================ */
+html[data-variante="1"]{
+  --v1-texte:#192837;
+  --v1-accent:#7342E2;
+  --v1-clair:#F2F2EE;
+  --v1-feuille:#CFC8C5;
+  --v1-titre:'Helvetica Now Display Bold', 'Archivo Black', system-ui, sans-serif;
+  --v1-corps:'Inter', system-ui, sans-serif;
+}
+/* La video de fond : tout l'ecran, recadree, derriere tout le reste. */
+.v1video{display:none;}
+html[data-variante="1"] .v1video{
+  display:block; position:absolute; inset:0; z-index:0;
+  width:100%; height:100%; object-fit:cover;
+  pointer-events:none;
+}
+
 /* ===== LES PIECES QUI FLOTTENT =====
    La demonstration d'origine pose une VIDEO de huit megaoctets, servie
    par le CDN d'un autre site. Trois raisons de ne pas la cabler : elle
@@ -4235,36 +4264,46 @@ html[data-variante="1"] .hero__oeuvre{display:none;}
    selecteur. */
 .hero .v1h__t{max-width:none;}
 .v1h__t{
-  font-family:'Archivo Black', system-ui, sans-serif; font-weight:400;
-  /* La proposition part de 1,65rem au minimum. En francais, « Tout
-     votre argent, » est plus long que l'anglais d'origine : a 320 px,
-     la ligne insecable mesurait 316 px pour 280 disponibles, et la
-     page defilait lateralement. 1,4rem la ramene a 272. Le plancher
-     d'une echelle depend de la langue qu'on y met. */
-  font-size:clamp(1.4rem, 5vw, 3rem);
+  font-family:var(--v1-titre); font-weight:700;
+  font-size:clamp(1.65rem, 5vw, 3rem);
   line-height:1.05; letter-spacing:-.01em;
-  color:var(--ink); margin:0; max-width:none;
+  color:var(--v1-texte); margin:0; max-width:none;
 }
+/* LA SEULE ENTORSE A LA LETTRE, et elle est forcee. La proposition
+   pose une ligne de titre INSECABLE et un plancher de 1,65rem — des
+   valeurs calees sur « Lock Down Your Passwords ». « Tout votre
+   argent, » est plus long : il demande 350 px la ou un iPhone courant
+   en offre 335, et un petit telephone 280. La page defilait donc de
+   cote. Sous 420 px, la ligne a le droit de se couper ; au-dessus,
+   elle reste insecable comme demande. Mieux vaut une ligne coupee
+   qu'un premier ecran qu'on pousse du doigt. */
+/* `.v1h .v1h__l` et non `.v1h__l` : la regle de base est ecrite plus
+   bas dans la feuille, et a specificite egale c'est la derniere qui
+   gagne. Ecrite simplement, cette exception ne s'appliquait a rien et
+   la page continuait de defiler de cote — le test l'a dit, pas la
+   relecture. */
+@media (max-width:420px){ .v1h .v1h__l{white-space:normal;} }
 /* Chaque ligne est insecable : un pictogramme reste colle au mot qui
    le precede, sinon il se retrouve seul en tete de ligne et ne veut
    plus rien dire. */
 .v1h__l{display:block; white-space:nowrap;}
 .v1h__i{
   display:inline; vertical-align:middle; position:relative; top:-2px;
-  margin:0 4px; color:var(--ink);
+  margin:0 4px; color:var(--v1-texte);
 }
 .v1h__p{
+  font-family:var(--v1-corps);
   font-size:clamp(0.9rem, 2.5vw, 1.1rem); line-height:1.65;
-  color:var(--ink); opacity:.8; max-width:560px;
+  color:var(--v1-texte); opacity:.8; max-width:560px;
   margin:18px auto 0; text-wrap:pretty;
 }
 .v1h__cta{
   display:inline-flex; align-items:center; justify-content:space-between;
   gap:32px; min-width:210px; margin-top:28px;
   padding:17px 24px; border-radius:50px; text-decoration:none;
-  background:var(--accent); color:#fff; font-weight:600;
-  font-size:clamp(0.9rem, 2vw, 1rem);
-  box-shadow:0 4px 24px color-mix(in srgb, var(--accent) 28%, transparent);
+  background:var(--v1-accent, #7342E2); color:#fff; font-weight:600;
+  font-family:var(--v1-corps); font-size:clamp(0.9rem, 2vw, 1rem);
+  box-shadow:0 4px 24px rgba(115, 66, 226, .28);
   transition:transform .18s cubic-bezier(.22, 1, .36, 1), filter .18s;
 }
 .v1h__cta:hover{transform:scale(1.04); filter:brightness(1.1);}
@@ -4356,6 +4395,85 @@ html[data-variante="1"] .split-h{
 }
 html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
 
+/* ===== LA BARRE DU HAUT (proposition 1) =====
+   1280 px de large, le logo a gauche, CINQ liens au centre, deux
+   boutons en pilule a droite, et le bouton a trois barres sous 900 px.
+
+   Deux ecarts, tous deux forces par ce que la page contient :
+
+   - LE BOUTON A TROIS BARRES RESTE sur grand ecran. Chez la
+     proposition il ne sert qu'aux liens, qui passent dans la barre ;
+     ici le meme panneau porte la langue, la devise, le theme et le
+     selecteur de mouvement. Le faire disparaitre retirerait des
+     reglages, pas un doublon.
+
+   - LE SECOND BOUTON est « Installer l'app » et non « Se connecter ».
+     La proposition a deux portes differentes ; ici « Commencer » et
+     « Se connecter » menent au meme endroit — l'espace s'ouvre sans
+     compte — et deux pilules vers la meme porte ne sont pas une
+     proposition, c'est un doublon. */
+@media (min-width:901px){
+  html[data-variante="1"] .site-head__in{max-width:1280px; padding:20px 32px;}
+  html[data-variante="1"] .site-nav{
+    display:flex; position:static; inset:auto;
+    flex-direction:row; align-items:center; justify-content:center;
+    width:auto; gap:32px; margin:0 auto; padding:0;
+    background:none; border:none; box-shadow:none; border-radius:0;
+    overflow:visible;
+  }
+  html[data-variante="1"] .site-nav a{
+    font-family:var(--v1-corps); font-size:14px; font-weight:500;
+    color:var(--v1-texte); padding:0; margin:0; border:none;
+    border-radius:0; background:none; opacity:1;
+    transition:opacity .2s;
+  }
+  html[data-variante="1"] .site-nav a:hover{opacity:.7; background:none;}
+  html[data-variante="1"] .site-nav a[aria-current="true"]{color:var(--v1-texte); font-weight:700;}
+  /* Les reglages restent dans le panneau du bouton a trois barres, pas
+     au milieu des liens. */
+  html[data-variante="1"] .site-nav .reglages,
+  html[data-variante="1"] .site-nav .nav__anim{display:none;}
+  html[data-variante="1"] .site-nav[data-ouvert="true"]{
+    position:absolute; left:auto; right:var(--pad); top:100%;
+    flex-direction:column; align-items:stretch; width:min(340px, calc(100vw - 2 * var(--pad)));
+    gap:0; margin-top:8px; padding:8px 0 12px;
+    background:var(--paper); border:1px solid var(--rule); border-radius:16px;
+    box-shadow:0 20px 40px -24px var(--shadow);
+  }
+  html[data-variante="1"] .site-nav[data-ouvert="true"] a{padding:12px 20px; font-size:15px;}
+  html[data-variante="1"] .site-nav[data-ouvert="true"] .reglages,
+  html[data-variante="1"] .site-nav[data-ouvert="true"] .nav__anim{display:block;}
+  html[data-variante="1"] .site-nav[data-ouvert="true"] .reglages{display:flex;}
+}
+/* Les deux pilules, aux couleurs de la proposition. */
+html[data-variante="1"] .head-tools .pill{
+  font-family:var(--v1-corps); font-size:14px; font-weight:600;
+  padding:10px 20px; border-radius:999px; border:none;
+  background:var(--v1-accent); color:#fff;
+  transition:transform .18s cubic-bezier(.22, 1, .36, 1), box-shadow .2s, filter .18s;
+}
+html[data-variante="1"] .head-tools .pill:hover{
+  box-shadow:0 6px 20px rgba(115, 66, 226, .3); transform:none; filter:none;
+}
+html[data-variante="1"] .head-tools .pill:active{transform:scale(.95); transition-duration:0s;}
+html[data-variante="1"] .head-tools .pill--creux{
+  background:var(--v1-clair); color:var(--v1-texte);
+}
+html[data-variante="1"] .head-tools .pill--creux:hover{
+  box-shadow:0 6px 20px rgba(25, 40, 55, .14);
+}
+html[data-variante="1"] .site-head__in{gap:12px;}
+/* SOUS 900 PX, L'EN-TETE NE GARDE QUE LE BOUTON A TROIS BARRES. C'est
+   la lettre de la proposition — les deux pilules y sont marquees
+   `md:hidden` et vivent dans la feuille — et c'etait aussi un defaut
+   mesure : a 320 px les deux pilules et le bouton faisaient 280 px a
+   eux seuls, le logo n'avait plus de place, et la page defilait de
+   cote de 61 px. Les deux boutons sont dans la feuille, ils n'ont pas
+   a etre deux fois. */
+@media (max-width:900px){
+  html[data-variante="1"] .head-tools .pill{display:none;}
+}
+
 /* ===== LE MENU EN FEUILLE LATERALE (proposition 1) =====
    La proposition remplace le panneau deroulant par une feuille qui
    entre par la DROITE sur toute la hauteur, avec sa propre tete — le
@@ -4373,14 +4491,22 @@ html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
     position:fixed; inset:0 0 auto auto; top:0; left:auto;
     width:min(88vw, 360px); height:100dvh;
     padding:0 0 calc(18px + env(safe-area-inset-bottom, 0px));
-    background:var(--paper-2); border:none;
-    border-left:1px solid var(--rule);
-    box-shadow:-12px 0 48px color-mix(in srgb, var(--ink) 18%, transparent);
+    background:#CFC8C5; border:none;
+    box-shadow:-12px 0 48px rgba(25, 40, 55, .18);
     overflow-y:auto; overscroll-behavior:contain;
     z-index:var(--z-overlay);
   }
   html[data-variante="1"] .site-nav[data-ouvert="true"]{
     animation:v1-feuille-d .45s cubic-bezier(.22, 1, .36, 1);
+  }
+  /* LA SORTIE, qui a sa propre courbe : elle part lentement et finit
+     sec, l'inverse de l'entree. Il faut donc garder la feuille
+     affichee le temps qu'elle s'en aille — un panneau qu'on masque
+     d'un coup n'a pas d'animation de sortie, quelle que soit la courbe
+     qu'on lui ecrit. */
+  html[data-variante="1"] .site-nav[data-ferme="1"]{
+    display:flex;
+    animation:v1-feuille-sort .35s cubic-bezier(.55, 0, 1, .45) both;
   }
   html[data-variante="1"] .nav__tete{
     display:flex; align-items:center; justify-content:space-between;
@@ -4388,36 +4514,72 @@ html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
   }
   html[data-variante="1"] .nav__logo{
     font-family:'Archivo Black', sans-serif; font-size:15px; line-height:.92;
-    letter-spacing:-.02em; text-transform:uppercase; color:var(--ink);
+    letter-spacing:-.02em; text-transform:uppercase; color:#192837;
   }
   html[data-variante="1"] .nav__x{
     width:40px; height:40px; flex:none; display:grid; place-items:center;
-    border:none; border-radius:50%; cursor:pointer; color:var(--ink);
-    background:color-mix(in srgb, var(--ink) 10%, transparent);
+    border:none; border-radius:50%; cursor:pointer; color:#192837;
+    background:rgba(25, 40, 55, .1);
     transition:transform .17s cubic-bezier(.22, 1, .36, 1), background .2s;
   }
   html[data-variante="1"] .nav__x:active{transform:scale(.9); transition-duration:0s;}
   html[data-variante="1"] .nav__x:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
   /* Le filet de la proposition : un trait d'un pixel, en retrait des
      deux bords. */
-  html[data-variante="1"] .site-nav > a:first-of-type{
-    border-top:1px solid color-mix(in srgb, var(--ink) 12%, transparent);
-    margin-top:0; padding-top:18px;
+  /* Le filet : un pixel, en retrait de 24 px des deux bords. */
+  html[data-variante="1"] .nav__tete{
+    border-bottom:1px solid rgba(25, 40, 55, .12);
+    margin:0 24px; padding:18px 0 16px;
   }
   html[data-variante="1"] .site-nav a{
-    font-size:1.1rem; margin:0 12px; padding:12px 14px;
-    border-radius:var(--r-2);
+    font-family:var(--v1-corps); font-size:1.1rem; color:#192837;
+    margin:0 12px; padding:12px 14px; border-radius:12px;
   }
-  html[data-variante="1"] .site-nav a:hover{
-    background:color-mix(in srgb, var(--ink) 8%, transparent);
+  html[data-variante="1"] .site-nav a:hover{background:rgba(0, 0, 0, .1);}
+  html[data-variante="1"] .nav__cta{
+    display:flex; flex-direction:column; gap:10px; padding:14px 20px 4px;
   }
-  html[data-variante="1"] .nav__cta{display:block; padding:14px 20px 4px;}
-  html[data-variante="1"] .nav__cta__b{width:100%; justify-content:center; gap:14px; margin-top:0;}
+  html[data-variante="1"] .nav__cta__b{
+    width:100%; justify-content:center; gap:14px; margin-top:0;
+    padding:14px 24px; font-size:.95rem; border-radius:999px;
+    border:none; cursor:pointer; font-family:var(--v1-corps); font-weight:600;
+  }
+  /* Le bouton d'action est un LIEN dans la feuille : la regle qui
+     colore les liens du menu l'emportait sur la sienne, et son texte
+     sortait en encre sombre sur le violet. */
+  html[data-variante="1"] .site-nav a.nav__cta__b{color:#fff;}
+  html[data-variante="1"] .nav__cta__b--clair{
+    background:#F2F2EE; color:#192837; box-shadow:none;
+  }
+  /* La feuille est claire, quel que soit le theme de la page : ce qui
+     vit dedans doit l'etre aussi. Sans cela, en theme sombre, les
+     etiquettes et les reglages gardaient leur encre claire et
+     disparaissaient sur le beige. */
+  html[data-variante="1"] .site-nav .menu__k{color:rgba(25, 40, 55, .6);}
+  html[data-variante="1"] .site-nav .menu__v{
+    color:rgba(25, 40, 55, .75); border-color:rgba(25, 40, 55, .25);
+  }
+  html[data-variante="1"] .site-nav .menu__v[aria-pressed="true"]{
+    color:var(--v1-accent); border-color:var(--v1-accent);
+    background:rgba(115, 66, 226, .12);
+  }
+  html[data-variante="1"] .site-nav .reglage,
+  html[data-variante="1"] .site-nav .icon-btn{
+    color:#192837; border-color:rgba(25, 40, 55, .25); background:transparent;
+  }
+  html[data-variante="1"] .nav__anim{border-top-color:rgba(25, 40, 55, .12);}
+  html[data-variante="1"] .nav__cta__b--clair:active{transform:scale(.96); transition-duration:0s;}
+  html[data-variante="1"] .reglages{padding-inline:20px;}
 }
 @keyframes v1-feuille-d{
   from{transform:translate3d(100%, 0, 0);}
   to  {transform:none;}
 }
+@keyframes v1-feuille-sort{
+  from{transform:none;}
+  to  {transform:translate3d(100%, 0, 0);}
+}
+@keyframes v1-voile-sort{from{opacity:1;} to{opacity:0;}}
 
 /* Le menu du site. Il descend de son bouton — une entree vient de la
    ou l'objet est — et ses liens arrivent de la droite a 70 ms d'ecart,
@@ -4443,6 +4605,13 @@ html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(n+6){animati
    disparait en meme temps que lui. La proposition le donne en bleu
    ardoise ; ici il est tire de NOTRE encre, sans quoi il poserait une
    couleur etrangere sur la page. */
+html[data-variante="1"] body:has(.site-nav[data-ferme="1"])::after{
+  content:""; position:fixed; inset:0; pointer-events:none;
+  z-index:calc(var(--z-sticky) - 1);
+  background:rgba(25, 40, 55, .35);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  animation:v1-voile-sort .3s ease both;
+}
 html[data-variante="1"] body:has(.site-nav[data-ouvert="true"])::after{
   content:""; position:fixed; inset:0; pointer-events:none;
   /* SOUS l'en-tete, pas juste sous la feuille. La feuille vit dans
@@ -4450,10 +4619,7 @@ html[data-variante="1"] body:has(.site-nav[data-ouvert="true"])::after{
      lui le recouvrait, et le flou s'appliquait a la feuille elle-meme
      — tout le menu etait illisible. */
   z-index:calc(var(--z-sticky) - 1);
-  /* Un voile ASSOMBRIT, dans les deux themes. Tire de `--ink` il
-     devenait clair en theme sombre — l'encre y est claire — et
-     eclaircissait la page au lieu de la reculer. Il est donc fixe. */
-  background:color-mix(in srgb, #0D0C07 38%, transparent);
+  background:rgba(25, 40, 55, .35);
   backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
   animation:fade-in .3s ease both;
 }
@@ -6140,7 +6306,23 @@ window.PC = (function(){
     const nav = document.getElementById('site-nav');
     if (!btn || !nav) return;
 
+    let minuterie = null;
     function pose(ouvert){
+      /* La proposition 1 donne a la feuille une courbe de SORTIE. Un
+         panneau qu'on masque d'un coup n'en a pas : il faut le garder
+         affiche le temps qu'elle se joue, puis le retirer. Hors de
+         cette variante et hors de la largeur ou le menu est une
+         feuille, rien de tout cela ne s'arme. */
+      const feuille = document.documentElement.getAttribute('data-variante') === '1'
+                   && matchMedia('(max-width:900px)').matches;
+      if (!ouvert && feuille && nav.getAttribute('data-ouvert') === 'true'){
+        clearTimeout(minuterie);
+        nav.setAttribute('data-ferme', '1');
+        minuterie = setTimeout(function(){ nav.removeAttribute('data-ferme'); }, 350);
+      } else {
+        clearTimeout(minuterie);
+        nav.removeAttribute('data-ferme');
+      }
       nav.setAttribute('data-ouvert', String(ouvert));
       btn.setAttribute('aria-expanded', String(ouvert));
       btn.setAttribute('aria-label', t(ouvert ? 'nav.menu.fermer' : 'nav.menu.ouvrir'));
@@ -6155,6 +6337,16 @@ window.PC = (function(){
        brancher pour elle-meme. */
     const croix = document.getElementById('nav-x');
     if (croix) croix.addEventListener('click', function(){ pose(false); btn.focus(); });
+    /* Le second bouton de la feuille declenche celui de l'en-tete
+       plutot que de recopier sa logique : l'invite d'installation du
+       navigateur ne se presente qu'une fois, et deux chemins vers elle
+       en feraient deux etats a tenir. */
+    const inst = document.getElementById('installer-feuille');
+    if (inst) inst.addEventListener('click', function(){
+      pose(false);
+      const h = document.getElementById('installer');
+      if (h) h.click();
+    });
     nav.addEventListener('click', function(e){
       if (e.target.closest('a')) pose(false);
     });
@@ -6317,6 +6509,9 @@ window.PC = (function(){
             <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
           </svg>
         </a>
+        <button class="nav__cta__b nav__cta__b--clair" type="button" id="installer-feuille">
+          <span data-i18n="hero.install">Installer l'app</span>
+        </button>
       </div>
       <div class="menu__sep nav__anim" data-banc>
         <p class="menu__k" data-i18n="e.anim">Mouvement</p>
@@ -6412,6 +6607,13 @@ window.PC = (function(){
        Une video de fond coute une requete, un decodeur, de la batterie
        sur telephone, et elle casse le jour ou le CDN d'en face
        disparait — ce qui, pour une demonstration, arrive. -->
+  <!-- LA VIDEO DE FOND de la proposition, a son adresse exacte. Les
+       pieces dessinees restent DERRIERE : si le CDN d'en face ne
+       repond pas — il est hors de portee depuis l'atelier, 403 au
+       tunnel — c'est elles qu'on voit, et le premier ecran ne se
+       retrouve pas vide. -->
+  <video class="v1video" autoplay muted loop playsinline aria-hidden="true"
+         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
   <div class="v1fond" aria-hidden="true">
     <span style="--x:14%; --y:68%; --s:.95; --t:23s; --d:-2s;  --dx:26px;  --dy:-34px; --a:1;   --c:#8E7BF2"></span>
     <span style="--x:28%; --y:86%; --s:1.25;--t:31s; --d:-9s;  --dx:-18px; --dy:-26px; --a:.9;  --c:#6E8FE8"></span>
@@ -11138,8 +11340,35 @@ window.PC = (function(){
       return bon(m) ? m : '0';
     };
 
+    /* LES DEUX POLICES DE LA PROPOSITION, aux adresses qu'elle donne.
+       Elles sont posees A LA DEMANDE, quand on choisit la variante 1,
+       et pas dans l'en-tete : le reste de la page embarque ses polices
+       en base64 et ne fait AUCUNE requete vers l'exterieur. Deux liens
+       dans l'en-tete auraient coute ces deux requetes a tout le monde,
+       y compris a ceux qui ne regardent pas la proposition.
+
+       A savoir, et ce n'est pas un detail : « Helvetica Now Display »
+       est une police commerciale de Monotype, que ce CDN redistribue
+       sans licence. Pour comparer deux premiers ecrans c'est sans
+       consequence ; sur un site qui vend, c'est une licence a
+       acheter. */
+    let policesPosees = false;
+    const posePolices = function(){
+      if (policesPosees) return;
+      policesPosees = true;
+      [['https://db.onlinewebfonts.com/c/04e6981992c0e2e7642af2074ebe3901?family=Helvetica+Now+Display+Bold', null],
+       ['https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap', null]
+      ].forEach(function(x){
+        const l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.href = x[0];
+        document.head.appendChild(l);
+      });
+    };
+
     const pose = function(v, rejoue){
       document.documentElement.setAttribute('data-variante', v);
+      if (v === '1') posePolices();
       try { localStorage.setItem('pc-mouvement', v); } catch(e){}
       document.querySelectorAll('[data-banc] .menu__v').forEach(function(b){
         b.setAttribute('aria-pressed', b.getAttribute('data-variante') === v ? 'true' : 'false');
