@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.1718";</script>
+<script>window.PC_VERSION = "261002.1844";</script>
 </head>
 <body>
 
@@ -4177,7 +4177,15 @@ html[data-variante="1"]{
   --v1-accent:#7342E2;
   --v1-clair:#F2F2EE;
   --v1-feuille:#CFC8C5;
-  --v1-titre:'Helvetica Now Display Bold', 'Archivo Black', system-ui, sans-serif;
+  /* LE SECOURS EST INTER, PAS ARCHIVO BLACK. « Helvetica Now Display »
+     n'arrive pas toujours : le CDN qui la sert est refuse par certains
+     reseaux, et la visionneuse d'artefact n'autorise que Google Fonts.
+     Ce qui s'affichait alors etait Archivo Black — une grasse
+     d'affichage, large et lourde, qui ne ressemble en rien a la
+     neo-grotesque de la proposition. Inter en est proche, elle est
+     DEJA demandee par la proposition pour le corps de texte, et elle
+     passe partout. */
+  --v1-titre:'Helvetica Now Display Bold', 'Inter', system-ui, sans-serif;
   --v1-corps:'Inter', system-ui, sans-serif;
 }
 /* La video de fond : tout l'ecran, recadree, derriere tout le reste. */
@@ -4218,17 +4226,26 @@ html[data-variante="1"] .v1video{
   border-radius:50%;
   opacity:var(--a, .9);
   background:
-    radial-gradient(circle at 32% 28%,
-      color-mix(in srgb, #fff 70%, transparent) 0%,
-      color-mix(in srgb, var(--c) 42%, transparent) 38%,
-      color-mix(in srgb, var(--c) 70%, transparent) 72%,
-      color-mix(in srgb, var(--c) 46%, transparent) 100%);
+    /* le reflet, petit et haut a gauche : c'est lui qui dit « verre » */
+    radial-gradient(ellipse 38% 26% at 30% 22%,
+      color-mix(in srgb, #fff 85%, transparent) 0%,
+      transparent 70%),
+    /* le corps, plus dense sur le pourtour qu'au centre */
+    radial-gradient(circle at 36% 32%,
+      color-mix(in srgb, var(--c) 26%, transparent) 0%,
+      color-mix(in srgb, var(--c) 52%, transparent) 46%,
+      color-mix(in srgb, var(--c) 78%, transparent) 78%,
+      color-mix(in srgb, var(--c) 52%, transparent) 100%);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, #fff 45%, transparent),
-    inset 0 calc(var(--s) * -8px) calc(var(--s) * 14px)
-      color-mix(in srgb, var(--c) 45%, transparent),
-    0 calc(var(--s) * 16px) calc(var(--s) * 26px)
-      color-mix(in srgb, var(--c) 22%, transparent);
+    /* la tranche : un filet clair en haut, un sombre en bas, et le
+       disque cesse d'etre un rond colorie pour devenir un objet */
+    inset 0 calc(var(--s) * 2px) 0 color-mix(in srgb, #fff 62%, transparent),
+    inset 0 calc(var(--s) * -3px) 0 color-mix(in srgb, var(--c) 72%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, #fff 38%, transparent),
+    inset 0 calc(var(--s) * -10px) calc(var(--s) * 16px)
+      color-mix(in srgb, var(--c) 42%, transparent),
+    0 calc(var(--s) * 18px) calc(var(--s) * 30px)
+      color-mix(in srgb, var(--c) 26%, transparent);
   animation:v1-flotte var(--t, 24s) linear var(--d, 0s) infinite;
   will-change:transform;
 }
@@ -4283,6 +4300,14 @@ html[data-variante="1"] .hero__oeuvre{display:none;}
    la page continuait de defiler de cote — le test l'a dit, pas la
    relecture. */
 @media (max-width:420px){ .v1h .v1h__l{white-space:normal;} }
+/* Et l'interligne, pour la meme raison. 1,05 est la valeur de la
+   proposition et elle tient sur grand ecran : son titre y demande
+   1,021 em d'encre. Des que le titre passe sur trois lignes — c'est-a-
+   dire sur un telephone, en francais — l'accent de « reuni » et la
+   virgule d'« argent, » portent le besoin a 1,061, et les lignes se
+   touchent. Trois centiemes d'em suffisent, et personne ne verra la
+   difference ; une collision, si. */
+@media (max-width:560px){ .v1h .v1h__t{line-height:1.08;} }
 /* Chaque ligne est insecable : un pictogramme reste colle au mot qui
    le precede, sinon il se retrouve seul en tete de ligne et ne veut
    plus rien dire. */
