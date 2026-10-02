@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.0736";</script>
+<script>window.PC_VERSION = "261002.0838";</script>
 </head>
 <body>
 
@@ -1302,7 +1302,12 @@ body.flux-vif .cours__vif::before{
   display:flex; align-items:center; justify-content:center;
   gap:18px; margin-top:26px; font-size:13px; color:var(--ink-3);
 }
-.marches__pages button[disabled]{opacity:.4; cursor:default;}
+/* UN BOUTON ETEINT N'EST PAS UNE INFORMATION. « Page precedente » en
+   gris sur la premiere page occupe la place d'une action qui n'existe
+   pas, et le gris est exactement ce qu'on cherche a retirer de cette
+   page. Il s'efface — la place reste prise pour que « Page 1 » ne
+   saute pas d'un cote a l'autre quand on tourne. */
+.marches__pages button[disabled]{visibility:hidden;}
 
 /* ===== La fiche d'une crypto ===== */
 .fiche-m__tete{
@@ -2053,34 +2058,38 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   html:not([data-anim="force"]) .an-mar-i{transition:none;}
 }
 
-/* ===== Les mesures du marche : un champ de donnees, pas des cartes =====
-   Sept tuiles encadrees de poids egal ne disent pas quoi lire en
-   premier, et l'encadrement n'apporte rien : il n'y a aucune hierarchie
-   a communiquer entre une boite et sa voisine. On retire donc les
-   boites et on laisse les filets faire le travail — c'est ce que fait
-   une page de cotation imprimee depuis cent ans.
+/* ===== Les mesures du marche : DES CASES =====
+   Elles ont d'abord ete posees en champ de donnees — des filets d'un
+   pixel, comme une page de cotation imprimee. C'etait defendable sur le
+   papier et c'etait faux a l'ecran : sept etiquettes grises empilees,
+   chacune separee de la suivante par un trait, lisaient comme un
+   formulaire a moitie charge. Un ecran entier de gris sur fond sombre
+   ne dit pas « sobriete », il dit « rien n'a fini d'arriver ».
 
-   La mesure de tete, elle, garde le haut de l'affiche : elle repond a
-   la question qu'on se pose en arrivant. */
+   Chaque mesure est donc une case : une surface, un bord, un angle.
+   Deux par rangee sur telephone — ce qui divise par deux la hauteur du
+   bloc au passage — quatre sur grand ecran.
+
+   Celle de tete garde toute la largeur : elle repond a la question
+   qu'on se pose en arrivant, et une question n'a pas la meme taille
+   que ses details. */
 #an-mar-mes{
-  margin-top:18px; gap:0; background:none;
-  border-top:1px solid var(--rule-strong);
-  /* TROIS COLONNES, pas « autant qu'il en tient ». Les six mesures qui
-     suivent celle de tete remplissent alors deux rangees pleines ; a
-     cinq par rangee, la sixieme restait seule sur une ligne vide, et un
-     vide pareil se lit comme un bloc inacheve. */
-  grid-template-columns:1fr;
+  display:flex; flex-wrap:wrap;
+  margin-top:18px; gap:10px; background:none; border-top:none;
 }
-@media (min-width:560px){ #an-mar-mes{grid-template-columns:repeat(2, 1fr);} }
-@media (min-width:900px){ #an-mar-mes{grid-template-columns:repeat(3, 1fr);} }
+@media (min-width:760px){ #an-mar-mes{gap:12px;} }
 #an-mar-mes .an-m{
-  background:none; padding:15px 18px 17px 0;
-  border-bottom:1px solid var(--rule);
+  flex:1 1 168px;
+  background:var(--verre); border:1px solid var(--verre-filet);
+  border-radius:var(--r-2); padding:14px 15px 16px; border-bottom:none;
+  backdrop-filter:var(--flou); -webkit-backdrop-filter:var(--flou);
+  box-shadow:var(--verre-haut),
+             0 1px 2px color-mix(in srgb, var(--shadow) 40%, transparent);
 }
 #an-mar-mes .an-m__v{font-family:'IBM Plex Mono', monospace; font-weight:500;}
 #an-mar-mes .an-m--tete{
-  grid-column:1 / -1; padding:20px 0 22px;
-  border-bottom:1px solid var(--rule-strong);
+  flex:1 1 100%; padding:22px 22px 24px; border-radius:var(--r-3);
+  border-bottom:1px solid var(--verre-filet);
 }
 #an-mar-mes .an-m--tete .an-m__v{
   font-family:'Archivo Black', system-ui, sans-serif; font-weight:400;
@@ -2088,13 +2097,19 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   margin:10px 0 8px;
 }
 #an-mar-mes .an-m--tete .an-m__d{font-size:13.5px; max-width:62ch;}
-/* Sur telephone les mesures passent en une colonne : les rembourrages
-   pensés pour une grille de trois y ajoutent sept fois le meme vide.
-   On les resserre — c'est de la densite, aucune information ne part. */
+/* Sur telephone les cases sont deux par rangee : on resserre les
+   rembourrages et les corps, sans rien retirer. */
 @media (max-width:700px){
-  #an-mar-mes .an-m{padding:11px 0 12px;}
-  #an-mar-mes .an-m--tete{padding:14px 0 16px;}
-  #an-mar-mes .an-m--tete .an-m__v{font-size:34px; margin:6px 0 6px;}
+  #an-mar-mes{gap:8px;}
+  /* Dans une case a deux par rangee, l'etiquette et le chiffre
+     s'EMPILENT. Cote a cote, « ce qui monte le plus » tient sur trois
+     lignes et le nombre lui passe dessus — c'est ce qu'on a vu au
+     premier rendu. */
+  #an-mar-mes .an-m{display:block; padding:12px 13px 14px;}
+  #an-mar-mes .an-m__v{white-space:normal; margin:5px 0 3px;}
+  #an-mar-mes .an-m__v{font-size:21px;}
+  #an-mar-mes .an-m--tete{padding:18px 16px 20px;}
+  #an-mar-mes .an-m--tete .an-m__v{font-size:40px; margin:6px 0 6px;}
   #an-mar-mes .an-m--tete .an-m__d{font-size:12.5px;}
   #an-mar-mes .an-m__d{font-size:12px;}
 }
@@ -2107,6 +2122,7 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
     align-items:baseline; gap:6px 40px;
   }
   #an-mar-mes .an-m--tete .an-m__k{grid-column:1 / -1;}
+  #an-mar-mes .an-m--tete{display:grid;}
   #an-mar-mes .an-m--tete .an-m__v{margin:6px 0 0;}
   #an-mar-mes .an-m--tete .an-m__d{margin:0;}
 }
@@ -2436,7 +2452,15 @@ body.vue-espace .field{opacity:.95;}
 /* Les indicateurs deviennent des tuiles détachées : le filet d'un
    pixel qui les cousait ensemble appartient au vocabulaire de la
    vitrine, pas à celui d'une application. */
-.espace .kpis{gap:12px; background:transparent; border:none;}
+/* EN RANGEES QUI SE REMPLISSENT, pour la meme raison que les mesures
+   de l'analyse : trois tuiles sur deux colonnes laissaient la
+   troisieme seule a cote d'un trou. En rangees elastiques, celle qui
+   reste prend toute la largeur. */
+.espace .kpis{
+  display:flex; flex-wrap:wrap; gap:12px;
+  background:transparent; border:none;
+}
+.espace .kpi{flex:1 1 150px;}
 .espace .kpi{
   background:var(--verre); border:1px solid var(--verre-filet);
   backdrop-filter:var(--flou); -webkit-backdrop-filter:var(--flou);
@@ -2470,17 +2494,36 @@ body.vue-espace .field{opacity:.95;}
    arrondi a la meme distance se decolle au lieu de s'emboiter. */
 .espace .an-lignes{background:none; border:none; gap:14px;}
 
-/* Les mesures d'une ligne parlaient un autre langage que celles du
-   marche, trente pixels plus haut : la-haut un champ de donnees a
-   filets, ici des cases cernees. Deux grilles pour la meme chose, sur
-   le meme ecran, c'est ce qui donne l'impression d'un assemblage. Elles
-   adoptent donc le champ. Les cases cernees posaient en plus un carre
-   de papier opaque au milieu d'une surface translucide, ce qui creve le
-   verre. */
-.espace .an-mes{background:none; gap:0 28px; margin-top:16px;}
+/* Les mesures d'une ligne parlent la meme langue que celles du marche,
+   trente pixels plus haut : DES CASES. Elles ont ete essayees en champ
+   de donnees a filets — c'etait defendable et c'etait faux : sur fond
+   sombre, une pile d'etiquettes grises separees par des traits lit
+   comme un formulaire a moitie charge.
+
+   Elles sont posees DANS une carte, donc elles ne reprennent pas son
+   verre : une surface translucide sur une surface translucide ne se lit
+   plus. Elles sont en creux — un voile de papier, un filet — ce qui dit
+   « contenu de » plutot que « pose sur ». */
+/* EN RANGEES QUI SE REMPLISSENT, pas en grille. Une grille a colonnes
+   fixes laisse la derniere case seule a cote d'un vide quand le compte
+   ne tombe pas juste — cinq mesures sur deux colonnes, et la cinquieme
+   reste seule devant un trou. C'est precisement ce qu'on cherche a
+   faire disparaitre. En rangees elastiques, les cases de la derniere
+   ligne s'etirent pour prendre la place : il n'y a jamais de trou, a
+   aucune largeur, quel que soit le nombre de mesures. */
+.espace .an-mes{
+  display:flex; flex-wrap:wrap; background:none; gap:8px; margin-top:14px;
+}
+@media (min-width:760px){ .espace .an-mes{gap:10px;} }
 .espace .an-m{
-  background:none; padding:14px 0 15px;
-  border-top:1px solid var(--verre-filet);
+  /* 132 et non 165 : ces cases-ci vivent DANS une carte, dont les
+     marges retirent une cinquantaine de pixels. A 165, deux ne
+     tenaient plus sur la largeur d'un telephone et chacune prenait
+     toute la rangee — le bloc devenait plus haut qu'avant. */
+  flex:1 1 132px;
+  background:color-mix(in srgb, var(--paper-2) 62%, transparent);
+  border:1px solid var(--verre-filet); border-radius:var(--r-2);
+  padding:13px 14px 15px;
 }
 
 /* Les tableaux repliables du detail : memes angles, meme filet. Ici
@@ -2489,10 +2532,60 @@ body.vue-espace .field{opacity:.95;}
 /* Les paires correlees : meme dalle soudee que les lignes, meme
    remede. Une liste de deux a cinq rangees n'a pas besoin d'un cadre
    pour qu'on voie qu'elle en est une. */
-.espace .an-paires{background:none; border:none; gap:0;}
+/* Vos lignes : DES CASES. Meme raison, meme remede que les rangees du
+   marche — et il fallait que les deux listes se ressemblent, puisque
+   c'est la meme chose qu'on y lit. */
+.espace .lignes{gap:6px;}
+.espace .ligne{
+  border:1px solid var(--verre-filet); border-radius:var(--r-2);
+  background:color-mix(in srgb, var(--paper-2) 45%, transparent);
+  padding:11px 13px;
+}
+.espace .ligne + .ligne{border-top:none;}
+
+/* Les lectures : DES CASES. Quatre paragraphes gris cousus par un filet
+   d'un pixel, c'est la forme d'un document ; ce sont pourtant quatre
+   constats independants, qui ne se lisent pas l'un apres l'autre mais
+   l'un OU l'autre. Chacun sa surface. */
+.espace .lectures{background:none; border-top:none; gap:9px;}
+.espace .lecture{
+  background:color-mix(in srgb, var(--paper-2) 62%, transparent);
+  border:1px solid var(--verre-filet); border-radius:var(--r-2);
+  padding:14px 15px 16px;
+}
+
+/* Les rangees des marches : DES CASES, elles aussi. Dix lignes cousues
+   par un filet d'un pixel, c'est une page de cotation ; sur un
+   telephone, posee sous un titre et des jetons arrondis, c'est le seul
+   endroit qui lit encore « tableau ». Le filet part, chaque ligne prend
+   sa surface, et l'ecart entre elles fait le travail que faisait le
+   trait.
+
+   Les cases sont a peine teintees : dix surfaces franches empilees
+   feraient une colonne de boutons. Ce qu'on veut, c'est qu'on voie DIX
+   OBJETS au lieu d'un bloc raye. */
+.espace .marches__liste{gap:6px;}
+.espace .marches__l{
+  border-bottom:none; border:1px solid var(--verre-filet);
+  border-radius:var(--r-2);
+  background:color-mix(in srgb, var(--paper-2) 45%, transparent);
+  padding:11px 13px;
+}
+.espace .marches__l:hover{background:var(--accent-soft);}
+.espace .marches__tete{border-bottom:none; padding-inline:13px;}
+.espace .an-mar-l__c{border-top:none; gap:6px 18px;}
+.espace .an-mar-i{
+  border-bottom:none; border:1px solid var(--verre-filet);
+  border-radius:var(--r-2);
+  background:color-mix(in srgb, var(--paper-2) 45%, transparent);
+  padding:11px 13px 12px;
+}
+
+.espace .an-paires{background:none; border:none; gap:8px;}
 .espace .an-paire{
-  background:none; border-top:1px solid var(--verre-filet);
-  padding:15px 2px 16px 0;
+  background:color-mix(in srgb, var(--paper-2) 62%, transparent);
+  border:1px solid var(--verre-filet); border-radius:var(--r-2);
+  padding:14px 15px 15px;
 }
 
 .espace .prod,
@@ -3734,14 +3827,15 @@ body:not(.espace-ouvert) .barre-app{display:none;}
      mesures d'une seule valeur cotee prenaient 130 px de plus — et
      c'est la, pas dans la taille des caracteres, que se trouvait le
      defilement. Meme forme que les reperes de la vue d'ensemble. */
-  .an-m{
-    display:grid; grid-template-columns:minmax(0,1fr) auto;
-    gap:2px 12px; align-items:baseline; padding:10px 13px;
-  }
-  .an-m__k{grid-column:1; grid-row:1;}
-  .an-m__v{grid-column:2; grid-row:1; font-size:17.5px; margin:0; white-space:nowrap;}
-  .an-m__d{grid-column:1 / -1; font-size:12px; line-height:1.45;}
-  .an-j, .an-bar{grid-column:1 / -1; margin:6px 0 2px;}
+  /* L'etiquette a gauche et le chiffre a droite valaient pour des
+     RANGEES pleine largeur. En cases de demi-largeur, l'etiquette tient
+     sur trois lignes et le chiffre lui passe dessus : on empile. Les
+     deux colonnes de cases rendent la hauteur que l'empilement coute,
+     et davantage. */
+  .an-m{padding:11px 12px 13px;}
+  .an-m__v{font-size:19px; margin:5px 0 2px;}
+  .an-m__d{font-size:11.5px; line-height:1.45;}
+  .an-j, .an-bar{margin:6px 0 2px;}
   .an-paire{padding:12px 13px;}
   .an-paire__n{font-size:14.5px;}
   .an-paire__c{font-size:17px;}
@@ -4641,7 +4735,6 @@ window.PC = (function(){
   'an.onglet':          ["Analyse","Analysis","Análisis","Analyse"],
   'an.eyebrow':         ["L'analyse","The analysis","El análisis","Die Analyse"],
   'an.h2':              ["Vos chiffres, dans le marché d'aujourd'hui.","Your figures, in today's market.","Sus cifras, en el mercado de hoy.","Ihre Zahlen, im heutigen Markt."],
-  'an.intro':           ["Les marchés du jour, puis vos lignes mesurées une par une. Aucune estimation, aucun modèle.","Today's markets, then your lines measured one by one. No estimate, no model.","Los mercados del día, luego sus líneas medidas una a una. Sin estimaciones ni modelos.","Die Märkte des Tages, dann Ihre Positionen einzeln gemessen. Keine Schätzung, kein Modell."],
   'an.lancer':          ["Analyser mes chiffres","Analyse my figures","Analizar mis cifras","Meine Zahlen analysieren"],
   'an.refaire':         ["Refaire l'analyse","Run it again","Repetir el análisis","Analyse wiederholen"],
   'an.encours':         ["L'analyse est en cours. Elle prend une vingtaine de secondes : le modèle lit vos chiffres, les cours du jour et les titres de presse avant d'écrire.","The analysis is running. It takes about twenty seconds: the model reads your figures, today's prices and the news headlines before writing.","El análisis está en marcha. Tarda unos veinte segundos: el modelo lee sus cifras, las cotizaciones del día y los titulares antes de escribir.","Die Analyse läuft. Sie dauert etwa zwanzig Sekunden: das Modell liest Ihre Zahlen, die Tageskurse und die Schlagzeilen, bevor es schreibt."],
@@ -4693,7 +4786,7 @@ window.PC = (function(){
   'an.mar.vous.k':      ["Vos lignes l\u00e0-dedans","Your lines in it","Sus l\u00edneas en todo esto","Ihre Positionen darin"],
   'an.mar.vous.d':      ["sur une de ces cotations.","on one of these quotes.","en una de estas cotizaciones.","auf einer dieser Notierungen."],
   'an.calc.t':          ["Et vos lignes là-dedans","And your lines in it","Y sus líneas en todo esto","Und Ihre Positionen darin"],
-  'an.calc.d':          ["Douze mois de cours réels quand la ligne en a, vos relevés datés sinon. Chaque ligne dit d'où elle parle.","Twelve months of real prices where there are any, your dated statements otherwise. Every line says where it speaks from.","Doce meses de cotizaciones reales cuando las hay, sus informes fechados si no. Cada línea dice desde dónde habla.","Zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge. Jede Position sagt, woher sie spricht."],
+  'an.calc.d':          ["Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.","Twelve months of real prices where there are any, your dated statements otherwise.","Doce meses de cotizaciones reales cuando las hay, sus informes fechados si no.","Zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
   'an.choix':           ["Quoi analyser\u00a0?","What to analyse?","\u00bfQu\u00e9 analizar?","Was analysieren?"],
@@ -4741,7 +4834,6 @@ window.PC = (function(){
   'an.sens.d':          ["{{h}} en hausse, {{b}} en baisse.","{{h}} up, {{b}} down.","{{h}} al alza, {{b}} a la baja.","{{h}} im Plus, {{b}} im Minus."],
   /* La correlation : le chiffre qui justifie l'abonnement. */
   'an.cor.t':           ["Ce qui bouge ensemble","What moves together","Lo que se mueve junto","Was sich zusammen bewegt"],
-  'an.cor.d':           ["Deux lignes qui montent et descendent ensemble ne sont pas deux placements : c'est le même pari, tenu deux fois.","Two lines that rise and fall together are not two investments: it is the same bet, held twice.","Dos líneas que suben y bajan juntas no son dos inversiones: es la misma apuesta, hecha dos veces.","Zwei Positionen, die gemeinsam steigen und fallen, sind nicht zwei Anlagen: es ist dieselbe Wette, zweimal gehalten."],
   'an.cor.echelle':     ["\u22121 en sens contraire  \u00b7  0 indépendantes  \u00b7  +1 ensemble","\u22121 opposite  \u00b7  0 independent  \u00b7  +1 together","\u22121 en sentido contrario  \u00b7  0 independientes  \u00b7  +1 juntas","\u22121 gegenläufig  \u00b7  0 unabhängig  \u00b7  +1 gemeinsam"],
   'an.cor.paire':       ["{{a}} et {{b}}","{{a}} and {{b}}","{{a}} y {{b}}","{{a}} und {{b}}"],
   'an.cor.forte':       ["bougent presque ensemble","move almost together","se mueven casi juntas","bewegen sich fast gemeinsam"],
@@ -4751,7 +4843,6 @@ window.PC = (function(){
   'an.cor.peu':         ["Il faut au moins deux lignes cotées, et leur historique chargé, pour mesurer ce qui bouge ensemble.","At least two listed lines are needed, with their history loaded, to measure what moves together.","Hacen falta al menos dos líneas cotizadas, con su historial cargado, para medir lo que se mueve junto.","Es braucht mindestens zwei notierte Positionen mit geladenem Verlauf, um zu messen, was sich zusammen bewegt."],
   'an.cor.n':           ["Mesuré sur {{n}} séances communes.","Measured on {{n}} shared sessions.","Medido sobre {{n}} sesiones comunes.","Gemessen an {{n}} gemeinsamen Handelstagen."],
   'an.ia.t':            ["Le marché du jour, écrit en clair","Today's market, written up plainly","El mercado del día, redactado con claridad","Der heutige Markt, klar formuliert"],
-  'an.ia.d':            ["Une intelligence artificielle reprend ces chiffres et explique les mécanismes. Elle ne recommande rien, et c'est vérifié sur chaque texte.","An artificial intelligence takes these figures and explains the mechanisms. It recommends nothing, and that is checked on every text.","Una inteligencia artificial retoma estas cifras y explica los mecanismos. No recomienda nada, y se verifica en cada texto.","Eine künstliche Intelligenz nimmt diese Zahlen und erklärt die Mechanismen. Sie empfiehlt nichts, und das wird an jedem Text geprüft."],
   'cmp.analyse':        ["L'analyse de vos lignes cotées : volatilité, pire recul, ce qui bouge ensemble", "Analysis of your listed lines: volatility, worst drawdown, what moves together", "El análisis de sus líneas cotizadas: volatilidad, peor caída, lo que se mueve junto", "Die Analyse Ihrer notierten Positionen: Volatilität, schlimmster Rückgang, was sich zusammen bewegt"],
   'cmp.analyseIA':      ["La même analyse commentée en clair par une IA", "The same analysis written up plainly by an AI", "El mismo análisis comentado con claridad por una IA", "Dieselbe Analyse, von einer KI klar kommentiert"],
   'cmp.lectures':       ["Les lectures : vos chiffres commentés en clair", "Readings: your figures explained plainly", "Las lecturas: sus cifras comentadas con claridad", "Die Lesarten: Ihre Zahlen klar kommentiert"],
@@ -5165,7 +5256,6 @@ window.PC = (function(){
   'm.onglet':           ["March\u00e9s","Markets","Mercados","M\u00e4rkte"],
   'm.courbe':           ["Le cours du march\u00e9","The market price","La cotizaci\u00f3n del mercado","Der Marktkurs"],
   'm.h2':                 ["Les march\u00e9s, en direct.","The markets, live.","Los mercados, en directo.","Die M\u00e4rkte, live."],
-  'm.intro':              ["Les cours ci-dessous viennent du march\u00e9, pas d'une capture d'\u00e9cran. Ils se rafra\u00eechissent pendant que vous lisez cette page.","The prices below come from the market, not from a screenshot. They refresh while you read this page.","Las cotizaciones de abajo vienen del mercado, no de una captura de pantalla. Se actualizan mientras lee esta p\u00e1gina.","Die Kurse unten kommen vom Markt, nicht aus einem Screenshot. Sie aktualisieren sich, w\u00e4hrend Sie diese Seite lesen."],
   'm.cherche':            ["Chercher une crypto","Search a coin","Buscar una cripto","Krypto suchen"],
   'm.cherche.b':          ["Chercher une action, un ETF","Search a stock or ETF","Buscar una acci\u00f3n o un ETF","Aktie oder ETF suchen"],
   'm.cherche.mp':         ["Chercher une mati\u00e8re premi\u00e8re","Search a commodity","Buscar una materia prima","Rohstoff suchen"],
@@ -6886,7 +6976,6 @@ window.PC = (function(){
     <div class="pan marches" id="pan-marches" role="tabpanel" aria-labelledby="ong-marches" tabindex="0" data-etat="attente" hidden>
       <div class="section__head">
         <h2 data-i18n="m.h2">Les marchés, en direct.</h2>
-        <p class="section__intro" data-i18n="m.intro">Les cours ci-dessous viennent du marché, pas d'une capture d'écran.</p>
       </div>
 
       <div class="marches__vue" id="mar-vue-liste">
@@ -6986,13 +7075,6 @@ window.PC = (function(){
             <p class="eyebrow" data-i18n="an.eyebrow">L'analyse</p>
             <h2 data-i18n="an.h2">Vos chiffres, dans le marché d'aujourd'hui.</h2>
           </div>
-          <p class="section__intro" data-i18n="an.intro">Toutes vos lignes, mesurées une par une&nbsp;:
-            ce que ça bouge, le pire recul qu'il a fallu traverser, et ce qui bouge ensemble dans
-            votre portefeuille. Les lignes cotées sur douze mois de cours réels, les autres sur vos
-            relevés — et celles dont la valeur sort d'un taux garanti le disent, plutôt que
-            d'afficher une volatilité nulle qui passerait pour un constat. Aucune estimation, aucun
-            modèle. La formule Max ajoute un commentaire écrit par une intelligence artificielle,
-            qui ne recommande jamais rien.</p>
         </div>
 
         <!-- LES MARCHES D'ABORD. C'est ce qu'on vient voir : l'etat
@@ -7033,10 +7115,6 @@ window.PC = (function(){
 
         <div class="an-bloc" id="an-ia" hidden>
           <h3 class="an-titre mono" data-i18n="an.ia.t">Le marché du jour, écrit en clair</h3>
-          <p class="an-sous" data-i18n="an.ia.d">Une intelligence artificielle part des chiffres
-            du marché ci-dessus, y ajoute vos lignes et les titres du jour, et explique les
-            mécanismes. Elle ne recommande rien, et cette limite est vérifiée sur chaque texte
-            avant qu'il vous parvienne.</p>
           <div class="analyse__b">
             <button class="pill" type="button" id="an-lancer" data-i18n="an.lancer">Analyser mes chiffres</button>
           </div>
@@ -7058,8 +7136,7 @@ window.PC = (function(){
              et elle ne peut pas se tromper. -->
         <div class="an-bloc" id="an-calc">
           <h3 class="an-titre mono" data-i18n="an.calc.t">Et vos lignes là-dedans</h3>
-          <p class="an-sous" data-i18n="an.calc.d">Douze mois de cours réels quand la ligne en a,
-            vos relevés datés sinon. Chaque ligne dit d'où elle parle.</p>
+          <p class="an-sous" data-i18n="an.calc.d">Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.</p>
           <!-- Choisir la ligne. Toutes a la fois se lisait a trois
                lignes et plus du tout a douze — et sur telephone, ou
                chaque ligne fait une courbe et cinq mesures, c'etait
@@ -7088,8 +7165,6 @@ window.PC = (function(){
              ne sont pas une diversification. -->
         <div class="an-bloc" id="an-cor" hidden>
           <h3 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h3>
-          <p class="an-sous" data-i18n="an.cor.d">Deux lignes qui montent et descendent en même
-            temps ne sont pas deux placements&nbsp;: c'est le même pari, tenu deux fois.</p>
           <!-- L'echelle, dite une fois : sans elle le curseur montre une
                position sans dire de quoi. -->
           <p class="an-echelle mono" data-i18n="an.cor.echelle">−1 en sens contraire · 0 indépendantes · +1 ensemble</p>
