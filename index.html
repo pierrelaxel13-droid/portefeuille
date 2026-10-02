@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.0656";</script>
+<script>window.PC_VERSION = "261002.0736";</script>
 </head>
 <body>
 
@@ -1825,6 +1825,17 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
     -webkit-overflow-scrolling:touch;
   }
   .menu__i{padding:13px 14px; font-size:15px;}
+  /* La poignee. Elle ne sert a rien mecaniquement — toute la feuille
+     se traine — mais c'est elle qui DIT qu'on peut la trainer. Sans
+     elle, le geste existe et personne ne le trouve. */
+  .menu__p::before{
+    content:""; display:block; width:38px; height:4px; flex:none;
+    border-radius:var(--r-pill); background:var(--rule-strong);
+    margin:2px auto 9px; opacity:.7;
+  }
+  /* `pan-y` laisse le navigateur defiler la liste et nous laisse voir
+     le geste ; sans cela le defilement de la page emporterait tout. */
+  .menu__p{touch-action:pan-y;}
 }
 .board__outils{display:flex; align-items:center; gap:9px; flex-wrap:wrap;}
 .msg{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--ink-2); min-height:1.2em; margin-bottom:14px;}
@@ -10261,6 +10272,174 @@ window.PC = (function(){
       menuBoard.querySelector('summary').focus();
     }
   });
+
+  /* ===== LA FEUILLE DU BAS SE TRAINE ET SE JETTE =====
+     ------------------------------------------------------------
+     Sous 700 px, ce menu n'est plus un menu : il se colle au bord bas,
+     prend toute la largeur et s'arrondit en haut. Il en avait la forme
+     sans en avoir le geste — il s'ouvrait et se fermait au tap, et le
+     pouce ne pouvait pas le repousser.
+
+     Six choses, dans l'ordre ou elles comptent.
+
+     1. SUIVI 1:1. La feuille colle au doigt, au pixel, pendant tout le
+        geste. C'est ce qui fait la difference entre un objet qu'on
+        tient et une animation qu'on declenche.
+
+     2. ON NE PREND PAS LA MAIN POUR RIEN. Le geste n'engage que si la
+        feuille est deja en haut de son propre defilement et qu'il
+        DESCEND. Vers le haut, ou sur une liste deja defilee, c'est son
+        contenu qu'on fait defiler — lui voler ce geste rendrait la
+        liste inutilisable. Huit pixels d'hysteresis avant de trancher.
+
+     3. ELLE RESISTE AU LIEU DE SE BLOQUER. Tiree vers le haut, elle
+        suit de moins en moins (formule de rebond elastique). Un arret
+        net se lit comme un gel ; une resistance continue se lit comme
+        « il n'y a rien de plus par la ».
+
+     4. ON PROJETTE L'ELAN, on ne regarde pas ou le doigt s'est arrete.
+        Un coup sec de vingt pixels ferme ; un glisse lent de cent
+        revient. C'est la decroissance exponentielle du defilement,
+        pas une distance seuil.
+
+     5. UN RESSORT, PAS UNE COURBE A DUREE FIXE. Amortissement 0,8 et
+        reponse 0,3 s — les valeurs d'un tiroir. Il part A LA VITESSE
+        DU DOIGT : sans cela on verrait la couture entre le geste et
+        l'animation, et c'est precisement ce qu'on cherche a effacer.
+
+     6. IL EST INTERRUPTIBLE. Un nouvel appui pendant que la feuille
+        file reprend la position AFFICHEE et repart de la. Une
+        animation qu'on ne peut pas rattraper transforme l'objet en
+        film.
+
+     Mouvement reduit : le glisse reste — c'est le doigt de la
+     personne, pas une animation qu'on lui impose — mais le ressort
+     devient un saut a l'etat final. */
+  (function feuilleDuBas(){
+    const p = menuBoard.querySelector('.menu__p');
+    if (!p || !window.PointerEvent) return;
+
+    const enFeuille = function(){ return matchMedia('(max-width:700px)').matches; };
+    const doux = function(){
+      return matchMedia('(prefers-reduced-motion: reduce)').matches &&
+             document.documentElement.getAttribute('data-anim') !== 'force';
+    };
+
+    let y0 = 0, pos = 0, pris = false, engage = false, pid = null;
+    let hist = [], anim = null;
+
+    const pose = function(v){
+      pos = v;
+      p.style.transform = v ? 'translate3d(0,' + v.toFixed(2) + 'px,0)' : '';
+    };
+    const lache = function(){
+      if (anim){ cancelAnimationFrame(anim); anim = null; }
+    };
+
+    /* La position REELLEMENT affichee, pour repartir de la quand on
+       rattrape la feuille en plein vol. */
+    const lue = function(){
+      const m = new DOMMatrixReadOnly(getComputedStyle(p).transform);
+      return m.m42 || 0;
+    };
+
+    /* Rebond elastique : plus on tire au-dela du bord, moins ca suit. */
+    const elastique = function(x, d){
+      const k = 0.55;
+      return (x * d * k) / (d + k * Math.abs(x));
+    };
+
+    /* La projection d'Apple : ou le doigt AURAIT pose l'objet s'il
+       avait continue a decelerer tout seul. */
+    const projette = function(v){
+      const f = 0.998;
+      return (v / 1000) * f / (1 - f);
+    };
+
+    /* Ressort amorti, integre a chaque image. Il accepte une vitesse
+       de depart : c'est elle qui soude le geste a l'animation. */
+    const ressort = function(vers, v, fini){
+      lache();
+      if (doux()){ pose(vers); if (fini) fini(); return; }
+      const w = 2 * Math.PI / 0.3, z = 0.8;
+      let t = performance.now();
+      const pas = function(n){
+        const dt = Math.min((n - t) / 1000, 1 / 30);
+        t = n;
+        const a = -(w * w) * (pos - vers) - 2 * z * w * v;
+        v += a * dt;
+        pose(pos + v * dt);
+        if (Math.abs(pos - vers) < 0.5 && Math.abs(v) < 12){
+          pose(vers);
+          anim = null;
+          if (fini) fini();
+          return;
+        }
+        anim = requestAnimationFrame(pas);
+      };
+      anim = requestAnimationFrame(pas);
+    };
+
+    const ferme = function(v){
+      ressort(p.offsetHeight + 24, v, function(){
+        menuBoard.open = false;
+        p.style.transform = '';
+        pos = 0;
+      });
+    };
+
+    p.addEventListener('pointerdown', function(e){
+      if (!enFeuille() || e.button) return;
+      /* Rattraper la feuille en vol : on repart de ce qu'on voit. */
+      if (anim){ pos = lue(); lache(); engage = true; }
+      else if (p.scrollTop > 0) return;
+      pris = true; pid = e.pointerId;
+      y0 = e.clientY - pos;
+      hist = [[e.clientY, performance.now()]];
+    });
+
+    p.addEventListener('pointermove', function(e){
+      if (!pris || e.pointerId !== pid) return;
+      const dy = e.clientY - y0;
+      hist.push([e.clientY, performance.now()]);
+      if (hist.length > 6) hist.shift();
+      if (!engage){
+        if (Math.abs(dy) < 8) return;
+        /* Vers le haut, ou sur une liste deja defilee : ce n'est pas
+           notre geste. */
+        if (dy < 0 || p.scrollTop > 0){ pris = false; return; }
+        engage = true;
+        p.setPointerCapture(pid);
+      }
+      e.preventDefault();
+      pose(dy >= 0 ? dy : elastique(dy, p.offsetHeight));
+    }, {passive:false});
+
+    const fin = function(e){
+      if (!pris || (e && e.pointerId !== pid)) return;
+      pris = false;
+      if (!engage){ return; }
+      engage = false;
+      /* Vitesse sur les dernieres images, pas sur tout le geste : ce
+         qui compte est l'elan au moment du lacher. */
+      let v = 0;
+      if (hist.length > 1){
+        const a = hist[0], b = hist[hist.length - 1];
+        const dt = b[1] - a[1];
+        if (dt > 0) v = (b[0] - a[0]) / dt * 1000;
+      }
+      const h = p.offsetHeight;
+      if (pos + projette(v) > h * 0.35 || v > 650) ferme(v);
+      else ressort(0, v, null);
+    };
+    p.addEventListener('pointerup', fin);
+    p.addEventListener('pointercancel', fin);
+
+    /* Une feuille rouverte repart toujours de sa place. */
+    menuBoard.addEventListener('toggle', function(){
+      if (!menuBoard.open){ lache(); p.style.transform = ''; pos = 0; }
+    });
+  })();
 
   document.getElementById('sel-pf').addEventListener('change', function(e){
     chargePortefeuille(e.target.value);
