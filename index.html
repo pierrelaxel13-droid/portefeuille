@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.0936";</script>
+<script>window.PC_VERSION = "261002.1024";</script>
 </head>
 <body>
 
@@ -4130,6 +4130,89 @@ html[data-variante="1"] .barre-app__i:active{
   transform:scale(.96);
 }
 
+/* ------------------------------------------------------------
+   VARIANTE 1 SUR LA VITRINE — c'est la qu'elle a ete pensee : le
+   prompt decrit un premier ecran de page d'accueil, titre, sous-titre,
+   bouton, et le menu du telephone.
+
+   La vitrine a deja son mouvement : les mots du titre montent derriere
+   un masque, les blocs se revelent au defilement. La variante 1 les
+   remplace par SA proposition — un bloc entier qui monte de 28 px, en
+   600 ms, sur une courbe qui part vite et s'arrete longuement, avec
+   150 ms entre chaque. Le titre cesse donc de se construire mot par
+   mot : il arrive d'un seul tenant. C'est un parti pris different, et
+   c'est exactement ce qu'il faut voir cote a cote pour trancher.
+   ------------------------------------------------------------ */
+/* Le titre : un bloc, plus des mots. */
+html[data-variante="1"].js-anim .hero h1 .w > i{transform:none;}
+html[data-variante="1"].intro-run .hero h1 .w > i{animation:none;}
+html[data-variante="1"].js-anim .hero h1{opacity:0;}
+html[data-variante="1"].intro-run .hero h1{
+  animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+html[data-variante="1"].intro-run .hero__lede{
+  animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) .15s forwards;
+}
+/* Les boutons de l'en-tete prennent le troisieme temps : dans la
+   proposition, c'est l'appel a l'action qui ferme la sequence. */
+html[data-variante="1"].intro-run .head-tools{
+  animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) .3s backwards;
+}
+
+/* Les blocs reveles au defilement : meme amplitude, meme courbe, meme
+   duree que le heros. Une page ou l'entree et la suite ne parlent pas
+   la meme langue se lit comme deux pages collees. */
+html[data-variante="1"].js-anim .reveal{transform:translate3d(0, 28px, 0);}
+html[data-variante="1"] .reveal{
+  transition:opacity .6s cubic-bezier(.22, 1, .36, 1),
+             transform .6s cubic-bezier(.22, 1, .36, 1);
+  transition-delay:var(--rd, 0s);
+}
+/* Les titres de section cessent eux aussi de monter mot par mot. */
+html[data-variante="1"].js-anim .split-h .w > i{transform:none;}
+html[data-variante="1"] .split-h.in .w > i{animation:none;}
+html[data-variante="1"].js-anim .split-h{opacity:0; transform:translate3d(0, 28px, 0);}
+html[data-variante="1"] .split-h{
+  transition:opacity .6s cubic-bezier(.22, 1, .36, 1),
+             transform .6s cubic-bezier(.22, 1, .36, 1);
+}
+html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
+
+/* Le menu du site. Il descend de son bouton — une entree vient de la
+   ou l'objet est — et ses liens arrivent de la droite a 70 ms d'ecart,
+   comme la proposition le demande. */
+@keyframes v1-tombe{
+  from{opacity:0; transform:translate3d(0, -14px, 0);}
+  to  {opacity:1; transform:none;}
+}
+html[data-variante="1"] .site-nav[data-ouvert="true"]{
+  animation:v1-tombe .45s cubic-bezier(.22, 1, .36, 1);
+}
+html[data-variante="1"] .site-nav[data-ouvert="true"] > *{
+  animation:v1-droite .4s cubic-bezier(.22, 1, .36, 1) backwards;
+}
+html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(1){animation-delay:.18s;}
+html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(2){animation-delay:.25s;}
+html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(3){animation-delay:.32s;}
+html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(4){animation-delay:.39s;}
+html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(5){animation-delay:.46s;}
+html[data-variante="1"] .site-nav[data-ouvert="true"] > *:nth-child(n+6){animation-delay:.53s;}
+
+/* Le voile derriere le menu : il assombrit et floute la page, et
+   disparait en meme temps que lui. La proposition le donne en bleu
+   ardoise ; ici il est tire de NOTRE encre, sans quoi il poserait une
+   couleur etrangere sur la page. */
+html[data-variante="1"] body:has(.site-nav[data-ouvert="true"])::after{
+  content:""; position:fixed; inset:0; pointer-events:none;
+  z-index:calc(var(--z-sticky) - 1);
+  /* Un voile ASSOMBRIT, dans les deux themes. Tire de `--ink` il
+     devenait clair en theme sombre — l'encre y est claire — et
+     eclaircissait la page au lieu de la reculer. Il est donc fixe. */
+  background:color-mix(in srgb, #0D0C07 38%, transparent);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  animation:fade-in .3s ease both;
+}
+
 /* Le selecteur du banc d'essai, dans le menu des trois points. */
 .menu__k{
   margin:4px 12px 6px; font-family:'IBM Plex Mono', monospace;
@@ -4137,6 +4220,10 @@ html[data-variante="1"] .barre-app__i:active{
   color:var(--ink-3);
 }
 .menu__choix{display:flex; gap:5px; padding:0 12px 6px;}
+.nav__anim{padding:6px var(--pad) 10px; border-top:1px solid var(--rule);}
+.nav__anim .menu__k{margin-inline:0;}
+.nav__anim .menu__choix{padding-inline:0;}
+@media (min-width:901px){ .nav__anim{padding-inline:20px;} }
 .menu__v{
   flex:1 1 auto; font:inherit; font-size:12.5px; cursor:pointer;
   padding:7px 4px; border-radius:var(--r-1); color:var(--ink-2);
@@ -4153,11 +4240,18 @@ html[data-variante="1"] .barre-app__i:active{
    qui ne le respecterait pas ne serait pas une proposition a comparer,
    ce serait un defaut a corriger apres coup. */
 @media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"])[data-variante="1"].intro-run .hero h1,
+  html:not([data-anim="force"])[data-variante="1"].intro-run .hero__lede,
+  html:not([data-anim="force"])[data-variante="1"].intro-run .head-tools,
+  html:not([data-anim="force"])[data-variante="1"] .site-nav[data-ouvert="true"],
+  html:not([data-anim="force"])[data-variante="1"] .site-nav[data-ouvert="true"] > *,
   html:not([data-anim="force"])[data-variante="1"] .pan.entre [data-bloc],
   html:not([data-anim="force"])[data-variante="1"] .menu[open] .menu__p,
   html:not([data-anim="force"])[data-variante="1"] .menu[open] .menu__i{
     animation:none;
   }
+  html:not([data-anim="force"])[data-variante="1"].js-anim .hero h1,
+  html:not([data-anim="force"])[data-variante="1"].js-anim .split-h{opacity:1; transform:none;}
   html:not([data-anim="force"])[data-variante="1"] .btn:hover,
   html:not([data-anim="force"])[data-variante="1"] .pill:hover,
   html:not([data-anim="force"])[data-variante="1"] .btn:active,
@@ -5944,6 +6038,19 @@ window.PC = (function(){
       <a href="#faq" data-i18n="nav.faq">Questions</a>
       <a href="#espace-client" data-i18n="nav.espace">Espace client</a>
       <a href="#contact" data-i18n="nav.contact">Me contacter</a>
+      <!-- BANC D'ESSAI DES MOUVEMENTS. Ici parce que c'est la page que
+           les variantes animent : il faut pouvoir basculer sans
+           quitter l'ecran qu'on regarde. Ce bloc part avec les deux
+           variantes non retenues. -->
+      <div class="menu__sep nav__anim" data-banc>
+        <p class="menu__k" data-i18n="e.anim">Mouvement</p>
+        <div class="menu__choix" role="group" data-i18n-aria="e.anim">
+          <button class="menu__v" type="button" data-variante="0" data-i18n="e.anim.0">Actuel</button>
+          <button class="menu__v" type="button" data-variante="1">1</button>
+          <button class="menu__v" type="button" data-variante="2">2</button>
+          <button class="menu__v" type="button" data-variante="3">3</button>
+        </div>
+      </div>
       <div class="reglages" id="reglages">
         <label class="sr" for="sel-langue" data-i18n="nav.langue">Langue</label>
         <select class="reglage" id="sel-langue" data-i18n-titre="nav.langue"></select>
@@ -6739,7 +6846,7 @@ window.PC = (function(){
                  sur la meme page, pour les comparer la ou elles vont
                  vivre plutot que sur des captures. Ce bloc disparait
                  avec les deux variantes non retenues. -->
-            <div class="menu__sep" id="menu-anim">
+            <div class="menu__sep" id="menu-anim" data-banc>
               <p class="menu__k" data-i18n="e.anim">Mouvement</p>
               <div class="menu__choix" role="group" data-i18n-aria="e.anim">
                 <button class="menu__v" type="button" data-variante="0" data-i18n="e.anim.0">Actuel</button>
@@ -10666,8 +10773,11 @@ window.PC = (function(){
      Tout ce bloc, le selecteur et les deux variantes non retenues
      partent le jour ou vous aurez choisi. */
   (function bancMouvements(){
-    const bloc = document.getElementById('menu-anim');
-    if (!bloc) return;
+    /* Deux selecteurs : un dans le menu du site, un dans celui de
+       l'espace. Les variantes animent les deux faces de la page, et on
+       ne doit pas avoir a changer d'ecran pour changer de mouvement. */
+    const blocs = [].slice.call(document.querySelectorAll('[data-banc]'));
+    if (!blocs.length) return;
     const VALIDES = ['0', '1', '2', '3'];
     const bon = function(v){ return VALIDES.indexOf(v) !== -1; };
 
@@ -10682,7 +10792,7 @@ window.PC = (function(){
     const pose = function(v, rejoue){
       document.documentElement.setAttribute('data-variante', v);
       try { localStorage.setItem('pc-mouvement', v); } catch(e){}
-      bloc.querySelectorAll('.menu__v').forEach(function(b){
+      document.querySelectorAll('[data-banc] .menu__v').forEach(function(b){
         b.setAttribute('aria-pressed', b.getAttribute('data-variante') === v ? 'true' : 'false');
       });
       /* On rejoue l'entree du panneau ouvert : sans cela on choisit un
@@ -10732,14 +10842,43 @@ window.PC = (function(){
       oeil.observe(e, {attributes:true, attributeFilter:['class']});
     });
 
+    /* Rejouer l'entree du heros. Elle ne se produit qu'une fois, au
+       chargement : sans cela on choisit une variante sur la vitrine et
+       il ne se passe rien. On retire la classe qui l'a lancee, on
+       force un recalcul, on la remet. */
+    const rejoueHeros = function(){
+      const r = document.documentElement;
+      if (!r.classList.contains('intro-run')) return;
+      r.classList.remove('intro-run');
+      void document.body.offsetWidth;
+      r.classList.add('intro-run');
+      /* Et les blocs deja reveles par le defilement : on les reprend a
+         zero pour qu'ils rejouent eux aussi. */
+      const vus = [].slice.call(document.querySelectorAll('.reveal.in, .split-h.in'));
+      vus.forEach(function(e){ e.classList.remove('in'); });
+      void document.body.offsetWidth;
+      vus.forEach(function(e){ e.classList.add('in'); });
+    };
+
     pose(lit(), false);
-    bloc.addEventListener('click', function(e){
-      const b = e.target.closest ? e.target.closest('.menu__v') : null;
-      if (!b) return;
-      /* Le menu se referme : sur telephone il couvre l'ecran, et on
-         choisirait un mouvement sans jamais le voir. */
-      menuBoard.open = false;
-      pose(b.getAttribute('data-variante'), true);
+    blocs.forEach(function(bloc){
+      bloc.addEventListener('click', function(e){
+        const b = e.target.closest ? e.target.closest('.menu__v') : null;
+        if (!b) return;
+        /* Le menu se referme : sur telephone il couvre l'ecran, et on
+           choisirait un mouvement sans jamais le voir. */
+        menuBoard.open = false;
+        const nav = document.getElementById('site-nav');
+        const bur = document.getElementById('burger');
+        if (nav && nav.getAttribute('data-ouvert') === 'true'){
+          nav.setAttribute('data-ouvert', 'false');
+          if (bur) bur.setAttribute('aria-expanded', 'false');
+        }
+        pose(b.getAttribute('data-variante'), true);
+        /* Sur la vitrine, c'est l'entree du heros qu'il faut rejouer :
+           elle ne se produit qu'une fois, au chargement. */
+        if (!document.body.classList.contains('vue-espace')) rejoueHeros();
+      });
     });
   })();
 
