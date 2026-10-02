@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261001.2213";</script>
+<script>window.PC_VERSION = "261002.0656";</script>
 </head>
 <body>
 
@@ -158,7 +158,24 @@ h1,h2,h3{font-family:'Archivo Black', system-ui, sans-serif; font-weight:400; te
 /* L'échelle fait l'impression : le titre monte à 13 vw, borné par la
    hauteur d'écran pour qu'un portable de 720 px ne le voie pas déborder
    sous la ligne de flottaison. */
-h1{font-size:clamp(52px, min(13vw, 19vh), 216px); line-height:0.84; letter-spacing:-0.05em;}
+/* L'INTERLIGNE DU TITRE EST MESURE, PAS CHOISI.
+   A 0,84 les trois lignes du titre d'accueil se chevauchaient : la
+   virgule d'« argent, » traversait le « f » d'« enfin », et l'accent
+   de « reuni » touchait cette meme virgule. Ce n'est pas une affaire
+   de gout — c'est une collision, et elle se calcule.
+
+   Mesure faite sur la police elle-meme (canvas, actualBoundingBox) :
+   la ligne « argent, » descend de 0,210 em sous sa ligne de base, et
+   « enfin reuni. » monte de 0,739 em au-dessus de la sienne. Il faut
+   donc au minimum 0,949 em d'une ligne de base a l'autre pour que les
+   encres se frolent sans se toucher — 0,962 sur telephone, ou le
+   titre casse autrement. On pose 0,98 : les 2 % qui restent sont le
+   jour qu'on voit entre deux lignes, et le titre reste serre.
+
+   Un titre a une seule ligne ne s'en apercoit pas. C'est pour cela que
+   le defaut avait tenu : il ne se voit que sur celui de la devanture,
+   c'est-a-dire sur le premier ecran du site. */
+h1{font-size:clamp(52px, min(13vw, 19vh), 216px); line-height:0.98; letter-spacing:-0.05em;}
 /* Le plancher de 52 px est calibre sur le francais. L'espagnol dit
    « actividades, » : a 52 px ce mot reclame 316 px, et un ecran de
    320 px n'en offre que 280 — il poussait la page et ouvrait une barre
@@ -172,7 +189,11 @@ h1{font-size:clamp(52px, min(13vw, 19vh), 216px); line-height:0.84; letter-spaci
    `overflow:hidden`, ou le debordement serait purement et simplement
    invisible. Inerte tant que tout tient. */
 .hero h1{overflow-wrap:break-word;}
-h2{font-size:clamp(30px,5.2vw,68px); line-height:0.94; letter-spacing:-0.035em;}
+/* Les h2 tenaient a 0,009 em de la collision — vrai pour les textes
+   francais d'aujourd'hui, faux des qu'une traduction amene une
+   majuscule accentuee. 0,96 met un jour franc entre les lignes sans
+   qu'on voie la difference. */
+h2{font-size:clamp(30px,5.2vw,68px); line-height:0.96; letter-spacing:-0.035em;}
 h3{font-size:clamp(21px,2.4vw,30px); line-height:1.08; letter-spacing:-0.022em;}
 p{margin:0;}
 
@@ -3423,6 +3444,15 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   grid-template-columns:repeat(auto-fit, minmax(min(100%, 268px), 1fr));
   border:1px solid var(--rule);
 }
+/* TROIS COLONNES, pas « autant qu'il en tient ». Au-dela de 1100 px la
+   grille en tenait quatre : les six cases faisaient une rangee pleine
+   et une rangee a moitie vide, et les deux cellules restantes
+   dessinaient un rectangle cerne et vide en bas a droite. Un trou dans
+   une grille ne se lit pas comme de l'espace, il se lit comme un bloc
+   qui n'a pas fini de charger. Trois colonnes font deux rangees
+   pleines. (Meme correction, meme raison, que les mesures du marche
+   dans l'analyse.) */
+@media (min-width:1000px){ .diag{grid-template-columns:repeat(3, 1fr);} }
 .diag__c{background:var(--paper); padding:clamp(18px,2.4vw,26px);}
 .diag__k{
   font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em;
@@ -3455,7 +3485,7 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   .diag::-webkit-scrollbar{display:none;}
   .diag__c{
     flex:0 0 78%; scroll-snap-align:start;
-    border:1px solid var(--rule); border-radius:14px;
+    border:1px solid var(--rule); border-radius:var(--r-2);
   }
 }
 
@@ -3811,6 +3841,102 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   }
   table.actifs thead th:first-child{background:var(--paper-2);}
   table.actifs tbody tr:hover td:first-child{background:var(--accent-soft);}
+}
+
+/* ============================================================
+   LE RETOUR PART DE L'APPUI
+   ------------------------------------------------------------
+   La page avait ete dessinee pour une souris : presque tout
+   repondait au SURVOL, c'est-a-dire a rien du tout sur le telephone
+   ou on la regarde. Quatre regles `:active` dans tout le fichier,
+   contre une cinquantaine de `:hover`.
+
+   Trois decisions, dans cet ordre.
+
+   1. LE RETOUR SE DECLENCHE A L'APPUI, PAS AU RELACHEMENT. C'est la
+      difference entre un objet qu'on touche et un formulaire qu'on
+      soumet. Attendre le relachement fait paraitre la page morte
+      pendant tout le temps ou le doigt est pose.
+
+   2. IL ENTRE INSTANTANEMENT ET SORT EN DOUCEUR. L'entree a une duree
+      de zero : une animation d'apparition, meme de 80 ms, remet le
+      retard qu'on cherchait a supprimer. La sortie, elle, se detend.
+
+   3. L'AMPLEUR SUIT LA TAILLE DE LA SURFACE, comme les rayons. A
+      reduction egale, un jeton de 32 px parait ecrase et une tuile de
+      300 px ne parait rien du tout.
+
+   Et une distinction qui compte : une RANGEE pleine largeur ne se
+   reduit pas. L'echelle deplacerait le texte sous le doigt qui le
+   designe, ce qui se lit comme un defaut d'affichage. Une rangee
+   s'allume — c'est ce que fait une liste d'application.
+
+   On eteint au passage la pastille grise que le navigateur peint
+   lui-meme sur mobile : maintenant qu'il y a un retour, deux retours
+   superposes ne valent pas mieux qu'aucun.
+   ============================================================ */
+:root{
+  --presse-jeton:.95;    /* pastilles et jetons, moins de ~44 px */
+  --presse-bouton:.975;  /* boutons, onglets, items larges */
+  --presse-tuile:.992;   /* grandes surfaces */
+  --presse-sortie:170ms;
+  --presse-fond:color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.pill, .btn, .icon-btn, .reglage, .bascule-vue, .marches__h, .sous-onglet,
+.tab, .barre-app__i, .tuile, .curtain__mark,
+.ligne, .marches__l, .an-mar-i, .menu__i, .panel__plier > summary{
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* Ces sept-la n'animaient pas `transform` : sans cela le relachement
+   claquerait au lieu de se detendre. Leurs transitions de couleur
+   etaient toutes ecrites a part, entre .18 et .22 s selon l'endroit —
+   elles sont reunies ici, a une valeur unique qu'aucun oeil ne
+   distingue des trois precedentes. */
+.icon-btn, .reglage, .bascule-vue, .marches__h, .sous-onglet,
+.tab, .barre-app__i{
+  transition:transform var(--presse-sortie) cubic-bezier(.22,.68,.15,1),
+             background .2s, color .2s, border-color .2s;
+}
+.ligne, .marches__l, .menu__i, .panel__plier > summary{
+  transition:background var(--presse-sortie) ease;
+}
+
+.pill:active, .btn:active, .curtain__mark:active{
+  transform:translateY(0) scale(var(--presse-bouton)); transition-duration:0s;
+}
+.icon-btn:active, .reglage:active, .bascule-vue:active,
+.marches__h:active, .barre-app__i:active{
+  transform:scale(var(--presse-jeton)); transition-duration:0s;
+}
+.sous-onglet:active, .tab:active{
+  transform:scale(var(--presse-bouton)); transition-duration:0s;
+}
+.tuile:active{
+  transform:translateY(-1px) scale(var(--presse-tuile)); transition-duration:0s;
+}
+.ligne:active, .marches__l:active, .an-mar-i:active, .menu__i:active,
+.panel__plier > summary:active{
+  background:var(--presse-fond); transition-duration:0s;
+}
+
+/* Mouvement reduit : le retour reste — c'est lui qui dit que l'appui a
+   ete pris — mais il passe entierement par la couleur. Une echelle,
+   meme de 2 %, reste un deplacement. */
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .pill:active,
+  html:not([data-anim="force"]) .btn:active,
+  html:not([data-anim="force"]) .curtain__mark:active,
+  html:not([data-anim="force"]) .icon-btn:active,
+  html:not([data-anim="force"]) .reglage:active,
+  html:not([data-anim="force"]) .bascule-vue:active,
+  html:not([data-anim="force"]) .marches__h:active,
+  html:not([data-anim="force"]) .barre-app__i:active,
+  html:not([data-anim="force"]) .sous-onglet:active,
+  html:not([data-anim="force"]) .tab:active,
+  html:not([data-anim="force"]) .tuile:active{
+    transform:none; background:var(--presse-fond);
+  }
 }
 </style>
 <script>
