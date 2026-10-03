@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261002.2351";</script>
+<script>window.PC_VERSION = "261003.0908";</script>
 </head>
 <body>
 
@@ -4262,11 +4262,15 @@ html[data-variante="1"] .v1video{
   pointer-events:none;
 }
 
-/* Les pieces qui flottaient et la video de fond ont ete retirees : on
-   les a vues, elles ne restent pas. Le premier ecran se tient sur son
-   titre, et la toile de fond de la maison ne revient pas non plus —
-   la proposition pose ses mots sur un fond calme, et c'est ce calme
-   qu'on garde. */
+/* La video de fond de la proposition : tout l'ecran, recadree,
+   derriere tout le reste. */
+.v1video{
+  position:absolute; inset:0; z-index:0;
+  width:100%; height:100%; object-fit:cover;
+  pointer-events:none;
+}
+/* La toile de la maison reste effacee : la proposition pose ses objets
+   sur un fond calme. */
 .hero__oeuvre{display:none;}
 
 .v1h{max-width:660px; margin:0 auto; text-align:center; position:relative; z-index:2;}
@@ -6643,6 +6647,18 @@ window.PC = (function(){
        Une video de fond coute une requete, un decodeur, de la batterie
        sur telephone, et elle casse le jour ou le CDN d'en face
        disparait — ce qui, pour une demonstration, arrive. -->
+  <!-- LE FOND D'ORIGINE : la video de la proposition, a son adresse
+       exacte, en boucle, muette, recadree sur tout l'ecran. Ce sont SES
+       pieces qui tournent, pas des disques dessines par moi — j'en
+       avais fait, elles lisaient comme des billes, elles sont parties.
+
+       A savoir : le fichier est servi par le CDN d'un autre site. La
+       page en depend donc, et il disparaitra le jour ou cette
+       demonstration sera retiree. Pour s'en affranchir il suffit du
+       fichier lui-meme, pose dans le depot. -->
+  <video class="v1video" autoplay muted loop playsinline aria-hidden="true"
+         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
+
   <div class="wrap hero__in hero__in--v1">
     <div class="v1h">
       <h1 class="v1h__t">
