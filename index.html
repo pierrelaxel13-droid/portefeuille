@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261003.0908";</script>
+<script>window.PC_VERSION = "261003.1025";</script>
 </head>
 <body>
 
@@ -778,7 +778,10 @@ body.flux-vif .cours__vif::before{
 .hero-figure{display:flex; flex-direction:column; gap:5px;}
 .hero-figure__label{font-size:11px; letter-spacing:0.17em; text-transform:uppercase; color:var(--ink-3);}
 .hero-figure__value{
-  font-family:'Archivo Black', sans-serif; font-size:clamp(42px,7vw,92px);
+  /* Le grand chiffre suit les titres. Reste en Archivo Black, c'etait
+     la seule voix differente sur le premier ecran apres le titre — et
+     elle arrivait juste en dessous. */
+  font-family:var(--v1-titre); font-weight:700; font-size:clamp(42px,7vw,92px);
   line-height:0.9; letter-spacing:-0.04em; font-variant-numeric:tabular-nums;
 }
 /* La marge haute dégage la place où passe le bas de l'ovale tracé à la
@@ -1332,7 +1335,7 @@ body.flux-vif .cours__vif::before{
   border:1px solid var(--rule); border-radius:999px; padding:3px 10px;
 }
 .fiche-m__prix{
-  font-family:'Archivo Black', sans-serif; font-size:clamp(34px,6vw,64px);
+  font-family:var(--v1-titre); font-weight:700; font-size:clamp(34px,6vw,64px);
   line-height:1; letter-spacing:-.04em; font-variant-numeric:tabular-nums;
   margin:14px 0 10px;
 }
@@ -4164,13 +4167,14 @@ html[data-variante="1"] .hero__in:not(.hero__in--v1){display:none;}
    d'autant. */
 html[data-variante="1"] .hero__in--v1{max-width:1280px; margin:0 auto;}
 html[data-variante="1"] .hero{
-  /* Assez de hauteur pour que les pieces aient un bas d'ecran ou
-     s'etaler : dans la demonstration, elles occupent la moitie basse
-     et le titre se lit sur un fond propre. Sans cette hauteur, elles
-     passent derriere le texte et c'est le texte qui perd. */
-  min-height:clamp(560px, 88dvh, 860px);
-  padding:calc(var(--h-tete) + clamp(40px, 8vw, 72px)) 0 48px;
-  align-items:flex-start;
+  /* LE CONTENU SE CENTRE, et l'ecran raccourcit. Colle en haut d'un
+     ecran de 860 px, le bouton se retrouvait a 866 px du premier bloc
+     suivant : un demi-ecran de vide entre l'appel a l'action et ce
+     qu'il annonce. Centre, le vide se partage entre le haut et le bas
+     et ne se lit plus comme un trou ; raccourci, la suite remonte. */
+  min-height:clamp(520px, 76dvh, 720px);
+  padding:calc(var(--h-tete) + clamp(28px, 5vw, 48px)) 0 clamp(36px, 6vw, 64px);
+  align-items:center;
 }
 /* ============================================================
    LE RESTE DU SITE SUIT
@@ -4198,7 +4202,7 @@ html[data-variante="1"] .hero{
    sombre pour tout le monde. L'encre et le papier restent donc ceux
    des themes ; c'est l'accent et la typographie qui s'alignent.
    ============================================================ */
-h1, h2{font-family:var(--v1-titre);}
+h1, h2, h3{font-family:var(--v1-titre);}
 h2{font-weight:700;}
 .split-h, .vue__t h3{font-family:var(--v1-titre);}
 
@@ -4269,6 +4273,32 @@ html[data-variante="1"] .v1video{
   width:100%; height:100%; object-fit:cover;
   pointer-events:none;
 }
+/* ===== LE RACCORD =====
+   Une video qui s'arrete net au bas du premier ecran laisse une arete
+   franche entre son creme et le papier de la page. En theme clair cela
+   se voit deja ; en theme sombre, c'est une page claire posee sur une
+   page sombre — deux sites colles.
+
+   Le voile prend la couleur DU PAPIER DE LA PAGE, quel que soit le
+   theme : la video ne se termine pas, elle s'y fond. C'est ce que
+   faisait la toile avant elle, et c'est pour cela qu'on ne voyait pas
+   ou elle finissait. */
+.v1voile{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--paper) 22%, transparent) 0%,
+    transparent 26%,
+    color-mix(in srgb, var(--paper) 45%, transparent) 68%,
+    color-mix(in srgb, var(--paper) 88%, transparent) 90%,
+    var(--paper) 100%);
+}
+/* En theme sombre, un fondu ne suffit pas : la video reste un
+   rectangle lumineux au milieu d'une page sombre. On l'assombrit pour
+   qu'elle appartienne a la page plutot que de s'y poser. */
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])) .v1video{filter:brightness(.42) saturate(.85);}
+}
+:root[data-theme="dark"] .v1video{filter:brightness(.42) saturate(.85);}
 /* La toile de la maison reste effacee : la proposition pose ses objets
    sur un fond calme. */
 .hero__oeuvre{display:none;}
@@ -6658,6 +6688,12 @@ window.PC = (function(){
        fichier lui-meme, pose dans le depot. -->
   <video class="v1video" autoplay muted loop playsinline aria-hidden="true"
          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
+  <!-- Le voile. La video s'arretait sur une ligne nette au bas du
+       premier ecran : une arete franche entre son creme et le papier de
+       la page, et sur le theme sombre, deux pages collees. Il la
+       dissout dans le fond, exactement comme la toile le faisait
+       avant elle. -->
+  <div class="v1voile" aria-hidden="true"></div>
 
   <div class="wrap hero__in hero__in--v1">
     <div class="v1h">
