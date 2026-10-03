@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261003.1316";</script>
+<script>window.PC_VERSION = "261003.1325";</script>
 </head>
 <body>
 
@@ -215,6 +215,14 @@ p{margin:0;}
   display:flex; align-items:center; gap:12px;
 }
 .eyebrow::before{content:""; width:26px; height:1px; background:var(--rule-strong); flex:none;}
+/* LE SUR-TITRE ETAIT TRAVERSE PAR LE TITRE. « 12 — Contact » passait
+   sous la barre du P de « Parlons-en. », « 05 — Formules » sous le S de
+   « Suivez ». Rien ne les separait, et l'encre d'un titre MONTE
+   au-dessus de sa boite : a 1,06 d'interligne, une neo-grotesque dont
+   les hampes font 0,97 em deborde de cinq pixels par le haut. Une
+   boite qui commence pile sous une autre n'est donc pas un jour, c'est
+   un chevauchement. */
+.eyebrow + h1, .eyebrow + h2{margin-top:clamp(24px, 2.2vw, 32px);}
 
 .skip-link{
   position:absolute; left:16px; top:-70px; background:var(--accent); color:#fff;
@@ -4829,7 +4837,7 @@ html.v1-fond .site-head .site-nav[data-ouvert="true"] > a{color:#192837;}
    5,1. Une bande de fin ne peut pas couter un dixieme de la page
    d'accueil d'un telephone. */
 @media (max-width:700px){
-  .fin-pieces{min-height:276px; padding:30px 0;}
+  .fin-pieces{min-height:230px; padding:26px 0;}
 }
 .v1video--fin{
   position:absolute; inset:0; z-index:0; pointer-events:none;
