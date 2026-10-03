@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Pierrel &amp; Co">
 <meta name="theme-color" content="#F2F0E9" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#17160F" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#100E16" media="(prefers-color-scheme: dark)">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Pierrel &amp; Co — portefeuille (v5)">
@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261003.1458";</script>
+<script>window.PC_VERSION = "261003.1757";</script>
 </head>
 <body>
 
@@ -97,16 +97,34 @@
   --r-4:26px;
   --r-pill:999px;
 }
+/* ===== LE THEME SOMBRE PREND LA TEINTE DE L'ACCENT =====
+   Les gris du theme sombre etaient CHAUDS — un noir brun, une encre
+   creme, des filets olive — herites du papier du theme clair. A cote du
+   premier ecran, ou les pieces sont desormais violettes, cela faisait
+   deux familles de couleurs sur une meme page : le heros d'un cote, le
+   site de l'autre.
+
+   Chaque valeur garde donc EXACTEMENT SA CLARTE et prend la teinte de
+   l'accent (256°), avec une saturation voisine de celle qu'elle avait.
+   Ce n'est pas une nouvelle palette, c'est la meme, tournee : rien ne
+   s'eclaircit, rien ne s'assombrit, et la hierarchie du texte ne bouge
+   pas d'un pouce.
+
+   Les contrastes ont ete recalcules avant d'ecrire ces valeurs, pas
+   apres : encre 15,8:1, encre secondaire 7,5:1, encre tertiaire 4,8:1
+   (4,5 sur le papier des cartes, le minimum), accent 5,9:1, gain 6,4:1,
+   perte 5,6:1. Tous au-dessus de ce qu'ils doivent etre, et la plupart
+   au-dessus de ce qu'ils etaient. */
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
-    --paper:#17160F;
-    --paper-2:#201E15;
-    --paper-3:#2A2719;
-    --ink:#F4F2E8;
-    --ink-2:#B5B1A0;
-    --ink-3:#8A8677;
-    --rule:#33301F;
-    --rule-strong:#4A4630;
+    --paper:#100E16;
+    --paper-2:#17141F;
+    --paper-3:#1D192A;
+    --ink:#EBE8F2;
+    --ink-2:#A69FB7;
+    --ink-3:#827B93;
+    --rule:#241E33;
+    --rule-strong:#372F4C;
     --accent:#9B7BF0;
     --accent-soft:rgba(139,116,242,0.15);
     --gain:#2AA96B;
@@ -118,14 +136,14 @@
   }
 }
 :root[data-theme="dark"]{
-  --paper:#17160F;
-  --paper-2:#201E15;
-  --paper-3:#2A2719;
-  --ink:#F4F2E8;
-  --ink-2:#B5B1A0;
-  --ink-3:#8A8677;
-  --rule:#33301F;
-  --rule-strong:#4A4630;
+  --paper:#100E16;
+  --paper-2:#17141F;
+  --paper-3:#1D192A;
+  --ink:#EBE8F2;
+  --ink-2:#A69FB7;
+  --ink-3:#827B93;
+  --rule:#241E33;
+  --rule-strong:#372F4C;
   --accent:#9B7BF0;
   --accent-soft:rgba(139,116,242,0.15);
   --gain:#2AA96B;
@@ -4835,13 +4853,24 @@ body:has(.site-nav[data-ouvert="true"])::after{
    parce qu'a specificite egale c'est la derniere qui gagne — on s'est
    fait prendre assez de fois. */
 html.v1-fond .site-head:not([data-pose="true"]) .wordmark,
-html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a,
-html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a:hover,
 html.v1-fond .site-head:not([data-pose="true"]) .icon-btn{
   /* L'encre du heros, pas une valeur figee : en theme clair la video
      est creme et cette encre est sombre ; en theme sombre la video a
      rejoint le papier et c'est l'encre du theme. Une couleur ecrite en
      dur ici redonnerait le bleu sur noir qu'on vient d'enlever. */
+  color:var(--v1-texte);
+}
+/* LES LIENS PASSENT A L'ENCRE SECONDAIRE. A pleine encre, les cinq
+   liens pesaient autant que le nom de la maison et les deux boutons :
+   six objets a egalite sur une seule rangee, et rien qui dise par ou
+   commencer. Ils prennent donc la couleur que tous les liens
+   secondaires du site portent deja. Mesure faite sur le fond du heros,
+   derriere eux : 7,1 contre 1 en theme sombre, 6,5 en clair — bien
+   au-dessus du minimum, et deux fois plus calme. Le survol et la
+   section courante gardent la pleine encre : c'est la qu'elle sert. */
+html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a{color:var(--ink-2);}
+html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a:hover,
+html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a[aria-current="true"]{
   color:var(--v1-texte);
 }
 html.v1-fond .site-head:not([data-pose="true"]) .icon-btn{
@@ -4867,7 +4896,7 @@ html.v1-fond .site-head .site-nav[data-ouvert="true"] > a{color:#192837;}
 .fin-pieces{
   position:relative; isolation:isolate; overflow:hidden;
   display:grid; align-items:center;
-  min-height:clamp(340px, 46dvh, 460px);
+  min-height:clamp(380px, 54dvh, 540px);
   padding:clamp(44px, 6vw, 76px) 0;
 }
 /* SUR TELEPHONE ELLE EST PLUS COURTE, et ce n'est pas un reglage de
@@ -4882,15 +4911,20 @@ html.v1-fond .site-head .site-nav[data-ouvert="true"] > a{color:#192837;}
   position:absolute; inset:0; z-index:0; pointer-events:none;
   width:100%; height:100%; object-fit:cover;
 }
+/* LA FENETRE CLAIRE S'OUVRE. Elle ne faisait qu'un dixieme de la
+   hauteur de la bande — de 46 a 56 % — et les pieces n'avaient pas la
+   place d'y passer : on devinait un mouvement plutot qu'on ne le
+   voyait. Elle en fait desormais les deux cinquieme, et les fondus
+   des deux cotes restent assez longs pour qu'aucune arete n'apparaisse. */
 .v1voile--fin{
   background:linear-gradient(to bottom,
     var(--paper) 0%,
-    color-mix(in srgb, var(--paper) 82%, transparent) 10%,
-    color-mix(in srgb, var(--paper) 26%, transparent) 28%,
-    transparent 46%,
-    transparent 56%,
-    color-mix(in srgb, var(--paper) 32%, transparent) 74%,
-    color-mix(in srgb, var(--paper) 86%, transparent) 91%,
+    color-mix(in srgb, var(--paper) 76%, transparent) 7%,
+    color-mix(in srgb, var(--paper) 18%, transparent) 20%,
+    transparent 32%,
+    transparent 70%,
+    color-mix(in srgb, var(--paper) 22%, transparent) 82%,
+    color-mix(in srgb, var(--paper) 80%, transparent) 93%,
     var(--paper) 100%);
 }
 .fin-pieces__in{position:relative; z-index:2;}
@@ -7599,7 +7633,7 @@ window.PC = (function(){
          formule et le titre. Ce qu'on regarde tous les jours reste
          devant, ce qu'on fait une fois par mois se déplie.
          ============================================================ -->
-    <div class="board__barre">
+    <div class="board__barre" id="board-barre">
       <div class="board__titre">
         <p class="eyebrow" data-i18n="e.board.eyebrow">Tableau de bord</p>
         <h2 data-i18n="e.board.titre">Vos actifs.</h2>
@@ -12065,6 +12099,20 @@ window.PC = (function(){
        « marches » il y en a deux, et c'est le sous-onglet qui tranche. */
     const barre = document.getElementById('sous-marches');
     if (barre) barre.hidden = vueCourante !== 'marches';
+    /* LA BARRE D'OUTILS N'APPARTIENT QU'A L'ACCUEIL. « Vue simple »,
+       le choix du portefeuille, la formule et le menu des trois points
+       agissent tous sur LA LISTE DES ACTIFS : sous Marches, Actualite
+       ou Analyse, ils restaient affiches sans rien commander. Une
+       commande qui ne commande rien la ou elle est posee est pire
+       qu'absente — on l'essaie.
+       Le menu se referme en partant : ouvert, il serait reste ouvert
+       sous l'ecran suivant, et on l'aurait retrouve tel quel au
+       retour. */
+    const outils = document.getElementById('board-barre');
+    if (outils){
+      outils.hidden = vueCourante !== 'general';
+      if (outils.hidden && menuBoard) menuBoard.open = false;
+    }
     if (vueCourante === 'marches') poseSousMarche(sousMarche);
     /* Entrer dans « Ajouter » repose toujours la premiere question :
        un formulaire a moitie rempli par une visite precedente est un
