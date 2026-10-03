@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261003.1757";</script>
+<script>window.PC_VERSION = "261003.2007";</script>
 </head>
 <body>
 
@@ -2085,6 +2085,7 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   .an-mar-l__t:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
 }
 .an-mar-l__d{font-size:13.5px; line-height:1.55; color:var(--ink-2); margin:0 0 14px; max-width:62ch;}
+.an-mar-l__n{margin:12px 0 0; font-size:11px; color:var(--ink-3); text-wrap:pretty;}
 .an-mar-l__c{
   display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 268px), 1fr));
   gap:0 34px; border-top:1px solid var(--rule-strong);
@@ -2204,11 +2205,14 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 @media (prefers-reduced-motion: reduce){
   html:not([data-anim="force"]) .an-sous[data-vif="1"]::before{animation:none;}
 }
-.an-choix{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 18px;}
+/* Le champ est remonte dans le bloc des marches, sous la liste des
+   valeurs de tete : il y prend l'air qu'il n'avait pas quand il
+   partageait une ligne avec son etiquette. */
+.an-choix{display:flex; flex-direction:column; align-items:flex-start; gap:8px; margin:18px 0 4px;}
 .an-choix__k{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 /* Le champ et sa liste : la liste se pose PAR-DESSUS ce qui suit,
    sinon chaque frappe pousse l'analyse vers le bas. */
-.an-q{position:relative; flex:1 1 260px; max-width:min(100%, 380px);}
+.an-q{position:relative; width:min(100%, 420px);}
 .an-q__c{width:100%; max-width:none; padding-right:12px;}
 .an-q__s{
   position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:var(--z-sticky);
@@ -3677,18 +3681,50 @@ body:not(.espace-ouvert) .barre-app{display:none;}
    pleine aux deux paliers. Le nombre de vignettes rendues est tenu
    multiple de quatre cote script — les deux vont ensemble, changer
    l'un sans l'autre ramene le trou. */
+/* DES CARTES, PLUS UNE GRILLE DE FILETS. Les vignettes etaient des
+   cases carrees separees par un filet d'un pixel — le fond de la
+   grille qu'on laisse voir. C'est net et c'est raide, et c'est la
+   derniere chose de cette page a l'etre. Chacune devient une carte
+   posee, avec son angle et son ecart. Le telephone les arrondissait
+   deja : c'est la version large qui etait en retard.
+
+   Au passage, le trou gris disparait par construction : sans fond de
+   filet, une rangee incomplete ne laisse voir que du papier. */
 .actu-cours{
-  display:grid; gap:1px; background:var(--rule);
+  display:grid; gap:clamp(10px, 1.1vw, 14px);
   grid-template-columns:repeat(4, minmax(0, 1fr));
-  border:1px solid var(--rule);
 }
 @media (max-width:1000px){
   .actu-cours{grid-template-columns:repeat(2, minmax(0, 1fr));}
 }
 .actu-cours:empty{display:none;}
 .cours-case{
-  background:var(--paper); padding:16px 18px;
+  background:var(--paper-2); border:1px solid var(--rule);
+  border-radius:var(--r-2); padding:16px 18px;
   display:flex; flex-direction:column; gap:5px; min-width:0;
+}
+/* ===== BONNE OU MAUVAISE NOUVELLE =====
+   Une pastille en tete de carte, et la regle ecrite dessous : sur
+   vingt-quatre heures, une hausse est comptee comme une bonne
+   nouvelle, une baisse comme une mauvaise. Dit comme ca, ce n'est
+   plus un jugement cache — c'est une convention qu'on peut accepter
+   ou refuser en connaissance de cause.
+
+   Jamais la couleur seule : un mot et un glyphe la portent aussi. */
+.nouv{
+  align-self:flex-start; display:inline-flex; align-items:center; gap:6px;
+  font-family:'IBM Plex Mono', monospace; font-size:10px;
+  letter-spacing:.11em; text-transform:uppercase;
+  padding:3px 9px 3px 7px; border-radius:var(--r-pill);
+  border:1px solid currentColor; margin-bottom:3px;
+}
+.nouv[data-ton="bonne"]{color:var(--gain);}
+.nouv[data-ton="mauvaise"]{color:var(--loss);}
+.nouv[data-ton="neutre"]{color:var(--ink-3);}
+.nouv__g{font-size:.9em;}
+.actu-legende{
+  font-family:'IBM Plex Mono', monospace; font-size:11px;
+  color:var(--ink-3); margin:14px 0 0; text-wrap:pretty;
 }
 .cours-case__n{
   font-size:14.5px; font-weight:600; white-space:nowrap;
@@ -3761,9 +3797,10 @@ body:not(.espace-ouvert) .barre-app{display:none;}
     scroll-padding-inline:var(--pad);
   }
   .actu-cours::-webkit-scrollbar{display:none;}
+  .actu-cours{gap:10px;}
   .cours-case{
     flex:0 0 46%; scroll-snap-align:start;
-    border:1px solid var(--rule); border-radius:12px;
+    border:1px solid var(--rule); border-radius:var(--r-2);
   }
 }
 /* ===== Le compte =====
@@ -4893,41 +4930,92 @@ html.v1-fond .site-head .site-nav[data-ouvert="true"] > a{color:#192837;}
    titre et le bouton sont ceux de la maison, et l'encre suit la meme
    regle que le heros (sombre quand la video est la, celle du theme
    quand elle n'arrive pas) parce qu'ils portent les memes classes. */
+/* LE CONTENEUR DE LA FIN. Il porte le fond — video, teinte, voile —
+   et contient a la fois la bande et le pied de page : c'est ce qui
+   fait descendre le violet et les pieces jusqu'au bord de la page au
+   lieu de s'arreter avant le dernier bloc. */
+.fin-zone{position:relative; isolation:isolate; overflow:hidden;}
+.fin-zone > .fin-pieces, .fin-zone > .site-foot{position:relative; z-index:2;}
+/* LE PIED DE PAGE PASSE SUR UNE MATIERE, PAS SUR L'IMAGE NUE. Les
+   mentions legales et le copyright sont du petit texte gris : sur des
+   pieces qui brillent, ils devenaient illisibles — et ce sont
+   precisement les lignes qu'on n'a pas le droit de rendre illisibles.
+   Un voile de papier floute laisse passer les pieces derriere lui et
+   rend au texte son fond. Son filet part : la matiere separe deja. */
+.fin-zone > .site-foot{
+  border-top:none;
+  background:color-mix(in srgb, var(--paper) 62%, transparent);
+  backdrop-filter:blur(14px) saturate(1.3);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);
+}
+@media (prefers-reduced-transparency: reduce){
+  .fin-zone > .site-foot{
+    background:var(--paper); backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+}
 .fin-pieces{
-  position:relative; isolation:isolate; overflow:hidden;
   display:grid; align-items:center;
   min-height:clamp(380px, 54dvh, 540px);
   padding:clamp(44px, 6vw, 76px) 0;
 }
+/* L'ESPACE CLIENT PARTAGE LE PIED DE PAGE, PAS LA DEVANTURE. La bande
+   et son fond s'effacent quand on y entre ; le pied reprend son
+   filet, puisqu'il n'a plus d'image dessous. */
+body.vue-espace .fin-pieces,
+body.vue-espace .fin-zone > .v1video--fin,
+body.vue-espace .fin-zone > .v1teinte,
+body.vue-espace .fin-zone > .v1voile{display:none;}
+body.vue-espace .fin-zone > .site-foot{border-top:1px solid var(--rule);}
 /* SUR TELEPHONE ELLE EST PLUS COURTE, et ce n'est pas un reglage de
    gout : la vitrine doit tenir en cinq ecrans — c'est une regle de la
    page, verifiee par le banc — et la bande ajoutee la faisait passer a
    5,1. Une bande de fin ne peut pas couter un dixieme de la page
    d'accueil d'un telephone. */
 @media (max-width:700px){
-  .fin-pieces{min-height:230px; padding:26px 0;}
+  /* LA VITRINE DOIT TENIR EN CINQ ECRANS sur telephone — c'est une
+     regle de la page, verifiee par le banc [47]. La fin a grandi (un
+     second chemin sous le bouton, le pied de page passe dedans) : elle
+     rend ici ce qu'elle a pris, en rembourrage et non en contenu. Le
+     heros rend les cinquante pixels qui manquaient encore : son
+     contenu est centre et court, six points de hauteur d'ecran en
+     moins ne lui coutent rien. */
+  .fin-pieces{min-height:200px; padding:16px 0;}
+  .fin-zone > .site-foot{padding:26px 0 32px;}
+  .v1h__second{margin-top:12px;}
+  html[data-variante="1"] .hero{min-height:clamp(480px, 70dvh, 720px);}
 }
 .v1video--fin{
   position:absolute; inset:0; z-index:0; pointer-events:none;
   width:100%; height:100%; object-fit:cover;
 }
-/* LA FENETRE CLAIRE S'OUVRE. Elle ne faisait qu'un dixieme de la
-   hauteur de la bande — de 46 a 56 % — et les pieces n'avaient pas la
-   place d'y passer : on devinait un mouvement plutot qu'on ne le
-   voyait. Elle en fait desormais les deux cinquieme, et les fondus
-   des deux cotes restent assez longs pour qu'aucune arete n'apparaisse. */
+/* LE VOILE NE TRAVAILLE PLUS QUE D'UN COTE. La video entre depuis le
+   papier — le fondu du haut est le raccord avec la section qui
+   precede — et elle ne ressort plus : il n'y a rien apres elle. Tout
+   ce qui etait voile pour preparer une sortie est rendu aux pieces. */
 .v1voile--fin{
   background:linear-gradient(to bottom,
     var(--paper) 0%,
-    color-mix(in srgb, var(--paper) 76%, transparent) 7%,
-    color-mix(in srgb, var(--paper) 18%, transparent) 20%,
-    transparent 32%,
-    transparent 70%,
-    color-mix(in srgb, var(--paper) 22%, transparent) 82%,
-    color-mix(in srgb, var(--paper) 80%, transparent) 93%,
-    var(--paper) 100%);
+    color-mix(in srgb, var(--paper) 72%, transparent) 6%,
+    color-mix(in srgb, var(--paper) 16%, transparent) 17%,
+    transparent 30%,
+    transparent 100%);
 }
 .fin-pieces__in{position:relative; z-index:2;}
+/* LE SECOND CHEMIN. Il n'y a pas d'essai gratuit : on prend un
+   abonnement, ou on se connecte. Le second est un lien, pas un
+   bouton — c'est une minorite de visiteurs, et deux boutons cote a
+   cote ne disent plus par ou commencer. */
+.v1h__second{
+  /* Sur sa propre ligne, sous le bouton : cote a cote, le lien se
+     collait au bord du bouton et les deux se lisaient comme un seul
+     objet coupe en deux. */
+  display:block; width:fit-content; margin:18px auto 0;
+  font-family:var(--v1-corps); font-size:14.5px;
+  color:var(--v1-texte); opacity:.72;
+  text-decoration:none; border-bottom:1px solid currentColor;
+  padding-bottom:1px; transition:opacity .18s;
+}
+.v1h__second:hover{opacity:1;}
 .v1h--fin{max-width:720px;}
 .v1h--fin .v1h__t{font-size:clamp(1.45rem, 3.6vw, 2.3rem); margin-bottom:26px;}
 /* L'ENTREE DU HEROS NE S'APPLIQUE PAS ICI. Elle se joue une fois, au
@@ -5066,6 +5154,14 @@ window.PC = (function(){
   'actu.intro':          ["Les cours ci-dessous arrivent du marché, comme ceux de vos lignes. En dessous, ce que je regarde en ce moment et pourquoi — à lire ou à ignorer, c'est selon.", "The prices below come from the market, like those on your own lines. Under them, what I am watching at the moment and why — read it or skip it, as you like.", "Las cotizaciones de abajo vienen del mercado, como las de sus líneas. Debajo, lo que observo ahora y por qué: para leer o para ignorar, como prefiera.", "Die Kurse unten kommen vom Markt, wie die Ihrer eigenen Positionen. Darunter, was ich gerade beobachte und warum — lesen oder überblättern, wie Sie mögen."],
   'actu.marches':        ["Les marchés","The markets","Los mercados","Die Märkte"],
   'actu.24h':            ["sur 24 heures","over 24 hours","en 24 horas","über 24 Stunden"],
+  /* La convention est ecrite a cote des pastilles : un jugement qu'on
+     ne dit pas est un jugement qu'on impose. */
+  'actu.bonne':          ["Bonne nouvelle","Good news","Buena noticia","Gute Nachricht"],
+  'actu.mauvaise':       ["Mauvaise nouvelle","Bad news","Mala noticia","Schlechte Nachricht"],
+  'actu.neutre':         ["Sans changement","Unchanged","Sin cambios","Unverändert"],
+  'actu.legende':        ["Sur vingt-quatre heures\u00a0: une hausse est comptée comme une bonne nouvelle, une baisse comme une mauvaise. En dessous de 0,2\u00a0%, rien n'est compté.","Over twenty-four hours: a rise counts as good news, a fall as bad. Below 0.2%, nothing is counted.","En veinticuatro horas: una subida cuenta como buena noticia, una bajada como mala. Por debajo del 0,2\u00a0%, no se cuenta nada.","Über vierundzwanzig Stunden: ein Anstieg gilt als gute Nachricht, ein Rückgang als schlechte. Unter 0,2\u00a0% zählt nichts."],
+  'actu.maj':            ["Mis à jour à {{h}}, puis chaque minute.","Updated at {{h}}, then every minute.","Actualizado a las {{h}}, y luego cada minuto.","Aktualisiert um {{h}}, danach jede Minute."],
+  'actu.p.legende':      ["Bonne ou mauvaise\u00a0: lu dans les mots du titre, pas dans le marché. Un titre qui n'en dit pas assez n'est pas marqué.","Good or bad: read from the wording of the headline, not from the market. A headline that says too little is left unmarked.","Buena o mala: leído en las palabras del titular, no en el mercado. Un titular que no dice bastante no se marca.","Gut oder schlecht: aus dem Wortlaut der Überschrift gelesen, nicht aus dem Markt. Eine Überschrift, die zu wenig sagt, bleibt unmarkiert."],
   'actu.journal':        ["Le journal","The journal","El diario","Das Journal"],
   'actu.journal.d':      ["Ce que je regarde, et pourquoi.","What I am watching, and why.","Lo que observo, y por qué.","Was ich beobachte, und warum."],
 
@@ -5482,7 +5578,15 @@ window.PC = (function(){
   'v1.h1a':             ["Tout","All","Todo","Ihr"],
   'v1.h1b':             ["votre argent,","your money,","su dinero,","ganzes Geld,"],
   'v1.h1c':             ["enfin réuni.","finally in one place.","por fin reunido.","endlich vereint."],
-  'v1.cta':             ["Commencer gratuitement","Get started free","Empezar gratis","Kostenlos starten"],
+  /* « Commencer gratuitement » promettait un essai qui n'existe pas :
+     l'entree est a 5 EUR par mois, il n'y a ni palier gratuit ni
+     demonstration ouverte. Un bouton qui promet le contraire de la
+     grille des prix, trois ecrans plus bas, n'est pas une maladresse
+     de redaction — c'est la premiere chose que le visiteur apprendra
+     etre fausse. Deux chemins, et seulement deux : prendre un
+     abonnement, ou se connecter si on en a deja un. */
+  'v1.cta':             ["Démarrer un abonnement","Start a subscription","Iniciar una suscripción","Abo starten"],
+  'v1.cta2':            ["J'ai déjà un compte","I already have an account","Ya tengo una cuenta","Ich habe schon ein Konto"],
   'fin.t':              ["Vos comptes, vos actions, votre immobilier. Une seule page.","Your accounts, your shares, your property. One single page.","Sus cuentas, sus acciones, sus inmuebles. Una sola página.","Ihre Konten, Ihre Aktien, Ihre Immobilien. Eine einzige Seite."],
   'e.vider':            ["Tout effacer","Erase everything","Borrar todo","Alles löschen"],
   /* --- Le compte, quand un serveur repond --- */
@@ -5686,7 +5790,10 @@ window.PC = (function(){
   'an.calc.d':          ["Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.","Twelve months of real prices where there are any, your dated statements otherwise.","Doce meses de cotizaciones reales cuando las hay, sus informes fechados si no.","Zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
-  'an.choix':           ["Quoi analyser\u00a0?","What to analyse?","\u00bfQu\u00e9 analizar?","Was analysieren?"],
+  'an.choix':           ["Une autre valeur\u00a0?","Another security?","\u00bfOtro valor?","Ein anderer Wert?"],
+  'an.mar.n.crypto':    ["Les dix premi\u00e8res par capitalisation.","The ten largest by market capitalisation.","Las diez primeras por capitalizaci\u00f3n.","Die zehn gr\u00f6\u00dften nach Marktkapitalisierung."],
+  'an.mar.n.bourse':    ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse."],
+  'an.mar.n.matieres':  ["Les m\u00e9taux et l'\u00e9nergie servis par le relais.","The metals and energy the relay serves.","Los metales y la energ\u00eda que sirve el relevo.","Die Metalle und Energie, die der Relais liefert."],
   'an.choix.tout':      ["Toutes vos lignes","All your lines","Todas sus l\u00edneas","Alle Ihre Positionen"],
   'an.cherche.t':       ["Une de vos lignes, ou n'importe quelle crypto ou action","One of your lines, or any crypto or share","Una de sus l\u00edneas, o cualquier cripto o acci\u00f3n","Eine Ihrer Positionen, oder eine beliebige Krypto oder Aktie"],
   'an.cherche.vos':     ["Vos lignes","Your lines","Sus l\u00edneas","Ihre Positionen"],
@@ -6766,8 +6873,8 @@ window.PC = (function(){
            quitter l'ecran qu'on regarde. Ce bloc part avec les deux
            variantes non retenues. -->
       <div class="nav__cta">
-        <a class="v1h__cta nav__cta__b" href="#espace-client">
-          <span data-i18n="v1.cta">Commencer gratuitement</span>
+        <a class="v1h__cta nav__cta__b" href="#offres">
+          <span data-i18n="v1.cta">Démarrer un abonnement</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
@@ -6911,13 +7018,15 @@ window.PC = (function(){
         </span>
       </h1>
       <p class="v1h__p" data-i18n="hero.lede"></p>
-      <a class="v1h__cta" href="#espace-client">
-        <span data-i18n="v1.cta">Commencer gratuitement</span>
+      <a class="v1h__cta" href="#offres">
+        <span data-i18n="v1.cta">Démarrer un abonnement</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
         </svg>
       </a>
+      <a class="v1h__second" href="#espace-client" data-i18n="v1.cta2">J'ai déjà un compte</a>
+
     </div>
   </div>
 </section>
@@ -7337,37 +7446,6 @@ window.PC = (function(){
 </section>
 
 <!-- ===== CONTACT ===== -->
-<!-- ===== LES PIECES, UNE DERNIERE FOIS =====
-     La page s'ouvre sur elles ; elle se ferme dessus. C'est la regle
-     la plus simple de la coherence spatiale : ce qui entre d'un cote
-     ressort du meme. Entre les deux, le site fait son travail en
-     papier et en encre ; ici il redit, en une ligne et un bouton, ce
-     qu'il a promis au premier ecran.
-
-     Meme video, meme traitement, meme encre : rien de nouveau n'est
-     introduit a la fin d'une page. Le voile travaille des DEUX cotes —
-     la bande arrive depuis le papier et y retourne, sans arete ni en
-     haut ni en bas. -->
-<section class="fin-pieces" aria-labelledby="fin-t">
-  <video class="v1video v1video--fin" autoplay muted loop playsinline aria-hidden="true"
-         preload="none"
-         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
-  <div class="v1teinte" aria-hidden="true"></div>
-  <div class="v1voile v1voile--fin" aria-hidden="true"></div>
-  <div class="wrap fin-pieces__in reveal">
-    <div class="v1h v1h--fin">
-      <h2 class="v1h__t" id="fin-t" data-i18n="fin.t">Vos comptes, vos actions, votre immobilier. Une seule page.</h2>
-      <a class="v1h__cta" href="#espace-client">
-        <span data-i18n="v1.cta">Commencer gratuitement</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
-        </svg>
-      </a>
-    </div>
-  </div>
-</section>
-
 <section class="section section--rule" id="contact">
   <div class="wrap contact">
     <div>
@@ -8105,6 +8183,9 @@ window.PC = (function(){
       <h3 class="actu-titre mono" data-i18n="actu.marches">Les marchés</h3>
       <div class="actu-cours" id="actu-cours"></div>
       <p class="actu-note mono" id="actu-note"></p>
+      <!-- La regle des pastilles, en toutes lettres : une convention
+           qu'on ne dit pas est un jugement qu'on impose. -->
+      <p class="actu-legende" id="actu-legende"></p>
     </div>
 
     <!-- La presse. Masquee tant que le serveur ne rend rien : un
@@ -8179,7 +8260,29 @@ window.PC = (function(){
           <details class="an-mar-l" id="an-mar-liste" hidden open>
             <summary class="an-mar-l__t mono" data-i18n="an.mar.liste.t">Ou une ligne en particulier</summary>
             <div class="an-mar-l__c" id="an-mar-lignes"></div>
+            <!-- CE QUE CETTE LISTE EST, SELON LA SOURCE. « Les valeurs
+                 de tete » n'est vrai que des cryptos, ou le classement
+                 par capitalisation existe ; pour la bourse aucun
+                 fournisseur gratuit n'en sert un. On ecrit donc la
+                 verite de chaque source plutot qu'un titre unique qui
+                 serait faux deux fois sur trois. -->
+            <p class="an-mar-l__n mono" id="an-mar-note"></p>
           </details>
+
+          <!-- ET N'IMPORTE QUELLE AUTRE. Le champ etait plus bas, dans
+               le bloc de vos lignes, et il ne s'affichait qu'a partir
+               d'un actif saisi : quelqu'un qui n'avait rien saisi ne
+               pouvait analyser que les dix valeurs posees la. Il
+               remonte ici, a cote des valeurs de tete, et il ne depend
+               plus de ce qu'on possede. -->
+          <div class="an-choix" id="an-choix-boite">
+            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Une autre valeur&nbsp;?</label>
+            <div class="an-q">
+              <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
+                     spellcheck="false" data-i18n-titre="an.cherche.t">
+              <div class="sug an-q__s" id="an-sug" hidden></div>
+            </div>
+          </div>
         </div>
 
         <div class="an-bloc" id="an-ia" hidden>
@@ -8217,14 +8320,6 @@ window.PC = (function(){
                recherche fait les deux : vide, il liste vos lignes ; rempli,
                il va chercher n'importe quelle crypto ou action chez le
                fournisseur de cours et en mesure les douze mois. -->
-          <div class="an-choix" id="an-choix-boite" hidden>
-            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Quoi analyser&nbsp;?</label>
-            <div class="an-q">
-              <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
-                     spellcheck="false" data-i18n-titre="an.cherche.t">
-              <div class="sug an-q__s" id="an-sug" hidden></div>
-            </div>
-          </div>
           <p class="analyse__m" id="an-calc-mot" hidden></p>
           <div class="an-lignes" id="an-calc-lignes"></div>
         </div>
@@ -8296,6 +8391,44 @@ window.PC = (function(){
   <div class="rapport__page" id="rapport-page"></div>
 </div>
 
+<!-- ===== LA FIN DE LA PAGE =====
+     La page s'ouvre sur les pieces ; elle se ferme dessus, et cette
+     fois JUSQU'EN BAS. La bande s'arretait avant le formulaire de
+     contact, puis le papier reprenait pour le pied de page : le fond
+     revenait une derniere fois sans rien dire. Le fond descend
+     desormais jusqu'au bord de la page, pied de page compris — on
+     entre dans le site par les pieces et on en sort par elles.
+
+     Le voile ne travaille donc plus que d'un cote : il fait entrer la
+     video depuis le papier, et il ne la fait plus ressortir. Il n'y a
+     rien apres.
+
+     L'espace client n'a rien a faire avec cette bande : il partage le
+     pied de page, pas la devanture. Tout le fond s'efface quand on y
+     entre. -->
+<div class="fin-zone">
+  <video class="v1video v1video--fin" autoplay muted loop playsinline aria-hidden="true"
+         preload="none"
+         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
+  <div class="v1teinte" aria-hidden="true"></div>
+  <div class="v1voile v1voile--fin" aria-hidden="true"></div>
+  <section class="fin-pieces" aria-labelledby="fin-t">
+  <div class="wrap fin-pieces__in reveal">
+    <div class="v1h v1h--fin">
+      <h2 class="v1h__t" id="fin-t" data-i18n="fin.t">Vos comptes, vos actions, votre immobilier. Une seule page.</h2>
+      <a class="v1h__cta" href="#offres">
+        <span data-i18n="v1.cta">Démarrer un abonnement</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
+        </svg>
+      </a>
+      <a class="v1h__second" href="#espace-client" data-i18n="v1.cta2">J'ai déjà un compte</a>
+
+    </div>
+  </div>
+  </section>
+
 <footer class="site-foot">
   <div class="wrap site-foot__in">
     <span data-i18n="foot.1">© 2026 Pierrel &amp; Co — chiffres d'exemple, sans valeur contractuelle.</span>
@@ -8314,6 +8447,7 @@ window.PC = (function(){
     </details>
   </div>
 </footer>
+</div>
 
 <script>
 (function(){
@@ -12642,11 +12776,13 @@ window.PC = (function(){
     const boite = document.getElementById('an-choix-boite');
     const q = document.getElementById('an-q');
     if (!boite || !q) return;
-    /* Chercher n'a de sens qu'avec quelque chose a chercher — mais des
-       une seule ligne, on peut vouloir mesurer une crypto qu'on ne
-       possede pas : le champ reste donc des qu'il y a un portefeuille. */
-    boite.hidden = !lignes.length;
-    if (!lignes.length){ anChoix = ''; anExterne = null; return; }
+    /* LE CHAMP NE DEPEND PLUS DE CE QU'ON POSSEDE. Il etait masque
+       tant qu'aucun actif n'etait saisi, et c'etait l'inverse du bon
+       sens : celui qui n'a encore rien entre est precisement celui qui
+       veut regarder le marche avant de s'engager. On cherche dans tout
+       ce que le fournisseur sert, pas seulement dans ses propres
+       lignes. */
+    boite.hidden = false;
 
     if (!q.dataset.branche){
       q.dataset.branche = '1';
@@ -12669,10 +12805,16 @@ window.PC = (function(){
        defilement, et on ne savait plus ou regarder. La plus grosse
        d'abord, parce que c'est celle dont le recul pese le plus sur le
        total. « Toutes vos lignes » reste a un geste. */
-    if (!anChoixPose && !anChoix && !anExterne){
+    if (!anChoixPose && !anChoix && !anExterne && lignes.length){
       anChoix = lignes[0].id;
       anChoixPose = true;
     }
+    /* Sans aucune ligne a soi, il n'y a pas de sujet par defaut — et
+       ce n'est pas une panne : le champ ci-dessus sert justement a en
+       choisir un. La ligne precedente lisait `lignes[0].id` sans
+       garde, et un portefeuille vide levait une erreur qui arretait
+       le rendu de tout l'onglet. */
+    if (!lignes.length && !anExterne){ anChoix = ''; }
   }
 
   function anBrancheTout(){
@@ -13319,6 +13461,10 @@ window.PC = (function(){
     }).join('');
     anRejoue(hoteL);
     hoteL.innerHTML = htmlL;
+    /* Ce que cette liste EST, dit sous elle : le classement par
+       capitalisation n'existe que pour les cryptos. */
+    const noteL = document.getElementById('an-mar-note');
+    if (noteL) noteL.textContent = PC.t('an.mar.n.' + marSrc);
     if (!hoteL.dataset.branche){
       hoteL.dataset.branche = '1';
       hoteL.addEventListener('click', function(e){
@@ -18660,6 +18806,34 @@ window.PC = (function(){
     }).join('') + '</div>';
   }
 
+  /* ===== BONNE OU MAUVAISE NOUVELLE =====
+     La regle, et toute la regle : au-dessus de +0,2 % sur vingt-quatre
+     heures c'est une bonne nouvelle, en dessous de -0,2 % une
+     mauvaise, entre les deux rien n'est dit. Le seuil existe parce
+     qu'un mouvement de trois centiemes de pour cent n'est pas une
+     nouvelle — l'appeler ainsi userait le mot.
+
+     Elle est ECRITE sous les cartes, en toutes lettres. Une pastille
+     qui juge sans dire sa regle n'est pas une information, c'est une
+     opinion deguisee en donnee. */
+  const SEUIL_NOUVELLE = 0.2;
+  function pastille(v){
+    const ton = (typeof v !== 'number' || !isFinite(v) || Math.abs(v) < SEUIL_NOUVELLE)
+      ? 'neutre' : (v > 0 ? 'bonne' : 'mauvaise');
+    const glyphe = ton === 'bonne' ? '▲' : (ton === 'mauvaise' ? '▼' : '—');
+    return '<span class="nouv" data-ton="' + ton + '">' +
+      '<span class="nouv__g" aria-hidden="true">' + glyphe + '</span>' +
+      echap(PC.t('actu.' + ton)) + '</span>';
+  }
+  /* La variation a vingt-quatre heures, quel que soit le nom du champ
+     que rend le fournisseur. */
+  function var24(x){
+    for (const champ of HORIZONS[0][1]){
+      if (typeof x[champ] === 'number' && isFinite(x[champ])) return x[champ];
+    }
+    return null;
+  }
+
   function poseCours(liste){
     const hote2 = document.getElementById('actu-cours');
     const bloc = document.getElementById('actu-marches');
@@ -18678,6 +18852,7 @@ window.PC = (function(){
 
     hote2.innerHTML = bonnes.map(function(x){
       return '<div class="cours-case">' +
+        pastille(var24(x)) +
         '<div class="cours-case__n">' + echap(x.name || '') + '</div>' +
         '<div class="cours-case__t">' + echap(String(x.symbol || '').toUpperCase()) + '</div>' +
         '<div class="cours-case__p">' + PC.argent(x.current_price,
@@ -18690,7 +18865,18 @@ window.PC = (function(){
       '</div>';
     }).join('');
     const note = document.getElementById('actu-note');
-    if (note) note.textContent = PC.t('actu.24h');
+    if (note){
+      /* L'HEURE DU RELEVE, ECRITE. Ce bloc ne se rafraichissait pas du
+         tout avant ; maintenant qu'il le fait, il faut le dire, sans
+         quoi personne ne saura si ce qu'il lit date d'une minute ou
+         d'une heure. */
+      let h = '';
+      try { h = new Date().toLocaleTimeString(PC.locale(),
+            {hour:'2-digit', minute:'2-digit'}); } catch (e){ h = ''; }
+      note.textContent = h ? PC.t('actu.maj', {h:h}) : PC.t('actu.24h');
+    }
+    const leg = document.getElementById('actu-legende');
+    if (leg) leg.textContent = PC.t('actu.legende');
     bloc.hidden = false;
     posees = true;
   }
@@ -18734,6 +18920,32 @@ window.PC = (function(){
     catch (e){ return ''; }
   }
 
+  /* ===== LA MEME LECTURE, SUR LES MOTS =====
+     Un titre de presse n'a pas de pourcentage : ce qu'on peut lire,
+     ce sont ses mots. On compte donc les mots qui disent une hausse
+     et ceux qui disent une baisse, dans les quatre langues servies,
+     et on ne tranche QUE si l'un l'emporte franchement.
+
+     Les limites de ce procede sont reelles et il faut les connaitre :
+     il ne comprend ni la negation ni l'ironie, et « les craintes
+     s'eloignent » sera compte comme une mauvaise nouvelle a cause de
+     « craintes ». C'est pourquoi un titre qui ne penche pas
+     clairement n'est pas marque du tout, et pourquoi la legende dit
+     d'ou vient la lecture. Mieux vaut ne rien dire que de se tromper
+     en couleur sur une page qui parle d'argent. */
+  const MOTS_HAUSSE = /\b(hausse|bondit|s'envole|progress\w*|record|rebond\w*|gagn\w*|monte|gr[iî]mpe|optimis\w*|accord|croissance|surperform\w*|rallye|rise|rises|surge|soar\w*|jump\w*|rally|gain\w*|record|rebound|climb\w*|beat\w*|growth|sube|repunt\w*|r[ée]cord|ganan\w*|avanza|crece|steigt|gewinn\w*|erholung|rekord|w[aä]chst|anstieg)\b/gi;
+  const MOTS_BAISSE = /\b(chute|plonge|recul\w*|baisse|d[éè]visse?|craint\w*|crise|krach|effondr\w*|perd|perte\w*|alerte|sanction\w*|r[ée]cession|inqui[ée]t\w*|licenci\w*|fall\w*|drop\w*|plunge\w*|slump\w*|crash|tumbl\w*|loss\w*|fear\w*|warn\w*|sink\w*|slide\w*|cae|caída|desplom\w*|p[ée]rdid\w*|temor\w*|crisis|f[aä]llt|sturz|verlust\w*|angst|krise|einbruch|r[üu]ckgang)\b/gi;
+  function tonTitre(t){
+    const txt = String(t || '');
+    const h = (txt.match(MOTS_HAUSSE) || []).length;
+    const b = (txt.match(MOTS_BAISSE) || []).length;
+    if (h === b) return '';                     /* on ne dit rien */
+    const ton = h > b ? 'bonne' : 'mauvaise';
+    return '<span class="nouv" data-ton="' + ton + '">' +
+      '<span class="nouv__g" aria-hidden="true">' + (ton === 'bonne' ? '▲' : '▼') + '</span>' +
+      echap(PC.t('actu.' + ton)) + '</span>';
+  }
+
   function posePresse(lignes, sources){
     const bloc = document.getElementById('actu-presse');
     const hote3 = document.getElementById('actu-titres');
@@ -18748,6 +18960,7 @@ window.PC = (function(){
     hote3.innerHTML = bonnes.map(function(x){
       const age = ilYA(x.date);
       return '<div class="titre-p">' +
+        tonTitre(x.titre) +
         '<a class="titre-p__a" href="' + echap(x.lien) + '"' +
           ' target="_blank" rel="noopener noreferrer nofollow">' +
           echap(x.titre) + '</a>' +
@@ -18759,14 +18972,14 @@ window.PC = (function(){
     const pied = document.getElementById('actu-sources');
     if (pied){
       const noms = (sources || []).map(nomSource).filter(Boolean);
-      pied.textContent = noms.length ? PC.t('actu.p.via', {s:noms.join(', ')}) : '';
+      pied.textContent = (noms.length ? PC.t('actu.p.via', {s:noms.join(', ')}) + ' \u00b7 ' : '') +
+                         PC.t('actu.p.legende');
     }
     bloc.hidden = false;
     presseFaite = true;
   }
 
   function cherchePresse(){
-    if (presseFaite) return;
     /* Pas d'origine a interroger dans un fichier local. */
     if (location.protocol.indexOf('http') !== 0) return;
     fetch('/api/actu', {credentials:'omit'})
@@ -18778,7 +18991,7 @@ window.PC = (function(){
   }
 
   function chercheCours(){
-    if (posees || !window.PC_MARCHES || !PC_MARCHES.dix) return;
+    if (!window.PC_MARCHES || !PC_MARCHES.dix) return;
     /* Les deux sources, et on prend ce qui revient. Si l'une echoue,
        l'autre suffit ; si les deux echouent, le bloc reste cache. */
     Promise.all([
@@ -18808,12 +19021,56 @@ window.PC = (function(){
   /* On ne va chercher les cours que lorsque la rubrique approche de
      l'ecran : un appel reseau au chargement retarde le premier
      rendu, et beaucoup de visiteurs ne descendront jamais jusqu'ici. */
+  /* ============================================================
+     ELLE S'ACTUALISE — CE QU'ELLE NE FAISAIT PAS DU TOUT
+     ------------------------------------------------------------
+     Les deux fonctions ci-dessus etaient gardees par un drapeau pose
+     au premier succes : une fois les cours affiches, plus rien n'etait
+     redemande de toute la session. Une rubrique qui s'appelle
+     « Actualite » et qui montre les prix d'il y a trois heures sans le
+     dire ne se contente pas d'etre inutile, elle trompe.
+
+     Trois regles, les memes que partout ailleurs dans cette page :
+     - rien tant que la rubrique n'est pas a l'ecran ;
+     - rien quand l'onglet est en arriere-plan — un telephone au fond
+       d'une poche ne doit ni consommer de quota ni vider sa batterie ;
+     - et au retour sur l'onglet, on redemande tout de suite, parce que
+       c'est exactement le moment ou ce qui est affiche est le plus
+       vieux.
+
+     Deux rythmes, parce que les deux sources n'ont pas le meme grain :
+     les cours bougent a la minute, la presse publie a l'heure. Le
+     cache de `PC_MARCHES` protege le fournisseur de toute facon : il
+     rend ce qu'il a tant qu'il a moins de cinq minutes.
+     ============================================================ */
+  const RYTHME_COURS = 60000;
+  const RYTHME_PRESSE = 5 * 60000;
+  let visible = false;
+
+  function rafraichit(){
+    if (!visible || document.hidden) return;
+    chercheCours();
+    cherchePresse();
+  }
+
   function guette(){
-    if (!window.IntersectionObserver){ chercheCours(); cherchePresse(); return; }
-    const o = new IntersectionObserver(function(e){
-      if (e[0].isIntersecting){ o.disconnect(); chercheCours(); cherchePresse(); }
-    }, {rootMargin:'320px'});
-    o.observe(hote);
+    const demarre = function(){
+      visible = true;
+      chercheCours(); cherchePresse();
+    };
+    if (!window.IntersectionObserver){ demarre(); }
+    else {
+      const o = new IntersectionObserver(function(e){
+        visible = e[0].isIntersecting;
+        if (visible) demarre();
+      }, {rootMargin:'320px'});
+      o.observe(hote);
+    }
+    setInterval(function(){ if (visible && !document.hidden) chercheCours(); }, RYTHME_COURS);
+    setInterval(function(){ if (visible && !document.hidden) cherchePresse(); }, RYTHME_PRESSE);
+    document.addEventListener('visibilitychange', function(){
+      if (!document.hidden) rafraichit();
+    });
   }
 
   poseJournal();
