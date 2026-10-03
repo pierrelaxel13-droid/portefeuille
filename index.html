@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261003.1325";</script>
+<script>window.PC_VERSION = "261003.1458";</script>
 </head>
 <body>
 
@@ -4315,10 +4315,10 @@ html[data-variante="1"] .v1video{
   position:absolute; inset:0; z-index:1; pointer-events:none;
   background:linear-gradient(to bottom,
     transparent 0%,
-    transparent 52%,
-    color-mix(in srgb, var(--paper) 18%, transparent) 66%,
-    color-mix(in srgb, var(--paper) 52%, transparent) 80%,
-    color-mix(in srgb, var(--paper) 86%, transparent) 92%,
+    transparent 64%,
+    color-mix(in srgb, var(--paper) 22%, transparent) 77%,
+    color-mix(in srgb, var(--paper) 62%, transparent) 88%,
+    color-mix(in srgb, var(--paper) 90%, transparent) 96%,
     var(--paper) 100%);
 }
 /* LE TEXTE SUIT LE FOND, PAS LE THEME.
@@ -4340,21 +4340,28 @@ html[data-variante="1"] .v1video{
    pas suffi — c'est precisement le cas « elle n'arrive pas » qui
    compte.
 
-   Posee sur LE HEROS ET LA BANDE, pas sur <html> : la barre du haut
-   lit la meme encre, et elle, elle traverse toute la page. Ecrite a la
-   racine, le lien de la section courante serait reste sombre sur le
-   papier sombre des neuf dixiemes du site. Une propriete personnalisee
-   posee sur un element l'emporte pour lui et ses descendants, quelle
-   que soit la specificite de celle de la racine. */
-html.v1-fond .hero,
-html.v1-fond .fin-pieces{--v1-texte:#192837;}
-/* Et le voile sous le texte prend la couleur de la VIDEO, pas celle du
-   papier : sur fond creme un voile sombre serait une tache. Il est
-   leger — assez pour poser l'encre sur une piece qui passe, trop peu
-   pour effacer quoi que ce soit. */
+   SECONDE VERSION, et c'est elle qui tient : ce n'est pas au texte de
+   rejoindre la video, c'est a LA VIDEO DE REJOINDRE LA PAGE.
+
+   Faire passer l'encre au bleu-noir de la proposition reglait la
+   lisibilite et laissait le reste en desaccord : un panneau creme pose
+   sur une page noire, et une encre bleutee partout ou le voile avait
+   deja commence a assombrir — du bleu sur du noir. En theme sombre,
+   la video est donc RETOURNEE puis teintee de l'accent de la page
+   (plus bas) : le creme devient le papier, les pieces deviennent
+   violettes, et tout le reste — encre, barre du haut, bouton — garde
+   les couleurs du theme, sans exception.
+
+   Au passage, les pieces se voient beaucoup mieux : lilas sur creme,
+   elles se distinguaient a peine ; violettes sur noir, elles sont le
+   sujet du premier ecran. */
+/* Le voile sous le texte prend la couleur DU FOND DU HEROS — qui est
+   le papier dans les deux themes, puisque la video rejoint la page.
+   Il est leger : assez pour poser l'encre sur une piece qui passe,
+   trop peu pour effacer quoi que ce soit. */
 :root{--v1-ecran:0%; --v1-ecran-c:var(--paper);}
 html.v1-fond .hero,
-html.v1-fond .fin-pieces{--v1-ecran:46%; --v1-ecran-c:var(--v1-clair);}
+html.v1-fond .fin-pieces{--v1-ecran:46%;}
 /* L'ellipse deborde volontairement de son bloc — un voile qui
    s'arreterait au bord du texte se verrait comme une boite. Elle
    deborde donc AUSSI de l'ecran : 50 px de defilement lateral sur
@@ -4369,6 +4376,40 @@ html.v1-fond .fin-pieces{--v1-ecran:46%; --v1-ecran-c:var(--v1-clair);}
     color-mix(in srgb, var(--v1-ecran-c) var(--v1-ecran), transparent) 34%,
     transparent 72%);
 }
+/* ===== LA VIDEO REJOINT LA PAGE (theme sombre) =====
+   La video est CLAIRE : un fond creme et des pieces lilas. Sur une
+   page noire, c'est un panneau d'une autre palette — et des pieces
+   pales sur un fond pale, qu'on distingue a peine.
+
+   On la RETOURNE : le creme devient noir, et les pieces, qui etaient
+   plus sombres que leur fond, deviennent plus claires que lui. Puis on
+   repeint le tout a l'accent de la page, avec un melange qui ne prend
+   que la teinte et la laisse la clarte : le noir reste noir, les
+   pieces deviennent violettes. La page n'a plus deux palettes, elle en
+   a une.
+
+   La couche de teinte n'existe que si la video est la. Sans elle, un
+   melange pose sur du vide repeindrait le heros entier en violet. */
+.v1teinte{display:none;}
+.v1video--fin ~ .v1teinte, .v1video ~ .v1teinte{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:var(--accent); mix-blend-mode:color;
+}
+/* En theme clair, rien a retourner : le creme de la video est deja
+   celui du papier. Les pieces, elles, sont pales sur pale — un peu de
+   saturation et de contraste suffit a les detacher, sans toucher au
+   fond. */
+.v1video{filter:saturate(1.3) contrast(1.04);}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])) .v1video{filter:invert(1) brightness(1.18);}
+  html.v1-fond:where(:not([data-theme="light"])) .v1teinte{display:block;}
+}
+:root[data-theme="dark"] .v1video{filter:invert(1) brightness(1.18);}
+:root[data-theme="dark"].v1-fond .v1teinte{display:block;}
+/* Le melange ne doit pas deborder du heros : sans contexte d'empilement
+   propre, il repeindrait aussi le fond de la page derriere lui. */
+.hero{isolation:isolate;}
+
 /* La toile de la maison reste effacee : la proposition pose ses objets
    sur un fond calme. */
 .hero__oeuvre{display:none;}
@@ -4797,16 +4838,14 @@ html.v1-fond .site-head:not([data-pose="true"]) .wordmark,
 html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a,
 html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a:hover,
 html.v1-fond .site-head:not([data-pose="true"]) .icon-btn{
-  color:#192837;
+  /* L'encre du heros, pas une valeur figee : en theme clair la video
+     est creme et cette encre est sombre ; en theme sombre la video a
+     rejoint le papier et c'est l'encre du theme. Une couleur ecrite en
+     dur ici redonnerait le bleu sur noir qu'on vient d'enlever. */
+  color:var(--v1-texte);
 }
 html.v1-fond .site-head:not([data-pose="true"]) .icon-btn{
-  border-color:rgba(25, 40, 55, .22);
-}
-html.v1-fond .site-head:not([data-pose="true"])::before{
-  background:linear-gradient(to bottom,
-    color-mix(in srgb, var(--v1-clair) 72%, transparent) 0%,
-    color-mix(in srgb, var(--v1-clair) 30%, transparent) 55%,
-    transparent 100%);
+  border-color:color-mix(in srgb, var(--v1-texte) 24%, transparent);
 }
 /* La feuille laterale ouverte est deja creme et porte sa propre
    encre : la regle ci-dessus ne doit pas s'appliquer a ses liens, qui
@@ -6805,6 +6844,7 @@ window.PC = (function(){
        la page, et sur le theme sombre, deux pages collees. Il la
        dissout dans le fond, exactement comme la toile le faisait
        avant elle. -->
+  <div class="v1teinte" aria-hidden="true"></div>
   <div class="v1voile" aria-hidden="true"></div>
 
   <div class="wrap hero__in hero__in--v1">
@@ -7278,6 +7318,7 @@ window.PC = (function(){
   <video class="v1video v1video--fin" autoplay muted loop playsinline aria-hidden="true"
          preload="none"
          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
+  <div class="v1teinte" aria-hidden="true"></div>
   <div class="v1voile v1voile--fin" aria-hidden="true"></div>
   <div class="wrap fin-pieces__in reveal">
     <div class="v1h v1h--fin">
