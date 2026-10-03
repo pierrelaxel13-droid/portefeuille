@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-variante="1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261003.1025";</script>
+<script>window.PC_VERSION = "261003.1316";</script>
 </head>
 <body>
 
@@ -873,6 +873,9 @@ body.flux-vif .cours__vif::before{
 @media (max-width:700px){
   .replimob > summary{display:block;}
 }
+/* Celui-la se replie a toutes les largeurs : son resume est donc
+   toujours visible, sans quoi son contenu serait injoignable. */
+.repli-toujours > summary{display:block;}
 .replimob--sect{border-top:none; padding-top:0;}
 .replimob--sect > summary{
   max-width:var(--maxw); margin-inline:auto; padding-inline:var(--pad);
@@ -880,8 +883,10 @@ body.flux-vif .cours__vif::before{
 }
 @media (min-width:701px){
   /* Hors telephone il n'est plus un repli du tout : ni bordure, ni
-     resume, et toujours ouvert. */
-  .replimob{border-top:none; padding-top:0;}
+     resume, et toujours ouvert. Sauf celui qui se replie partout, qui
+     garde son filet : c'est lui qui montre qu'il y a quelque chose
+     dessous. */
+  .replimob:not(.repli-toujours){border-top:none; padding-top:0;}
 }
 
 /* ===== Sections ===== */
@@ -1413,6 +1418,17 @@ body.flux-vif .cours__vif::before{
 
 /* ===== Notes ===== */
 .notes{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule);}
+/* QUATRE NOTES EN DEUX RANGEES DE DEUX, et non pas « autant par rangee
+   que la largeur en laisse tenir ». Au-dela de 967 px la grille tenait
+   TROIS colonnes : la quatrieme note restait seule sur sa ligne et
+   laissait a cote d'elle 146 000 px de fond — c'est-a-dire de filet
+   nu, puisque le fond de la grille est le filet. Deux colonnes se
+   remplissent toujours avec quatre cartes, quelle que soit la
+   largeur ; et les notes, qui sont des paragraphes, y respirent
+   mieux. */
+@media (min-width:701px){
+  .notes{grid-template-columns:repeat(2, 1fr);}
+}
 .note{background:var(--paper); padding:clamp(20px,2.6vw,30px);}
 .note__k{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:11px;}
 .note p{color:var(--ink-2); font-size:15.5px; text-wrap:pretty;}
@@ -1422,6 +1438,15 @@ body.flux-vif .cours__vif::before{
    une hauteur différente : les trois colonnes gardent la même grille,
    donc prix, listes et boutons s'alignent d'une carte à l'autre. */
 .offres{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule);}
+/* ENTRE 701 ET 880 PX, LA TROISIEME CARTE RESTAIT SEULE SUR SA LIGNE
+   et laissait a cote d'elle 314 x 386 px de fond — c'est-a-dire du
+   gris, puisque le fond de la grille est le filet. Une grille qui
+   remplit ses COLONNES ne remplit pas ses RANGEES : la derniere carte
+   doit prendre la place qui reste, sinon le filet se voit. */
+@media (min-width:701px) and (max-width:880px){
+  .offres{grid-template-columns:repeat(2, 1fr);}
+  .offres > .offre:last-child{grid-column:1 / -1;}
+}
 .offre{
   background:var(--paper); padding:clamp(22px,2.8vw,32px);
   display:grid; grid-template-rows:auto auto auto 1fr auto; gap:14px;
@@ -3528,10 +3553,6 @@ body:not(.espace-ouvert) .barre-app{display:none;}
    390 px cela tient sans defilement — c'est pour cela que les valeurs
    restent courtes. */
 .comparo{margin-top:clamp(34px,4vw,54px);}
-.comparo__t{
-  font-size:11px; letter-spacing:.19em; text-transform:uppercase;
-  color:var(--ink-3); margin:0 0 16px;
-}
 .comparo__boite{overflow-x:auto;}
 .cmp{width:100%; border-collapse:collapse; font-size:14px;}
 .cmp th, .cmp td{padding:11px 10px; border-bottom:1px solid var(--rule); text-align:left;}
@@ -4273,32 +4294,73 @@ html[data-variante="1"] .v1video{
   width:100%; height:100%; object-fit:cover;
   pointer-events:none;
 }
-/* ===== LE RACCORD =====
-   Une video qui s'arrete net au bas du premier ecran laisse une arete
-   franche entre son creme et le papier de la page. En theme clair cela
-   se voit deja ; en theme sombre, c'est une page claire posee sur une
-   page sombre — deux sites colles.
+/* ===== LE RACCORD, SANS EFFACER LES PIECES =====
+   Premiere version : un voile sur TOUTE la hauteur et une video
+   assombrie a 42 %. Le raccord etait propre et les pieces avaient
+   disparu — on raccordait deux fonds vides. Le sujet du premier ecran
+   ne peut pas etre la chose qu'on efface pour que le bas se raccorde.
 
-   Le voile prend la couleur DU PAPIER DE LA PAGE, quel que soit le
-   theme : la video ne se termine pas, elle s'y fond. C'est ce que
-   faisait la toile avant elle, et c'est pour cela qu'on ne voyait pas
-   ou elle finissait. */
+   Le voile ne travaille donc plus que LA OU IL SERT : le dernier
+   tiers, celui qui touche la page. Au-dessus il n'y a rien du tout, et
+   les pieces tiennent l'ecran. */
 .v1voile{
   position:absolute; inset:0; z-index:1; pointer-events:none;
   background:linear-gradient(to bottom,
-    color-mix(in srgb, var(--paper) 22%, transparent) 0%,
-    transparent 26%,
-    color-mix(in srgb, var(--paper) 45%, transparent) 68%,
-    color-mix(in srgb, var(--paper) 88%, transparent) 90%,
+    transparent 0%,
+    transparent 52%,
+    color-mix(in srgb, var(--paper) 18%, transparent) 66%,
+    color-mix(in srgb, var(--paper) 52%, transparent) 80%,
+    color-mix(in srgb, var(--paper) 86%, transparent) 92%,
     var(--paper) 100%);
 }
-/* En theme sombre, un fondu ne suffit pas : la video reste un
-   rectangle lumineux au milieu d'une page sombre. On l'assombrit pour
-   qu'elle appartienne a la page plutot que de s'y poser. */
-@media (prefers-color-scheme: dark){
-  :root:where(:not([data-theme="light"])) .v1video{filter:brightness(.42) saturate(.85);}
+/* LE TEXTE SUIT LE FOND, PAS LE THEME.
+   ------------------------------------------------------------
+   Assombrir la video reglait un vrai probleme — elle est CLAIRE, et en
+   theme sombre le texte l'est aussi — mais au prix du sujet : a 42 %
+   les pieces ne se voyaient plus. Le filtre est donc retire, et le
+   probleme traite a l'endroit ou il se pose, c'est-a-dire l'encre.
+
+   Quand la video est la, le premier ecran EST creme : l'encre y est
+   sombre, dans les deux themes, comme la proposition l'ecrit. Quand
+   elle n'arrive pas — reseau qui refuse ce CDN, visionneuse d'artefact
+   qui bloque les medias exterieurs — le heros retombe sur le papier de
+   la page, et l'encre reprend celle du theme, sans quoi un texte
+   sombre disparaitrait sur un fond sombre.
+
+   C'est la video elle-meme qui le dit : le script pose `v1-fond` sur
+   <html> quand elle a des images a montrer. Une supposition n'aurait
+   pas suffi — c'est precisement le cas « elle n'arrive pas » qui
+   compte.
+
+   Posee sur LE HEROS ET LA BANDE, pas sur <html> : la barre du haut
+   lit la meme encre, et elle, elle traverse toute la page. Ecrite a la
+   racine, le lien de la section courante serait reste sombre sur le
+   papier sombre des neuf dixiemes du site. Une propriete personnalisee
+   posee sur un element l'emporte pour lui et ses descendants, quelle
+   que soit la specificite de celle de la racine. */
+html.v1-fond .hero,
+html.v1-fond .fin-pieces{--v1-texte:#192837;}
+/* Et le voile sous le texte prend la couleur de la VIDEO, pas celle du
+   papier : sur fond creme un voile sombre serait une tache. Il est
+   leger — assez pour poser l'encre sur une piece qui passe, trop peu
+   pour effacer quoi que ce soit. */
+:root{--v1-ecran:0%; --v1-ecran-c:var(--paper);}
+html.v1-fond .hero,
+html.v1-fond .fin-pieces{--v1-ecran:46%; --v1-ecran-c:var(--v1-clair);}
+/* L'ellipse deborde volontairement de son bloc — un voile qui
+   s'arreterait au bord du texte se verrait comme une boite. Elle
+   deborde donc AUSSI de l'ecran : 50 px de defilement lateral sur
+   telephone, dans les quatre langues. Le heros la coupe. La bande de
+   fin le faisait deja, c'est pour cela qu'elle ne debordait pas. */
+.hero{overflow:hidden;}
+.v1h::before{
+  content:""; position:absolute; z-index:-1; inset:-16% -20%;
+  pointer-events:none;
+  background:radial-gradient(ellipse at 50% 48%,
+    color-mix(in srgb, var(--v1-ecran-c) var(--v1-ecran), transparent) 0%,
+    color-mix(in srgb, var(--v1-ecran-c) var(--v1-ecran), transparent) 34%,
+    transparent 72%);
 }
-:root[data-theme="dark"] .v1video{filter:brightness(.42) saturate(.85);}
 /* La toile de la maison reste effacee : la proposition pose ses objets
    sur un fond calme. */
 .hero__oeuvre{display:none;}
@@ -4485,8 +4547,7 @@ html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
   .site-nav a[aria-current="true"]{color:var(--v1-texte); font-weight:700;}
   /* Les reglages restent dans le panneau du bouton a trois barres, pas
      au milieu des liens. */
-  .site-nav .reglages,
-  .site-nav .nav__anim{display:none;}
+  .site-nav .reglages{display:none;}
   .site-nav[data-ouvert="true"]{
     position:absolute; left:auto; right:var(--pad); top:100%;
     flex-direction:column; align-items:stretch; width:min(340px, calc(100vw - 2 * var(--pad)));
@@ -4495,8 +4556,6 @@ html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
     box-shadow:0 20px 40px -24px var(--shadow);
   }
   .site-nav[data-ouvert="true"] a{padding:12px 20px; font-size:15px;}
-  .site-nav[data-ouvert="true"] .reglages,
-  .site-nav[data-ouvert="true"] .nav__anim{display:block;}
   .site-nav[data-ouvert="true"] .reglages{display:flex;}
 }
 /* Les deux pilules, aux couleurs de la proposition. */
@@ -4612,19 +4671,10 @@ html[data-variante="1"] .split-h.in{opacity:1; transform:none;}
      vit dedans doit l'etre aussi. Sans cela, en theme sombre, les
      etiquettes et les reglages gardaient leur encre claire et
      disparaissaient sur le beige. */
-  .site-nav .menu__k{color:rgba(25, 40, 55, .6);}
-  .site-nav .menu__v{
-    color:rgba(25, 40, 55, .75); border-color:rgba(25, 40, 55, .25);
-  }
-  .site-nav .menu__v[aria-pressed="true"]{
-    color:var(--v1-accent); border-color:var(--v1-accent);
-    background:rgba(115, 66, 226, .12);
-  }
   .site-nav .reglage,
   .site-nav .icon-btn{
     color:#192837; border-color:rgba(25, 40, 55, .25); background:transparent;
   }
-  .nav__anim{border-top-color:rgba(25, 40, 55, .12);}
   .nav__cta__b--clair:active{transform:scale(.96); transition-duration:0s;}
   .reglages{padding-inline:20px;}
 }
@@ -4681,28 +4731,6 @@ body:has(.site-nav[data-ouvert="true"])::after{
   animation:fade-in .3s ease both;
 }
 
-/* Le selecteur du banc d'essai, dans le menu des trois points. */
-.menu__k{
-  margin:4px 12px 6px; font-family:'IBM Plex Mono', monospace;
-  font-size:10px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--ink-3);
-}
-.menu__choix{display:flex; gap:5px; padding:0 12px 6px;}
-.nav__anim{padding:6px var(--pad) 10px; border-top:1px solid var(--rule);}
-.nav__anim .menu__k{margin-inline:0;}
-.nav__anim .menu__choix{padding-inline:0;}
-@media (min-width:901px){ .nav__anim{padding-inline:20px;} }
-.menu__v{
-  flex:1 1 auto; font:inherit; font-size:12.5px; cursor:pointer;
-  padding:7px 4px; border-radius:var(--r-1); color:var(--ink-2);
-  border:1px solid var(--rule-strong); background:none;
-  transition:background .18s, color .18s, border-color .18s;
-}
-.menu__v:hover{background:var(--paper-2); color:var(--ink);}
-.menu__v[aria-pressed="true"]{
-  background:var(--accent-soft); border-color:var(--accent); color:var(--accent);
-}
-.menu__v:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 
 /* AUCUNE VARIANTE NE PASSE OUTRE LE MOUVEMENT REDUIT. Une proposition
    qui ne le respecterait pas ne serait pas une proposition a comparer,
@@ -4740,6 +4768,93 @@ body:has(.site-nav[data-ouvert="true"])::after{
     transform:none; filter:none;
   }
 }
+
+/* ============================================================
+   L'EN-TETE SUR LE PREMIER ECRAN
+   ------------------------------------------------------------
+   Tant que la barre survole le heros, elle survole la VIDEO : un fond
+   creme, dans les deux themes. En theme sombre son encre claire s'y
+   effacait, et le degrade qui lui sert d'appui — teinte du papier de
+   la page — posait une ombre sombre sur le creme.
+
+   Elle prend donc l'encre du heros, et son appui la couleur de la
+   video, exactement le temps qu'elle le survole : `data-pose="true"`
+   arrive des que du texte de la page passe derriere elle, et tout
+   revient au theme.
+
+   Ecrit en fin de feuille, apres les regles de couleur de la barre,
+   parce qu'a specificite egale c'est la derniere qui gagne — on s'est
+   fait prendre assez de fois. */
+html.v1-fond .site-head:not([data-pose="true"]) .wordmark,
+html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a,
+html.v1-fond .site-head:not([data-pose="true"]) .site-nav > a:hover,
+html.v1-fond .site-head:not([data-pose="true"]) .icon-btn{
+  color:#192837;
+}
+html.v1-fond .site-head:not([data-pose="true"]) .icon-btn{
+  border-color:rgba(25, 40, 55, .22);
+}
+html.v1-fond .site-head:not([data-pose="true"])::before{
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--v1-clair) 72%, transparent) 0%,
+    color-mix(in srgb, var(--v1-clair) 30%, transparent) 55%,
+    transparent 100%);
+}
+/* La feuille laterale ouverte est deja creme et porte sa propre
+   encre : la regle ci-dessus ne doit pas s'appliquer a ses liens, qui
+   ne survolent plus la video mais le papier de la feuille. */
+html.v1-fond .site-head .site-nav[data-ouvert="true"] > a{color:#192837;}
+
+/* ============================================================
+   LA BANDE DE FIN
+   ------------------------------------------------------------
+   Le meme fond que le premier ecran, en bas de page. Son voile
+   travaille des deux cotes : la bande sort du papier et y rentre, donc
+   aucune arete — ni sous la section qui la precede, ni au-dessus du
+   pied de page.
+
+   Elle est plus courte que le heros : une bande, pas un ecran. Le
+   titre et le bouton sont ceux de la maison, et l'encre suit la meme
+   regle que le heros (sombre quand la video est la, celle du theme
+   quand elle n'arrive pas) parce qu'ils portent les memes classes. */
+.fin-pieces{
+  position:relative; isolation:isolate; overflow:hidden;
+  display:grid; align-items:center;
+  min-height:clamp(340px, 46dvh, 460px);
+  padding:clamp(44px, 6vw, 76px) 0;
+}
+/* SUR TELEPHONE ELLE EST PLUS COURTE, et ce n'est pas un reglage de
+   gout : la vitrine doit tenir en cinq ecrans — c'est une regle de la
+   page, verifiee par le banc — et la bande ajoutee la faisait passer a
+   5,1. Une bande de fin ne peut pas couter un dixieme de la page
+   d'accueil d'un telephone. */
+@media (max-width:700px){
+  .fin-pieces{min-height:276px; padding:30px 0;}
+}
+.v1video--fin{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  width:100%; height:100%; object-fit:cover;
+}
+.v1voile--fin{
+  background:linear-gradient(to bottom,
+    var(--paper) 0%,
+    color-mix(in srgb, var(--paper) 82%, transparent) 10%,
+    color-mix(in srgb, var(--paper) 26%, transparent) 28%,
+    transparent 46%,
+    transparent 56%,
+    color-mix(in srgb, var(--paper) 32%, transparent) 74%,
+    color-mix(in srgb, var(--paper) 86%, transparent) 91%,
+    var(--paper) 100%);
+}
+.fin-pieces__in{position:relative; z-index:2;}
+.v1h--fin{max-width:720px;}
+.v1h--fin .v1h__t{font-size:clamp(1.45rem, 3.6vw, 2.3rem); margin-bottom:26px;}
+/* L'ENTREE DU HEROS NE S'APPLIQUE PAS ICI. Elle se joue une fois, au
+   chargement, et cette bande est a trois ecrans plus bas : elle aurait
+   joue dans le vide. C'est le defilement qui la revele, comme le reste
+   de la page. */
+html.js-anim .fin-pieces .v1h__t,
+html.js-anim .fin-pieces .v1h__cta{opacity:1; animation:none;}
 </style>
 <script>
   /* Posé avant le rendu : conditionne l'état « avant animation ».
@@ -5287,8 +5402,7 @@ window.PC = (function(){
   'v1.h1b':             ["votre argent,","your money,","su dinero,","ganzes Geld,"],
   'v1.h1c':             ["enfin réuni.","finally in one place.","por fin reunido.","endlich vereint."],
   'v1.cta':             ["Commencer gratuitement","Get started free","Empezar gratis","Kostenlos starten"],
-  'e.anim':             ["Mouvement","Motion","Movimiento","Bewegung"],
-  'e.anim.0':           ["Actuel","Current","Actual","Aktuell"],
+  'fin.t':              ["Vos comptes, vos actions, votre immobilier. Une seule page.","Your accounts, your shares, your property. One single page.","Sus cuentas, sus acciones, sus inmuebles. Una sola página.","Ihre Konten, Ihre Aktien, Ihre Immobilien. Eine einzige Seite."],
   'e.vider':            ["Tout effacer","Erase everything","Borrar todo","Alles löschen"],
   /* --- Le compte, quand un serveur repond --- */
   'c.onglet.entrer':    ["Se connecter","Sign in","Iniciar sesión","Anmelden"],
@@ -5388,7 +5502,6 @@ window.PC = (function(){
   'actu.h.7j':          ["7 j", "7 d", "7 d", "7 Tg."],
   'actu.h.30j':         ["30 j", "30 d", "30 d", "30 Tg."],
   'm.30j':              ["30 jours", "30 days", "30 días", "30 Tage"],
-  'cmp.titre':          ["Ligne par ligne", "Line by line", "Línea por línea", "Punkt für Punkt"],
   'cmp.voir':           ["Comparer ligne par ligne", "Compare line by line", "Comparar línea por línea", "Punkt für Punkt vergleichen"],
   'cmp.legende':        ["Comparaison des trois formules", "Comparison of the three plans", "Comparación de los tres planes", "Vergleich der drei Tarife"],
   'cmp.note':           ["Ce tableau est écrit par le programme lui-même, depuis les règles qu'il applique : il ne peut pas annoncer autre chose que ce que vous obtiendrez.", "This table is written by the program itself, from the rules it enforces: it cannot promise anything other than what you will get.", "Esta tabla la escribe el propio programa, a partir de las reglas que aplica: no puede anunciar otra cosa que lo que usted obtendrá.", "Diese Tabelle schreibt das Programm selbst, aus den Regeln, die es durchsetzt: Sie kann nichts anderes versprechen als das, was Sie bekommen."],
@@ -6583,15 +6696,6 @@ window.PC = (function(){
           <span data-i18n="hero.install">Installer l'app</span>
         </button>
       </div>
-      <div class="menu__sep nav__anim" data-banc>
-        <p class="menu__k" data-i18n="e.anim">Mouvement</p>
-        <div class="menu__choix" role="group" data-i18n-aria="e.anim">
-          <button class="menu__v" type="button" data-variante="0" data-i18n="e.anim.0">Actuel</button>
-          <button class="menu__v" type="button" data-variante="1">1</button>
-          <button class="menu__v" type="button" data-variante="2">2</button>
-          <button class="menu__v" type="button" data-variante="3">3</button>
-        </div>
-      </div>
       <div class="reglages" id="reglages">
         <label class="sr" for="sel-langue" data-i18n="nav.langue">Langue</label>
         <select class="reglage" id="sel-langue" data-i18n-titre="nav.langue"></select>
@@ -7000,12 +7104,14 @@ window.PC = (function(){
          limites. Vide si le script ne tourne pas : un tableau de
          tarifs a moitie rempli vaut moins que pas de tableau. -->
     <div class="comparo reveal" id="comparo" style="--rd:.18s" hidden>
-      <h3 class="comparo__t" data-i18n="cmp.titre">Ligne par ligne</h3>
-      <!-- Replie sur telephone : douze lignes sur trois colonnes font
-           un ecran entier, et un tableau de comparaison se consulte
-           quand on hesite, pas en passant. Sur grand ecran le resume
-           disparait et le bloc reste ouvert. -->
-      <details class="replimob" open>
+      <!-- REPLIE PARTOUT, plus seulement sur telephone. Douze lignes
+           sur trois colonnes font 836 px sur un ecran de bureau —
+           45 % de la section des formules — pour redire ce que les
+           trois cartes viennent de dire. Un tableau de comparaison se
+           consulte quand on hesite entre deux formules, pas en
+           passant : il reste a un clic, et la section perd la moitie
+           de sa hauteur. -->
+      <details class="replimob repli-toujours">
       <summary data-i18n="cmp.voir">Comparer ligne par ligne</summary>
       <div class="comparo__boite">
         <table class="cmp">
@@ -7149,6 +7255,36 @@ window.PC = (function(){
 </section>
 
 <!-- ===== CONTACT ===== -->
+<!-- ===== LES PIECES, UNE DERNIERE FOIS =====
+     La page s'ouvre sur elles ; elle se ferme dessus. C'est la regle
+     la plus simple de la coherence spatiale : ce qui entre d'un cote
+     ressort du meme. Entre les deux, le site fait son travail en
+     papier et en encre ; ici il redit, en une ligne et un bouton, ce
+     qu'il a promis au premier ecran.
+
+     Meme video, meme traitement, meme encre : rien de nouveau n'est
+     introduit a la fin d'une page. Le voile travaille des DEUX cotes —
+     la bande arrive depuis le papier et y retourne, sans arete ni en
+     haut ni en bas. -->
+<section class="fin-pieces" aria-labelledby="fin-t">
+  <video class="v1video v1video--fin" autoplay muted loop playsinline aria-hidden="true"
+         preload="none"
+         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
+  <div class="v1voile v1voile--fin" aria-hidden="true"></div>
+  <div class="wrap fin-pieces__in reveal">
+    <div class="v1h v1h--fin">
+      <h2 class="v1h__t" id="fin-t" data-i18n="fin.t">Vos comptes, vos actions, votre immobilier. Une seule page.</h2>
+      <a class="v1h__cta" href="#espace-client">
+        <span data-i18n="v1.cta">Commencer gratuitement</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="section section--rule" id="contact">
   <div class="wrap contact">
     <div>
@@ -7461,19 +7597,6 @@ window.PC = (function(){
                  pour ce compte. Le bouton ne donne aucun droit : les
                  deux routes reverifient le drapeau en base a chaque
                  appel. -->
-            <!-- BANC D'ESSAI DES MOUVEMENTS. Trois propositions montees
-                 sur la meme page, pour les comparer la ou elles vont
-                 vivre plutot que sur des captures. Ce bloc disparait
-                 avec les deux variantes non retenues. -->
-            <div class="menu__sep" id="menu-anim" data-banc>
-              <p class="menu__k" data-i18n="e.anim">Mouvement</p>
-              <div class="menu__choix" role="group" data-i18n-aria="e.anim">
-                <button class="menu__v" type="button" data-variante="0" data-i18n="e.anim.0">Actuel</button>
-                <button class="menu__v" type="button" data-variante="1">1</button>
-                <button class="menu__v" type="button" data-variante="2">2</button>
-                <button class="menu__v" type="button" data-variante="3">3</button>
-              </div>
-            </div>
             <div class="menu__sep" id="menu-adm" hidden>
               <button class="menu__i" type="button" id="adm-btn" data-i18n="adm.ouvrir">Les comptes…</button>
             </div>
@@ -11402,86 +11525,45 @@ window.PC = (function(){
 
      Tout ce bloc, le selecteur et les deux variantes non retenues
      partent le jour ou vous aurez choisi. */
-  (function bancMouvements(){
-    /* Deux selecteurs : un dans le menu du site, un dans celui de
-       l'espace. Les variantes animent les deux faces de la page, et on
-       ne doit pas avoir a changer d'ecran pour changer de mouvement. */
-    const blocs = [].slice.call(document.querySelectorAll('[data-banc]'));
-    if (!blocs.length) return;
-    const VALIDES = ['0', '1', '2', '3'];
-    const bon = function(v){ return VALIDES.indexOf(v) !== -1; };
+  (function premierEcran(){
+    /* CE QUI RESTE DU BANC D'ESSAI.
+       -----------------------------------------------------------
+       Trois propositions de mouvement ont vecu ici cote a cote, avec
+       un selecteur dans les deux menus pour passer de l'une a l'autre.
+       La premiere a ete retenue : elle n'est plus une variante, elle
+       est la page. Le selecteur est donc parti — un reglage qui ne
+       propose plus de choix n'est pas un reglage, c'est un bouton qui
+       ne fait rien.
 
-    /* LA PROPOSITION EST ACTIVE PAR DEFAUT, et « Actuel » est a un clic.
-       L'inverse paraissait prudent et ne l'etait pas : on ouvrait la
-       page, on voyait l'ancien premier ecran, et il fallait savoir
-       qu'un selecteur existait, dans un menu, pour voir ce qu'on
-       venait justement regarder. Une proposition qu'il faut aller
-       chercher n'est pas proposee.
+       `data-variante="1"` est desormais ecrit dans la balise <html>
+       elle-meme : la feuille de style la lit au premier pixel, sans
+       attendre ce script, et le premier ecran ne clignote pas.
 
-       La cle de memoire porte un numero : un « Actuel » enregistre lors
-       d'un essai precedent collait a la page pour toujours, et aucun
-       changement de defaut ne l'aurait decolle. */
-    const lit = function(){
-      const u = new URLSearchParams(location.search).get('anim');
-      if (bon(u)) return u;
-      let m = null;
-      try { m = localStorage.getItem('pc-mouvement-2'); } catch(e){}
-      return bon(m) ? m : '1';
-    };
+       Il reste trois choses a faire ici, et seulement trois. */
 
-    /* LES DEUX POLICES DE LA PROPOSITION, aux adresses qu'elle donne.
-       Elles sont posees A LA DEMANDE, quand on choisit la variante 1,
-       et pas dans l'en-tete : le reste de la page embarque ses polices
-       en base64 et ne fait AUCUNE requete vers l'exterieur. Deux liens
-       dans l'en-tete auraient coute ces deux requetes a tout le monde,
-       y compris a ceux qui ne regardent pas la proposition.
+    /* 1. LES DEUX POLICES, aux adresses qu'elles donnent. Le reste de
+          la page embarque les siennes en base64 et ne fait AUCUNE
+          requete vers l'exterieur ; ces deux-la sont les seules.
 
-       A savoir, et ce n'est pas un detail : « Helvetica Now Display »
-       est une police commerciale de Monotype, que ce CDN redistribue
-       sans licence. Pour comparer deux premiers ecrans c'est sans
-       consequence ; sur un site qui vend, c'est une licence a
-       acheter. */
-    let policesPosees = false;
-    const posePolices = function(){
-      if (policesPosees) return;
-      policesPosees = true;
-      [['https://db.onlinewebfonts.com/c/04e6981992c0e2e7642af2074ebe3901?family=Helvetica+Now+Display+Bold', null],
-       ['https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap', null]
-      ].forEach(function(x){
-        const l = document.createElement('link');
-        l.rel = 'stylesheet';
-        l.href = x[0];
-        document.head.appendChild(l);
-      });
-    };
+          A savoir, et ce n'est pas un detail : « Helvetica Now
+          Display » est une police commerciale de Monotype, que ce CDN
+          redistribue sans licence. Sur un site qui vend, c'est une
+          licence a acheter. */
+    [['https://db.onlinewebfonts.com/c/04e6981992c0e2e7642af2074ebe3901?family=Helvetica+Now+Display+Bold', null],
+     ['https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap', null]
+    ].forEach(function(x){
+      const l = document.createElement('link');
+      l.rel = 'stylesheet';
+      l.href = x[0];
+      document.head.appendChild(l);
+    });
 
-    const pose = function(v, rejoue){
-      document.documentElement.setAttribute('data-variante', v);
-      if (v === '1') posePolices();
-      try { localStorage.setItem('pc-mouvement-2', v); } catch(e){}
-      document.querySelectorAll('[data-banc] .menu__v').forEach(function(b){
-        b.setAttribute('aria-pressed', b.getAttribute('data-variante') === v ? 'true' : 'false');
-      });
-      /* On rejoue l'entree du panneau ouvert : sans cela on choisit un
-         mouvement et il ne se passe rien jusqu'au prochain changement
-         d'onglet. */
-      if (rejoue){
-        const pan = document.querySelector('.pan:not([hidden])');
-        if (pan){
-          pan.classList.remove('entre');
-          indexe(pan);
-          void pan.offsetWidth;
-          pan.classList.add('entre');
-        }
-      }
-    };
-
-    /* LES BLOCS A ANIMER. Les enfants directs d'un panneau sont des
-       enveloppes de mise en page ; ce qu'on voit arriver, ce sont le
-       solde, la rangee de reperes, les cartes et les blocs d'analyse.
-       On ne garde que les plus englobants : une carte DANS un bloc
-       d'analyse n'est pas un bloc de plus, c'est le meme objet qui
-       arriverait deux fois. */
+    /* 2. LE RANG DES BLOCS QUI ARRIVENT. Les enfants directs d'un
+          panneau sont des enveloppes de mise en page ; ce qu'on voit
+          arriver, ce sont le solde, la rangee de reperes, les cartes
+          et les blocs d'analyse. On ne garde que les plus englobants :
+          une carte DANS un bloc d'analyse n'est pas un bloc de plus,
+          c'est le meme objet qui arriverait deux fois. */
     const BLOCS = '.solde, .kpis, .carte, .an-bloc, .section__head, .marches__vue';
     const indexe = function(pan){
       if (!pan) return;
@@ -11494,11 +11576,9 @@ window.PC = (function(){
         e.style.setProperty('--i', n++);
       });
     };
-
     /* Le rang doit etre pose AVANT que la cascade parte. On observe
        donc l'arrivee de la classe plutot que de modifier le code qui
-       la pose : le banc d'essai est temporaire, le reste ne l'est
-       pas. */
+       la pose. */
     const oeil = new MutationObserver(function(l){
       l.forEach(function(m){
         if (m.target.classList.contains('entre')) indexe(m.target);
@@ -11509,43 +11589,51 @@ window.PC = (function(){
       oeil.observe(e, {attributes:true, attributeFilter:['class']});
     });
 
-    /* Rejouer l'entree du heros. Elle ne se produit qu'une fois, au
-       chargement : sans cela on choisit une variante sur la vitrine et
-       il ne se passe rien. On retire la classe qui l'a lancee, on
-       force un recalcul, on la remet. */
-    const rejoueHeros = function(){
-      const r = document.documentElement;
-      if (!r.classList.contains('intro-run')) return;
-      r.classList.remove('intro-run');
-      void document.body.offsetWidth;
-      r.classList.add('intro-run');
-      /* Et les blocs deja reveles par le defilement : on les reprend a
-         zero pour qu'ils rejouent eux aussi. */
-      const vus = [].slice.call(document.querySelectorAll('.reveal.in, .split-h.in'));
-      vus.forEach(function(e){ e.classList.remove('in'); });
-      void document.body.offsetWidth;
-      vus.forEach(function(e){ e.classList.add('in'); });
-    };
+    /* 3. DIRE SI LA VIDEO EST LA. L'encre du premier ecran en depend,
+          et elle ne peut pas etre devinee : quand les pieces tournent,
+          le heros est creme et l'encre y est sombre, dans les deux
+          themes ; quand la video n'arrive pas — reseau qui refuse ce
+          CDN, visionneuse d'artefact qui bloque les medias exterieurs
+          — le heros retombe sur le papier de la page et l'encre doit
+          reprendre celle du theme.
 
-    pose(lit(), false);
-    blocs.forEach(function(bloc){
-      bloc.addEventListener('click', function(e){
-        const b = e.target.closest ? e.target.closest('.menu__v') : null;
-        if (!b) return;
-        /* Le menu se referme : sur telephone il couvre l'ecran, et on
-           choisirait un mouvement sans jamais le voir. */
-        menuBoard.open = false;
-        const nav = document.getElementById('site-nav');
-        const bur = document.getElementById('burger');
-        if (nav && nav.getAttribute('data-ouvert') === 'true'){
-          nav.setAttribute('data-ouvert', 'false');
-          if (bur) bur.setAttribute('aria-expanded', 'false');
-        }
-        pose(b.getAttribute('data-variante'), true);
-        /* Sur la vitrine, c'est l'entree du heros qu'il faut rejouer :
-           elle ne se produit qu'une fois, au chargement. */
-        if (!document.body.classList.contains('vue-espace')) rejoueHeros();
-      });
+          On attend donc des IMAGES, pas une requete : `readyState >= 2`
+          veut dire que la premiere est decodee. Si elle n'arrive
+          jamais, la classe ne vient pas, et c'est exactement ce qu'il
+          faut. */
+    const marque = function(v){
+      if (v.readyState >= 2) document.documentElement.classList.add('v1-fond');
+    };
+    const fige = matchMedia('(prefers-reduced-motion: reduce)').matches &&
+                 document.documentElement.getAttribute('data-anim') !== 'force';
+    document.querySelectorAll('.v1video').forEach(function(v){
+      marque(v);
+      v.addEventListener('loadeddata', function(){ marque(v); });
+      /* Mouvement reduit : la video reste — c'est le fond de l'ecran,
+         pas une animation d'interface — mais elle s'arrete sur une
+         image. Un fond qui bouge en permanence sur tout un ecran est
+         precisement ce que ce reglage demande d'eviter. */
+      if (fige){
+        v.removeAttribute('autoplay');
+        v.addEventListener('loadeddata', function(){ v.pause(); });
+        try { v.pause(); } catch(e){}
+        return;
+      }
+      /* ET ELLE NE TOURNE QUE QUAND ON LA REGARDE. La page en porte
+         deux — le premier ecran et la bande de fin — et la seconde est
+         a trois ecrans plus bas. Decoder une video qu'on ne voit pas
+         coute de la batterie sur telephone pour rien. C'est le meme
+         fichier que le heros : il est deja en cache, seul le decodage
+         est economise. */
+      if (v.classList.contains('v1video--fin') && window.IntersectionObserver){
+        v.removeAttribute('autoplay');
+        new IntersectionObserver(function(l){
+          l.forEach(function(e){
+            if (e.isIntersecting){ const j = v.play(); if (j && j.catch) j.catch(function(){}); }
+            else { try { v.pause(); } catch(x){} }
+          });
+        }, {rootMargin: '300px'}).observe(v);
+      }
     });
   })();
 
@@ -16684,7 +16772,10 @@ window.PC = (function(){
 
   function repliMobile(){
     const petit = window.matchMedia('(max-width:700px)').matches;
-    document.querySelectorAll('details.replimob').forEach(function(d){
+    /* `repli-toujours` reste ferme a toutes les largeurs : c'est la
+       seule raison d'etre de cette classe, et la ligne qui suit la
+       rouvrirait a chaque changement de largeur. */
+    document.querySelectorAll('details.replimob:not(.repli-toujours)').forEach(function(d){
       if (!d.dataset.touche) d.open = !petit;
     });
   }
