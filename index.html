@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261004.1033";</script>
+<script>window.PC_VERSION = "261004.1257";</script>
 </head>
 <body>
 
@@ -160,6 +160,20 @@ body{
   font-size:17px; line-height:1.62;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
+  /* ===== UN MOT TROP LONG SE COUPE PLUTOT QUE DE POUSSER LA PAGE =====
+     Presque tout le texte de cette page est le notre, et il se coupe
+     ou il faut. Mais les noms des lignes viennent de la personne : un
+     ISIN, un code de fonds, un mot compose. Pose dans une phrase —
+     « LU1681043599COMPARTIMENT… a pris 10 % » — un mot de cinquante
+     caracteres sans espace sortait de sa boite et poussait la page
+     entiere de cote : une barre de defilement horizontale sur
+     telephone, a cause d'un nom.
+
+     `break-word` ne se declenche QUE si le mot ne tient pas : sur du
+     texte ordinaire, rien ne change. C'est un filet, pas une regle de
+     composition — et un filet vaut mieux que la liste, jamais
+     complete, des endroits ou un nom peut apparaitre. */
+  overflow-wrap:break-word;
 }
 img,svg{max-width:100%;}
 a{color:inherit;}
@@ -2021,7 +2035,10 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em;
   text-transform:uppercase; color:var(--ink-3);
 }
-.lecture__p{margin:7px 0 0; font-size:15px; line-height:1.6; color:var(--ink); max-width:74ch; text-wrap:pretty;}
+/* `anywhere` et non `break-word` : dans une grille, seul `anywhere`
+   autorise la colonne a devenir plus etroite que son plus long mot.
+   C'est ici que le nom d'une ligne est repris en toutes lettres. */
+.lecture__p{margin:7px 0 0; font-size:15px; line-height:1.6; color:var(--ink); max-width:74ch; text-wrap:pretty; overflow-wrap:anywhere;}
 .lectures__non{background:var(--paper); padding:16px 18px; color:var(--ink-3); font-size:14.5px;}
 /* ===== L'analyse calculee =====
    Une carte par ligne cotee : le nom, puis cinq mesures. Meme grammaire
@@ -2255,7 +2272,8 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 }
 .an-lignes{display:flex; flex-direction:column; gap:1px; background:var(--rule); border:1px solid var(--rule);}
 .an-ligne{background:var(--paper); padding:clamp(16px,2.2vw,22px);}
-.an-ligne__n{font-weight:700; font-size:16.5px; letter-spacing:-.01em;}
+.an-ligne__n{font-weight:700; font-size:16.5px; letter-spacing:-.01em;
+  overflow-wrap:anywhere;}
 .an-mes{
   margin-top:14px; display:grid; gap:1px; background:var(--rule);
   grid-template-columns:repeat(auto-fit, minmax(min(100%, 196px), 1fr));
@@ -3434,6 +3452,13 @@ body.impression .grain, body.impression .field{display:none;}
 .pa__nom{
   font-family:'Archivo Black', sans-serif; margin:0;
   font-size:clamp(28px,4.6vw,50px); letter-spacing:-.035em; line-height:1;
+  /* UN NOM EST UN TEXTE QU'ON N'ECRIT PAS. Celui d'une ligne vient de
+     la personne : un ISIN, un nom de fonds a rallonge, un mot
+     compose allemand. Pose en gros titre, un mot de quarante
+     caracteres sans espace poussait la page entiere de cote — une
+     barre de defilement horizontale sur telephone, a cause d'un nom.
+     `anywhere` coupe au besoin, et seulement au besoin. */
+  overflow-wrap:anywhere;
 }
 .pa__meta{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; align-items:center;}
 .pa__sect{display:flex; flex-direction:column; gap:clamp(12px,1.6vw,18px);}
@@ -6606,12 +6631,17 @@ window.PC = (function(){
       });
     }
     if (!items.length) return;
+    /* Le chevron echappe : a l'interieur d'un <script>, un « < » suivi
+       d'un « /script » refermerait la balise et jetterait le reste du
+       JSON dans la page. Nos reponses n'en contiennent pas — mais
+       elles sont du texte, et du texte finit toujours par changer.
+       `\u003c` est la meme chaine pour un lecteur de JSON. */
     hote.textContent = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
       inLanguage: langue,
       mainEntity: items
-    });
+    }).replace(/</g, '\\u003c');
   }
 
   function previent(){
@@ -6822,6 +6852,39 @@ window.PC = (function(){
     }
   };
 })();
+
+/* ============================================================
+   UNE IMAGE QUI NE VIENT PAS LAISSE SON MONOGRAMME
+   ------------------------------------------------------------
+   Les logos des lignes de marche viennent d'un tiers : le fournisseur
+   de cryptos pour les unes, un service de favicons pour les autres.
+   Ils tombent pour des raisons qui n'ont rien a voir avec nous — un
+   bloqueur de publicite, un reseau d'entreprise, une region ou ce
+   domaine est filtre. L'image se cachait alors (`visibility:hidden`),
+   et laissait un TROU de la taille du logo au debut de chaque ligne.
+   Une colonne de trous se lit « c'est casse ».
+
+   Or le monogramme existe deja : c'est ce qu'on dessine pour la
+   bourse, ou aucun logo gratuit n'est servi. Il suffisait de s'en
+   servir aussi quand l'image promise n'arrive pas.
+
+   Un seul ecouteur pour toute la page, en phase de CAPTURE : l'erreur
+   de chargement d'une image ne remonte pas, mais elle descend. C'est
+   ce qui permet de rattraper les images rendues par trois modules
+   differents sans ecrire trois fois la meme chose. */
+document.addEventListener('error', function(ev){
+  const i = ev.target;
+  if (!i || i.tagName !== 'IMG' || !i.hasAttribute('data-mono')) return;
+  const t = parseInt(i.getAttribute('width'), 10) || 26;
+  const s = document.createElement('span');
+  s.className = 'mono-logo';
+  s.setAttribute('aria-hidden', 'true');
+  s.textContent = i.getAttribute('data-mono') || '?';
+  s.style.cssText = 'width:' + t + 'px;height:' + t + 'px;font-size:' +
+    Math.round(t * 0.38) + 'px;background:hsl(' +
+    (parseInt(i.getAttribute('data-teinte'), 10) || 0) + ' 62% 42%)';
+  if (i.parentNode) i.parentNode.replaceChild(s, i);
+}, true);
 </script>
 
 <a class="skip-link mono" href="#main" data-i18n="skip">Aller au contenu</a>
@@ -7407,6 +7470,14 @@ window.PC = (function(){
       <details><summary data-i18n="faq.7.q"></summary><div class="faq__r" data-i18n-html="faq.7.a"></div></details>
       <details><summary data-i18n="faq.8.q"></summary><div class="faq__r" data-i18n-html="faq.8.a"></div></details>
     </div>
+    <!-- LES HUIT QUESTIONS, EN DONNEES STRUCTUREES. La fonction qui
+         les ecrit existait et tournait a chaque changement de langue ;
+         le cadre ou elle ecrit avait disparu de la page, et elle
+         sortait donc sur sa premiere ligne depuis des mois. Un moteur
+         de recherche ne voyait rien de cette FAQ. Le cadre est vide
+         ici : c'est `majSchemaFaq()` qui le remplit, dans la langue
+         affichee. -->
+    <script type="application/ld+json" id="faq-schema"></script>
   </div>
 </section>
 
@@ -9135,7 +9206,10 @@ window.PC = (function(){
   const editMsg = document.getElementById('edit-msg');
   let enSaisie = false;
 
-  function dit(t){ editMsg.textContent = t; }
+  /* La barre de saisie n'existe plus : `editMsg` est nul. Aucun chemin
+     n'atteint `dit` aujourd'hui — mais une fonction qui lance une
+     erreur des qu'on l'appelle est un piege pose pour plus tard. */
+  function dit(t){ if (editMsg) editMsg.textContent = t; }
 
   /* Ne garde que les chiffres. « 12 400 € », « 12,400.50 » et
      « 12.400,50 » donnent tous le même nombre : le dernier séparateur
@@ -10623,6 +10697,92 @@ window.PC = (function(){
     }).join('');
   }
 
+  /* ============================================================
+     LE CHIFFRE DE TETE TIENT DANS SA BOITE
+     ------------------------------------------------------------
+     Il est dessine a quarante pixels au minimum sur telephone. Passe
+     le million, « 1 382 715 € » reclame 243 px dans une boite qui en
+     fait 238 : il deborde. A quelques millions de plus il pousse la
+     page entiere de cote, et une barre de defilement horizontale
+     apparait sur l'ecran qui compte le plus.
+
+     Ce n'est pas un cas tordu : c'est le client de ce site. Un suivi
+     de patrimoine dont le solde casse la mise en page au premier
+     million se disqualifie tout seul.
+
+     La longueur d'un montant ne se prevoit pas — elle depend du
+     nombre, de la devise, et des separateurs de la langue, qui ne
+     sont pas les memes en allemand qu'en francais. On ne la devine
+     donc pas : on la MESURE, et on reduit jusqu'a ce que ca rentre.
+     Un plancher, parce que sous vingt-quatre pixels ce n'est plus un
+     chiffre de tete : passe ce point, mieux vaut un leger depassement
+     qu'un titre illisible. */
+  function ajusteSolde(el){
+    if (!el || !el.clientWidth) return;
+    /* RIEN A REFAIRE SI RIEN N'A CHANGE. Deux raisons, et la seconde
+       compte : reduire la taille change la HAUTEUR de l'element, donc
+       reveille l'observateur qui nous a appeles. Sans ce temoin, il
+       effacerait la taille, remesurerait, reduirait, serait rappele —
+       et la page oscillerait indefiniment. */
+    const signe = el.clientWidth + '|' + el.textContent;
+    if (el.dataset.ajuste === signe) return;
+    el.style.fontSize = '';
+    let t = parseFloat(getComputedStyle(el).fontSize) || 0;
+    if (!t) return;
+    let tours = 0;
+    while (el.scrollWidth > el.clientWidth + 1 && t > 24 && tours++ < 12){
+      t = Math.max(24, t * 0.92);
+      el.style.fontSize = t.toFixed(1) + 'px';
+    }
+    el.dataset.ajuste = el.clientWidth + '|' + el.textContent;
+  }
+  /* QUAND MESURER. Le rendu a lieu pendant que le tableau de bord est
+     encore cache : la boite fait alors zero pixel, et il n'y a rien a
+     mesurer. Chercher tous les endroits qui le montrent serait une
+     liste a tenir a jour ; on observe la boite elle-meme, et elle se
+     mesure des qu'elle a une taille — a l'ouverture, en changeant de
+     vue, en tournant le telephone. */
+  if (window.ResizeObserver){
+    const oeilSolde = new ResizeObserver(function(){
+      ajusteSolde(document.getElementById('solde-v'));
+    });
+    const sv0 = document.getElementById('solde-v');
+    if (sv0) oeilSolde.observe(sv0);
+  }
+  /* ET QUAND LES POLICES ARRIVENT. Celle des titres est chargee apres
+     le premier rendu : jusque-la le chiffre est dessine dans la
+     police de secours, qui est plus etroite. Il TENAIT a la mesure,
+     et il debordait une demi-seconde plus tard — sans que la boite
+     change de taille, donc sans reveiller l'observateur ci-dessus.
+     C'est le genre de defaut qui ne se voit qu'une fois sur deux et
+     qu'on finit par croire imaginaire. */
+  function remesureSolde(){
+    const e = document.getElementById('solde-v');
+    if (!e) return;
+    delete e.dataset.ajuste;
+    ajusteSolde(e);
+  }
+  if (document.fonts){
+    /* `ready` ne suffit pas : la police des titres est demandee par
+       une feuille que la page ajoute elle-meme, APRES le premier
+       rendu, et la promesse peut se resoudre avant que cette
+       demande-la parte. `loadingdone` se declenche a chaque fournee
+       terminee — c'est celui qui attrape la bonne. */
+    if (document.fonts.ready) document.fonts.ready.then(remesureSolde, function(){});
+    if (document.fonts.addEventListener)
+      document.fonts.addEventListener('loadingdone', remesureSolde);
+  }
+
+  /* Tourner le telephone change la largeur de la boite, pas le
+     montant : on remesure sans tout redessiner. */
+  let minuteurSolde = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(minuteurSolde);
+    minuteurSolde = setTimeout(function(){
+      ajusteSolde(document.getElementById('solde-v'));
+    }, 160);
+  });
+
   function rendre(){
     majTaux(); majCours(); majRevenus(); chargeSeries();
     const t = totaux();
@@ -10630,6 +10790,7 @@ window.PC = (function(){
     /* La valeur totale a sa propre surface en tête : la laisser aussi
        dans la grille la répéterait à deux lignes d'intervalle. */
     document.getElementById('solde-v').textContent = eur.format(t.val);
+    ajusteSolde(document.getElementById('solde-v'));
     /* La provenance des cours se réaffiche avec le reste : changer de
        langue ou de devise réécrit cette ligne comme les autres. */
     majEtatCours();
@@ -14948,6 +15109,10 @@ window.PC = (function(){
     if (sv){
       ecritVif(sv, eur.format(t.val), +sv.dataset.vu || null, t.val);
       sv.dataset.vu = t.val;
+      /* Un prix recu en direct change la longueur du total : il faut
+         le remesurer ici aussi, sinon le chiffre deborde entre deux
+         rendus complets. */
+      ajusteSolde(sv);
     }
     document.querySelectorAll('#lignes .ligne').forEach(function(el){
       const a = actifs[+el.getAttribute('data-ligne')];
@@ -16003,11 +16168,6 @@ window.PC = (function(){
 
   /* Le meme monogramme que dans les marches, en petit. */
   function logoPetit(x){
-    if (x.image){
-      return '<img src="' + echapAttr(x.image) + '" alt="" width="26" height="26" ' +
-        'loading="lazy" style="border-radius:50%" ' +
-        'onerror="this.style.visibility=\'hidden\'">';
-    }
     let h = 0;
     const t = String(x.code || x.nom || '');
     for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 360;
@@ -16015,6 +16175,14 @@ window.PC = (function(){
     const ini = mots.length > 1
       ? (mots[0].charAt(0) + mots[1].charAt(0)).toUpperCase()
       : mots[0].slice(0, 2).toUpperCase();
+    /* Le monogramme voyage AVEC l'image : si elle ne vient pas, le
+       rattrapage de la page le pose a sa place plutot que de laisser
+       un trou. */
+    if (x.image){
+      return '<img src="' + echapAttr(x.image) + '" alt="" width="26" height="26" ' +
+        'loading="lazy" style="border-radius:50%" ' +
+        'data-mono="' + echapAttr(ini) + '" data-teinte="' + h + '">';
+    }
     return '<span class="mono-logo" aria-hidden="true" style="width:26px;height:26px;' +
       'font-size:10px;background:hsl(' + h + ' 62% 42%)">' + echap(ini) + '</span>';
   }
@@ -17603,15 +17771,20 @@ window.PC = (function(){
     return (mots[0].charAt(0) + mots[1].charAt(0)).toUpperCase();
   }
   function logo(c, taille){
+    const h = teinte(c.id || c.symbol || c.name);
+    const ini = initiales(c.name);
+    /* Le monogramme voyage AVEC l'image. Elle se cachait quand elle ne
+       venait pas, et laissait un trou de sa taille au debut de chaque
+       ligne : une colonne de trous se lit « c'est casse », alors que
+       le dessin de remplacement existait deja juste en dessous. */
     if (c.image){
       return '<img src="' + ech(c.image) + '" alt="" width="' + taille +
         '" height="' + taille + '" loading="lazy" ' +
-        'onerror="this.style.visibility=\'hidden\'">';
+        'data-mono="' + ech(ini) + '" data-teinte="' + h + '">';
     }
-    const h = teinte(c.id || c.symbol || c.name);
     return '<span class="mono-logo" aria-hidden="true" style="width:' + taille +
       'px;height:' + taille + 'px;font-size:' + Math.round(taille * 0.38) + 'px;' +
-      'background:hsl(' + h + ' 62% 42%)">' + ech(initiales(c.name)) + '</span>';
+      'background:hsl(' + h + ' 62% 42%)">' + ech(ini) + '</span>';
   }
 
   /* ===== Les matieres premieres =====
