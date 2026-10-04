@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261003.2007";</script>
+<script>window.PC_VERSION = "261004.1033";</script>
 </head>
 <body>
 
@@ -1378,7 +1378,13 @@ body.flux-vif .cours__vif::before{
 .sug{
   grid-column:1 / -1; margin-top:-4px;
   border:1px solid var(--rule); border-radius:12px; background:var(--paper-2);
-  overflow:hidden;
+  /* ELLE DEFILE. Tant que la recherche rendait cinq lignes, une boite
+     qui s'etire ne se voyait pas. Elle en rend maintenant jusqu'a
+     cinquante — vingt actions, vingt cryptos, dix matieres — et une
+     boite de deux mille pixels pousserait le formulaire hors de
+     l'ecran au moment precis ou l'on cherche quelque chose. */
+  overflow:auto; max-height:min(56vh, 420px);
+  overscroll-behavior:contain;
 }
 .sug__t{
   padding:9px 14px; font-family:'IBM Plex Mono', monospace; font-size:11px;
@@ -5159,7 +5165,7 @@ window.PC = (function(){
   'actu.bonne':          ["Bonne nouvelle","Good news","Buena noticia","Gute Nachricht"],
   'actu.mauvaise':       ["Mauvaise nouvelle","Bad news","Mala noticia","Schlechte Nachricht"],
   'actu.neutre':         ["Sans changement","Unchanged","Sin cambios","Unverändert"],
-  'actu.legende':        ["Sur vingt-quatre heures\u00a0: une hausse est comptée comme une bonne nouvelle, une baisse comme une mauvaise. En dessous de 0,2\u00a0%, rien n'est compté.","Over twenty-four hours: a rise counts as good news, a fall as bad. Below 0.2%, nothing is counted.","En veinticuatro horas: una subida cuenta como buena noticia, una bajada como mala. Por debajo del 0,2\u00a0%, no se cuenta nada.","Über vierundzwanzig Stunden: ein Anstieg gilt als gute Nachricht, ein Rückgang als schlechte. Unter 0,2\u00a0% zählt nichts."],
+  'actu.legende':        ["Les plus fortes hausses et les plus fortes baisses du jour, prises parmi les soixante premières capitalisations et les matières premières \u2014 et non les plus grosses, qui bougent toutes ensemble. Sur vingt-quatre heures\u00a0: une hausse est comptée comme une bonne nouvelle, une baisse comme une mauvaise. En dessous de 0,2\u00a0%, rien n'est compté.","The day's biggest risers and biggest fallers, taken from the sixty largest capitalisations and from commodities \u2014 not the largest, which all move together. Over twenty-four hours: a rise counts as good news, a fall as bad. Below 0.2%, nothing is counted.","Las mayores subidas y las mayores bajadas del día, tomadas entre las sesenta primeras capitalizaciones y las materias primas \u2014 y no las más grandes, que se mueven todas juntas. En veinticuatro horas: una subida cuenta como buena noticia, una bajada como mala. Por debajo del 0,2\u00a0%, no se cuenta nada.","Die stärksten Gewinner und die stärksten Verlierer des Tages, aus den sechzig größten Marktkapitalisierungen und den Rohstoffen \u2014 nicht die größten, die sich alle gemeinsam bewegen. Über vierundzwanzig Stunden: ein Anstieg gilt als gute Nachricht, ein Rückgang als schlechte. Unter 0,2\u00a0% zählt nichts."],
   'actu.maj':            ["Mis à jour à {{h}}, puis chaque minute.","Updated at {{h}}, then every minute.","Actualizado a las {{h}}, y luego cada minuto.","Aktualisiert um {{h}}, danach jede Minute."],
   'actu.p.legende':      ["Bonne ou mauvaise\u00a0: lu dans les mots du titre, pas dans le marché. Un titre qui n'en dit pas assez n'est pas marqué.","Good or bad: read from the wording of the headline, not from the market. A headline that says too little is left unmarked.","Buena o mala: leído en las palabras del titular, no en el mercado. Un titular que no dice bastante no se marca.","Gut oder schlecht: aus dem Wortlaut der Überschrift gelesen, nicht aus dem Markt. Eine Überschrift, die zu wenig sagt, bleibt unmarkiert."],
   'actu.journal':        ["Le journal","The journal","El diario","Das Journal"],
@@ -5791,13 +5797,14 @@ window.PC = (function(){
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
   'an.choix':           ["Une autre valeur\u00a0?","Another security?","\u00bfOtro valor?","Ein anderer Wert?"],
-  'an.mar.n.crypto':    ["Les dix premi\u00e8res par capitalisation.","The ten largest by market capitalisation.","Las diez primeras por capitalizaci\u00f3n.","Die zehn gr\u00f6\u00dften nach Marktkapitalisierung."],
+  'an.mar.n.crypto':    ["Les vingt-quatre premi\u00e8res par capitalisation. Pour une autre valeur, le champ ci-dessous cherche dans tout ce que les fournisseurs servent.","The twenty-four largest by market capitalisation. For any other security, the field below searches everything the providers serve.","Las veinticuatro primeras por capitalizaci\u00f3n. Para otro valor, el campo de abajo busca en todo lo que sirven los proveedores.","Die vierundzwanzig gr\u00f6\u00dften nach Marktkapitalisierung. F\u00fcr einen anderen Wert sucht das Feld unten in allem, was die Anbieter liefern."],
   'an.mar.n.bourse':    ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse."],
-  'an.mar.n.matieres':  ["Les m\u00e9taux et l'\u00e9nergie servis par le relais.","The metals and energy the relay serves.","Los metales y la energ\u00eda que sirve el relevo.","Die Metalle und Energie, die der Relais liefert."],
+  'an.mar.n.matieres':  ["L'or et l'argent arrivent sans rien installer\u00a0; le platine, le cuivre, le p\u00e9trole et les autres passent par le relais.","Gold and silver arrive with nothing installed; platinum, copper, oil and the rest go through the relay.","El oro y la plata llegan sin instalar nada; el platino, el cobre, el petr\u00f3leo y los dem\u00e1s pasan por el rel\u00e9.","Gold und Silber kommen ohne Installation; Platin, Kupfer, \u00d6l und die \u00fcbrigen laufen \u00fcber das Relais."],
   'an.choix.tout':      ["Toutes vos lignes","All your lines","Todas sus l\u00edneas","Alle Ihre Positionen"],
-  'an.cherche.t':       ["Une de vos lignes, ou n'importe quelle crypto ou action","One of your lines, or any crypto or share","Una de sus l\u00edneas, o cualquier cripto o acci\u00f3n","Eine Ihrer Positionen, oder eine beliebige Krypto oder Aktie"],
+  'an.cherche.t':       ["Une de vos lignes, ou n'importe quelle crypto, action ou matière première","One of your lines, or any crypto, share or commodity","Una de sus líneas, o cualquier cripto, acción o materia prima","Eine Ihrer Positionen, oder eine beliebige Krypto, Aktie oder Rohstoff"],
   'an.cherche.vos':     ["Vos lignes","Your lines","Sus l\u00edneas","Ihre Positionen"],
   'an.cherche.marche':  ["Sur les march\u00e9s","On the markets","En los mercados","An den M\u00e4rkten"],
+  'an.cherche.tout':    ["Tapez deux lettres pour chercher dans tout ce que les fournisseurs servent\u00a0: cryptos, bourse, mati\u00e8res premi\u00e8res.","Type two letters to search everything the providers serve: crypto, stocks, commodities.","Escriba dos letras para buscar en todo lo que sirven los proveedores: criptos, bolsa, materias primas.","Tippen Sie zwei Buchstaben, um in allem zu suchen, was die Anbieter liefern: Kryptos, B\u00f6rse, Rohstoffe."],
   'an.cherche.rien':    ["Rien trouv\u00e9 \u00e0 ce nom.","Nothing found under that name.","No se ha encontrado nada con ese nombre.","Unter diesem Namen nichts gefunden."],
   'an.sujet.tout':      ["Voir toutes vos lignes","See all your lines","Ver todas sus l\u00edneas","Alle Ihre Positionen ansehen"],
   'an.sujet.sur':       ["une de vos {{n}} lignes","one of your {{n}} lines","una de sus {{n}} l\u00edneas","eine Ihrer {{n}} Positionen"],
@@ -5806,6 +5813,10 @@ window.PC = (function(){
   'an.src.rien':        ["pas encore de quoi mesurer","nothing to measure yet","a\u00fan nada que medir","noch nichts zu messen"],
   'an.ext.charge':      ["On charge douze mois de cours pour {{n}}\u2026","Loading twelve months of prices for {{n}}\u2026","Cargando doce meses de cotizaciones de {{n}}\u2026","Zw\u00f6lf Monate Kurse f\u00fcr {{n}} werden geladen\u2026"],
   'an.ext.vain':        ["Le fournisseur ne sert pas d'historique pour {{n}}. Rien n'a \u00e9t\u00e9 mesur\u00e9, et rien n'a \u00e9t\u00e9 devin\u00e9.","The provider serves no history for {{n}}. Nothing was measured, and nothing was guessed.","El proveedor no sirve historial de {{n}}. No se ha medido nada, y no se ha adivinado nada.","Der Anbieter liefert keinen Verlauf f\u00fcr {{n}}. Es wurde nichts gemessen und nichts geraten."],
+  'an.ext.sansrelais':  ["Aucune source d'historique pour {{n}}\u00a0: les actions et la plupart des matières premières passent par un relais, qu'il faut indiquer une fois \u2014 menu, puis \u00ab\u00a0Relais pour la bourse\u00a0\u00bb. Les cryptos, l'or et l'argent se mesurent sans rien installer.","No history source for {{n}}: shares and most commodities go through a relay, which you set once \u2014 menu, then \u00ab\u00a0Stock market relay\u00a0\u00bb. Crypto, gold and silver are measured with nothing installed.","Ninguna fuente de historial para {{n}}: las acciones y la mayoría de las materias primas pasan por un relé, que hay que indicar una vez \u2014 menú, luego \u00ab\u00a0Relé para la bolsa\u00a0\u00bb. Las criptos, el oro y la plata se miden sin instalar nada.","Keine Verlaufsquelle für {{n}}: Aktien und die meisten Rohstoffe laufen über ein Relais, das Sie einmal angeben \u2014 Menü, dann \u00ab\u00a0Relais für die Börse\u00a0\u00bb. Kryptos, Gold und Silber werden ohne Installation gemessen."],
+  'an.ext.limite':      ["Le fournisseur limite les appels\u00a0: l'historique de {{n}} reviendra dans une minute. Rien n'a été deviné en attendant.","The provider is rate-limiting: the history for {{n}} will come back in a minute. Nothing was guessed in the meantime.","El proveedor limita las llamadas: el historial de {{n}} volverá en un minuto. No se ha adivinado nada mientras tanto.","Der Anbieter drosselt die Aufrufe: der Verlauf für {{n}} kommt in einer Minute zurück. In der Zwischenzeit wurde nichts geraten."],
+  'an.ext.panne':       ["La source d'historique de {{n}} n'a pas répondu. Réessayez dans un instant\u00a0: rien n'a été mesuré, et rien n'a été deviné.","The history source for {{n}} did not answer. Try again in a moment: nothing was measured, and nothing was guessed.","La fuente de historial de {{n}} no respondió. Inténtelo de nuevo en un momento: no se ha medido nada, y no se ha adivinado nada.","Die Verlaufsquelle für {{n}} hat nicht geantwortet. Versuchen Sie es in einem Moment erneut: es wurde nichts gemessen und nichts geraten."],
+  'an.ext.court':       ["L'historique servi pour {{n}} ne couvre que {{j}} relevés\u00a0: tout est mesuré ci-dessous, sauf l'écart-type annualisé, qui en demande vingt.","The history served for {{n}} covers only {{j}} readings: everything below is measured, except the annualised standard deviation, which needs twenty.","El historial servido para {{n}} solo cubre {{j}} registros: todo lo de abajo está medido, salvo la desviación típica anualizada, que necesita veinte.","Der für {{n}} gelieferte Verlauf umfasst nur {{j}} Werte: alles unten ist gemessen, außer der annualisierten Standardabweichung, die zwanzig benötigt."],
   'an.ext.marque':      ["hors portefeuille","not held","fuera de cartera","nicht im Bestand"],
   'an.ext.hors':        ["{{n}} n'est pas dans votre portefeuille\u00a0: ce sont les mesures du cours, pas les v\u00f4tres. Ni montant, ni part, ni corr\u00e9lation avec vos lignes.","{{n}} is not in your portfolio: these are the price's measurements, not yours. No amount, no share, no correlation with your lines.","{{n}} no est\u00e1 en su cartera: son las medidas de la cotizaci\u00f3n, no las suyas. Ni importe, ni parte, ni correlaci\u00f3n con sus l\u00edneas.","{{n}} liegt nicht in Ihrem Portfolio: das sind die Messungen des Kurses, nicht Ihre. Kein Betrag, kein Anteil, keine Korrelation mit Ihren Positionen."],
   'an.relsens.k':       ["Relevés en hausse","Statements up","Informes al alza","Auszüge im Plus"],
@@ -6197,6 +6208,7 @@ window.PC = (function(){
   'e.sug.posesans':     ["{{n}}\u00a0: code pos\u00e9. Le cours n'a pas pu \u00eatre r\u00e9cup\u00e9r\u00e9 maintenant\u00a0\u2014 indiquez-le \u00e0 la main, il se corrigera au prochain rafra\u00eechissement.","{{n}}: code set. The price could not be fetched right now \u2014 enter it by hand, it will correct itself on the next refresh.","{{n}}: c\u00f3digo puesto. La cotizaci\u00f3n no se pudo obtener ahora \u2014 ind\u00edquela a mano, se corregir\u00e1 en la pr\u00f3xima actualizaci\u00f3n.","{{n}}: Code gesetzt. Der Kurs konnte jetzt nicht abgerufen werden \u2014 geben Sie ihn von Hand ein, er korrigiert sich beim n\u00e4chsten Abruf."],
   'e.sug.encours':      ["Recherche du cours\u2026","Fetching the price\u2026","Obteniendo la cotizaci\u00f3n\u2026","Kurs wird abgerufen\u2026"],
   'e.sug.crypto':       ["Crypto","Crypto","Cripto","Krypto"],
+  'e.sug.matiere':      ["Mati\u00e8re premi\u00e8re","Commodity","Materia prima","Rohstoff"],
   'e.g.lbl':            ["Qu'est-ce que vous ajoutez\u00a0?","What are you adding?","\u00bfQu\u00e9 a\u00f1ade?","Was f\u00fcgen Sie hinzu?"],
   'e.g.crypto':         ["Une crypto","Crypto","Una cripto","Eine Krypto"],
   'e.g.bourse':         ["Une action ou un ETF","A share or an ETF","Una acci\u00f3n o un ETF","Eine Aktie oder ein ETF"],
@@ -6286,6 +6298,8 @@ window.PC = (function(){
   'm.statut':             ["{{h}} a r\u00e9pondu {{c}}. Les cours n'ont pas pu \u00eatre charg\u00e9s.","{{h}} answered {{c}}. Prices could not be loaded.","{{h}} respondi\u00f3 {{c}}. No se han podido cargar las cotizaciones.","{{h}} hat {{c}} geantwortet. Die Kurse konnten nicht geladen werden."],
   'm.fichier':            ["Cette page est ouverte depuis un fichier, pas depuis un site. Le navigateur y interdit tout appel ext\u00e9rieur\u00a0: ouvrez-la \u00e0 son adresse (https) pour voir les cours.","This page is open from a file, not from a website. The browser forbids any outside call there: open it at its https address to see prices.","Esta p\u00e1gina est\u00e1 abierta desde un archivo, no desde un sitio. El navegador proh\u00edbe ah\u00ed toda llamada externa: \u00e1brala en su direcci\u00f3n https para ver las cotizaciones.","Diese Seite ist aus einer Datei ge\u00f6ffnet, nicht von einer Website. Der Browser verbietet dort jeden externen Aufruf: \u00f6ffnen Sie sie unter ihrer https-Adresse, um Kurse zu sehen."],
   'm.origine':            ["Votre relais refuse cette adresse. Ajoutez {{o}} \u00e0 sa variable ORIGINES, puis rechargez la page.","Your relay refuses this address. Add {{o}} to its ORIGINES variable, then reload the page.","Su rel\u00e9 rechaza esta direcci\u00f3n. A\u00f1ada {{o}} a su variable ORIGINES y recargue la p\u00e1gina.","Ihr Relais weist diese Adresse ab. F\u00fcgen Sie {{o}} zu seiner Variablen ORIGINES hinzu und laden Sie die Seite neu."],
+  'm.delai':              ["{{h}} n'a pas r\u00e9pondu \u00e0 temps. L'appel est parti et rien n'est revenu\u00a0: on a cess\u00e9 d'attendre plut\u00f4t que de laisser l'\u00e9cran fig\u00e9. Il repartira tout seul.","{{h}} did not answer in time. The call left and nothing came back: we stopped waiting rather than leave the screen frozen. It will try again on its own.","{{h}} no respondi\u00f3 a tiempo. La llamada sali\u00f3 y nada volvi\u00f3: dejamos de esperar en vez de dejar la pantalla congelada. Volver\u00e1 a intentarlo solo.","{{h}} hat nicht rechtzeitig geantwortet. Der Aufruf ging hinaus und nichts kam zur\u00fcck: wir haben das Warten beendet, statt den Bildschirm einzufrieren. Es versucht es von selbst erneut."],
+  'm.delai.h':            ["Le fournisseur","The provider","El proveedor","Der Anbieter"],
   'm.ko':                 ["Les cours n'ont pas pu \u00eatre charg\u00e9s. Le fournisseur est peut-\u00eatre injoignable depuis votre r\u00e9seau.","Prices could not be loaded. The provider may be unreachable from your network.","No se han podido cargar las cotizaciones. El proveedor puede no ser accesible desde su red.","Die Kurse konnten nicht geladen werden. Der Anbieter ist von Ihrem Netz aus m\u00f6glicherweise nicht erreichbar."],
   'm.limite':             ["Le fournisseur limite les appels. Les cours reviendront dans une minute.","The provider is rate-limiting. Prices will come back in a minute.","El proveedor limita las llamadas. Las cotizaciones volver\u00e1n en un minuto.","Der Anbieter drosselt die Aufrufe. Die Kurse kommen in einer Minute zur\u00fcck."],
   'm.vide':               ["Aucune crypto ne correspond \u00e0 cette recherche.","No coin matches this search.","Ninguna cripto coincide con esta b\u00fasqueda.","Keine Krypto passt zu dieser Suche."],
@@ -6783,6 +6797,11 @@ window.PC = (function(){
     get devise(){ return devise; },
     locale: function(){ return LOCALES[langue]; },
     t: t,
+    /* TOUTES LES LANGUES D'UNE CLE, et pas seulement celle qui est
+       affichee. La recherche de matieres premieres s'en sert : qui
+       tape « gold » sur une page en francais cherche bien l'or, et
+       refuser de le trouver serait pointilleux sans etre utile. */
+    variantes: function(cle){ return (T[cle] || []).slice(); },
     pluriel: pluriel,
     argent: argent,
     somme: somme,
@@ -12683,11 +12702,22 @@ window.PC = (function(){
     PC_MARCHES.serie(c).then(function(pts){
       anCharge = '';
       if (pts && pts.length > 1) SERIES[c] = pts;
-      else if (anExterne && anExterne.code === c) anExterne.vain = true;
+      /* Le fournisseur a repondu, et il n'a pas d'historique pour ce
+         code-la. C'est un fait sur le titre. */
+      else if (anExterne && anExterne.code === c) anExterne.vain = 'vide';
       anCalcule();
-    }, function(){
+    }, function(e){
       anCharge = '';
-      if (anExterne && anExterne.code === c) anExterne.vain = true;
+      /* LA RAISON, PAS SEULEMENT L'ECHEC. « Le fournisseur ne sert pas
+         d'historique » s'affichait aussi quand il n'y avait AUCUNE
+         source a interroger — c'est-a-dire pour toutes les actions et
+         pour huit matieres sur dix tant qu'aucun relais n'est indique.
+         La phrase accusait le marche d'un trou qui etait le notre, et
+         se lisait « cette valeur ne marche pas ». */
+      if (anExterne && anExterne.code === c){
+        anExterne.vain = (e && e.sansRelais) ? 'relais'
+                       : (e && e.limite) ? 'limite' : 'panne';
+      }
       anCalcule();
     });
   }
@@ -12706,10 +12736,12 @@ window.PC = (function(){
     const h = document.getElementById('an-sug');
     if (!h) return;
     const t = String(q || '').trim().toLowerCase();
-    const sans = function(x){
-      return String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    };
-    const vus = lignes.filter(function(L){ return !t || sans(L.nom).indexOf(sans(t)) !== -1; });
+    /* Le meme depouillement d'accents que la recherche de marche, et
+       non une seconde copie : deux fonctions qui font la meme chose
+       finissent par ne plus la faire pareil. */
+    const vus = lignes.filter(function(L){
+      return !t || sansAccent(L.nom).indexOf(sansAccent(t)) !== -1;
+    });
     const jeton = ++anJeton;
 
     const tete = (t ? '' :
@@ -12724,8 +12756,14 @@ window.PC = (function(){
         }).join('')
       : '';
     h.hidden = false;
+    /* LE CHAMP VIDE DIT CE QU'IL SAIT CHERCHER. Sans cette ligne, une
+       liste qui ne montre que vos propres lignes laisse croire qu'elle
+       ne connait que vos propres lignes — et c'est precisement ce
+       qu'on a cru. Le marche entier est derriere deux lettres : il
+       faut le dire la, pas ailleurs. */
     h.innerHTML = tete + mien +
-      (t.length >= 2 ? '<p class="sug__mot">' + echap(PC.t('e.sug.cherche')) + '</p>' : '');
+      '<p class="sug__mot">' + echap(PC.t(t.length >= 2 ? 'e.sug.cherche'
+                                                        : 'an.cherche.tout')) + '</p>';
     anBrancheSug(vus, []);
 
     if (t.length < 2) return;
@@ -12738,16 +12776,42 @@ window.PC = (function(){
            vos montants. */
         return !lignes.some(function(L){ return L.code && L.code === String(x.code).toLowerCase(); });
       });
-      g.innerHTML = tete + mien + (loin.length
-        ? '<div class="sug__t">' + echap(PC.t('an.cherche.marche')) + '</div>' +
-          loin.map(function(x, i){
-            return '<button class="sug__i" type="button" data-an-loin="' + i + '">' +
+      /* ===== CHAQUE CLASSE SOUS SON NOM =====
+         « Sur les marches » melangeait un baril, un ETF de Milan et un
+         jeton sous un seul titre. Ce sont trois choses differentes, qui
+         ne se cotent pas de la meme facon et ne viennent pas du meme
+         fournisseur : on les nomme, avec les memes mots que les
+         sous-onglets juste au-dessus.
+
+         Les index restent ceux de `loin` : c'est par eux que le clic
+         retrouve la valeur choisie, et un index de groupe aurait
+         ouvert la ligne d'a cote. */
+      const CLASSES = [['matieres', 'b.sous.matieres'],
+                       ['bourse',   'b.sous.bourse'],
+                       ['crypto',   'b.sous.crypto']];
+      let marche = '';
+      CLASSES.forEach(function(c){
+        const dedans = loin.filter(function(x){ return (x.classe || 'crypto') === c[0]; });
+        if (!dedans.length) return;
+        marche += '<div class="sug__t">' + echap(PC.t(c[1])) + '</div>' +
+          dedans.map(function(x){
+            return '<button class="sug__i" type="button" data-an-loin="' + loin.indexOf(x) + '">' +
               '<span class="sug__n">' + echap(x.nom) + '</span>' +
               '<span class="sug__m">' + echap(x.code) +
                 (x.place ? ' \u00b7 ' + echap(x.place) : '') +
                 (x.genre ? ' \u00b7 ' + echap(x.genre) : '') + '</span></button>';
-          }).join('')
-        : (vus.length ? '' : '<p class="sug__mot">' + echap(PC.t('an.cherche.rien')) + '</p>'));
+          }).join('');
+      });
+      /* SANS RELAIS, LA BOURSE NE REPOND PAS — et le dire vaut mieux
+         que de laisser croire que le titre cherche n'existe pas. Les
+         cryptos et les matieres, elles, arrivent sans rien installer :
+         on ne se taît donc pas sur l'ensemble pour une source qui
+         manque. */
+      const sansB = (r.bourse === null)
+        ? '<p class="sug__mot">' + echap(PC.t('e.sug.horsrelais')) + '</p>' : '';
+      g.innerHTML = tete + mien + marche + sansB +
+        ((marche || vus.length || sansB) ? ''
+          : '<p class="sug__mot">' + echap(PC.t('an.cherche.rien')) + '</p>');
       anBrancheSug(vus, loin);
     }, function(){ /* Le reseau a refuse : vos lignes restent la. */ });
   }
@@ -13008,7 +13072,7 @@ window.PC = (function(){
   /* Un cache par marche : passer des cryptos a la bourse et revenir ne
      doit pas redemander ce qu'on vient de lire. */
   const marCache = {};
-  let marSrc = 'crypto', marH = '24h', marEnVol = '';
+  let marSrc = 'crypto', marH = '24h', marEnVol = '', marEnVolDepuis = 0;
   /* Les cryptos ont une cotation continue accessible ; la bourse et les
      metaux, non. On ne fait donc pas semblant : la phrase sous le titre
      change avec, et le point qui bat n'apparait que la ou il y a
@@ -13016,6 +13080,12 @@ window.PC = (function(){
   let marFlux = null, marFluxPaires = '', marFluxPeint = null,
       marFluxVif = false, marFluxRetard = 0;
   const MAR_VIF = {crypto:1};
+  /* Vingt-quatre lignes montrees, prises dans un panier de soixante.
+     Le panier est celui de l'actualite : un seul appel pour les deux
+     lecteurs. Le nombre MONTRE est ecrit sous la liste — une note qui
+     annonce dix lignes au-dessus de douze est un petit mensonge, et un
+     petit mensonge sur un chiffre est encore un mensonge. */
+  const MAR_COMBIEN = 24, PANIER = 60;
 
   function marEtat(){ return marCache[marSrc] || null; }
   Object.defineProperty(window, 'PC_MAR_LUS', {get:function(){
@@ -13041,13 +13111,24 @@ window.PC = (function(){
      memes six chiffres. */
   function anMarcheCharge(){
     const src = marSrc;
-    if (marEnVol === src || !droit('analyse') || vueCourante !== 'analyse') return;
+    /* Le verrou d'un appel en vol se levait UNIQUEMENT a son retour.
+       Un appel suspendu — ce que `json` interdit maintenant, mais que
+       rien n'interdisait avant — laissait ce bloc muet pour le reste
+       de la session. On lui donne une date limite. */
+    if (marEnVol === src && Date.now() - marEnVolDepuis < 25000) return;
+    if (!droit('analyse') || vueCourante !== 'analyse') return;
     const e = marCache[src];
     if (e && e.l && e.l.length && Date.now() - e.t < 300000) return;
     if (!window.PC_MARCHES || !PC_MARCHES.dix) return;
     if (PC_MARCHES.occupe && PC_MARCHES.occupe()) return;
-    marEnVol = src;
-    PC_MARCHES.dix(src).then(function(l){
+    marEnVol = src; marEnVolDepuis = Date.now();
+    /* ON EN DEMANDE PLUS, ET ON DEMANDE LE MEME PANIER QUE L'ACTUALITE.
+       Douze lignes, c'etait court pour une page qui propose de
+       regarder le marche. Et en demandant le meme panier que la
+       rubrique d'actualite, les deux lecteurs se partagent un seul
+       appel au fournisseur — un appel de moins, c'est un « trop
+       d'appels » de moins. */
+    PC_MARCHES.dix(src, src === 'crypto' ? PANIER : 12).then(function(l){
       marEnVol = '';
       /* `null` ne veut pas dire « rien » : c'est le relais qui manque.
          Les confondre ferait croire que la bourse est vide. */
@@ -13069,7 +13150,8 @@ window.PC = (function(){
       });
       marCache[src] = (l === null)
         ? {l:[], t:Date.now(), relais:false}
-        : {l:lu, t:Date.now(), relais:true};
+        : {l:lu.slice(0, src === 'crypto' ? MAR_COMBIEN : lu.length),
+           t:Date.now(), relais:true};
       anMarche();
       marOuvreFlux();
     }, function(){
@@ -13524,16 +13606,41 @@ window.PC = (function(){
        laisser un cadre vide qui passerait pour une panne. */
     if (anExterne){
       const pts = SERIES[anExterne.code];
+      /* ===== ASSEZ POUR MESURER, ET NON UN SEUIL ROND =====
+         Le seuil etait de quarante points. Entre deux et trente-neuf,
+         le cadre se rendait VIDE : ni mesure, ni message, ni raison.
+         Un cadre blanc se lit « cette valeur ne marche pas » — et
+         c'est ce qui se voyait.
+
+         Or presque toutes les mesures n'ont besoin que de deux points
+         consecutifs : le pire recul, la position dans l'annee, la plus
+         forte seance, la part de seances en hausse. Une seule en
+         demande vingt : l'ecart-type annualise. On rend donc ce qui se
+         mesure, et on nomme ce qui manque. */
+      const vExt = pts ? anVariations(pts) : [];
+      const assez = !!pts && vExt.length >= 1;
+      const court = assez && vExt.length < 20;
       if (mot){
         const attend = !pts && !anExterne.vain;
-        mot.hidden = !(attend || anExterne.vain);
+        /* LA RAISON, EN TOUTES LETTRES. Une source absente, un
+           fournisseur qui limite, une panne et un titre sans
+           historique sont quatre choses differentes, dont une seule
+           est un fait sur le titre. Les confondre faisait porter au
+           marche un trou qui etait le notre. */
+        const raison = anExterne.vain
+          ? (anExterne.vain === 'relais' ? PC.t('an.ext.sansrelais', {n:anExterne.nom})
+           : anExterne.vain === 'limite' ? PC.t('an.ext.limite', {n:anExterne.nom})
+           : anExterne.vain === 'panne'  ? PC.t('an.ext.panne', {n:anExterne.nom})
+           : PC.t('an.ext.vain', {n:anExterne.nom}))
+          : court ? PC.t('an.ext.court', {n:anExterne.nom, j:String(pts.length)})
+          : '';
+        mot.hidden = !(attend || raison);
         mot.dataset.ton = attend ? 'attente' : '';
-        mot.textContent = attend ? PC.t('an.ext.charge', {n:anExterne.nom})
-                        : anExterne.vain ? PC.t('an.ext.vain', {n:anExterne.nom}) : '';
+        mot.textContent = attend ? PC.t('an.ext.charge', {n:anExterne.nom}) : raison;
       }
-      hote.innerHTML = anDitSujet(lignes, anExterne.nom) + (pts && pts.length >= 40
+      hote.innerHTML = anDitSujet(lignes, anExterne.nom) + (assez
         ? anRendLigne({id:'', nom:anExterne.nom, val:0, src:'marche',
-                       code:anExterne.code, pts:pts, v:anVariations(pts)})
+                       code:anExterne.code, pts:pts, v:vExt})
         : '');
       anBrancheTout();
       if (bcor) bcor.hidden = true;
@@ -14489,13 +14596,28 @@ window.PC = (function(){
   function sourceMarche(){
     return window.PC_MARCHE_SOURCE || 'https://api.coingecko.com/api/v3';
   }
+  /* COMBIEN ON EN PROPOSE. Cinq cryptos, c'etait le nombre d'une liste
+     qu'on deroule sous un champ etroit — pas celui d'une recherche sur
+     un marche qui en compte des milliers. Chercher « sol » ou « eth »
+     rendait cinq lignes et laissait croire qu'il n'y en avait pas
+     d'autres. La liste defile : vingt tiennent sans gener. */
+  const COMBIEN_SUG = 20;
+
+  /* Sans accent et sans casse, des deux cotes de la comparaison :
+     personne ne tape « Pétrole » avec son accent dans un champ de
+     recherche, et refuser « petrole » serait de la pedanterie. */
+  function sansAccent(x){
+    return String(x == null ? '' : x).toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
   /* Les cryptos, chez le même fournisseur que les cours. */
   function chercheCryptos(q){
     return litJSON(sourceMarche() + '/search?query=' + encodeURIComponent(q))
       .then(function(o){
-        return ((o && o.coins) || []).slice(0, 5).map(function(c){
+        return ((o && o.coins) || []).slice(0, COMBIEN_SUG).map(function(c){
           return {code:c.id, nom:c.name, place:PC.t('e.sug.crypto'),
-                  genre:String(c.symbol || '').toUpperCase()};
+                  genre:String(c.symbol || '').toUpperCase(), classe:'crypto'};
         });
       }, function(){ return []; });
   }
@@ -14505,12 +14627,57 @@ window.PC = (function(){
     if (!u) return Promise.resolve(null);   /* null : pas « rien trouvé » */
     return litJSON(u + (u.indexOf('?') === -1 ? '?' : '&') +
         'cherche=' + encodeURIComponent(q))
-      .then(function(o){ return (o && o.resultats) || []; }, function(){ return []; });
+      .then(function(o){
+        return ((o && o.resultats) || []).slice(0, COMBIEN_SUG).map(function(x){
+          return {code:x.code, nom:x.nom, place:x.place, genre:x.genre, classe:'bourse'};
+        });
+      }, function(){ return []; });
   }
+  /* ===== LES MATIERES PREMIERES, QUI MANQUAIENT =====
+     On pouvait chercher une crypto et une action ; un baril, une once
+     ou un boisseau, non — alors que la table existe, qu'elle est a
+     nous, et qu'elle ne coute aucun appel. C'est la troisieme classe
+     d'actifs de ce site, et elle etait absente du seul endroit ou on
+     la cherche.
+
+     On compare sur les QUATRE langues du nom, plus le code. « gold »,
+     « Öl » et « petrole » designent les memes lignes que « or » et
+     « pétrole », et quelqu'un qui tape l'un des quatre cherche bien
+     cette ligne-la. */
+  function chercheMatieres(q){
+    const t = sansAccent(q);
+    if (t.length < 2) return [];
+    /* AU DEBUT D'UN MOT, et non n'importe ou dans le mot. Chercher
+       « or » sur dix noms courts rendait aussi le mais, parce que
+       « corn » contient « or » — et une proposition qu'on ne
+       s'explique pas fait douter de toutes les autres. Le code, lui,
+       se compare en entier : on le colle d'un bloc, on ne le tape
+       pas. */
+    const colle = function(n){
+      const x = sansAccent(n);
+      return x.indexOf(t) === 0 ||
+             x.split(/[^a-z0-9]+/).some(function(w){ return w && w.indexOf(t) === 0; });
+    };
+    return (window.PC_MATIERES || []).filter(function(m){
+      const noms = PC.variantes ? PC.variantes(m.nom) : [PC.t(m.nom)];
+      return noms.some(colle) || sansAccent(m.code).indexOf(t) !== -1;
+    }).map(function(m){
+      return {code:m.code, nom:PC.t(m.nom), place:PC.t('e.sug.matiere'),
+              genre:PC.t(m.u), classe:'matieres'};
+    });
+  }
+  /* Les trois classes, dans l'ordre ou on les lit : ce qui est a nous
+     et gratuit d'abord (les matieres, une table locale), puis la
+     bourse, puis les cryptos. `liste` reste la concatenation, pour les
+     appelants qui ne trient pas ; `parClasse` sert a ceux qui
+     nomment chaque groupe. */
   function chercheTitres(q){
     return Promise.all([chercheBourse(q), chercheCryptos(q)])
       .then(function(r){
-        return {bourse:r[0], liste:(r[0] || []).concat(r[1])};
+        const mp = chercheMatieres(q);
+        return {bourse:r[0],
+                parClasse:{matieres:mp, bourse:r[0] || [], crypto:r[1]},
+                liste:mp.concat(r[0] || [], r[1])};
       });
   }
 
@@ -15977,6 +16144,7 @@ window.PC = (function(){
           : l.refus === 'cadre' ? PC.t('m.cadre')
           : l.refus === 'origine' ? PC.t('m.origine', {o:location.origin})
           : l.refus === 'limite' ? PC.t('e.dir.limite')
+          : l.refus === 'delai' ? PC.t('m.delai', {h:PC.t('m.delai.h')})
           : PC.t('e.et2.ko');
         return;
       }
@@ -17125,6 +17293,12 @@ window.PC = (function(){
   let page = 1, recherche = '', rangs = [], ouverte = null, minuteur = null;
   let battements = 0;   /* pour espacer les rafraichissements sur une fiche */
   let dernier = 0, enVol = false, vu = false;
+  /* Depuis quand un appel est en vol. Le delai de `json` suffit en
+     principe a lever ce verrou ; ce temoin est la ceinture de la
+     bretelle, pour tout chemin qui ne passerait pas par `json` et
+     resterait suspendu. Un ecran qui se debloque tout seul au bout de
+     vingt secondes vaut mieux qu'un ecran a recharger. */
+  let enVolDepuis = 0;
   /* Le fournisseur gratuit tolère une dizaine d'appels par minute.
      Continuer à frapper après un refus ne fait que prolonger le refus :
      on se tait, de plus en plus longtemps, puis on réessaie. */
@@ -17136,9 +17310,40 @@ window.PC = (function(){
     try { return new URL(u, location.href).host || String(u); }
     catch (e){ return String(u); }
   }
+  /* ============================================================
+     UN APPEL QUI NE REVIENT JAMAIS
+     ------------------------------------------------------------
+     `fetch` n'a pas de delai par lui-meme. Un portail de reseau
+     captif qui accepte la connexion et ne repond pas, un telephone
+     qui change d'antenne au mauvais moment, un relais qui reste
+     ouvert sans rien ecrire : la promesse ne se resout ni dans un
+     sens ni dans l'autre, pour toujours.
+
+     Et tout ce module se garde d'empiler les appels — `enVol` pour la
+     liste, `enVolCourbe` pour une courbe, `marEnVol` pour l'analyse.
+     Ces trois verrous ne se levent qu'au retour de l'appel. Un seul
+     appel suspendu fige donc la surface entiere : plus de mise a
+     jour, aucun message, et aucun moyen d'en sortir autrement qu'en
+     rechargeant la page. C'est exactement ce qui se voit comme
+     « des fois les marches buguent ».
+
+     L'autre module de cette page avait ce delai depuis longtemps
+     (`avecDelai`, 9 s). Cette copie-ci ne l'avait jamais recu : c'est
+     une ligne qui manquait, pas une difficulte. */
+  const DELAI = 12000;
+  function avecDelai(p, ms, h){
+    return new Promise(function(ok, ko){
+      const t = setTimeout(function(){
+        const e = new Error('delai'); e.delai = true; e.hote = h;
+        ko(e);
+      }, ms);
+      p.then(function(v){ clearTimeout(t); ok(v); },
+             function(e){ clearTimeout(t); ko(e); });
+    });
+  }
   function json(u){
     const h = hoteDe(u);
-    return fetch(u, {headers:{'Accept':'application/json'}}).then(function(r){
+    return avecDelai(fetch(u, {headers:{'Accept':'application/json'}}).then(function(r){
       if (r.status === 429){ const e = new Error('limite'); e.limite = true; e.hote = h; throw e; }
       /* 403 d'un relais : ce n'est pas une panne, c'est une adresse
          qu'il n'a pas dans sa liste. On le distingue, parce que le
@@ -17156,7 +17361,7 @@ window.PC = (function(){
       const x = new Error('muet'); x.muet = true; x.hote = h;
       x.cause = String((e && e.message) || e);
       throw x;
-    });
+    }), DELAI, h);
   }
   function estRelais(u){
     const r = relais();
@@ -17181,6 +17386,10 @@ window.PC = (function(){
     if (e && e.muet && dansUnCadre()) return PC.t('m.cadre');
     if (e && e.origine) return PC.t('m.origine', {o:location.origin});
     if (e && e.limite) return PC.t('m.limite');
+    /* Un appel parti et jamais revenu n'est pas un appel refuse : le
+       remede n'est pas le meme, et « il n'a pas repondu a temps » est
+       la seule chose qu'on sache vraiment. */
+    if (e && e.delai) return PC.t('m.delai', {h:e.hote});
     if (e && e.muet) return PC.t('m.muet', {h:e.hote});
     if (e && e.statut) return PC.t('m.statut', {h:e.hote, c:String(e.statut)});
     return PC.t('m.ko');
@@ -17490,14 +17699,14 @@ window.PC = (function(){
   }
 
   function charge(force){
-    if (enVol) return Promise.resolve();
+    if (enVol && Date.now() - enVolDepuis < DELAI + 8000) return Promise.resolve();
     /* Le repos ne vaut que pour ce qui part tout seul. Un clic est une
        intention : le brider reviendrait à punir l'utilisateur d'un
        refus qu'il n'a pas provoqué, et à figer tout l'écran parce
        qu'une seule période a échoué. */
     if (!force && Date.now() < repos) return Promise.resolve();
     if (!force && Date.now() - dernier < FRAIS) return Promise.resolve();
-    enVol = true;
+    enVol = true; enVolDepuis = Date.now();
     if (!rangs.length) dit(PC.t('m.charge'), true);
     return (marcheSource === 'matieres' ? listeMatieres() : json(urlListe()))
       .then(function(o){
@@ -17704,6 +17913,18 @@ window.PC = (function(){
     }
   }
 
+  /* La memoire courte des listes servies par `dix`, et le copieur qui
+     en rend des exemplaires independants. Une copie de surface suffit :
+     ce que les lecteurs ecrivent, ce sont des nombres sur l'objet, pas
+     dans ses sous-objets. */
+  const memDix = {};
+  function copies(l){
+    if (!Array.isArray(l)) return l;
+    const out = l.map(function(c){ return c && typeof c === 'object' ? Object.assign({}, c) : c; });
+    if (l.refus) out.refus = l.refus;
+    return out;
+  }
+
   /* Les points d'une plage, découpés dans la série qui la couvre. */
   function pointsPlage(id, nom){
     const jours = profondeur(nom);
@@ -17734,7 +17955,12 @@ window.PC = (function(){
         : BASE + '/coins/' + encodeURIComponent(id) +
           '/market_chart?vs_currency=' + dev() + '&days=' + jours;
       if (!ou){
-        const e = new Error('sans relais');
+        /* NOMME. L'appelant doit pouvoir distinguer « ce titre n'a pas
+           d'historique » de « nous n'avons aucune source pour ce
+           titre » : le premier est un fait sur le titre, le second un
+           reglage manquant chez nous, et dire le premier a la place du
+           second accuse le marche d'un trou qui est le notre. */
+        const e = new Error('sans relais'); e.sansRelais = true;
         return Promise.reject(e);
       }
       enVolCourbe[cle] = json(ou)
@@ -17974,19 +18200,43 @@ window.PC = (function(){
     /* Une liste, rendue sans toucher a l'ecran. L'ajout s'en sert
        pour proposer un choix sans ouvrir l'onglet des marches, et
        sans deranger ce qui y est affiche. */
-    dix: function(src){
+    dix: function(src, combien){
+      /* COMBIEN, DEMANDE PAR L'APPELANT. Le nom de cette fonction
+         vient du temps ou elle rendait dix lignes pour un seul
+         lecteur. L'actualite a besoin d'un panier plus large — elle y
+         cherche ce qui a le plus bouge, et les douze premieres
+         capitalisations bougent toutes ensemble. Le plafond protege
+         le fournisseur autant que la page. */
+      const n = Math.min(Math.max(combien || 12, 1), 100);
+      /* TRENTE SECONDES DE MEMOIRE, PARTAGEES. Trois lecteurs
+         appellent cette liste : l'actualite chaque minute, l'analyse
+         toutes les cinq minutes, l'ajout d'une ligne a la demande. Sans
+         cette memoire ils frappaient le fournisseur chacun de son
+         cote, et c'est ce cumul qui declenche le « trop d'appels »
+         que l'utilisateur lit comme une panne.
+
+         On rend des COPIES : l'analyse ecrit dans ces objets (le cours
+         d'ouverture, puis chaque prix recu en direct), et deux
+         lecteurs ne doivent pas se marcher dessus. */
+      const cleD = src + '|' + n + '|' + dev();
+      const gardeD = memDix[cleD];
+      if (gardeD && Date.now() - gardeD.t < 30000) return Promise.resolve(copies(gardeD.l));
+      const garde2 = function(l){
+        if (Array.isArray(l) && l.length && !l.refus) memDix[cleD] = {t:Date.now(), l:copies(l)};
+        return l;
+      };
       if (src === 'matieres'){
         /* Elle se sert des deux sources et se passe du relais pour
            l'or et l'argent : elle ne rend jamais « pas de relais ». */
         const garde = recherche; recherche = '';
-        return listeMatieres().then(function(l){ recherche = garde; return l; },
+        return listeMatieres().then(function(l){ recherche = garde; return garde2(l); },
                                     function(){ recherche = garde; return []; });
       }
       const bourse = src === 'bourse';
       const u = bourse
         ? (relais() ? avecQ(relais(), 'marche=1&vs_currencies=' + dev()) : null)
         : BASE + '/coins/markets?vs_currency=' + dev() +
-          '&order=market_cap_desc&per_page=12&page=1' +
+          '&order=market_cap_desc&per_page=' + n + '&page=1' +
           /* Les trois horizons, comme la liste des marches. Cette
              URL-ci ne portait pas « sparkline=true », donc le
              remplacement qui a mis a jour les trois autres l'a
@@ -17996,7 +18246,7 @@ window.PC = (function(){
           '&price_change_percentage=24h,7d,30d';
       if (!u) return Promise.resolve(null);   /* null : pas de relais */
       return json(u).then(function(o){
-        return Array.isArray(o) ? o.slice(0, 12) : [];
+        return garde2(Array.isArray(o) ? o.slice(0, n) : []);
       }, function(e){
         noteRefus(e);
         /* Une liste vide se lit « il n'y a rien ». Un refus n'est pas
@@ -18005,7 +18255,8 @@ window.PC = (function(){
         const r = [];
         r.refus = (e && e.muet && dansUnCadre()) ? 'cadre'
                 : (e && e.origine) ? 'origine'
-                : (e && e.limite) ? 'limite' : 'ko';
+                : (e && e.limite) ? 'limite'
+                : (e && e.delai) ? 'delai' : 'ko';
         return r;
       });
     },
@@ -18990,31 +19241,80 @@ window.PC = (function(){
       .catch(function(){});
   }
 
+  /* ============================================================
+     CE QUI A BOUGE, ET NON CE QUI EST GROS
+     ------------------------------------------------------------
+     Les huit vignettes etaient les huit premieres capitalisations.
+     Or les huit premieres montent et descendent ENSEMBLE : un jour
+     rouge, les huit pastilles etaient rouges ; un jour vert, les huit
+     etaient vertes. Un systeme de bonne et de mauvaise nouvelle qui
+     ne sait montrer qu'un cote a la fois ne dit rien du marche — il
+     repete huit fois la meme nouvelle. Et c'est ce qui s'est vu
+     immediatement : les bonnes nouvelles avaient disparu de la
+     rubrique, sans que rien ne soit casse.
+
+     On choisit donc sur le MOUVEMENT du jour : les plus fortes
+     hausses, puis les plus fortes baisses. Les deux cotes sont alors
+     presents par construction des que le marche n'est pas plat — ce
+     qui, sur ces valeurs-la, est le cas tous les jours.
+
+     Le panier ou l'on puise reste classe par capitalisation. Sans ce
+     garde-fou, « la plus forte hausse du marche » mettrait en vitrine
+     un jeton de trois millions d'euros qui a double parce que
+     personne ne le cote. La selection est ECRITE sous la rangee :
+     choisir ce qu'on montre est un acte editorial, et un acte
+     editorial cache est une manipulation. */
+  const PANIER = 60;
+  const VISE = 8;
+
+  function parMouvement(liste){
+    const avec = liste.filter(function(x){ return var24(x) !== null; });
+    /* Une valeur dont le fournisseur ne sert pas la variation du jour
+       ne peut etre rangee d'aucun cote. Elle ne sert qu'a completer, et
+       seulement s'il manque des cases. */
+    const sans = liste.filter(function(x){ return var24(x) === null; });
+    const hausse = avec.filter(function(x){ return var24(x) >= SEUIL_NOUVELLE; })
+                       .sort(function(a, b){ return var24(b) - var24(a); });
+    const baisse = avec.filter(function(x){ return var24(x) <= -SEUIL_NOUVELLE; })
+                       .sort(function(a, b){ return var24(a) - var24(b); });
+    /* Une moitie chacun ; si un cote est plus court, l'autre prend la
+       place libre plutot que de laisser un trou. */
+    const moitie = VISE / 2;
+    const nH = Math.min(hausse.length,
+                        Math.max(moitie, VISE - Math.min(baisse.length, moitie)));
+    const nB = Math.min(baisse.length, VISE - nH);
+    let pris = hausse.slice(0, nH).concat(baisse.slice(0, nB));
+    if (pris.length < VISE){
+      const reste = avec.filter(function(x){ return pris.indexOf(x) === -1; })
+        .sort(function(a, b){ return Math.abs(var24(b)) - Math.abs(var24(a)); })
+        .concat(sans);
+      pris = pris.concat(reste.slice(0, VISE - pris.length));
+    }
+    return pris;
+  }
+
   function chercheCours(){
     if (!window.PC_MARCHES || !PC_MARCHES.dix) return;
     /* Les deux sources, et on prend ce qui revient. Si l'une echoue,
-       l'autre suffit ; si les deux echouent, le bloc reste cache. */
+       l'autre suffit ; si les deux echouent, le bloc reste cache.
+       Les metaux restent du lot : un portefeuille n'est pas que de la
+       crypto, et l'or qui recule un jour ou le brut qui bondit sont
+       exactement le genre de nouvelle qu'on vient lire ici. */
     Promise.all([
-      PC_MARCHES.dix('crypto').catch(function(){ return []; }),
+      PC_MARCHES.dix('crypto', PANIER).catch(function(){ return []; }),
       PC_MARCHES.dix('matieres').catch(function(){ return []; })
     ]).then(function(r){
-      /* Huit vignettes : la rubrique est une destination, elle a la
-         place. On prend d'abord jusqu'a trois metaux — ils donnent a la
-         rangee son interet, un portefeuille n'est pas que de la
-         crypto — puis on complete avec les cryptos jusqu'a huit. Si les
-         metaux manquent, ce qui arrive sans relais, la rangee reste
-         pleine au lieu de tomber a trois cases. */
-      const VISE = 8;
-      const metaux = (r[1] || []).slice(0, 3);
+      const metaux = (r[1] || []).filter(function(x){
+        return x && typeof x.current_price === 'number';
+      });
       const crypto = (r[0] || [])
-        .filter(function(x){ return !stable(x); })
+        .filter(function(x){ return x && typeof x.current_price === 'number' && !stable(x); })
         /* Un jeton adosse au metal figure dans les deux listes : sans ce
            filtre l'or apparaitrait deux fois. */
         .filter(function(x){
-          return !metaux.some(function(m){ return m && x && m.id === x.id; });
-        })
-        .slice(0, Math.max(0, VISE - metaux.length));
-      poseCours(crypto.concat(metaux));
+          return !metaux.some(function(m){ return m && m.id === x.id; });
+        });
+      poseCours(parMouvement(crypto.concat(metaux)));
     }).catch(function(){});
   }
 
