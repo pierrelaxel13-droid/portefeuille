@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261007.1526";</script>
+<script>window.PC_VERSION = "261007.1935";</script>
 </head>
 <body>
 
@@ -626,6 +626,22 @@ body.flux-vif .cours__vif::before{
    du panneau. */
 .reglages .reglage{flex:1 1 0; min-width:0; max-width:none; height:42px;}
 .reglages .icon-btn{flex:none;}
+/* ===== LE MOUVEMENT SE REPREND =====
+   Le bouton n'existe que pour qui en a besoin : il ne s'affiche que
+   si le systeme demande moins d'animations. Ailleurs, il n'aurait
+   rien a regler — et un reglage qui ne regle rien est une case de
+   plus a comprendre pour personne.
+
+   C'est de la feuille de style et non du script : la regle se
+   reevalue toute seule si le visiteur change l'avis de son systeme,
+   sans qu'on ait a l'ecouter. */
+.anim-btn{display:none;}
+@media (prefers-reduced-motion: reduce){
+  .anim-btn{display:grid;}
+}
+.anim-btn[aria-pressed="true"]{
+  background:var(--accent); border-color:var(--accent); color:#fff;
+}
 @media (min-width:901px){
   .reglages{padding:12px 20px 4px;}
 }
@@ -5224,6 +5240,27 @@ html.js-anim .fin-pieces .v1h__cta{opacity:1; animation:none;}
      même quand le système demande de les réduire. Le réglage du
      visiteur est respecté partout ailleurs — c'est un confort d'auteur,
      pas un contournement. */
+  /* ===== LE MOUVEMENT, ET QUI EN DECIDE =====
+     Un systeme qui demande moins d'animations fige TOUT ici, et c'est
+     la bonne reponse par defaut : les pieces s'arretent, le titre
+     n'entre plus, le compteur saute a son total, les blocs n'arrivent
+     plus au defilement, la video se met en pause.
+
+     C'est aussi ce qui fait qu'un visiteur qui a ce reglage — souvent
+     sans le savoir, c'est une case d'accessibilite qu'on active une
+     fois et qu'on oublie — voit une page entierement immobile et
+     conclut, a juste titre de son point de vue, que l'animation est
+     cassee. Respecter un reglage sans laisser aucun moyen d'en
+     sortir, ce n'est pas du respect, c'est une impasse.
+
+     Son choix vit donc a cote du theme, et il est retenu. `?anim=1`
+     reste la porte de l'auteur. Pose ICI, avant le premier pixel :
+     une classe ajoutee apres coup rejouerait l'entree au milieu. */
+  try {
+    if (localStorage.getItem('pierrelco.anim') === 'force'){
+      document.documentElement.setAttribute('data-anim', 'force');
+    }
+  } catch (e){}
   if (/[?&]anim=1(&|$)/.test(location.search)){
     document.documentElement.setAttribute('data-anim', 'force');
   }
@@ -5321,6 +5358,8 @@ window.PC = (function(){
   'nav.faq':            ["Questions","Questions","Preguntas","Fragen"],
   'nav.espace':         ["Espace client","Client area","Área de cliente","Kundenbereich"],
   'nav.contact':        ["Me contacter","Contact me","Contactar","Kontakt"],
+  'nav.anim.off':       ["Activer les animations\u00a0: votre appareil demande à les réduire, et toute la page reste donc immobile.","Turn animations on: your device asks to reduce them, so the whole page stays still.","Activar las animaciones: su dispositivo pide reducirlas, por lo que toda la página permanece inmóvil.","Animationen einschalten: Ihr Gerät bittet darum, sie zu reduzieren, daher bleibt die ganze Seite still."],
+  'nav.anim.on':        ["Animations activées. Les remettre au réglage de votre appareil\u00a0?","Animations are on. Put them back to your device's setting?","Animaciones activadas. ¿Volver al ajuste de su dispositivo?","Animationen sind an. Zurück zur Einstellung Ihres Geräts?"],
   'nav.theme':          ["Changer de thème","Switch theme","Cambiar el tema","Design wechseln"],
   'nav.menu':           ["Menu","Menu","Menú","Menü"],
   'nav.menu.ouvrir':    ["Ouvrir le menu","Open the menu","Abrir el menú","Menü öffnen"],
@@ -7124,6 +7163,18 @@ document.addEventListener('error', function(ev){
         <button class="icon-btn" id="theme-btn" type="button" data-i18n-aria="nav.theme" aria-label="Changer de thème">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <!-- Le mouvement. Ce bouton n'apparait QUE si le systeme
+             demande moins d'animations : partout ailleurs il n'aurait
+             rien a regler, et un reglage qui ne regle rien est pire
+             qu'un reglage absent. Voir la feuille de style, « LE
+             MOUVEMENT SE REPREND ». -->
+        <button class="icon-btn anim-btn" id="anim-btn" type="button" aria-pressed="false">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+            <path d="M3 8h6"/><path d="M3 12h4"/><path d="M3 16h6"/>
+            <circle cx="16" cy="12" r="4.5"/>
           </svg>
         </button>
       </div>
@@ -9966,6 +10017,40 @@ document.addEventListener('error', function(ev){
        bouton donne l'impression de ne servir à rien. */
     try { localStorage.setItem('pierrelco.theme', veut); } catch (e){}
   });
+
+  /* --- Le mouvement ---
+     Il ne se montre que si le systeme demande moins d'animations ; la
+     feuille de style s'en charge. Ici, il ne reste qu'a poser l'etat,
+     le retenir, et le dire. */
+  const animBtn = document.getElementById('anim-btn');
+  if (animBtn){
+    const ditAnim = function(){
+      const on = root.getAttribute('data-anim') === 'force';
+      animBtn.setAttribute('aria-pressed', String(on));
+      const mot = PC.t(on ? 'nav.anim.on' : 'nav.anim.off');
+      animBtn.setAttribute('aria-label', mot);
+      animBtn.title = mot;
+    };
+    ditAnim();
+    PC.surChangement(ditAnim);
+    animBtn.addEventListener('click', function(){
+      const on = root.getAttribute('data-anim') === 'force';
+      if (on) root.removeAttribute('data-anim');
+      else root.setAttribute('data-anim', 'force');
+      try { localStorage.setItem('pierrelco.anim', on ? '' : 'force'); } catch (e){}
+      ditAnim();
+      /* ET ON REJOUE L'ENTREE. Sans cela, activer les animations ne
+         changerait rien de visible avant un rechargement : le titre
+         est deja arrive, le compteur a deja fini. Le bouton aurait
+         l'air de ne rien faire — c'est-a-dire exactement le defaut
+         qu'il vient corriger. */
+      if (!on){
+        root.classList.remove('intro-run');
+        void root.offsetWidth;
+        root.classList.add('intro-run');
+      }
+    });
+  }
 
   /* ============================================================
      SOUSCRIPTION
