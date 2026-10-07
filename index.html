@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261007.1935";</script>
+<script>window.PC_VERSION = "261007.2209";</script>
 </head>
 <body>
 
@@ -2305,6 +2305,118 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 }
 .an-m__d{font-size:12.5px; line-height:1.5; color:var(--ink-3); margin:0; text-wrap:pretty;}
 .an-m[data-ton="attention"] .an-m__v{color:var(--accent);}
+
+/* ============================================================
+   LA PHRASE DE TETE
+   ------------------------------------------------------------
+   Une grille de mesures repond a « combien », jamais a « et
+   alors ? ». Chaque tuile portait donc sa propre phrase
+   d'explication — en gris, en petit, sous le chiffre. Six tuiles,
+   six phrases : ce n'est plus une explication, c'est ce qui separe
+   les chiffres, et plus personne ne les lit.
+
+   Une seule phrase par bloc, ecrite A PARTIR des chiffres et posee
+   AVANT eux. Elle dit ce que l'ensemble veut dire ; les tuiles
+   donnent le detail a qui le cherche. Moins de texte en tout, et une
+   phrase qu'on lit vraiment parce qu'il n'y en a qu'une.
+
+   Elle est en corps de texte, pas en gris de note : une phrase qu'on
+   doit lire se compose comme une phrase qu'on lit. Les chiffres qui
+   la portent sont en gras et prennent la couleur du sens — c'est ce
+   qui permet de n'en lire que les mots gras quand on est presse. */
+.an-verdict{
+  margin:0 0 clamp(14px,1.8vw,20px); max-width:68ch;
+  font-size:clamp(15.5px,1.45vw,18px); line-height:1.52;
+  color:var(--ink-2); text-wrap:pretty;
+}
+.an-verdict b{color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums;}
+.an-verdict b[data-ton="hausse"]{color:var(--gain);}
+.an-verdict b[data-ton="baisse"]{color:var(--loss);}
+/* Dans une carte de ligne, la phrase vient apres un nom et non apres
+   un titre de bloc : un cran plus bas, et collee a ce qu'elle
+   explique. */
+.an-verdict--l{
+  margin:10px 0 0; font-size:clamp(14.5px,1.25vw,16px); max-width:62ch;
+}
+/* ===== LE DETAIL, SUR TELEPHONE =====
+   Hors telephone ce n'est pas un repli du tout : le resume ne
+   s'affiche pas et le bloc est toujours ouvert. C'est le script qui
+   le referme sous 700 px, au changement de largeur seulement — un
+   repli qui se refermerait a chaque rendu, c'est-a-dire toutes les
+   quarante-cinq secondes, se refermerait sous les doigts de celui
+   qui vient de l'ouvrir. */
+.an-plus > summary{
+  display:none; cursor:pointer; list-style:none;
+  font-size:11.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--accent); padding:2px 0 12px;
+}
+.an-plus > summary::-webkit-details-marker{display:none;}
+.an-plus > summary::after{content:" +";}
+.an-plus[open] > summary::after{content:" \2013";}
+.an-plus > summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+@media (max-width:700px){
+  .an-plus > summary{display:block;}
+}
+
+/* ============================================================
+   D'OU VIENT L'ARGENT
+   ------------------------------------------------------------
+   La mesure la plus parlante d'un portefeuille, et celle qui
+   manquait : non pas « combien ca a fait », mais QUELLE LIGNE l'a
+   fait. Un pourcentage par ligne ne repond pas a cette question —
+   une ligne de 500 EUR qui double pese moins qu'une ligne de
+   100 000 EUR qui prend trois pour cent, et pourtant c'est la
+   premiere qui affiche le plus beau chiffre.
+
+   C'est donc en EUROS, et la barre evite d'avoir a comparer des
+   nombres de tete. Elle part du milieu : a gauche ce qui a coute, a
+   droite ce qui a rapporte. Deux colonnes separees auraient demande
+   de les comparer ; un axe commun les compare pour vous. */
+.an-contrib{display:flex; flex-direction:column; gap:1px;
+  background:var(--rule); border:1px solid var(--rule); margin-top:4px;}
+.an-c{
+  display:grid; grid-template-columns:minmax(0,1fr) auto;
+  gap:3px 14px; align-items:baseline;
+  background:var(--paper); padding:10px clamp(13px,1.4vw,16px);
+}
+/* La barre vient entre le nom et le montant dans le balisage — c'est
+   l'ordre ou on la lit sur grand ecran. Sur telephone elle passe
+   dessous, et il faut le DIRE a la grille : sans ces trois lignes,
+   elle s'intercale et jette le montant sur une troisieme rangee. */
+.an-c__n{grid-column:1; grid-row:1;}
+.an-c__v{grid-column:2; grid-row:1;}
+.an-c__b{grid-column:1 / -1; grid-row:2;}
+.an-c__n{font-size:14.5px; font-weight:600; min-width:0; overflow-wrap:anywhere;}
+.an-c__v{
+  font-family:'IBM Plex Mono', monospace; font-size:14.5px; font-weight:500;
+  font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+.an-c__v[data-ton="hausse"]{color:var(--gain);}
+.an-c__v[data-ton="baisse"]{color:var(--loss);}
+.an-c__b{
+  grid-column:1 / -1; position:relative; height:6px; margin-top:5px;
+  background:var(--paper-2); border-radius:999px;
+}
+.an-c__b i{position:absolute; top:0; bottom:0; border-radius:999px; background:var(--gain);}
+.an-c__b i[data-ton="baisse"]{background:var(--loss);}
+/* Des la place venue, la barre passe ENTRE le nom et le montant : la
+   rangee tient sur une ligne au lieu de trois, et huit lignes tiennent
+   dans un ecran au lieu d'en demander deux. Sur un telephone elle
+   repasse dessous — une barre de soixante pixels ne se lit pas. */
+@media (min-width:620px){
+  .an-c{grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) auto;
+        align-items:center; gap:16px;}
+  .an-c__b{grid-column:auto; margin-top:0;}
+}
+
+/* L'axe du zero — mais SEULEMENT si quelque chose se tient de chaque
+   cote. Quand tout a rapporte, un axe au milieu laisse la moitie
+   gauche vide et fait commencer les barres a un endroit qui ne veut
+   rien dire ; elles partent alors du bord, sur toute la largeur. */
+.an-contrib[data-axe="1"] .an-c__b::after{
+  content:""; position:absolute; top:-3px; bottom:-3px; left:50%;
+  width:1px; background:var(--rule-strong);
+}
 
 /* ===== Les visuels de l'analyse =====
    Meme vocabulaire que l'actualite : on montre d'abord, on chiffre
@@ -5989,7 +6101,7 @@ window.PC = (function(){
   'an.mar.charge':      ["On rel\u00e8ve les cours du jour\u2026","Reading today's prices\u2026","Leyendo las cotizaciones del d\u00eda\u2026","Die Tageskurse werden erhoben\u2026"],
   'an.mar.ko':          ["Le fournisseur de cours n'a pas r\u00e9pondu. Vos chiffres, eux, sont intacts\u00a0: rien de ce qui suit n'en d\u00e9pend.","The price provider did not answer. Your figures are untouched: nothing below depends on it.","El proveedor de cotizaciones no respondi\u00f3. Sus cifras est\u00e1n intactas: nada de lo que sigue depende de \u00e9l.","Der Kursanbieter hat nicht geantwortet. Ihre Zahlen sind unber\u00fchrt: nichts weiter unten h\u00e4ngt davon ab."],
   'an.mar.ens.k':       ["Le march\u00e9 dans son ensemble","The market as a whole","El mercado en conjunto","Der Markt insgesamt"],
-  'an.mar.ens.d':       ["Pondérée par la capitalisation des {{n}} lignes.","Weighted by the capitalisation of the {{n}} lines.","Ponderada por la capitalización de las {{n}} líneas.","Nach der Kapitalisierung der {{n}} Werte gewichtet."],
+  'an.mar.ens.d':       ["Pondérée par la capitalisation.","Weighted by capitalisation.","Ponderada por la capitalización.","Nach Kapitalisierung gewichtet."],
   'an.mar.ens.ds':      ["Moyenne simple : la capitalisation des actions n'est pas servie.","Plain average: share capitalisation is not served.","Media simple: no se sirve la capitalización de las acciones.","Einfacher Durchschnitt: Aktien-Kapitalisierung wird nicht geliefert."],
   'an.mar.actif.dv':    ["{{p}} échangés dans la journée.","{{p}} traded during the day.","{{p}} negociados en el día.","{{p}} am Tag gehandelt."],
   'an.mar.liste.t':     ["Ou une ligne en particulier","Or one line in particular","O una línea en particular","Oder eine einzelne Position"],
@@ -6011,6 +6123,39 @@ window.PC = (function(){
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
   'an.choix':           ["Une autre valeur\u00a0?","Another security?","\u00bfOtro valor?","Ein anderer Wert?"],
+  'an.mar.per.24h':     ["aujourd'hui","today","hoy","heute"],
+  'an.mar.per.7j':      ["sur sept jours","over seven days","en siete días","über sieben Tage"],
+  'an.mar.per.30j':     ["sur trente jours","over thirty days","en treinta días","über dreißig Tage"],
+  'an.mar.verdict.hausse': ["Les {{n}} valeurs suivies montent de {{e}} en moyenne {{p}}. {{h}} d'entre elles sont en hausse, et {{d}} points séparent la meilleure de la pire.","The {{n}} securities followed are up {{e}} on average {{p}}. {{h}} of them are rising, and {{d}} points separate the best from the worst.","Los {{n}} valores seguidos suben un {{e}} de media {{p}}. {{h}} de ellos están al alza, y {{d}} puntos separan el mejor del peor.","Die {{n}} verfolgten Werte steigen {{p}} im Schnitt um {{e}}. {{h}} davon legen zu, und {{d}} Punkte trennen den besten vom schlechtesten."],
+  'an.mar.verdict.baisse': ["Les {{n}} valeurs suivies reculent de {{e}} en moyenne {{p}}. {{h}} d'entre elles montent tout de même, et {{d}} points séparent la meilleure de la pire.","The {{n}} securities followed are down {{e}} on average {{p}}. {{h}} of them are rising all the same, and {{d}} points separate the best from the worst.","Los {{n}} valores seguidos bajan un {{e}} de media {{p}}. Aun así {{h}} de ellos suben, y {{d}} puntos separan el mejor del peor.","Die {{n}} verfolgten Werte geben {{p}} im Schnitt um {{e}} nach. {{h}} davon steigen dennoch, und {{d}} Punkte trennen den besten vom schlechtesten."],
+  'an.mar.verdict.plat': ["Les {{n}} valeurs suivies ne bougent presque pas {{p}}\u00a0: {{h}} en hausse, et {{d}} points entre la meilleure et la pire.","The {{n}} securities followed barely move {{p}}: {{h}} rising, and {{d}} points between the best and the worst.","Los {{n}} valores seguidos apenas se mueven {{p}}: {{h}} al alza, y {{d}} puntos entre el mejor y el peor.","Die {{n}} verfolgten Werte bewegen sich {{p}} kaum: {{h}} im Plus, und {{d}} Punkte zwischen dem besten und dem schlechtesten."],
+  'an.mar.verdict.une': ["Cette valeur fait {{e}} {{p}}.","This security is {{e}} {{p}}.","Este valor hace {{e}} {{p}}.","Dieser Wert macht {{p}} {{e}}."],
+  'an.moi.t':           ["Votre portefeuille dans son ensemble","Your portfolio as a whole","Su cartera en conjunto","Ihr Portfolio als Ganzes"],
+  'an.moi.verdict':     ["Vous avez mis {{i}}. Votre portefeuille vaut {{v}} aujourd'hui, soit {{p}}.","You put in {{i}}. Your portfolio is worth {{v}} today, that is {{p}}.","Ha puesto {{i}}. Su cartera vale {{v}} hoy, es decir {{p}}.","Sie haben {{i}} eingezahlt. Ihr Portfolio ist heute {{v}} wert, also {{p}}."],
+  'an.moi.cote':        ["{{n}} de cette valeur suit un cours de marché\u00a0; le reste repose sur ce que vous avez saisi.","{{n}} of that value follows a market price; the rest rests on what you entered.","{{n}} de ese valor sigue una cotización de mercado; el resto se basa en lo que ha introducido.","{{n}} dieses Werts folgt einem Marktkurs; der Rest beruht auf Ihren Eingaben."],
+  'an.moi.cote.tout':   ["Toute cette valeur suit un cours de marché.","All of that value follows a market price.","Todo ese valor sigue una cotización de mercado.","Dieser gesamte Wert folgt einem Marktkurs."],
+  'an.moi.cote.rien':   ["Aucune de ces lignes ne suit un cours de marché\u00a0: tout repose sur ce que vous avez saisi.","None of these lines follows a market price: everything rests on what you entered.","Ninguna de estas líneas sigue una cotización de mercado: todo se basa en lo que ha introducido.","Keine dieser Positionen folgt einem Marktkurs: alles beruht auf Ihren Eingaben."],
+  'an.moi.gain.k':      ["Résultat depuis le départ","Result since the start","Resultado desde el inicio","Ergebnis seit Beginn"],
+  'an.moi.perf.k':      ["En pourcentage","As a percentage","En porcentaje","In Prozent"],
+  'an.moi.cotee.k':     ["Part suivie par un cours","Share followed by a price","Parte seguida por una cotización","Anteil mit Marktkurs"],
+  'an.moi.conc.k':      ["La plus grosse ligne","The largest line","La línea más grande","Die größte Position"],
+  'an.moi.lignes.k':    ["Lignes suivies","Lines followed","Líneas seguidas","Verfolgte Positionen"],
+  'an.moi.cat.un':      ["catégorie","category","categoría","Kategorie"],
+  'an.moi.cat.plus':    ["catégories","categories","categorías","Kategorien"],
+  'an.moi.liq.k':       ["Disponible tout de suite","Available right away","Disponible de inmediato","Sofort verfügbar"],
+  'an.moi.port.t':      ["Ce qui a porté, ce qui a pesé","What carried, what weighed","Lo que ha tirado, lo que ha pesado","Was getragen hat, was gewogen hat"],
+  'an.moi.port.1':      ["Sur un résultat de {{g}}, {{q}} apporte {{m}} à elle seule.","Out of a {{g}} result, {{q}} brings {{m}} on its own.","De un resultado de {{g}}, {{q}} aporta {{m}} por sí sola.","Von einem Ergebnis von {{g}} bringt {{q}} allein {{m}}."],
+  'an.moi.port.2':      ["Sur un résultat de {{g}}, {{q}} apporte {{m}} quand {{q2}} en retire {{m2}}.","Out of a {{g}} result, {{q}} brings {{m}} while {{q2}} takes {{m2}} away.","De un resultado de {{g}}, {{q}} aporta {{m}} mientras {{q2}} resta {{m2}}.","Von einem Ergebnis von {{g}} bringt {{q}} {{m}}, während {{q2}} {{m2}} abzieht."],
+  'an.moi.port.0':      ["Sur un résultat de {{g}}, c'est {{q}} qui pèse le plus, avec {{m}}.","Out of a {{g}} result, {{q}} weighs the most, with {{m}}.","De un resultado de {{g}}, {{q}} es la que más pesa, con {{m}}.","Von einem Ergebnis von {{g}} wiegt {{q}} am schwersten, mit {{m}}."],
+  'an.l.v.vol':         ["Sur {{n}} séances, {{q}} a bougé de {{v}} par an\u00a0: {{m}}.","Over {{n}} sessions, {{q}} moved {{v}} a year: {{m}}.","En {{n}} sesiones, {{q}} se ha movido un {{v}} al año: {{m}}.","Über {{n}} Handelstage hat sich {{q}} um {{v}} pro Jahr bewegt: {{m}}."],
+  'an.l.v.recul':       ["Son pire recul depuis un sommet a été de {{r}}.","Its worst fall from a peak was {{r}}.","Su peor caída desde un máximo ha sido de {{r}}.","Ihr schlimmster Rückgang von einem Hoch war {{r}}."],
+  'an.l.v.jamais':      ["Elle n'est jamais repassée sous un sommet précédent.","It never fell back below a previous peak.","Nunca ha vuelto a caer por debajo de un máximo anterior.","Sie ist nie unter ein früheres Hoch zurückgefallen."],
+  'an.l.cran.calme':    ["c'est très calme","that is very calm","es muy tranquilo","das ist sehr ruhig"],
+  'an.l.cran.tranquille': ["c'est tranquille","that is calm","es tranquilo","das ist ruhig"],
+  'an.l.cran.remuante': ["c'est remuant","that is lively","es movido","das ist lebhaft"],
+  'an.l.cran.agitee':   ["c'est agité","that is restless","es agitado","das ist unruhig"],
+  'an.l.cran.extreme':  ["c'est extrême","that is extreme","es extremo","das ist extrem"],
+  'an.detail':          ["Le détail, chiffre par chiffre","The detail, figure by figure","El detalle, cifra a cifra","Das Detail, Zahl für Zahl"],
   'an.mar.n.crypto':    ["Les vingt-quatre premi\u00e8res par capitalisation. Pour une autre valeur, le champ ci-dessous cherche dans tout ce que les fournisseurs servent.","The twenty-four largest by market capitalisation. For any other security, the field below searches everything the providers serve.","Las veinticuatro primeras por capitalizaci\u00f3n. Para otro valor, el campo de abajo busca en todo lo que sirven los proveedores.","Die vierundzwanzig gr\u00f6\u00dften nach Marktkapitalisierung. F\u00fcr einen anderen Wert sucht das Feld unten in allem, was die Anbieter liefern."],
   'an.mar.n.bourse':    ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse."],
   'an.mar.n.matieres':  ["L'or et l'argent arrivent sans rien installer\u00a0; le platine, le cuivre, le p\u00e9trole et les autres passent par le relais.","Gold and silver arrive with nothing installed; platinum, copper, oil and the rest go through the relay.","El oro y la plata llegan sin instalar nada; el platino, el cobre, el petr\u00f3leo y los dem\u00e1s pasan por el rel\u00e9.","Gold und Silber kommen ohne Installation; Platin, Kupfer, \u00d6l und die \u00fcbrigen laufen \u00fcber das Relais."],
@@ -6065,11 +6210,15 @@ window.PC = (function(){
   'an.cor.t':           ["Ce qui bouge ensemble","What moves together","Lo que se mueve junto","Was sich zusammen bewegt"],
   'an.cor.echelle':     ["\u22121 en sens contraire  \u00b7  0 indépendantes  \u00b7  +1 ensemble","\u22121 opposite  \u00b7  0 independent  \u00b7  +1 together","\u22121 en sentido contrario  \u00b7  0 independientes  \u00b7  +1 juntas","\u22121 gegenläufig  \u00b7  0 unabhängig  \u00b7  +1 gemeinsam"],
   'an.cor.paire':       ["{{a}} et {{b}}","{{a}} and {{b}}","{{a}} y {{b}}","{{a}} und {{b}}"],
-  'an.cor.forte':       ["bougent presque ensemble","move almost together","se mueven casi juntas","bewegen sich fast gemeinsam"],
-  'an.cor.nette':       ["bougent souvent dans le même sens","often move the same way","suelen moverse en el mismo sentido","bewegen sich oft gleich"],
-  'an.cor.faible':      ["bougent plutôt indépendamment","move fairly independently","se mueven bastante independientemente","bewegen sich eher unabhängig"],
-  'an.cor.inverse':     ["bougent en sens contraire","move in opposite directions","se mueven en sentido contrario","bewegen sich gegenläufig"],
+  'an.cor.forte':       ["presque ensemble","almost together","casi juntas","fast gemeinsam"],
+  'an.cor.nette':       ["souvent ensemble","often together","a menudo juntas","oft gemeinsam"],
+  'an.cor.faible':      ["indépendantes","independent","independientes","unabhängig"],
+  'an.cor.inverse':     ["en sens contraire","opposite ways","en sentido contrario","gegenläufig"],
   'an.cor.peu':         ["Il faut au moins deux lignes cotées, et leur historique chargé, pour mesurer ce qui bouge ensemble.","At least two listed lines are needed, with their history loaded, to measure what moves together.","Hacen falta al menos dos líneas cotizadas, con su historial cargado, para medir lo que se mueve junto.","Es braucht mindestens zwei notierte Positionen mit geladenem Verlauf, um zu messen, was sich zusammen bewegt."],
+  'an.cor.v.forte':     ["{{a}} et {{b}} bougent presque toujours ensemble ({{c}})\u00a0: ce sont deux fois le même pari, pas deux paris.","{{a}} and {{b}} almost always move together ({{c}}): that is the same bet twice, not two bets.","{{a}} y {{b}} casi siempre se mueven juntas ({{c}}): es la misma apuesta dos veces, no dos apuestas.","{{a}} und {{b}} bewegen sich fast immer gemeinsam ({{c}}): das ist zweimal dieselbe Wette, nicht zwei."],
+  'an.cor.v.nette':     ["{{a}} et {{b}} vont souvent dans le même sens ({{c}}), sans se confondre pour autant.","{{a}} and {{b}} often go the same way ({{c}}), without being one and the same.","{{a}} y {{b}} suelen ir en el mismo sentido ({{c}}), sin confundirse del todo.","{{a}} und {{b}} laufen oft in dieselbe Richtung ({{c}}), ohne dasselbe zu sein."],
+  'an.cor.v.inverse':   ["{{a}} et {{b}} vont en sens contraire ({{c}})\u00a0: quand l'une baisse, l'autre amortit.","{{a}} and {{b}} go opposite ways ({{c}}): when one falls, the other cushions.","{{a}} y {{b}} van en sentido contrario ({{c}}): cuando una baja, la otra amortigua.","{{a}} und {{b}} laufen gegenläufig ({{c}}): fällt die eine, federt die andere ab."],
+  'an.cor.v.faible':    ["Aucune de vos {{n}} paires cotées ne bouge vraiment avec une autre\u00a0: vos lignes ne portent pas le même pari.","None of your {{n}} quoted pairs really moves with another: your lines are not the same bet.","Ninguno de sus {{n}} pares cotizados se mueve realmente con otro: sus líneas no son la misma apuesta.","Keines Ihrer {{n}} notierten Paare bewegt sich wirklich mit einem anderen: Ihre Positionen sind nicht dieselbe Wette."],
   'an.cor.n':           ["Mesuré sur {{n}} séances communes.","Measured on {{n}} shared sessions.","Medido sobre {{n}} sesiones comunes.","Gemessen an {{n}} gemeinsamen Handelstagen."],
   'an.ia.t':            ["Le marché du jour, écrit en clair","Today's market, written up plainly","El mercado del día, redactado con claridad","Der heutige Markt, klar formuliert"],
   'cmp.analyse':        ["L'analyse de vos lignes cotées : volatilité, pire recul, ce qui bouge ensemble", "Analysis of your listed lines: volatility, worst drawdown, what moves together", "El análisis de sus líneas cotizadas: volatilidad, peor caída, lo que se mueve junto", "Die Analyse Ihrer notierten Positionen: Volatilität, schlimmster Rückgang, was sich zusammen bewegt"],
@@ -8565,7 +8714,19 @@ document.addEventListener('error', function(ev){
             <button class="marches__h" type="button" data-h="30j" aria-pressed="false">30 j</button>
           </div>
           <p class="analyse__m" id="an-mar-mot" hidden></p>
-          <div class="an-mes" id="an-mar-mes"></div>
+          <!-- Ce que les six chiffres veulent dire, en une phrase.
+               Voir la feuille de style, « LA PHRASE DE TETE ». -->
+          <p class="an-verdict" id="an-mar-verdict"></p>
+          <!-- SUR TELEPHONE, LA PHRASE SUFFIT. Elle porte deja la
+               moyenne, le nombre de hausses et l'ecart : les six
+               tuiles les repetent en chiffres. On les range donc
+               derriere un mot, et l'ecran montre la conclusion
+               plutot que l'appareil de mesure. Ailleurs, elles sont
+               ouvertes et le repli n'existe pas. -->
+          <details class="an-plus" id="an-mar-plus" open>
+            <summary class="an-plus__t mono" data-i18n="an.detail">Le détail, chiffre par chiffre</summary>
+            <div class="an-mes" id="an-mar-mes"></div>
+          </details>
           <!-- Les lignes du marche, une par une. Le bloc du dessus dit
                ce que fait l'ensemble ; celui-ci laisse ouvrir n'importe
                laquelle et en mesurer les douze mois. -->
@@ -8595,6 +8756,27 @@ document.addEventListener('error', function(ev){
               <div class="sug an-q__s" id="an-sug" hidden></div>
             </div>
           </div>
+        </div>
+
+        <!-- ===== VOUS, LA-DEDANS =====
+             Le bloc du dessus dit ce que fait le marche ; celui du
+             dessous ouvre UNE de vos lignes. Entre les deux il
+             manquait la seule chose qu'on vient vraiment chercher :
+             ce que fait l'ensemble de ce qu'on possede, et d'ou
+             vient ce qu'il a fait. -->
+        <div class="an-bloc" id="an-moi" hidden>
+          <h3 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h3>
+          <p class="an-verdict" id="an-moi-verdict"></p>
+          <details class="an-plus" id="an-moi-plus" open>
+            <summary class="an-plus__t mono" data-i18n="an.detail">Le détail, chiffre par chiffre</summary>
+            <div class="an-mes" id="an-moi-mes"></div>
+          </details>
+          <!-- D'ou vient l'argent : la contribution de chaque ligne au
+               resultat, en euros. Voir la feuille de style. -->
+          <h4 class="an-titre mono" id="an-moi-ct" style="margin-top:clamp(22px,2.6vw,30px)"
+              data-i18n="an.moi.port.t">Ce qui a porté, ce qui a pesé</h4>
+          <p class="an-verdict" id="an-moi-port"></p>
+          <div class="an-contrib" id="an-moi-contrib"></div>
         </div>
 
         <div class="an-bloc" id="an-ia" hidden>
@@ -8643,6 +8825,10 @@ document.addEventListener('error', function(ev){
           <h3 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h3>
           <!-- L'echelle, dite une fois : sans elle le curseur montre une
                position sans dire de quoi. -->
+          <!-- Ce que les paires veulent dire, en une phrase : trois
+               fois « bougent plutot independamment » n'est pas une
+               conclusion, c'est la meme donnee recopiee. -->
+          <p class="an-verdict" id="an-cor-verdict"></p>
           <p class="an-echelle mono" data-i18n="an.cor.echelle">−1 en sens contraire · 0 indépendantes · +1 ensemble</p>
           <div class="an-paires" id="an-cor-paires"></div>
           <p class="analyse__q" id="an-cor-n"></p>
@@ -11250,6 +11436,7 @@ document.addEventListener('error', function(ev){
        une ligne a la fois, et chaque arrivee doit se voir. Le bloc de
        l'IA, lui, ne depend que du droit. */
     if (typeof anCalcule === 'function') anCalcule();
+    if (typeof anMoi === 'function') anMoi();
     if (typeof anMarche === 'function'){
       anMarche(); anMarcheCharge();
       /* Le flux ne vit que sur cet onglet : la fonction se coupe
@@ -13117,9 +13304,15 @@ document.addEventListener('error', function(ev){
      quarante-cinq secondes — et « toutes vos lignes » serait
      inchoisissable. */
   let anChoixPose = false;
+  /* Vrai quand le sujet par defaut a ete pose faute de mieux : aucune
+     ligne n'etait alors mesurable. Il cede la place a la premiere qui
+     le devient. */
+  let anDefautFaible = false;
 
   function anSujet(v){
     anChoix = v && v.id ? v.id : '';
+    /* Choisi a la main : plus rien ne le remplace. */
+    anDefautFaible = false;
     anExterne = v && v.code ? {code:String(v.code).toLowerCase(), nom:v.nom || v.code} : null;
     anChoixPose = true;
     const q = document.getElementById('an-q');
@@ -13307,9 +13500,31 @@ document.addEventListener('error', function(ev){
        defilement, et on ne savait plus ou regarder. La plus grosse
        d'abord, parce que c'est celle dont le recul pese le plus sur le
        total. « Toutes vos lignes » reste a un geste. */
-    if (!anChoixPose && !anChoix && !anExterne && lignes.length){
-      anChoix = lignes[0].id;
-      anChoixPose = true;
+    /* ===== LA PLUS GROSSE QU'ON SACHE MESURER =====
+       Et non la plus grosse tout court. Sur un patrimoine ordinaire la
+       plus grosse ligne est un appartement ou une assurance-vie :
+       aucune des deux n'a de cours, et le bloc s'ouvrait donc sur
+       « rien a mesurer pour l'instant ». Le premier ecran de l'analyse
+       montrait un vide, pour la seule raison qu'on avait choisi le
+       sujet au montant.
+
+       ET IL FAUT POUVOIR Y REVENIR. Les series arrivent une par une,
+       APRES le premier rendu : au moment ou le defaut se pose, aucune
+       ligne n'est encore mesurable, et le figer la revenait a choisir
+       l'appartement quand meme. Un defaut pose faute de mieux reste
+       donc provisoire et cede la place des qu'une ligne devient
+       mesurable. Un choix EXPLICITE, lui, ne bouge jamais. */
+    const mesurable = lignes.filter(function(L){ return L.src === 'marche'; })[0]
+                   || lignes.filter(function(L){ return L.src === 'releve'; })[0];
+    if (!anExterne && lignes.length){
+      if (!anChoixPose && !anChoix){
+        anChoix = (mesurable || lignes[0]).id;
+        anChoixPose = true;
+        anDefautFaible = !mesurable;
+      } else if (anDefautFaible && mesurable){
+        anChoix = mesurable.id;
+        anDefautFaible = false;
+      }
     }
     /* Sans aucune ligne a soi, il n'y a pas de sujet par defaut — et
        ce n'est pas une panne : le champ ci-dessus sert justement a en
@@ -13357,9 +13572,32 @@ document.addEventListener('error', function(ev){
   function anRendLigne(L){
     let m = '', sous = '', note = '';
 
+    let tete = '';
     if (L.src === 'marche'){
       const vol = anVolatilite(L.v);
       const rec = anRecul(L.pts);
+      /* ===== LA PHRASE D'UNE LIGNE =====
+         « VOLATILITE 0 % » suivi de cinq points est la mesure la moins
+         comprehensible de cette page : elle demande de savoir ce
+         qu'est un ecart-type annualise, et la jauge ne dit que
+         « plus ou moins » sans dire plus ou moins QUE QUOI. La phrase
+         donne l'echelle avec des mots — et le pire recul avec, parce
+         que c'est l'autre moitie de la question : combien ca bouge,
+         et jusqu'ou c'est deja descendu. */
+      if (vol !== null){
+        const cran = vol < 10 ? 'calme' : vol < 25 ? 'tranquille'
+                   : vol < 40 ? 'remuante' : vol < 60 ? 'agitee' : 'extreme';
+        tete = PC.t('an.l.v.vol', {
+          q: anGras(echap(L.nom)),
+          n: anGras(String(L.pts.length)),
+          v: anGras(anAmpleur(vol), vol >= 50 ? 'baisse' : ''),
+          m: PC.t('an.l.cran.' + cran)
+        });
+        tete += ' ' + (rec
+          ? PC.t('an.l.v.recul', {r: anGras('\u2212' + anAmpleur(rec.part), 'baisse')})
+          : PC.t('an.l.v.jamais'));
+        tete = '<p class="an-verdict an-verdict--l">' + tete + '</p>';
+      }
       const prix = L.pts[L.pts.length - 1][1];
       let haut = -Infinity, bas = Infinity;
       L.pts.forEach(function(p){ if (p[1] > haut) haut = p[1]; if (p[1] < bas) bas = p[1]; });
@@ -13378,12 +13616,15 @@ document.addEventListener('error', function(ev){
          retrouvait courte d'une case : un trou se lit comme une panne,
          alors que c'est le constat le plus fort que la serie puisse
          rendre. On l'ecrit. */
+      /* La phrase de tete dit deja qu'elle n'est jamais repassee sous
+         un sommet : la repeter sous la tuile, c'est la meme ligne deux
+         fois a trois centimetres d'intervalle. Quand il Y A un recul,
+         le detail porte les DATES — ca, la phrase ne le dit pas. */
       m += rec
         ? anMesure('an.recul', '\u2212' + anAmpleur(rec.part),
                    echap(PC.t('an.recul.d', {a:anDate(rec.debut), b:anDate(rec.fin)})),
                    rec.part >= 30 ? 'baisse' : '')
-        : anMesure('an.recul', echap(PC.t('an.recul.aucun')),
-                   echap(PC.t('an.recul.aucun.d')));
+        : anMesure('an.recul', echap(PC.t('an.recul.aucun')), '');
       m += anPosition(prix, haut, bas);
       if (forte){
         m += anMesure('an.seance', PC.pourcent(forte.r * 100, 1),
@@ -13465,6 +13706,7 @@ document.addEventListener('error', function(ev){
     return '<div class="an-ligne" data-src="' + L.src + '">' +
       '<div><span class="an-ligne__n">' + echap(L.nom) + '</span>' +
       (sous ? '<span class="an-ligne__s">' + sous + '</span>' : '') + '</div>' +
+      tete +
       dessin +
       '<div class="an-mes">' + m + '</div>' + note + '</div>';
   }
@@ -13896,6 +14138,7 @@ document.addEventListener('error', function(ev){
     }
 
     const R = marResume(vus, marH);
+    anVerdictMarche(R, vus);
     const poids = R.poids, hausses = R.hausses, haut = R.haut, bas = R.bas, actif = R.actif;
 
     let m = '';
@@ -13912,8 +14155,11 @@ document.addEventListener('error', function(ev){
                                {n:String(vus.length)})),
                     ens < 0 ? 'baisse' : 'hausse', '', 'an-m--tete');
     }
-    m += anMesure('an.mar.sens', hausses + ' / ' + vus.length,
-                  echap(PC.t('an.mar.sens.d', {h:String(hausses), n:String(vus.length)})),
+    /* Plus de phrase sous ces deux-la : la phrase de tete les dit
+       toutes les deux, et mieux, parce qu'elle les relie. Ce qui
+       reste sous une tuile est ce que la phrase ne porte pas — un
+       nom, une methode. */
+    m += anMesure('an.mar.sens', hausses + ' / ' + vus.length, '',
                   '', anBarre(hausses / vus.length * 100));
     if (haut){
       m += anMesure('an.mar.haut', PC.pourcent(haut.v, 1),
@@ -13927,8 +14173,7 @@ document.addEventListener('error', function(ev){
       /* Un ecart est une amplitude : il ne se signe pas. Et il se
          compte en POINTS, pas en pourcent — un pourcentage de
          pourcentage ne veut rien dire. */
-      m += anMesure('an.mar.ecart', PC.t('an.mar.pt', {n:PC.nombre(haut.v - bas.v, 1)}),
-                    echap(PC.t('an.mar.ecart.d')));
+      m += anMesure('an.mar.ecart', PC.t('an.mar.pt', {n:PC.nombre(haut.v - bas.v, 1)}), '');
     }
     if (actif){
       m += anMesure('an.mar.actif', echap(actif.n),
@@ -13968,6 +14213,18 @@ document.addEventListener('error', function(ev){
       boiteL.dataset.pose = tel;
       boiteL.open = (tel === 'large');
     }
+    /* Les grilles de tuiles suivent la meme regle, et pour la meme
+       raison : sur telephone la phrase porte la conclusion, les
+       chiffres sont a un geste. Pose au changement de largeur
+       seulement — sinon le repli se refermerait sous les doigts de
+       celui qui vient de l'ouvrir, toutes les quarante-cinq
+       secondes. */
+    ['an-mar-plus', 'an-moi-plus'].forEach(function(id){
+      const d = document.getElementById(id);
+      if (!d || d.dataset.pose === tel) return;
+      d.dataset.pose = tel;
+      d.open = (tel === 'large');
+    });
     const htmlL = vus.map(function(c){
       const v = marVar(c, marH);
       const dir = v === null ? 'rien' : (v < 0 ? 'down' : 'up');
@@ -14012,6 +14269,169 @@ document.addEventListener('error', function(ev){
           cible.scrollIntoView({behavior: doux ? 'smooth' : 'auto', block:'start'});
         }
       });
+    }
+  }
+
+  /* ============================================================
+     CE QUE LES CHIFFRES VEULENT DIRE
+     ------------------------------------------------------------
+     Une grille de mesures repond a « combien ». Elle ne repond jamais
+     a « et alors ? », et c'est pourtant la seule question qu'on se
+     pose en arrivant. Chaque tuile portait donc sa propre phrase
+     d'explication, en gris sous le chiffre — six tuiles, six phrases,
+     qui finissent par n'etre que ce qui separe les chiffres.
+
+     Une phrase par bloc, ecrite a partir des chiffres, posee avant
+     eux, et dont les nombres sont en gras : on peut n'en lire que le
+     gras. Moins de texte en tout, et une phrase qu'on lit vraiment
+     parce qu'il n'y en a qu'une. */
+  function anGras(txt, ton){
+    return '<b' + (ton ? ' data-ton="' + ton + '"' : '') + '>' + txt + '</b>';
+  }
+
+  function anVerdictMarche(R, vus){
+    const el = document.getElementById('an-mar-verdict');
+    if (!el) return;
+    if (!R || R.ensemble === null || !vus.length){ el.innerHTML = ''; return; }
+    const e = R.ensemble;
+    const quand = PC.t('an.mar.per.' + marH);
+    /* Une seule ligne suivie : il n'y a ni « d'entre elles » ni ecart
+       a mesurer. Le dire autrement plutot que d'ecrire une phrase
+       dont la moitie des mots ne veulent rien dire. */
+    if (vus.length < 2){
+      el.innerHTML = PC.t('an.mar.verdict.une', {
+        p:quand, e:anGras(PC.pourcent(e, 1), e < 0 ? 'baisse' : 'hausse')});
+      return;
+    }
+    const ecart = (R.haut && R.bas) ? R.haut.v - R.bas.v : 0;
+    /* Sous un dixieme de point, « monte » et « recule » sont deux
+       facons de dire la meme chose : rien n'a bouge. */
+    const cle = Math.abs(e) < 0.1 ? 'an.mar.verdict.plat'
+              : e > 0 ? 'an.mar.verdict.hausse' : 'an.mar.verdict.baisse';
+    el.innerHTML = PC.t(cle, {
+      p: quand,
+      n: String(vus.length),
+      e: anGras(anAmpleur(e, 1), e > 0 ? 'hausse' : 'baisse'),
+      h: anGras(String(R.hausses)),
+      d: anGras(PC.nombre(Math.abs(ecart), 1))
+    });
+  }
+
+  /* ============================================================
+     VOUS, LA-DEDANS
+     ------------------------------------------------------------
+     Le bloc du dessus dit ce que fait le marche ; celui du dessous
+     ouvre UNE ligne. Entre les deux manquait la seule chose qu'on
+     vient vraiment chercher : ce que fait l'ensemble de ce qu'on
+     possede, et D'OU VIENT ce qu'il a fait.
+
+     Cette derniere question est la plus parlante qui existe pour un
+     particulier, et aucun tableur ne la pose : un pourcentage par
+     ligne ne dit pas d'ou vient l'argent. Une ligne de 500 EUR qui
+     double affiche +100 % et n'a rien change ; une ligne de
+     100 000 EUR qui prend trois pour cent porte tout le resultat.
+     C'est donc en euros, et avec une barre, parce que comparer
+     quinze nombres de tete n'est pas un travail de lecteur.
+     ============================================================ */
+  function anMoi(){
+    const bloc = document.getElementById('an-moi');
+    if (!bloc) return;
+    if (!droit('analyse') || !actifs.length){ bloc.hidden = true; return; }
+    bloc.hidden = false;
+
+    const t = totaux();
+    /* La part de la valeur qui suit un VRAI cours. Elle decide de ce
+       que les mesures du bloc suivant valent : annoncer une
+       volatilite sur un portefeuille dont les trois quarts sont un
+       appartement serait une mesure juste sur une question fausse. */
+    let cotee = 0;
+    anLignes().forEach(function(L){ if (L.src === 'marche') cotee += L.val; });
+    const partCotee = t.val > 0 ? cotee / t.val * 100 : 0;
+
+    const v = document.getElementById('an-moi-verdict');
+    if (v){
+      v.innerHTML = PC.t('an.moi.verdict', {
+        i: anGras(eur.format(t.inv)),
+        v: anGras(eur.format(t.val)),
+        p: anGras(PC.pourcent(t.perf, 1), t.perf < 0 ? 'baisse' : 'hausse')
+      }) + ' ' + PC.t(partCotee >= 99.5 ? 'an.moi.cote.tout'
+                    : partCotee < 0.5 ? 'an.moi.cote.rien' : 'an.moi.cote',
+                    {n: anGras(part0(partCotee))});
+    }
+
+    const hoteM = document.getElementById('an-moi-mes');
+    if (hoteM){
+      let m = '';
+      m += anMesure('an.moi.gain', eur.format(t.gain), '',
+                    t.gain < 0 ? 'baisse' : 'hausse', '', 'an-m--tete');
+      m += anMesure('an.moi.perf', PC.pourcent(t.perf, 1), '',
+                    t.perf < 0 ? 'baisse' : 'hausse');
+      m += anMesure('an.moi.cotee', part0(partCotee), '', '', anBarre(partCotee));
+      if (t.grosse){
+        m += anMesure('an.moi.conc', part0(t.concentration), echap(t.grosse.nom),
+                      t.concentration >= 50 ? 'attention' : '', anBarre(t.concentration));
+      }
+      m += anMesure('an.moi.lignes', String(actifs.length),
+                    echap(t.nbCats + ' ' + PC.pluriel(t.nbCats, 'an.moi.cat.un', 'an.moi.cat.plus')));
+      if (t.liquide > 0){
+        m += anMesure('an.moi.liq', part0(t.partLiquide), '', '', anBarre(t.partLiquide));
+      }
+      hoteM.innerHTML = m;
+    }
+
+    /* ---------- D'ou vient l'argent ---------- */
+    const parts = actifs.map(function(a){
+      return {nom:a.nom, d:(a.val || 0) - (a.inv || 0)};
+    }).filter(function(x){ return isFinite(x.d) && Math.round(x.d) !== 0; })
+      .sort(function(x, y){ return Math.abs(y.d) - Math.abs(x.d); });
+    const hoteC = document.getElementById('an-moi-contrib');
+    const titreC = document.getElementById('an-moi-ct');
+    const motC = document.getElementById('an-moi-port');
+    const max = parts.length ? Math.abs(parts[0].d) : 0;
+    if (!parts.length || !max){
+      /* Rien n'a bouge, ou rien n'a de montant investi : il n'y a pas
+         de repartition a montrer. On retire le titre AUSSI, sinon il
+         annonce un bloc vide. */
+      if (hoteC) hoteC.innerHTML = '';
+      if (titreC) titreC.hidden = true;
+      if (motC) motC.innerHTML = '';
+      return;
+    }
+    if (titreC) titreC.hidden = false;
+    if (hoteC){
+      /* L'axe central ne sert que s'il y a quelque chose des deux
+         cotes. Tout en positif, il laisserait la moitie gauche vide. */
+      const desDeux = parts.some(function(x){ return x.d < 0; }) &&
+                      parts.some(function(x){ return x.d > 0; });
+      hoteC.setAttribute('data-axe', desDeux ? '1' : '0');
+      hoteC.innerHTML = parts.map(function(x){
+        const ton = x.d < 0 ? 'baisse' : 'hausse';
+        const l = Math.abs(x.d) / max * (desDeux ? 50 : 100);
+        const ou = !desDeux ? 'left:0;' : (x.d < 0 ? 'right:50%;' : 'left:50%;');
+        return '<div class="an-c">' +
+          '<span class="an-c__n">' + echap(x.nom) + '</span>' +
+          '<span class="an-c__b" aria-hidden="true"><i data-ton="' + ton + '" style="' +
+            ou + 'width:' + l.toFixed(1) + '%"></i></span>' +
+          '<span class="an-c__v" data-ton="' + ton + '">' +
+            (x.d < 0 ? '\u2212' : '+') + eur.format(Math.abs(x.d)) + '</span>' +
+        '</div>';
+      }).join('');
+    }
+    if (motC){
+      const plus = parts.filter(function(x){ return x.d > 0; })[0];
+      const moins = parts.filter(function(x){ return x.d < 0; })[0];
+      const g = anGras(eur.format(t.gain), t.gain < 0 ? 'baisse' : 'hausse');
+      if (plus && moins){
+        motC.innerHTML = PC.t('an.moi.port.2', {g:g,
+          q:anGras(echap(plus.nom)), m:anGras(eur.format(plus.d), 'hausse'),
+          q2:anGras(echap(moins.nom)), m2:anGras(eur.format(Math.abs(moins.d)), 'baisse')});
+      } else if (plus){
+        motC.innerHTML = PC.t('an.moi.port.1', {g:g,
+          q:anGras(echap(plus.nom)), m:anGras(eur.format(plus.d), 'hausse')});
+      } else {
+        motC.innerHTML = PC.t('an.moi.port.0', {g:g,
+          q:anGras(echap(moins.nom)), m:anGras(eur.format(Math.abs(moins.d)), 'baisse')});
+      }
     }
   }
 
@@ -14155,6 +14575,24 @@ document.addEventListener('error', function(ev){
       }).join('');
     }
     if (ncor) ncor.textContent = PC.t('an.cor.n', {n:String(paires[0].n)});
+    /* ===== CE QUE CES COEFFICIENTS VEULENT DIRE =====
+       Un coefficient de correlation est une mesure que personne ne lit
+       de naissance. Trois lignes qui repetent « bougent plutot
+       independamment » ne l'expliquent pas : elles recopient trois
+       fois la meme donnee. La phrase dit ce qui compte — est-ce que
+       deux de vos lignes sont, en pratique, le meme pari ? */
+    const vcor = document.getElementById('an-cor-verdict');
+    if (vcor){
+      const forte = paires.filter(function(x){ return x.c >= 0.8; })[0];
+      const inv   = paires.filter(function(x){ return x.c <= -0.3; })[0];
+      const nette = paires.filter(function(x){ return x.c >= 0.5; })[0];
+      const q = forte || inv || nette;
+      vcor.innerHTML = q
+        ? PC.t(forte ? 'an.cor.v.forte' : inv ? 'an.cor.v.inverse' : 'an.cor.v.nette',
+               {a:anGras(echap(q.a)), b:anGras(echap(q.b)),
+                c:anGras(PC.nombre(q.c, 2).replace(/^-/, '\u2212'))})
+        : PC.t('an.cor.v.faible', {n:anGras(String(paires.length))});
+    }
   }
 
   const anBouton = document.getElementById('an-lancer');
