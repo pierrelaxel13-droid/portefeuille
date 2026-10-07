@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261004.1257";</script>
+<script>window.PC_VERSION = "261007.1526";</script>
 </head>
 <body>
 
@@ -4492,6 +4492,156 @@ html.v1-fond .fin-pieces{--v1-ecran:46%;}
 }
 :root[data-theme="dark"] .v1video{filter:invert(1) brightness(1.18);}
 :root[data-theme="dark"].v1-fond .v1teinte{display:block;}
+/* ============================================================
+   LES PIECES, DESSINEES, QUAND LA VIDEO N'ARRIVE PAS
+   ------------------------------------------------------------
+   Le premier ecran et la bande de fin tiennent sur une video servie
+   par le CDN d'un AUTRE site. Il y a trois cas, et aucun n'est rare,
+   ou elle n'arrive jamais :
+
+     — la visionneuse d'artefact, dont la politique de securite
+       n'admet que les fichiers de la page elle-meme ;
+     — un reseau qui refuse ce domaine (entreprise, bloqueur, pays) ;
+     — le jour ou la demonstration d'en face sera retiree.
+
+   Dans ces trois cas le premier ecran perdait son sujet : il restait
+   un aplat, un titre et un bouton. « L'animation ne marche pas »
+   n'etait donc pas une panne a trouver — c'etait un cas qu'on n'avait
+   pas couvert.
+
+   La page les dessine desormais elle-meme, mais SEULEMENT la : des
+   que la video a une image a montrer, le script pose `v1-fond` sur
+   <html> et ce sont SES pieces qui tournent. Celles-ci s'effacent.
+   C'est le bon ordre — le dessin est un filet, pas un remplacement.
+
+   ET UNE PIECE N'EST PAS UNE BILLE. C'est tout le sujet, et c'est ce
+   qui avait fait retirer la premiere version : un disque avec un
+   reflet rond est une bille, et le reste quoi qu'on fasse. Ce qui
+   fait lire « piece » tient en trois choses, et elles sont toutes
+   ici : la bande de reflet est DROITE (un metal plat renvoie la
+   lumiere en bande, une sphere en point) ; le disque TOURNE sur un
+   axe, sa largeur respire et il passe par sa tranche a chaque
+   demi-tour ; et la tranche elle-meme est un filet clair, qui ne se
+   voit que la, exactement comme sur une piece qu'on fait rouler. */
+.pieces{display:none;}
+html:not(.v1-fond) .pieces{
+  display:block; position:absolute; inset:0; z-index:0;
+  pointer-events:none; overflow:hidden;
+}
+/* ===== LE METAL, EN DEUX TONS =====
+   La teinte du disque, de l'ombre a la lumiere. Elle n'est pas la
+   meme dans les deux themes, et pas pour une question de gout : sur
+   le papier creme, la part sombre peut etre transparente — ce qui
+   passe au travers est clair, et le disque reste pale et lisible. Sur
+   le papier noir, la meme transparence donne du NOIR : le disque
+   devenait une tache grise, et le violet disparaissait de la seule
+   chose que cet ecran montre. La part sombre est donc melangee a du
+   noir plutot qu'au vide : elle reste violette, et plus foncee. */
+.pieces{
+  --metal-bas:color-mix(in srgb, var(--accent) 46%, transparent);
+  --metal-haut:color-mix(in srgb, var(--accent) 88%, white);
+  --metal-mi:color-mix(in srgb, var(--accent) 34%, transparent);
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])) .pieces{
+    --metal-bas:color-mix(in srgb, var(--accent) 60%, black);
+    --metal-haut:color-mix(in srgb, var(--accent) 74%, white);
+    --metal-mi:color-mix(in srgb, var(--accent) 46%, black);
+  }
+  /* Et le disque entier porte un peu plus : sur fond noir, ce qui est
+     a demi transparent n'est pas a demi visible. */
+  :root:where(:not([data-theme="light"])) .piece{opacity:calc(var(--o) + .2);}
+}
+:root[data-theme="dark"] .pieces{
+  --metal-bas:color-mix(in srgb, var(--accent) 60%, black);
+  --metal-haut:color-mix(in srgb, var(--accent) 74%, white);
+  --metal-mi:color-mix(in srgb, var(--accent) 46%, black);
+}
+:root[data-theme="dark"] .piece{opacity:calc(var(--o) + .2);}
+.piece{
+  position:absolute; left:var(--x); top:var(--y);
+  width:var(--t); height:var(--t); margin:calc(var(--t) / -2);
+  opacity:var(--o);
+  animation:piece-derive var(--dd) ease-in-out var(--r) infinite alternate;
+}
+.piece__f{
+  position:absolute; inset:0; border-radius:50%;
+  /* La bande, et non le point : cinq arrets en diagonale, deux clairs
+     et trois sombres. C'est le reflet d'une surface plate. */
+  background:linear-gradient(112deg,
+    var(--metal-bas) 0%,
+    var(--metal-haut) 22%,
+    var(--metal-mi) 43%,
+    var(--metal-haut) 66%,
+    var(--metal-bas) 100%);
+  /* La tranche. De face elle fait un filet discret ; de profil, les
+     deux cotes se rejoignent et c'est elle qu'on voit. */
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 65%, white),
+             0 14px 30px -18px rgba(0,0,0,.7);
+  /* La position d'arret sert au mouvement reduit : sans elle, toutes
+     les pieces s'immobiliseraient de face, c'est-a-dire en billes. */
+  transform:rotate(var(--a)) rotateX(14deg) rotateY(var(--ry));
+  animation:piece-tourne var(--dt) linear var(--r) infinite;
+  will-change:transform;
+}
+@keyframes piece-tourne{
+  from{transform:rotate(var(--a)) rotateX(14deg) rotateY(var(--ry));}
+  to  {transform:rotate(var(--a)) rotateX(14deg) rotateY(calc(var(--ry) + 360deg));}
+}
+@keyframes piece-derive{
+  from{transform:translate3d(0, 0, 0);}
+  to  {transform:translate3d(var(--dx), var(--dy), 0);}
+}
+  .piece:nth-child(1){--x:6%; --y:14%; --t:64px; --o:0.52; --ry:20deg;
+    --a:-18deg; --dt:11.5s; --dd:17s; --r:-2.0s; --dx:14px; --dy:-26px;}
+  .piece:nth-child(2){--x:17%; --y:62%; --t:38px; --o:0.4; --ry:140deg;
+    --a:24deg; --dt:14.0s; --dd:21s; --r:-9.0s; --dx:-18px; --dy:22px;}
+  .piece:nth-child(3){--x:10%; --y:84%; --t:52px; --o:0.34; --ry:70deg;
+    --a:8deg; --dt:9.5s; --dd:19s; --r:-5.0s; --dx:22px; --dy:-18px;}
+  .piece:nth-child(4){--x:26%; --y:28%; --t:26px; --o:0.44; --ry:215deg;
+    --a:-32deg; --dt:12.5s; --dd:15s; --r:-1.0s; --dx:-12px; --dy:-20px;}
+  .piece:nth-child(5){--x:31%; --y:88%; --t:44px; --o:0.3; --ry:300deg;
+    --a:16deg; --dt:16.0s; --dd:23s; --r:-13.0s; --dx:16px; --dy:24px;}
+  .piece:nth-child(6){--x:41%; --y:8%; --t:34px; --o:0.36; --ry:95deg;
+    --a:-10deg; --dt:10.5s; --dd:18s; --r:-7.0s; --dx:-20px; --dy:18px;}
+  .piece:nth-child(7){--x:46%; --y:74%; --t:28px; --o:0.26; --ry:255deg;
+    --a:30deg; --dt:13.5s; --dd:20s; --r:-3.0s; --dx:12px; --dy:-22px;}
+  .piece:nth-child(8){--x:57%; --y:20%; --t:58px; --o:0.46; --ry:35deg;
+    --a:-22deg; --dt:8.5s; --dd:16s; --r:-11.0s; --dx:18px; --dy:20px;}
+  .piece:nth-child(9){--x:63%; --y:92%; --t:36px; --o:0.28; --ry:185deg;
+    --a:12deg; --dt:15.0s; --dd:22s; --r:-6.0s; --dx:-16px; --dy:-24px;}
+  .piece:nth-child(10){--x:70%; --y:52%; --t:30px; --o:0.34; --ry:125deg;
+    --a:-28deg; --dt:11.0s; --dd:19s; --r:-14.0s; --dx:20px; --dy:16px;}
+  .piece:nth-child(11){--x:78%; --y:16%; --t:46px; --o:0.42; --ry:330deg;
+    --a:20deg; --dt:12.0s; --dd:17s; --r:-4.0s; --dx:-14px; --dy:26px;}
+  .piece:nth-child(12){--x:84%; --y:70%; --t:62px; --o:0.5; --ry:55deg;
+    --a:-6deg; --dt:9.0s; --dd:21s; --r:-8.0s; --dx:16px; --dy:-20px;}
+  .piece:nth-child(13){--x:90%; --y:38%; --t:32px; --o:0.3; --ry:240deg;
+    --a:26deg; --dt:14.5s; --dd:18s; --r:-2.5s; --dx:-18px; --dy:-16px;}
+  .piece:nth-child(14){--x:94%; --y:88%; --t:40px; --o:0.24; --ry:155deg;
+    --a:-14deg; --dt:10.0s; --dd:23s; --r:-12.0s; --dx:14px; --dy:22px;}
+  .piece:nth-child(15){--x:36%; --y:46%; --t:22px; --o:0.22; --ry:285deg;
+    --a:34deg; --dt:16.5s; --dd:20s; --r:-10.0s; --dx:-10px; --dy:18px;}
+  .piece:nth-child(16){--x:73%; --y:32%; --t:24px; --o:0.2; --ry:15deg;
+    --a:-30deg; --dt:13.0s; --dd:15s; --r:-6.5s; --dx:12px; --dy:-14px;}
+/* La bande de fin est courte : les pieces du bas tomberaient sous le
+   pied de page. On n'en garde que la moitie haute, et plus petites —
+   une bande de 200 px n'est pas un ecran. */
+.fin-zone .pieces .piece:nth-child(n+13){display:none;}
+.fin-zone .pieces .piece{--t:34px;}
+@media (max-width:700px){
+  /* Seize disques sur un telephone, c'est seize couches a composer a
+     chaque image pour un fond. On en garde dix. */
+  .piece:nth-child(n+11){display:none;}
+}
+@media (prefers-reduced-motion: reduce){
+  /* Le reglage demande d'eviter un fond qui bouge en permanence sur
+     tout un ecran — pas d'effacer le sujet. Les pieces restent, a
+     l'arret, chacune sur son angle. */
+  html:not([data-anim="force"]) .piece,
+  html:not([data-anim="force"]) .piece__f{animation:none;}
+}
+
 /* Le melange ne doit pas deborder du heros : sans contexte d'empilement
    propre, il repeindrait aussi le fond de la page derriere lui. */
 .hero{isolation:isolate;}
@@ -7062,6 +7212,27 @@ document.addEventListener('error', function(ev){
        fichier lui-meme, pose dans le depot. -->
   <video class="v1video" autoplay muted loop playsinline aria-hidden="true"
          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
+  <!-- Les pieces dessinees : elles ne se montrent que si la video
+       n'arrive pas. Voir la feuille de style, « LES PIECES,
+       DESSINEES ». -->
+  <div class="pieces" aria-hidden="true">
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+  </div>
   <!-- Le voile. La video s'arretait sur une ligne nette au bas du
        premier ecran : une arete franche entre son creme et le papier de
        la page, et sur le theme sombre, deux pages collees. Il la
@@ -8500,6 +8671,27 @@ document.addEventListener('error', function(ev){
   <video class="v1video v1video--fin" autoplay muted loop playsinline aria-hidden="true"
          preload="none"
          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4"></video>
+  <!-- Les memes pieces dessinees qu'au premier ecran, et pour la
+       meme raison : la bande de fin tient sur la meme video, donc
+       elle tombe aux memes endroits. -->
+  <div class="pieces" aria-hidden="true">
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+    <span class="piece"><span class="piece__f"></span></span>
+  </div>
   <div class="v1teinte" aria-hidden="true"></div>
   <div class="v1voile v1voile--fin" aria-hidden="true"></div>
   <section class="fin-pieces" aria-labelledby="fin-t">
