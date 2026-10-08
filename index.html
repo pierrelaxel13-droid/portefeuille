@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261008.1118";</script>
+<script>window.PC_VERSION = "261008.1218";</script>
 </head>
 <body>
 
@@ -6197,7 +6197,8 @@ window.PC = (function(){
   'an.mar.qui.d':       ["{{q}}","{{q}}","{{q}}","{{q}}"],
   'an.mar.ecart.k':     ["L'\u00e9cart du jour","Today's spread","La horquilla del d\u00eda","Die Tagesspanne"],
   'an.mar.ecart.d':     ["De la plus forte hausse à la plus forte baisse.","From the biggest rise to the biggest fall.","De la mayor subida a la mayor bajada.","Vom größten Anstieg zum größten Rückgang."],
-  'an.mar.pt':          ["{{n}} points","{{n}} points","{{n}} puntos","{{n}} Punkte"],
+  'an.pt.un':           ["point","point","punto","Punkt"],
+  'an.pt.plus':         ["points","points","puntos","Punkte"],
   'an.mar.actif.k':     ["Le plus \u00e9chang\u00e9","Most traded","El m\u00e1s negociado","Am meisten gehandelt"],
   'an.mar.actif.d':     ["{{p}} de sa capitalisation échangés aujourd'hui.","{{p}} of its capitalisation traded today.","{{p}} de su capitalización negociado hoy.","{{p}} seiner Kapitalisierung heute gehandelt."],
   'an.mar.vous.k':      ["Vos lignes l\u00e0-dedans","Your lines in it","Sus l\u00edneas en todo esto","Ihre Positionen darin"],
@@ -6210,12 +6211,12 @@ window.PC = (function(){
   'an.mar.per.24h':     ["aujourd'hui","today","hoy","heute"],
   'an.mar.per.7j':      ["sur sept jours","over seven days","en siete días","über sieben Tage"],
   'an.mar.per.30j':     ["sur trente jours","over thirty days","en treinta días","über dreißig Tage"],
-  'an.mar.verdict.hausse': ["Les {{n}} valeurs suivies montent de {{e}} en moyenne {{p}}. {{h}} d'entre elles sont en hausse, et {{d}} points séparent la meilleure de la pire.","The {{n}} securities followed are up {{e}} on average {{p}}. {{h}} of them are rising, and {{d}} points separate the best from the worst.","Los {{n}} valores seguidos suben un {{e}} de media {{p}}. {{h}} de ellos están al alza, y {{d}} puntos separan el mejor del peor.","Die {{n}} verfolgten Werte steigen {{p}} im Schnitt um {{e}}. {{h}} davon legen zu, und {{d}} Punkte trennen den besten vom schlechtesten."],
-  'an.mar.verdict.baisse': ["Les {{n}} valeurs suivies reculent de {{e}} en moyenne {{p}}. {{h}} d'entre elles montent tout de même, et {{d}} points séparent la meilleure de la pire.","The {{n}} securities followed are down {{e}} on average {{p}}. {{h}} of them are rising all the same, and {{d}} points separate the best from the worst.","Los {{n}} valores seguidos bajan un {{e}} de media {{p}}. Aun así {{h}} de ellos suben, y {{d}} puntos separan el mejor del peor.","Die {{n}} verfolgten Werte geben {{p}} im Schnitt um {{e}} nach. {{h}} davon steigen dennoch, und {{d}} Punkte trennen den besten vom schlechtesten."],
-  'an.mar.verdict.plat': ["Les {{n}} valeurs suivies ne bougent presque pas {{p}}\u00a0: {{h}} en hausse, et {{d}} points entre la meilleure et la pire.","The {{n}} securities followed barely move {{p}}: {{h}} rising, and {{d}} points between the best and the worst.","Los {{n}} valores seguidos apenas se mueven {{p}}: {{h}} al alza, y {{d}} puntos entre el mejor y el peor.","Die {{n}} verfolgten Werte bewegen sich {{p}} kaum: {{h}} im Plus, und {{d}} Punkte zwischen dem besten und dem schlechtesten."],
+  'an.mar.verdict.hausse': ["Les {{n}} valeurs suivies montent de {{e}} en moyenne {{p}}. {{h}} d'entre elles sont en hausse, et l'écart entre la meilleure et la pire est de {{d}}.","The {{n}} securities followed are up {{e}} on average {{p}}. {{h}} of them are rising, and the gap between the best and the worst is {{d}}.","Los {{n}} valores seguidos suben un {{e}} de media {{p}}. {{h}} de ellos están al alza, y la diferencia entre el mejor y el peor es de {{d}}.","Die {{n}} verfolgten Werte steigen {{p}} im Schnitt um {{e}}. {{h}} davon legen zu, und der Abstand zwischen dem besten und dem schlechtesten beträgt {{d}}."],
+  'an.mar.verdict.baisse': ["Les {{n}} valeurs suivies reculent de {{e}} en moyenne {{p}}. {{h}} d'entre elles montent tout de même, et l'écart entre la meilleure et la pire est de {{d}}.","The {{n}} securities followed are down {{e}} on average {{p}}. {{h}} of them are rising all the same, and the gap between the best and the worst is {{d}}.","Los {{n}} valores seguidos bajan un {{e}} de media {{p}}. Aun así {{h}} de ellos suben, y la diferencia entre el mejor y el peor es de {{d}}.","Die {{n}} verfolgten Werte geben {{p}} im Schnitt um {{e}} nach. {{h}} davon steigen dennoch, und der Abstand zwischen dem besten und dem schlechtesten beträgt {{d}}."],
+  'an.mar.verdict.plat': ["Les {{n}} valeurs suivies ne bougent presque pas {{p}} : {{h}} en hausse, et l'écart entre la meilleure et la pire est de {{d}}.","The {{n}} securities followed barely move {{p}}: {{h}} rising, and the gap between the best and the worst is {{d}}.","Los {{n}} valores seguidos apenas se mueven {{p}}: {{h}} al alza, y la diferencia entre el mejor y el peor es de {{d}}.","Die {{n}} verfolgten Werte bewegen sich {{p}} kaum: {{h}} im Plus, und der Abstand zwischen dem besten und dem schlechtesten beträgt {{d}}."],
   'an.mar.verdict.une': ["Cette valeur fait {{e}} {{p}}.","This security is {{e}} {{p}}.","Este valor hace {{e}} {{p}}.","Dieser Wert macht {{p}} {{e}}."],
-  'an.mar.moi.mieux':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} points de mieux.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} points better.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} puntos mejor.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} Punkte besser."],
-  'an.mar.moi.moins':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} points de moins.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} points less.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} puntos menos.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} Punkte weniger."],
+  'an.mar.moi.mieux':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} de mieux.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} better.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} mejor.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} besser."],
+  'an.mar.moi.moins':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} de moins.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} less.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} menos.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} weniger."],
   'an.mar.moi.pareil':     ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période : comme l'ensemble, à un dixième de point près.","Your {{n}} lines followed by these quotes are {{v}} over the same period: like the whole, to within a tenth of a point.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo: como el conjunto, con una décima de punto de margen.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum: wie das Ganze, auf ein Zehntelpunkt genau."],
   'an.moi.t':           ["Votre portefeuille dans son ensemble","Your portfolio as a whole","Su cartera en conjunto","Ihr Portfolio als Ganzes"],
   'an.moi.verdict':     ["Vous avez mis {{i}}. Votre portefeuille vaut {{v}} aujourd'hui, soit {{p}}.","You put in {{i}}. Your portfolio is worth {{v}} today, that is {{p}}.","Ha puesto {{i}}. Su cartera vale {{v}} hoy, es decir {{p}}.","Sie haben {{i}} eingezahlt. Ihr Portfolio ist heute {{v}} wert, also {{p}}."],
@@ -6256,13 +6257,13 @@ window.PC = (function(){
   'an.moi.sens.d':   ["{{h}} jours sur {{n}} mesurés","{{h}} days out of {{n}} measured","{{h}} días de {{n}} medidos","{{h}} von {{n}} gemessenen Tagen"],
   'an.moi.jours':    ["sur {{n}} jours","over {{n}} days","en {{n}} días","über {{n}} Tage"],
   'an.div.t':        ["Ce que votre répartition vous rend","What your spread gives back","Lo que le devuelve su reparto","Was Ihre Aufteilung einbringt"],
-  'an.div.v':        ["Vos {{n}} lignes cotées bougent de {{a}} par an en moyenne. Prises ensemble, aux poids d'aujourd'hui, elles ne bougent que de {{b}} : les {{d}} points d'écart sont ce que votre répartition vous rend, parce qu'elles ne descendent pas toutes le même jour.","Your {{n}} quoted lines move {{a}} a year on average. Taken together, at today's weights, they move only {{b}}: the {{d}} point gap is what your spread gives back, because they do not all fall on the same day.","Sus {{n}} líneas cotizadas se mueven un {{a}} al año de media. Tomadas juntas, con los pesos de hoy, solo se mueven un {{b}}: los {{d}} puntos de diferencia son lo que le devuelve su reparto, porque no bajan todas el mismo día.","Ihre {{n}} notierten Positionen bewegen sich im Schnitt um {{a}} pro Jahr. Zusammen genommen, zu den heutigen Gewichten, nur um {{b}}: die {{d}} Punkte Differenz sind, was Ihre Aufteilung einbringt, weil sie nicht alle am selben Tag fallen."],
+  'an.div.v':        ["Vos {{n}} lignes cotées bougent de {{a}} par an en moyenne. Prises ensemble, aux poids d'aujourd'hui, elles ne bougent que de {{b}} : l'écart de {{d}} est ce que votre répartition vous rend, parce qu'elles ne descendent pas toutes le même jour.","Your {{n}} quoted lines move {{a}} a year on average. Taken together, at today's weights, they move only {{b}}: the gap of {{d}} is what your spread gives back, because they do not all fall on the same day.","Sus {{n}} líneas cotizadas se mueven un {{a}} al año de media. Tomadas juntas, con los pesos de hoy, solo se mueven un {{b}}: la diferencia de {{d}} es lo que le devuelve su reparto, porque no bajan todas el mismo día.","Ihre {{n}} notierten Positionen bewegen sich im Schnitt um {{a}} pro Jahr. Zusammen genommen, zu den heutigen Gewichten, nur um {{b}}: der Unterschied beträgt {{d}} — das ist, was Ihre Aufteilung einbringt, weil sie nicht alle am selben Tag fallen."],
   'an.div.v.0':      ["Vos {{n}} lignes cotées bougent de {{a}} par an en moyenne, et prises ensemble de {{b}} : votre répartition ne vous rend presque rien, parce que ces lignes montent et descendent ensemble.","Your {{n}} quoted lines move {{a}} a year on average, and {{b}} taken together: your spread gives back almost nothing, because these lines rise and fall together.","Sus {{n}} líneas cotizadas se mueven un {{a}} al año de media, y un {{b}} tomadas juntas: su reparto no le devuelve casi nada, porque estas líneas suben y bajan juntas.","Ihre {{n}} notierten Positionen bewegen sich im Schnitt um {{a}} pro Jahr, zusammen um {{b}}: Ihre Aufteilung bringt fast nichts ein, weil diese Positionen gemeinsam steigen und fallen."],
   'an.div.rec':      ["Sur ces {{j}} séances communes, l'ensemble est descendu de {{r}} au pire, quand {{q}}, la plus touchée, perdait {{rl}}.","Over those {{j}} shared sessions the whole fell {{r}} at worst, while {{q}}, the hardest hit, lost {{rl}}.","En esas {{j}} sesiones comunes el conjunto cayó un {{r}} en el peor momento, mientras {{q}}, la más afectada, perdía un {{rl}}.","In diesen {{j}} gemeinsamen Handelstagen fiel das Ganze im schlimmsten Fall um {{r}}, während {{q}}, die am stärksten betroffene, {{rl}} verlor."],
   'an.div.vol.k':    ["Amplitude de l'ensemble","How much the whole moves","Amplitud del conjunto","Schwankung des Ganzen"],
   'an.div.moy.k':    ["Moyenne de vos lignes","Average of your lines","Media de sus líneas","Durchschnitt Ihrer Positionen"],
   'an.div.ecart.k':  ["Ce que la répartition rend","What the spread gives back","Lo que devuelve el reparto","Was die Aufteilung einbringt"],
-  'an.div.ecart.d':  ["{{n}} points de moins que la moyenne de vos lignes","{{n}} points less than the average of your lines","{{n}} puntos menos que la media de sus líneas","{{n}} Punkte weniger als der Durchschnitt Ihrer Positionen"],
+  'an.div.ecart.d':  ["{{p}} de moins que la moyenne de vos lignes","{{p}} less than the average of your lines","{{p}} menos que la media de sus líneas","{{p}} weniger als der Durchschnitt Ihrer Positionen"],
   'an.div.pire.k':   ["Pire recul de l'ensemble","Worst fall of the whole","Peor caída del conjunto","Schlimmster Rückgang des Ganzen"],
   'an.div.pire.d':   ["{{q}}, la plus touchée, perdait {{r}}","{{q}}, the hardest hit, lost {{r}}","{{q}}, la más afectada, perdía un {{r}}","{{q}}, die am stärksten betroffene, verlor {{r}}"],
   'an.div.seances':  ["{{n}} séances communes","{{n}} shared sessions","{{n}} sesiones comunes","{{n}} gemeinsame Handelstage"],
@@ -14604,7 +14605,7 @@ document.addEventListener('error', function(ev){
       /* Un ecart est une amplitude : il ne se signe pas. Et il se
          compte en POINTS, pas en pourcent — un pourcentage de
          pourcentage ne veut rien dire. */
-      m += anMesure('an.mar.ecart', PC.t('an.mar.pt', {n:PC.nombre(haut.v - bas.v, 1)}), '');
+      m += anMesure('an.mar.ecart', anPoints(haut.v - bas.v), '');
     }
     if (actif){
       m += anMesure('an.mar.actif', echap(actif.n),
@@ -14716,6 +14717,18 @@ document.addEventListener('error', function(ev){
      eux, et dont les nombres sont en gras : on peut n'en lire que le
      gras. Moins de texte en tout, et une phrase qu'on lit vraiment
      parce qu'il n'y en a qu'une. */
+  /* « 1,4 points » n'existe pas en francais : le pluriel commence a
+     DEUX, pas a un. Et la regle n'est pas la meme dans les quatre
+     langues — l'anglais, l'espagnol et l'allemand passent au pluriel
+     des qu'on quitte un. PC.pluriel la porte depuis toujours ; les
+     phrases qui comptent des points ne s'en servaient pas, et la
+     tournure elle-meme ne tenait pas au singulier : « 1,4 points
+     separent la meilleure de la pire » se corrige en comptant juste
+     ET en disant « l'ecart est de 1,4 point ». */
+  function anPoints(n){
+    return PC.nombre(n, 1) + ' ' + PC.pluriel(n, 'an.pt.un', 'an.pt.plus');
+  }
+
   function anGras(txt, ton){
     return '<b' + (ton ? ' data-ton="' + ton + '"' : '') + '>' + txt + '</b>';
   }
@@ -14744,7 +14757,7 @@ document.addEventListener('error', function(ev){
       n: String(vus.length),
       e: anGras(anAmpleur(e, 1), e > 0 ? 'hausse' : 'baisse'),
       h: anGras(String(R.hausses)),
-      d: anGras(PC.nombre(Math.abs(ecart), 1))
+      d: anGras(anPoints(Math.abs(ecart)))
     });
   }
 
@@ -14794,7 +14807,7 @@ document.addEventListener('error', function(ev){
       n: anGras(String(n)),
       v: anGras(PC.pourcent(moi, 1), moi < 0 ? 'baisse' : 'hausse'),
       e: anGras(PC.pourcent(R.ensemble, 1), R.ensemble < 0 ? 'baisse' : 'hausse'),
-      d: anGras(PC.nombre(Math.abs(ecart), 1))
+      d: anGras(anPoints(Math.abs(ecart)))
     });
   }
 
@@ -15041,7 +15054,7 @@ document.addEventListener('error', function(ev){
         n: anGras(String(P.n)),
         a: anGras(anAmpleur(P.volMoyenne)),
         b: anGras(anAmpleur(P.vol)),
-        d: anGras(PC.nombre(P.ecart, 1))
+        d: anGras(anPoints(P.ecart))
       });
       v.innerHTML = ph;
     }
@@ -15063,8 +15076,8 @@ document.addEventListener('error', function(ev){
     }
     if (mes){
       let m = '';
-      m += anMesure('an.div.ecart', PC.t('an.mar.pt', {n:PC.nombre(P.ecart, 1)}),
-                    echap(PC.t('an.div.ecart.d', {n:PC.nombre(P.ecart, 1)})),
+      m += anMesure('an.div.ecart', anPoints(P.ecart),
+                    echap(PC.t('an.div.ecart.d', {p:anPoints(P.ecart)})),
                     '', '', 'an-m--tete');
       m += anMesure('an.div.vol', anAmpleur(P.vol),
                     echap(PC.t('an.div.seances', {n:String(P.jours)})),
