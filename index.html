@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261008.1332";</script>
+<script>window.PC_VERSION = "261008.1904";</script>
 </head>
 <body>
 
@@ -507,6 +507,35 @@ body.flux-vif .cours__vif::before{
   color:var(--ink-2); text-wrap:pretty;
 }
 .aide-install[hidden]{display:none;}
+/* ===== L'OFFRE DE MOUVEMENT, SUR LE PREMIER ECRAN =====
+   Elle n'existe que pour qui en a besoin : la regle de media la montre
+   si le systeme demande moins d'animations, et la cache partout
+   ailleurs. C'est de la feuille de style et non du script, pour
+   qu'elle se reevalue toute seule si le visiteur change l'avis de son
+   systeme pendant qu'il lit.
+
+   Discrete : du mono gris, le corps d'une note, et deux boutons qui ne
+   sont pas des appels a l'action — elle ne doit pas rivaliser avec le
+   bouton d'abonnement qui est juste au-dessus. */
+.v1h__anim{display:none;}
+@media (prefers-reduced-motion: reduce){
+  .v1h__anim:not([hidden]){
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px;
+    margin-top:clamp(20px,2.6vw,30px); max-width:52ch;
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; line-height:1.6;
+    color:var(--ink-3); text-wrap:pretty;
+  }
+}
+/* Une fois le mouvement rendu, l'offre n'a plus d'objet. */
+html[data-anim="force"] .v1h__anim{display:none !important;}
+.v1h__anim button{
+  background:none; border:none; padding:0; cursor:pointer;
+  font:inherit; text-decoration:underline; text-underline-offset:3px;
+}
+.v1h__anim__o{color:var(--accent);}
+.v1h__anim__n{color:var(--ink-3);}
+.v1h__anim button:hover{color:var(--ink);}
+.v1h__anim button:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
 .hero__gratuit{
   font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-3);
   margin-top:12px; text-wrap:pretty;
@@ -2267,6 +2296,68 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 /* Le champ est remonte dans le bloc des marches, sous la liste des
    valeurs de tete : il y prend l'air qu'il n'avait pas quand il
    partageait une ligne avec son etiquette. */
+/* ===== VOS LIGNES, EN TOUTES LETTRES =====
+   Elles etaient dans la liste du champ, melangees aux cotations du
+   marche. Ici elles sont a part, et a un seul geste : un bouton par
+   ligne, celle qui est ouverte marquee. A sept lignes c'est un coup
+   d'oeil ; au-dela la rangee passe a la ligne, ce qui reste lisible
+   bien plus longtemps qu'une liste a derouler. */
+.an-mien{display:flex; flex-direction:column; align-items:flex-start; gap:9px; margin:18px 0 0;}
+.an-mien__l{display:flex; flex-wrap:wrap; gap:7px;}
+.an-mien__b{
+  font:inherit; font-size:13.5px; line-height:1.2; cursor:pointer;
+  padding:8px 13px; border-radius:var(--r-pill);
+  background:color-mix(in srgb, var(--paper-2) 62%, transparent);
+  border:1px solid var(--verre-filet); color:var(--ink-2);
+  transition:border-color .18s, color .18s, background .18s;
+  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.an-mien__b:hover{border-color:var(--accent); color:var(--ink);}
+.an-mien__b:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+/* La ligne ouverte se voit : sans ca, la rangee ne dit pas ce qu'on
+   est en train de lire juste en dessous. */
+.an-mien__b[aria-current="true"]{
+  background:var(--accent-soft); border-color:var(--accent); color:var(--ink);
+}
+.an-mien__b--tout{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.04em;}
+/* Sur telephone la rangee ne se replie pas, elle DEFILE. A neuf
+   lignes elle passait sur quatre rangs et mangeait un tiers d'ecran ;
+   repliee, elle aurait cache le seul moyen de changer de ligne. Un
+   rang qui glisse sous le pouce garde les deux : tout reste joignable,
+   et ca tient sur une ligne.
+
+   `min-width:0` sur le parent : sans lui un enfant qui defile refuse
+   de devenir plus etroit que son contenu, et c'est la page entiere qui
+   part de cote. */
+@media (max-width:700px){
+  /* `align-items:stretch` ET une largeur bornee : `flex-start` laisse
+     l'enfant se dimensionner sur son contenu, et un rang de neuf cases
+     qui ne se replie pas reclamait alors 881 px dans un ecran de 390 —
+     la page partait de cote. Un enfant qui defile doit etre borne par
+     son parent, sinon c'est lui qui borne la page. */
+  /* ===== CE QUE LE TELEPHONE N'A PAS BESOIN DE LIRE DEUX FOIS =====
+     « Douze mois de cours reels quand la ligne en a, vos releves dates
+     sinon » est une note de methode. Chaque carte de ligne porte deja
+     sa source en toutes lettres — « 365 seances lues », « vos releves
+     dates » — et « Comment lire ces chiffres » la reprend en entier.
+     Sur un ecran de 390 px, trois lignes de prose qui redisent ce qui
+     est ecrit vingt pixels plus bas coutent plus qu'elles
+     n'apprennent. Elle reste dans le document, donc trouvable, et
+     revient des que l'ecran s'elargit. */
+  #an-calc > .an-sous{display:none;}
+  .an-mien{margin-top:12px; gap:7px; align-items:stretch; min-width:0;}
+  .an-mien__l{
+    flex-wrap:nowrap; overflow-x:auto; min-width:0; max-width:100%;
+    padding-bottom:4px; scrollbar-width:none;
+    scroll-snap-type:x proximity;
+    /* PAS de debordement jusqu'au bord de l'ecran : la marge negative
+       qui l'aurait fait sortait le rang de son cadre, et c'est la page
+       entiere qui partait de cote — 901 px de contenu dans 390. Un
+       rang qui s'arrete dans la marge se defile tout aussi bien. */
+  }
+  .an-mien__l::-webkit-scrollbar{display:none;}
+  .an-mien__b{font-size:13px; padding:7px 11px; flex:none; scroll-snap-align:start;}
+}
 .an-choix{display:flex; flex-direction:column; align-items:flex-start; gap:8px; margin:18px 0 4px;}
 .an-choix__k{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 /* Le champ et sa liste : la liste se pose PAR-DESSUS ce qui suit,
@@ -5579,6 +5670,9 @@ window.PC = (function(){
   'nav.contact':        ["Me contacter","Contact me","Contactar","Kontakt"],
   'nav.anim.off':       ["Activer les animations\u00a0: votre appareil demande à les réduire, et toute la page reste donc immobile.","Turn animations on: your device asks to reduce them, so the whole page stays still.","Activar las animaciones: su dispositivo pide reducirlas, por lo que toda la página permanece inmóvil.","Animationen einschalten: Ihr Gerät bittet darum, sie zu reduzieren, daher bleibt die ganze Seite still."],
   'nav.anim.on':        ["Animations activées. Les remettre au réglage de votre appareil\u00a0?","Animations are on. Put them back to your device's setting?","Animaciones activadas. ¿Volver al ajuste de su dispositivo?","Animationen sind an. Zurück zur Einstellung Ihres Geräts?"],
+  'nav.anim.offre':     ["Votre appareil demande moins d'animations, et cette page les a donc toutes coupées.","Your device asks for fewer animations, so this page has turned them all off.","Su dispositivo pide menos animaciones, por lo que esta página las ha desactivado todas.","Ihr Gerät bittet um weniger Animationen, daher hat diese Seite sie alle abgeschaltet."],
+  'nav.anim.oui':       ["Les activer ici","Turn them on here","Activarlas aquí","Hier einschalten"],
+  'nav.anim.non':       ["Laisser comme ça","Leave it as it is","Dejarlo así","So lassen"],
   'nav.theme':          ["Changer de thème","Switch theme","Cambiar el tema","Design wechseln"],
   'nav.menu':           ["Menu","Menu","Menú","Menü"],
   'nav.menu.ouvrir':    ["Ouvrir le menu","Open the menu","Abrir el menú","Menü öffnen"],
@@ -6200,9 +6294,27 @@ window.PC = (function(){
      seul — la correlation entre deux lignes surtout. Deux placements
      qui montent et descendent ensemble ne sont pas une
      diversification, et personne ne le calcule a la main. */
+  'an.mar.lec.large':      ["{{h}} valeurs sur {{n}} montent : le mouvement est large, il ne tient pas à deux noms.","{{h}} securities out of {{n}} are rising: the move is broad, it does not rest on two names.","{{h}} valores de {{n}} suben: el movimiento es amplio, no depende de dos nombres.","{{h}} von {{n}} Werten steigen: die Bewegung ist breit, sie hängt nicht an zwei Namen."],
+  'an.mar.lec.peu':        ["{{h}} valeurs sur {{n}} seulement montent : ce qui bouge tient à peu de monde.","Only {{h}} securities out of {{n}} are rising: what moves rests on very few.","Solo {{h}} valores de {{n}} suben: lo que se mueve depende de muy pocos.","Nur {{h}} von {{n}} Werten steigen: was sich bewegt, hängt an sehr wenigen."],
+  'an.mar.lec.partage':    ["{{h}} valeurs sur {{n}} montent : le marché est partagé, il ne va pas dans un seul sens.","{{h}} securities out of {{n}} are rising: the market is split, it is not going one way.","{{h}} valores de {{n}} suben: el mercado está dividido, no va en un solo sentido.","{{h}} von {{n}} Werten steigen: der Markt ist geteilt, er geht nicht in eine Richtung."],
+  'an.mar.lec.tire':       ["Retirez {{q}}, qui fait {{v}} à elle seule, et la moyenne passe à {{b}} : c'est elle qui porte la journée.","Take out {{q}}, which is {{v}} on its own, and the average becomes {{b}}: it is carrying the day.","Quite {{q}}, que hace un {{v}} por sí sola, y la media pasa a {{b}}: es ella la que sostiene el día.","Nimmt man {{q}} heraus, die allein {{v}} macht, wird der Durchschnitt {{b}}: sie trägt den Tag."],
+  'an.mar.lec.egal':       ["Retirez celle qui bouge le plus et la moyenne ne change presque pas : personne ne tire le marché tout seul.","Take out the biggest mover and the average barely changes: nobody is pulling the market alone.","Quite la que más se mueve y la media apenas cambia: nadie tira del mercado en solitario.","Nimmt man den stärksten Beweger heraus, ändert sich der Durchschnitt kaum: niemand zieht den Markt allein."],
+  'an.mar.lec.trie':       ["Et {{d}} séparent la meilleure de la pire : le marché trie, il ne monte pas en bloc.","And {{d}} separate the best from the worst: the market is sorting, it is not rising as a block.","Y {{d}} separan el mejor del peor: el mercado selecciona, no sube en bloque.","Und {{d}} trennen den besten vom schlechtesten: der Markt sortiert, er steigt nicht im Block."],
+  'an.mar.lec.bloc':       ["Et {{d}} seulement séparent la meilleure de la pire : tout bouge ensemble.","And only {{d}} separate the best from the worst: everything moves together.","Y solo {{d}} separan el mejor del peor: todo se mueve junto.","Und nur {{d}} trennen den besten vom schlechtesten: alles bewegt sich gemeinsam."],
+  'an.mar.lec.grosses':    ["Pondérée par la taille, la moyenne fait {{a}} contre {{b}} à l'unité : ce sont les grosses capitalisations qui mènent.","Weighted by size, the average is {{a}} against {{b}} per security: the large caps are leading.","Ponderada por el tamaño, la media hace un {{a}} frente al {{b}} por valor: mandan las grandes capitalizaciones.","Nach Größe gewichtet macht der Durchschnitt {{a}} gegenüber {{b}} je Wert: die großen Werte führen."],
+  'an.mar.lec.petites':    ["Pondérée par la taille, la moyenne fait {{a}} contre {{b}} à l'unité : ce sont les petites qui mènent.","Weighted by size, the average is {{a}} against {{b}} per security: the small caps are leading.","Ponderada por el tamaño, la media hace un {{a}} frente al {{b}} por valor: mandan las pequeñas.","Nach Größe gewichtet macht der Durchschnitt {{a}} gegenüber {{b}} je Wert: die kleinen führen."],
+  'an.mar.med.k':          ["La valeur du milieu","The middle security","El valor del medio","Der mittlere Wert"],
+  'an.mar.med.d':          ["La moitié fait mieux, la moitié fait moins bien.","Half do better, half do worse.","La mitad lo hace mejor, la mitad peor.","Die Hälfte macht es besser, die Hälfte schlechter."],
+  'an.mar.sans.k':         ["Sans la plus forte","Without the biggest mover","Sin la más fuerte","Ohne den stärksten Beweger"],
+  'an.mar.sans.d':         ["La moyenne sans {{q}}, qui fait {{v}}.","The average without {{q}}, which is {{v}}.","La media sin {{q}}, que hace un {{v}}.","Der Durchschnitt ohne {{q}}, die {{v}} macht."],
+  'an.mar.taille.k':       ["Grosses contre petites","Large against small","Grandes contra pequeñas","Große gegen kleine"],
+  'an.mar.taille.d':       ["Moyenne pondérée moins moyenne à l'unité. Au-dessus de zéro, les grosses mènent.","Weighted average minus per-security average. Above zero, the large caps lead.","Media ponderada menos media por valor. Por encima de cero, mandan las grandes.","Gewichteter Durchschnitt minus Durchschnitt je Wert. Über null führen die großen."],
+  'an.mar.fort.k':         ["Ce qui bouge fort","Moving hard","Lo que se mueve fuerte","Was sich stark bewegt"],
+  'an.mar.fort.d':         ["{{n}} valeurs font 5 % ou plus, dans un sens ou dans l'autre.","{{n}} securities move 5% or more, one way or the other.","{{n}} valores hacen un 5 % o más, en un sentido o en otro.","{{n}} Werte bewegen sich um 5 % oder mehr, in die eine oder andere Richtung."],
   'an.part.marche':     ["Le marché","The market","El mercado","Der Markt"],
   'an.part.moi':        ["Vos lignes","Your lines","Sus líneas","Ihre Positionen"],
   'an.mar.d':           ["Relevé à {{h}} · {{n}} lignes","Read at {{h}} · {{n}} lines","Tomado a las {{h}} · {{n}} líneas","Erhoben um {{h}} · {{n}} Werte"],
+  'an.mar.d.1':            ["Relevé à {{h}} · une ligne","Read at {{h}} · one line","Leído a las {{h}} · una línea","Stand {{h}} · eine Position"],
   'an.mar.vif':         ["En direct de {{s}} · 7 j et 30 j au relevé de {{h}}","Live from {{s}} · 7 d and 30 d as of {{h}}","En directo desde {{s}} · 7 y 30 días a las {{h}}","Live von {{s}} · 7 und 30 Tage Stand {{h}}"],
   'an.mar.fige':        ["Pas de cotation continue sur ce marché.","No continuous quote on this market.","Sin cotización continua en este mercado.","Keine fortlaufende Notierung an diesem Markt."],
   'an.mar.relais':      ["La bourse passe par le relais de cours, et il n'est pas configuré sur cette page. Les cryptos et les métaux, eux, se lisent sans lui.","Shares go through the price relay, and it is not configured on this page. Cryptos and metals are read without it.","La bolsa pasa por el relé de cotizaciones, y no está configurado en esta página. Las criptos y los metales se leen sin él.","Aktien laufen über das Kurs-Relais, das auf dieser Seite nicht eingerichtet ist. Kryptos und Metalle kommen ohne es aus."],
@@ -6231,17 +6343,20 @@ window.PC = (function(){
   'an.calc.d':          ["Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.","Twelve months of real prices where there are any, your dated statements otherwise.","Doce meses de cotizaciones reales cuando las hay, sus informes fechados si no.","Zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
-  'an.choix':           ["Une autre valeur\u00a0?","Another security?","\u00bfOtro valor?","Ein anderer Wert?"],
+  'an.choix':           ["Ou une valeur du marché","Or a security from the market","O un valor del mercado","Oder ein Wert vom Markt"],
   'an.mar.per.24h':     ["aujourd'hui","today","hoy","heute"],
   'an.mar.per.7j':      ["sur sept jours","over seven days","en siete días","über sieben Tage"],
   'an.mar.per.30j':     ["sur trente jours","over thirty days","en treinta días","über dreißig Tage"],
-  'an.mar.verdict.hausse': ["Les {{n}} valeurs suivies montent de {{e}} en moyenne {{p}}. {{h}} d'entre elles sont en hausse, et l'écart entre la meilleure et la pire est de {{d}}.","The {{n}} securities followed are up {{e}} on average {{p}}. {{h}} of them are rising, and the gap between the best and the worst is {{d}}.","Los {{n}} valores seguidos suben un {{e}} de media {{p}}. {{h}} de ellos están al alza, y la diferencia entre el mejor y el peor es de {{d}}.","Die {{n}} verfolgten Werte steigen {{p}} im Schnitt um {{e}}. {{h}} davon legen zu, und der Abstand zwischen dem besten und dem schlechtesten beträgt {{d}}."],
-  'an.mar.verdict.baisse': ["Les {{n}} valeurs suivies reculent de {{e}} en moyenne {{p}}. {{h}} d'entre elles montent tout de même, et l'écart entre la meilleure et la pire est de {{d}}.","The {{n}} securities followed are down {{e}} on average {{p}}. {{h}} of them are rising all the same, and the gap between the best and the worst is {{d}}.","Los {{n}} valores seguidos bajan un {{e}} de media {{p}}. Aun así {{h}} de ellos suben, y la diferencia entre el mejor y el peor es de {{d}}.","Die {{n}} verfolgten Werte geben {{p}} im Schnitt um {{e}} nach. {{h}} davon steigen dennoch, und der Abstand zwischen dem besten und dem schlechtesten beträgt {{d}}."],
-  'an.mar.verdict.plat': ["Les {{n}} valeurs suivies ne bougent presque pas {{p}} : {{h}} en hausse, et l'écart entre la meilleure et la pire est de {{d}}.","The {{n}} securities followed barely move {{p}}: {{h}} rising, and the gap between the best and the worst is {{d}}.","Los {{n}} valores seguidos apenas se mueven {{p}}: {{h}} al alza, y la diferencia entre el mejor y el peor es de {{d}}.","Die {{n}} verfolgten Werte bewegen sich {{p}} kaum: {{h}} im Plus, und der Abstand zwischen dem besten und dem schlechtesten beträgt {{d}}."],
+  'an.mar.verdict.hausse': ["Les {{n}} valeurs suivies montent de {{e}} en moyenne {{p}}, et {{h}} d'entre elles sont en hausse.","The {{n}} securities followed are up {{e}} on average {{p}}, and {{h}} of them are rising.","Los {{n}} valores seguidos suben un {{e}} de media {{p}}, y {{h}} de ellos están al alza.","Die {{n}} verfolgten Werte steigen {{p}} im Schnitt um {{e}}, und {{h}} davon legen zu."],
+  'an.mar.verdict.baisse': ["Les {{n}} valeurs suivies reculent de {{e}} en moyenne {{p}}, et {{h}} d'entre elles montent tout de même.","The {{n}} securities followed are down {{e}} on average {{p}}, and {{h}} of them are rising all the same.","Los {{n}} valores seguidos bajan un {{e}} de media {{p}}, y aun así {{h}} de ellos suben.","Die {{n}} verfolgten Werte geben {{p}} im Schnitt um {{e}} nach, und {{h}} davon steigen dennoch."],
+  'an.mar.verdict.plat': ["Les {{n}} valeurs suivies ne bougent presque pas {{p}} : {{h}} d'entre elles sont en hausse.","The {{n}} securities followed barely move {{p}}: {{h}} of them are rising.","Los {{n}} valores seguidos apenas se mueven {{p}}: {{h}} de ellos están al alza.","Die {{n}} verfolgten Werte bewegen sich {{p}} kaum: {{h}} davon legen zu."],
   'an.mar.verdict.une': ["Cette valeur fait {{e}} {{p}}.","This security is {{e}} {{p}}.","Este valor hace {{e}} {{p}}.","Dieser Wert macht {{p}} {{e}}."],
   'an.mar.moi.mieux':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} de mieux.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} better.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} mejor.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} besser."],
+  'an.mar.moi.mieux.1':    ["Votre seule ligne suivie par ces cotations fait {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} de mieux.","Your only line followed by these quotes is {{v}} over the same period, against {{e}} for the whole: {{d}} better.","Su única línea seguida por estas cotizaciones hace un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} mejor.","Ihre einzige von diesen Kursen verfolgte Position macht {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} besser."],
   'an.mar.moi.moins':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} de moins.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} less.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} menos.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} weniger."],
+  'an.mar.moi.moins.1':    ["Votre seule ligne suivie par ces cotations fait {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} de moins.","Your only line followed by these quotes is {{v}} over the same period, against {{e}} for the whole: {{d}} less.","Su única línea seguida por estas cotizaciones hace un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} menos.","Ihre einzige von diesen Kursen verfolgte Position macht {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} weniger."],
   'an.mar.moi.pareil':     ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période : comme l'ensemble, à un dixième de point près.","Your {{n}} lines followed by these quotes are {{v}} over the same period: like the whole, to within a tenth of a point.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo: como el conjunto, con una décima de punto de margen.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum: wie das Ganze, auf ein Zehntelpunkt genau."],
+  'an.mar.moi.pareil.1':   ["Votre seule ligne suivie par ces cotations fait {{v}} sur la même période : comme l'ensemble, à un dixième de point près.","Your only line followed by these quotes is {{v}} over the same period: like the whole, to within a tenth of a point.","Su única línea seguida por estas cotizaciones hace un {{v}} en el mismo periodo: como el conjunto, con una décima de punto de margen.","Ihre einzige von diesen Kursen verfolgte Position macht {{v}} im selben Zeitraum: wie das Ganze, auf ein Zehntelpunkt genau."],
   'an.moi.t':           ["Votre portefeuille dans son ensemble","Your portfolio as a whole","Su cartera en conjunto","Ihr Portfolio als Ganzes"],
   'an.moi.verdict':     ["Vous avez mis {{i}}. Votre portefeuille vaut {{v}} aujourd'hui, soit {{p}}.","You put in {{i}}. Your portfolio is worth {{v}} today, that is {{p}}.","Ha puesto {{i}}. Su cartera vale {{v}} hoy, es decir {{p}}.","Sie haben {{i}} eingezahlt. Ihr Portfolio ist heute {{v}} wert, also {{p}}."],
   'an.moi.cote':        ["{{n}} de cette valeur suit un cours de marché\u00a0; le reste repose sur ce que vous avez saisi.","{{n}} of that value follows a market price; the rest rests on what you entered.","{{n}} de ese valor sigue una cotización de mercado; el resto se basa en lo que ha introducido.","{{n}} dieses Werts folgt einem Marktkurs; der Rest beruht auf Ihren Eingaben."],
@@ -6300,14 +6415,18 @@ window.PC = (function(){
   'an.mar.n.crypto':    ["Les vingt-quatre premi\u00e8res par capitalisation. Pour une autre valeur, le champ ci-dessous cherche dans tout ce que les fournisseurs servent.","The twenty-four largest by market capitalisation. For any other security, the field below searches everything the providers serve.","Las veinticuatro primeras por capitalizaci\u00f3n. Para otro valor, el campo de abajo busca en todo lo que sirven los proveedores.","Die vierundzwanzig gr\u00f6\u00dften nach Marktkapitalisierung. F\u00fcr einen anderen Wert sucht das Feld unten in allem, was die Anbieter liefern."],
   'an.mar.n.bourse':    ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse."],
   'an.mar.n.matieres':  ["L'or et l'argent arrivent sans rien installer\u00a0; le platine, le cuivre, le p\u00e9trole et les autres passent par le relais.","Gold and silver arrive with nothing installed; platinum, copper, oil and the rest go through the relay.","El oro y la plata llegan sin instalar nada; el platino, el cobre, el petr\u00f3leo y los dem\u00e1s pasan por el rel\u00e9.","Gold und Silber kommen ohne Installation; Platin, Kupfer, \u00d6l und die \u00fcbrigen laufen \u00fcber das Relais."],
+  'an.choix.vos':       ["Vos lignes","Your lines","Sus líneas","Ihre Positionen"],
   'an.choix.tout':      ["Toutes vos lignes","All your lines","Todas sus l\u00edneas","Alle Ihre Positionen"],
   'an.cherche.t':       ["Une de vos lignes, ou n'importe quelle crypto, action ou matière première","One of your lines, or any crypto, share or commodity","Una de sus líneas, o cualquier cripto, acción o materia prima","Eine Ihrer Positionen, oder eine beliebige Krypto, Aktie oder Rohstoff"],
   'an.cherche.vos':     ["Vos lignes","Your lines","Sus l\u00edneas","Ihre Positionen"],
   'an.cherche.marche':  ["Sur les march\u00e9s","On the markets","En los mercados","An den M\u00e4rkten"],
-  'an.cherche.tout':    ["Tapez deux lettres pour chercher dans tout ce que les fournisseurs servent\u00a0: cryptos, bourse, mati\u00e8res premi\u00e8res.","Type two letters to search everything the providers serve: crypto, stocks, commodities.","Escriba dos letras para buscar en todo lo que sirven los proveedores: criptos, bolsa, materias primas.","Tippen Sie zwei Buchstaben, um in allem zu suchen, was die Anbieter liefern: Kryptos, B\u00f6rse, Rohstoffe."],
+  'an.cherche.tout':    ["Tapez deux lettres : cryptos, bourse et matières premières, chez tous les fournisseurs. Vos propres lignes sont au-dessus.","Type two letters: crypto, stocks and commodities, across every provider. Your own lines are above.","Escriba dos letras: criptos, bolsa y materias primas, en todos los proveedores. Sus propias líneas están arriba.","Tippen Sie zwei Buchstaben: Kryptos, Börse und Rohstoffe, bei allen Anbietern. Ihre eigenen Positionen stehen oben."],
+  'an.cherche.mien':    ["« {{q}} » est une de vos lignes\u00a0: elle est proposée juste au-dessus du champ.","« {{q}} » is one of your lines: it is offered just above the field.","« {{q}} » es una de sus líneas: se propone justo encima del campo.","« {{q}} » ist eine Ihrer Positionen: sie wird direkt über dem Feld angeboten."],
+  'an.cherche.miens':   ["{{n}} de vos lignes répondent à ce nom, dont « {{q}} »\u00a0: elles sont proposées juste au-dessus du champ.","{{n}} of your lines match that name, including « {{q}} »: they are offered just above the field.","{{n}} de sus líneas responden a ese nombre, entre ellas « {{q}} »: se proponen justo encima del campo.","{{n}} Ihrer Positionen passen zu diesem Namen, darunter « {{q}} »: sie werden direkt über dem Feld angeboten."],
   'an.cherche.rien':    ["Rien trouv\u00e9 \u00e0 ce nom.","Nothing found under that name.","No se ha encontrado nada con ese nombre.","Unter diesem Namen nichts gefunden."],
   'an.sujet.tout':      ["Voir toutes vos lignes","See all your lines","Ver todas sus l\u00edneas","Alle Ihre Positionen ansehen"],
   'an.sujet.sur':       ["une de vos {{n}} lignes","one of your {{n}} lines","una de sus {{n}} l\u00edneas","eine Ihrer {{n}} Positionen"],
+  'an.sujet.sur.1':        ["votre seule ligne","your only line","su única línea","Ihre einzige Position"],
   'an.src.marche':      ["cours quotidiens du march\u00e9","daily market prices","cotizaciones diarias del mercado","t\u00e4gliche Marktkurse"],
   'an.src.releve':      ["vos relev\u00e9s dat\u00e9s","your dated statements","sus informes fechados","Ihre datierten Ausz\u00fcge"],
   'an.src.rien':        ["pas encore de quoi mesurer","nothing to measure yet","a\u00fan nada que medir","noch nichts zu messen"],
@@ -6361,6 +6480,7 @@ window.PC = (function(){
   'an.cor.v.nette':     ["{{a}} et {{b}} vont souvent dans le même sens ({{c}}), sans se confondre pour autant.","{{a}} and {{b}} often go the same way ({{c}}), without being one and the same.","{{a}} y {{b}} suelen ir en el mismo sentido ({{c}}), sin confundirse del todo.","{{a}} und {{b}} laufen oft in dieselbe Richtung ({{c}}), ohne dasselbe zu sein."],
   'an.cor.v.inverse':   ["{{a}} et {{b}} vont en sens contraire ({{c}})\u00a0: quand l'une baisse, l'autre amortit.","{{a}} and {{b}} go opposite ways ({{c}}): when one falls, the other cushions.","{{a}} y {{b}} van en sentido contrario ({{c}}): cuando una baja, la otra amortigua.","{{a}} und {{b}} laufen gegenläufig ({{c}}): fällt die eine, federt die andere ab."],
   'an.cor.v.faible':    ["Aucune de vos {{n}} paires cotées ne bouge vraiment avec une autre\u00a0: vos lignes ne portent pas le même pari.","None of your {{n}} quoted pairs really moves with another: your lines are not the same bet.","Ninguno de sus {{n}} pares cotizados se mueve realmente con otro: sus líneas no son la misma apuesta.","Keines Ihrer {{n}} notierten Paare bewegt sich wirklich mit einem anderen: Ihre Positionen sind nicht dieselbe Wette."],
+  'an.cor.v.faible.1':     ["Votre seule paire cotée ne bouge pas vraiment ensemble : ces deux lignes ne portent pas le même pari.","Your only quoted pair does not really move together: those two lines are not the same bet.","Su único par cotizado no se mueve realmente junto: esas dos líneas no son la misma apuesta.","Ihr einziges notiertes Paar bewegt sich nicht wirklich gemeinsam: diese beiden Positionen sind nicht dieselbe Wette."],
   'an.cor.n':           ["Mesuré sur {{n}} séances communes.","Measured on {{n}} shared sessions.","Medido sobre {{n}} sesiones comunes.","Gemessen an {{n}} gemeinsamen Handelstagen."],
   'an.ia.t':            ["Vos chiffres, écrits en clair","Your figures, written up plainly","Sus cifras, redactadas con claridad","Ihre Zahlen, klar formuliert"],
   'cmp.analyse':        ["L'analyse de vos lignes cotées : volatilité, pire recul, ce qui bouge ensemble", "Analysis of your listed lines: volatility, worst drawdown, what moves together", "El análisis de sus líneas cotizadas: volatilidad, peor caída, lo que se mueve junto", "Die Analyse Ihrer notierten Positionen: Volatilität, schlimmster Rückgang, was sich zusammen bewegt"],
@@ -7621,6 +7741,36 @@ document.addEventListener('error', function(ev){
         </svg>
       </a>
       <a class="v1h__second" href="#espace-client" data-i18n="v1.cta2">J'ai déjà un compte</a>
+
+      <!-- ===== LE MOUVEMENT SE REPREND LA OU IL MANQUE =====
+           Le bouton existait deja, et il reglait bien le probleme —
+           mais il vit dans le panneau des reglages, derriere le bouton
+           menu. Quelqu'un dont le systeme demande moins d'animations
+           voit donc une page entierement immobile, conclut qu'elle est
+           cassee, et n'a aucune raison d'ouvrir un menu pour y
+           chercher une case dont il ignore l'existence. C'est le cas
+           de Windows, ou « Effets d'animation » se desactive en un
+           geste dans les reglages d'accessibilite et ne se rallume
+           jamais.
+
+           L'offre se pose donc SUR LE PREMIER ECRAN, la ou le defaut
+           se voit. Elle dit la cause en toutes lettres — ce n'est pas
+           la page qui est cassee, c'est un reglage de l'appareil — et
+           elle laisse le choix. On ne force rien : respecter un
+           reglage sans donner le moyen d'en sortir etait l'impasse ;
+           en sortir sans demander en serait une autre.
+
+           Elle ne se montre qu'une fois : « Laisser comme ca » la
+           retire pour de bon, et le bouton des reglages reste la pour
+           qui changerait d'avis. -->
+      <p class="v1h__anim" id="anim-offre" hidden>
+        <span data-i18n="nav.anim.offre">Votre appareil demande moins d'animations, et cette page
+          les a donc toutes coupées.</span>
+        <button class="v1h__anim__o" type="button" id="anim-oui"
+                data-i18n="nav.anim.oui">Les activer ici</button>
+        <button class="v1h__anim__n" type="button" id="anim-non"
+                data-i18n="nav.anim.non">Laisser comme ça</button>
+      </p>
 
     </div>
   </div>
@@ -8883,6 +9033,17 @@ document.addEventListener('error', function(ev){
                et non dans le bloc du portefeuille, parce que c'est
                ici que le choix de la periode se fait : 24 h, 7 j ou
                30 j, et la comparaison doit suivre. -->
+          <!-- ===== CE QUE LES CHIFFRES DU MARCHE VEULENT DIRE =====
+               La phrase du dessus donne les nombres ; celle-ci dit ce
+               qu'ils signifient, et ce sont deux choses differentes.
+               « Six valeurs sur dix montent » est un fait ; « le
+               marche est partage, il ne va pas dans un seul sens » est
+               sa lecture, et c'est elle qu'on vient chercher.
+
+               Trois lectures, tirees des memes cours : combien de
+               monde porte le mouvement, si une seule valeur le tire,
+               et si le marche trie ou bouge en bloc. -->
+          <p class="an-verdict an-verdict--2" id="an-mar-lecture"></p>
           <p class="an-verdict an-verdict--2" id="an-mar-moi"></p>
           <!-- SUR TELEPHONE, LA PHRASE SUFFIT. Elle porte deja la
                moyenne, le nombre de hausses et l'ecart : les six
@@ -9023,8 +9184,24 @@ document.addEventListener('error', function(ev){
                vide, il liste vos lignes ; rempli, il va chercher
                n'importe quelle crypto, action ou matiere premiere chez
                le fournisseur de cours et en mesure les douze mois. -->
+          <!-- ===== VOS LIGNES D'UN COTE, LE MARCHE DE L'AUTRE =====
+               Le champ s'appelle « une autre valeur » et sa liste
+               proposait d'abord VOS lignes : on y retrouvait ses
+               propres investissements melanges aux cotations du
+               marche, dans une seule liste. C'est le meme melange que
+               les chapitres viennent de defaire, refait a l'interieur
+               d'un champ.
+
+               Vos lignes sont donc ici, en toutes lettres et a un
+               seul geste — elles sont connues, instantanees, et ce
+               sont elles qu'on veut neuf fois sur dix. Le champ, lui,
+               ne cherche plus que le marche. -->
+          <div class="an-mien" id="an-mien-choix" hidden>
+            <span class="an-choix__k mono" data-i18n="an.choix.vos">Vos lignes</span>
+            <div class="an-mien__l" id="an-mien-liste"></div>
+          </div>
           <div class="an-choix" id="an-choix-boite">
-            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Une autre valeur&nbsp;?</label>
+            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Ou une valeur du marché</label>
             <div class="an-q">
               <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
                      spellcheck="false" data-i18n-titre="an.cherche.t">
@@ -10479,35 +10656,63 @@ document.addEventListener('error', function(ev){
      Il ne se montre que si le systeme demande moins d'animations ; la
      feuille de style s'en charge. Ici, il ne reste qu'a poser l'etat,
      le retenir, et le dire. */
+  /* ===== RENDRE LE MOUVEMENT, DE DEUX ENDROITS =====
+     Le bouton des reglages, et l'offre posee sur le premier ecran. Un
+     seul geste derriere les deux : sans ca, l'un des deux aurait fini
+     par oublier de rejouer l'entree ou d'ecrire le choix. */
   const animBtn = document.getElementById('anim-btn');
-  if (animBtn){
-    const ditAnim = function(){
+  const animOffre = document.getElementById('anim-offre');
+
+  function animForce(on){
+    if (on) root.setAttribute('data-anim', 'force');
+    else root.removeAttribute('data-anim');
+    try { localStorage.setItem('pierrelco.anim', on ? 'force' : ''); } catch (e){}
+    /* ET ON REJOUE L'ENTREE. Sans cela, activer les animations ne
+       changerait rien de visible avant un rechargement : le titre est
+       deja arrive, le compteur a deja fini. Le geste aurait l'air de
+       ne rien faire — c'est-a-dire exactement le defaut qu'il vient
+       corriger. */
+    if (on){
+      root.classList.remove('intro-run');
+      void root.offsetWidth;
+      root.classList.add('intro-run');
+    }
+    animDit();
+  }
+
+  /* L'offre ne se montre qu'a qui en a besoin, et une seule fois.
+     La regle de media, elle, est dans la feuille de style : c'est
+     elle qui decide de l'afficher ou non selon le reglage du systeme,
+     et elle se reevalue toute seule si ce reglage change en cours de
+     route. Ici on ne traite que les deux raisons de ne PLUS la
+     proposer — c'est deja fait, ou on a dit non. */
+  function animDit(){
+    if (animBtn){
       const on = root.getAttribute('data-anim') === 'force';
       animBtn.setAttribute('aria-pressed', String(on));
       const mot = PC.t(on ? 'nav.anim.on' : 'nav.anim.off');
       animBtn.setAttribute('aria-label', mot);
       animBtn.title = mot;
-    };
-    ditAnim();
-    PC.surChangement(ditAnim);
-    animBtn.addEventListener('click', function(){
-      const on = root.getAttribute('data-anim') === 'force';
-      if (on) root.removeAttribute('data-anim');
-      else root.setAttribute('data-anim', 'force');
-      try { localStorage.setItem('pierrelco.anim', on ? '' : 'force'); } catch (e){}
-      ditAnim();
-      /* ET ON REJOUE L'ENTREE. Sans cela, activer les animations ne
-         changerait rien de visible avant un rechargement : le titre
-         est deja arrive, le compteur a deja fini. Le bouton aurait
-         l'air de ne rien faire — c'est-a-dire exactement le defaut
-         qu'il vient corriger. */
-      if (!on){
-        root.classList.remove('intro-run');
-        void root.offsetWidth;
-        root.classList.add('intro-run');
-      }
-    });
+    }
+    if (animOffre){
+      let refuse = '';
+      try { refuse = localStorage.getItem('pierrelco.anim.offre') || ''; } catch (e){}
+      animOffre.hidden = (root.getAttribute('data-anim') === 'force') || refuse === 'non';
+    }
   }
+
+  animDit();
+  PC.surChangement(animDit);
+  if (animBtn) animBtn.addEventListener('click', function(){
+    animForce(root.getAttribute('data-anim') !== 'force');
+  });
+  const animOui = document.getElementById('anim-oui');
+  const animNon = document.getElementById('anim-non');
+  if (animOui) animOui.addEventListener('click', function(){ animForce(true); });
+  if (animNon) animNon.addEventListener('click', function(){
+    try { localStorage.setItem('pierrelco.anim.offre', 'non'); } catch (e){}
+    animDit();
+  });
 
   /* ============================================================
      SOUSCRIPTION
@@ -13868,41 +14073,31 @@ document.addEventListener('error', function(ev){
     /* Le meme depouillement d'accents que la recherche de marche, et
        non une seconde copie : deux fonctions qui font la meme chose
        finissent par ne plus la faire pareil. */
-    const vus = lignes.filter(function(L){
-      return !t || sansAccent(L.nom).indexOf(sansAccent(t)) !== -1;
-    });
     const jeton = ++anJeton;
 
-    const tete = (t ? '' :
-      '<button class="sug__i" type="button" data-an-tout="1">' +
-        '<span class="sug__n">' + echap(PC.t('an.choix.tout')) + '</span></button>');
-    const mien = vus.length
-      ? '<div class="sug__t">' + echap(PC.t('an.cherche.vos')) + '</div>' +
-        vus.map(function(L, i){
-          return '<button class="sug__i" type="button" data-an-mien="' + i + '">' +
-            '<span class="sug__n">' + echap(L.nom) + '</span>' +
-            '<span class="sug__m">' + echap(PC.t('an.src.' + L.src) || L.src) + '</span></button>';
-        }).join('')
-      : '';
+    /* ===== PLUS VOS LIGNES ICI =====
+       Elles sont proposees au-dessus du champ, en toutes lettres.
+       Les remettre dans cette liste ferait deux entrees pour la meme
+       chose et remelangerait ce qu'on vient de separer : un champ qui
+       s'appelle « une autre valeur » ne doit pas rendre les votres. */
     h.hidden = false;
     /* LE CHAMP VIDE DIT CE QU'IL SAIT CHERCHER. Sans cette ligne, une
        liste qui ne montre que vos propres lignes laisse croire qu'elle
        ne connait que vos propres lignes — et c'est precisement ce
        qu'on a cru. Le marche entier est derriere deux lettres : il
        faut le dire la, pas ailleurs. */
-    h.innerHTML = tete + mien +
-      '<p class="sug__mot">' + echap(PC.t(t.length >= 2 ? 'e.sug.cherche'
-                                                        : 'an.cherche.tout')) + '</p>';
-    anBrancheSug(vus, []);
+    h.innerHTML = '<p class="sug__mot">' +
+      echap(PC.t(t.length >= 2 ? 'e.sug.cherche' : 'an.cherche.tout')) + '</p>';
+    anBrancheSug([], []);
 
     if (t.length < 2) return;
     chercheTitres(t).then(function(r){
       const g = document.getElementById('an-sug');
       if (!g || jeton !== anJeton) return;
       const loin = (r.liste || []).filter(function(x){
-        /* Ce qu'on possede deja est propose au-dessus : le reproposer
-           ferait deux entrees pour la meme chose, dont une qui perdrait
-           vos montants. */
+        /* Ce qu'on possede deja est propose au-dessus de ce champ : le
+           reproposer ici ferait deux entrees pour la meme chose, dont
+           une qui perdrait vos montants. */
         return !lignes.some(function(L){ return L.code && L.code === String(x.code).toLowerCase(); });
       });
       /* ===== CHAQUE CLASSE SOUS SON NOM =====
@@ -13938,10 +14133,21 @@ document.addEventListener('error', function(ev){
          manque. */
       const sansB = (r.bourse === null)
         ? '<p class="sug__mot">' + echap(PC.t('e.sug.horsrelais')) + '</p>' : '';
-      g.innerHTML = tete + mien + marche + sansB +
-        ((marche || vus.length || sansB) ? ''
+      /* Ce que VOUS possedez et qui repond au nom tape : il n'est
+         pas dans cette liste, et le taire rendrait « rien trouve »
+         sur une valeur qu'on a sous les yeux, une rangee plus haut. */
+      const miens = lignes.filter(function(L){
+        return sansAccent(L.nom).indexOf(sansAccent(t)) !== -1;
+      });
+      const note = miens.length
+        ? '<p class="sug__mot">' +
+            echap(PC.t(miens.length > 1 ? 'an.cherche.miens' : 'an.cherche.mien',
+                       {q:miens[0].nom, n:String(miens.length)})) + '</p>'
+        : '';
+      g.innerHTML = note + marche + sansB +
+        ((marche || sansB || note) ? ''
           : '<p class="sug__mot">' + echap(PC.t('an.cherche.rien')) + '</p>');
-      anBrancheSug(vus, loin);
+      anBrancheSug([], loin);
     }, function(){ /* Le reseau a refuse : vos lignes restent la. */ });
   }
 
@@ -13988,6 +14194,54 @@ document.addEventListener('error', function(ev){
         if (!e.target.closest || !e.target.closest('.an-q')) anFermeSug();
       });
       q.addEventListener('keydown', function(e){ if (e.key === 'Escape') anFermeSug(); });
+    }
+
+    /* ===== VOS LIGNES, EN TOUTES LETTRES =====
+       Un bouton par ligne plutot qu'une liste a derouler : a sept
+       lignes c'est un coup d'oeil, et la ligne ouverte se voit sans
+       qu'on ait rien a ouvrir. « Toutes vos lignes » ferme la rangee,
+       comme elle fermait la liste. */
+    const mienH = document.getElementById('an-mien-choix');
+    const mienL = document.getElementById('an-mien-liste');
+    if (mienH && mienL){
+      mienH.hidden = !lignes.length;
+      if (lignes.length){
+        mienL.innerHTML = lignes.map(function(L, i){
+          const ouvert = !anExterne && anChoix === L.id;
+          return '<button class="an-mien__b" type="button" data-an-mien="' + i + '"' +
+            (ouvert ? ' aria-current="true"' : '') + '>' + echap(L.nom) + '</button>';
+        }).join('') +
+          '<button class="an-mien__b an-mien__b--tout" type="button" data-an-tout="1"' +
+            ((!anExterne && !anChoix) ? ' aria-current="true"' : '') + '>' +
+            echap(PC.t('an.choix.tout')) + '</button>';
+        /* ===== LA LIGNE OUVERTE DOIT SE VOIR =====
+           Sur telephone la rangee defile, et la ligne choisie se
+           trouve souvent hors du cadre : on lit ses mesures sans
+           voir laquelle est marquee. On amene donc la case marquee
+           dans le cadre — en posant `scrollLeft` plutot qu'en
+           appelant `scrollIntoView`, qui fait aussi defiler la PAGE
+           et renverrait le lecteur ailleurs. */
+        const ici = mienL.querySelector('[aria-current="true"]');
+        if (ici && mienL.scrollWidth > mienL.clientWidth + 1){
+          const g = ici.offsetLeft, d = g + ici.offsetWidth;
+          if (g < mienL.scrollLeft) mienL.scrollLeft = Math.max(0, g - 12);
+          else if (d > mienL.scrollLeft + mienL.clientWidth){
+            mienL.scrollLeft = d - mienL.clientWidth + 12;
+          }
+        }
+        if (!mienL.dataset.branche){
+          mienL.dataset.branche = '1';
+          mienL.addEventListener('click', function(e){
+            const b = e.target.closest ? e.target.closest('[data-an-mien],[data-an-tout]') : null;
+            if (!b) return;
+            if (b.hasAttribute('data-an-tout')){ anSujet(null); return; }
+            /* On relit les lignes au clic : celles d'il y a trois
+               rendus ne sont plus forcement celles d'aujourd'hui. */
+            const L = anLignes()[+b.getAttribute('data-an-mien')];
+            if (L) anSujet({id:L.id});
+          });
+        }
+      } else mienL.innerHTML = '';
     }
 
     if (anChoix && !lignes.some(function(L){ return L.id === anChoix; })){
@@ -14058,7 +14312,8 @@ document.addEventListener('error', function(ev){
     }
     if (!anChoix) return '';
     return '<p class="an-sujet"><b>' + echap(montre) + '</b>' +
-      '<span>' + echap(PC.t('an.sujet.sur', {n:String(lignes.length)})) + '</span>' +
+      '<span>' + echap(PC.t(lignes.length === 1 ? 'an.sujet.sur.1' : 'an.sujet.sur',
+                            {n:String(lignes.length)})) + '</span>' +
       '<button type="button" data-an-tout="1">' +
       echap(PC.t('an.sujet.tout')) + '</button></p>';
   }
@@ -14474,17 +14729,66 @@ document.addEventListener('error', function(ev){
        fait la ligne moyenne de cette liste, et non ce que fait le
        marche. La difference doit etre ecrite, pas devinee. */
     const actif = actifR || actifV;
+
+    /* ===== CE QUE LA MOYENNE NE DIT PAS =====
+       Une moyenne et un nombre de hausses decrivent mal une journee.
+       Quatre mesures de plus, toutes tirees des memes cours, et
+       chacune repond a une question que la moyenne laisse ouverte.
+
+       LA MEDIANE : la valeur du milieu. Quand elle s'ecarte de la
+       moyenne, c'est qu'une ou deux valeurs tirent tout le reste —
+       et c'est exactement ce qu'une moyenne cache.
+
+       SANS LA PLUS FORTE : la moyenne recalculee en retirant celle
+       qui bouge le plus. L'ecart entre les deux chiffre la dependance
+       du marche a une seule valeur, ce qu'aucune moyenne ne montre.
+
+       LES GROSSES CONTRE LES PETITES : la moyenne ponderee par la
+       capitalisation contre la moyenne simple. Au-dessus, ce sont les
+       grosses qui tirent ; en dessous, les petites. C'est la mesure
+       qui dit QUI mene, et elle n'a de sens que la ou la
+       capitalisation existe.
+
+       CE QUI BOUGE FORT : combien de valeurs font plus de cinq pour
+       cent, dans un sens ou dans l'autre. Une journee calme et une
+       journee ou tout s'agite peuvent rendre la meme moyenne. */
+    const vals = [];
+    vus.forEach(function(c){
+      const v = marVar(c, h);
+      if (v !== null) vals.push(v);
+    });
+    const simpleMoy = vals.length
+      ? vals.reduce(function(a2, b2){ return a2 + b2; }, 0) / vals.length : null;
+    const tri = vals.slice().sort(function(a2, b2){ return a2 - b2; });
+    const median = tri.length
+      ? (tri.length % 2 ? tri[(tri.length - 1) / 2]
+                        : (tri[tri.length / 2 - 1] + tri[tri.length / 2]) / 2)
+      : null;
+    /* La plus forte EN AMPLITUDE, pas la plus haute : une chute de
+       vingt pour cent tire la moyenne autant qu'une hausse. */
+    let fortN = null, fortV = 0;
+    vus.forEach(function(c){
+      const v = marVar(c, h);
+      if (v !== null && Math.abs(v) > Math.abs(fortV)){ fortV = v; fortN = c.name || c.id; }
+    });
+    const sansMoy = (vals.length > 1 && fortN !== null)
+      ? (vals.reduce(function(a2, b2){ return a2 + b2; }, 0) - fortV) / (vals.length - 1)
+      : null;
+    const forts = vals.filter(function(v){ return Math.abs(v) >= 5; }).length;
+    const extra = {vals:vals, simpleMoy:simpleMoy, median:median,
+                   fortN:fortN, fortV:fortV, sansMoy:sansMoy, forts:forts};
+
     if (!(poids > 0) && vus.length){
       let ss = 0, nn = 0;
       vus.forEach(function(c){
         const v = marVar(c, h);
         if (v !== null){ ss += v; nn++; }
       });
-      return {poids:0, simple:true, hausses:hausses, haut:haut, bas:bas, actif:actif,
-              n:vus.length, ensemble: nn ? ss / nn : null};
+      return Object.assign({poids:0, simple:true, hausses:hausses, haut:haut, bas:bas,
+              actif:actif, n:vus.length, ensemble: nn ? ss / nn : null}, extra);
     }
-    return {poids:poids, simple:false, hausses:hausses, haut:haut, bas:bas, actif:actif,
-            n:vus.length, ensemble: poids > 0 ? somme / poids : null};
+    return Object.assign({poids:poids, simple:false, hausses:hausses, haut:haut, bas:bas,
+            actif:actif, n:vus.length, ensemble: poids > 0 ? somme / poids : null}, extra);
   }
 
   /* Rejouer l'entree, mais seulement quand ON A CHANGE DE SUJET.
@@ -14630,13 +14934,15 @@ document.addEventListener('error', function(ev){
         sous.textContent = PC.t('an.mar.vif', {s:fluxNom, h:h});
       } else {
         sous.removeAttribute('data-vif');
-        sous.textContent = PC.t('an.mar.d', {n:String(vus.length), h:h}) +
+        sous.textContent = PC.t(vus.length === 1 ? 'an.mar.d.1' : 'an.mar.d',
+                                {n:String(vus.length), h:h}) +
           (MAR_VIF[marSrc] ? '' : ' ' + PC.t('an.mar.fige'));
       }
     }
 
     const R = marResume(vus, marH);
     anVerdictMarche(R, vus);
+    anLitMarche(R, vus);
     anVerdictMoiMarche(R, vus);
     const poids = R.poids, hausses = R.hausses, haut = R.haut, bas = R.bas, actif = R.actif;
 
@@ -14689,6 +14995,34 @@ document.addEventListener('error', function(ev){
     }).length;
     m += anMesure('an.mar.vous', String(miennes),
                   echap(PC.t('an.mar.vous.d', {n:String(miennes)})));
+    /* ===== CE QUE LA MOYENNE NE DIT PAS =====
+       Quatre mesures de plus, toutes tirees des memes cours. Voir
+       marResume : chacune repond a une question que la moyenne laisse
+       ouverte, et aucune ne la repete. */
+    if (R.median !== null && vus.length >= 4){
+      m += anMesure('an.mar.med', PC.pourcent(R.median, 1),
+                    echap(PC.t('an.mar.med.d')), R.median < 0 ? 'baisse' : 'hausse');
+    }
+    if (R.sansMoy !== null && R.fortN){
+      m += anMesure('an.mar.sans', PC.pourcent(R.sansMoy, 1),
+                    echap(PC.t('an.mar.sans.d',
+                          {q:R.fortN, v:PC.pourcent(R.fortV, 1)})),
+                    R.sansMoy < 0 ? 'baisse' : 'hausse');
+    }
+    /* La ponderation n'existe que la ou la capitalisation est servie :
+       le relais de bourse la rend nulle sur chaque action, et une
+       difference entre deux moyennes identiques ne mesure rien. */
+    if (!R.simple && R.simpleMoy !== null){
+      const ecT = R.ensemble - R.simpleMoy;
+      m += anMesure('an.mar.taille',
+                    (ecT < 0 ? '\u2212' : '+') + anPoints(Math.abs(ecT)),
+                    echap(PC.t('an.mar.taille.d')), '',
+                    anBarre(Math.max(0, Math.min(100, 50 + ecT * 10))));
+    }
+    m += anMesure('an.mar.fort', String(R.forts),
+                  echap(PC.t('an.mar.fort.d', {n:String(R.forts)})),
+                  R.forts >= Math.ceil(vus.length / 2) ? 'attention' : '',
+                  anBarre(R.forts / vus.length * 100));
     /* Le marqueur ne se pose que si le contenu a VRAIMENT change. Pose
        a chaque rendu, l'animation se rejouerait toutes les
        quarante-cinq secondes et a chaque tick du flux : un bloc qui
@@ -14830,6 +15164,71 @@ document.addEventListener('error', function(ev){
   }
 
   /* ============================================================
+     CE QUE LES CHIFFRES DU MARCHE VEULENT DIRE
+     ------------------------------------------------------------
+     La phrase du dessus donne les nombres. Celle-ci dit ce qu'ils
+     signifient — et ce sont deux choses differentes. « Six valeurs
+     sur dix montent » est un fait ; « le marche est partage, il ne va
+     pas dans un seul sens » est sa lecture, et c'est elle qu'on vient
+     chercher.
+
+     Trois lectures au plus, et jamais celles qui n'apprennent rien :
+     une dispersion moyenne ne se commente pas, et une ponderation qui
+     ne change rien non plus. Une phrase qui se declenche toujours
+     devient du remplissage, et c'est ce qui rend un texte illisible
+     bien avant sa longueur.
+     ============================================================ */
+  function anLitMarche(R, vus){
+    const el = document.getElementById('an-mar-lecture');
+    if (!el) return;
+    el.innerHTML = '';
+    if (!R || R.ensemble === null || vus.length < 3) return;
+    const p = [];
+
+    /* 1. COMBIEN DE MONDE PORTE LE MOUVEMENT. La mesure la plus
+       parlante d'une seance, et celle qu'une moyenne cache le mieux :
+       +3 % en moyenne ne dit pas si vingt valeurs montent un peu ou
+       si deux s'envolent pendant que dix-huit reculent. */
+    const part = R.hausses / vus.length;
+    p.push(PC.t(part >= 0.7 ? 'an.mar.lec.large'
+              : part <= 0.3 ? 'an.mar.lec.peu' : 'an.mar.lec.partage',
+            {h: anGras(String(R.hausses)), n: String(vus.length)}));
+
+    /* 2. UNE SEULE VALEUR TIRE-T-ELLE TOUT ? Un demi-point d'ecart
+       entre la moyenne et la moyenne sans la plus forte : en dessous,
+       le retrait ne change rien et le dire serait du bruit. */
+    if (R.sansMoy !== null && R.fortN &&
+        Math.abs((R.simpleMoy === null ? R.ensemble : R.simpleMoy) - R.sansMoy) >= 0.5){
+      p.push(PC.t('an.mar.lec.tire', {
+        q: anGras(echap(R.fortN)),
+        v: anGras(PC.pourcent(R.fortV, 1), R.fortV < 0 ? 'baisse' : 'hausse'),
+        b: anGras(PC.pourcent(R.sansMoy, 1), R.sansMoy < 0 ? 'baisse' : 'hausse')}));
+    } else if (R.sansMoy !== null && vus.length >= 5){
+      p.push(PC.t('an.mar.lec.egal'));
+    }
+
+    /* 3. LE MARCHE TRIE-T-IL, OU BOUGE-T-IL EN BLOC ? Seulement aux
+       deux extremes : entre les deux il n'y a rien a conclure. */
+    if (R.haut && R.bas){
+      const ec = R.haut.v - R.bas.v;
+      if (ec >= 15) p.push(PC.t('an.mar.lec.trie', {d: anGras(anPoints(ec))}));
+      else if (ec <= 4) p.push(PC.t('an.mar.lec.bloc', {d: anGras(anPoints(ec))}));
+    }
+
+    /* 4. QUI MENE, LES GROSSES OU LES PETITES ? Elle n'existe que la
+       ou la capitalisation est servie — le relais de bourse ne la rend
+       pas — et seulement si l'ecart se voit. Et on s'arrete a trois
+       phrases : la quatrieme ne serait plus lue. */
+    if (p.length < 3 && !R.simple && R.simpleMoy !== null &&
+        Math.abs(R.ensemble - R.simpleMoy) >= 0.5){
+      p.push(PC.t(R.ensemble > R.simpleMoy ? 'an.mar.lec.grosses' : 'an.mar.lec.petites', {
+        a: anGras(PC.pourcent(R.ensemble, 1), R.ensemble < 0 ? 'baisse' : 'hausse'),
+        b: anGras(PC.pourcent(R.simpleMoy, 1), R.simpleMoy < 0 ? 'baisse' : 'hausse')}));
+    }
+    el.innerHTML = p.slice(0, 3).join(' ');
+  }
+
+  /* ============================================================
      ET VOUS, SUR LA MEME PERIODE ?
      ------------------------------------------------------------
      « Le marche monte de 2,4 % » appelle immediatement une seconde
@@ -14869,8 +15268,9 @@ document.addEventListener('error', function(ev){
     const ecart = moi - R.ensemble;
     /* Sous un dixieme de point, « mieux » et « moins bien » sont deux
        facons de dire la meme chose : vous faites comme le marche. */
-    const cle = Math.abs(ecart) < 0.1 ? 'an.mar.moi.pareil'
-              : ecart > 0 ? 'an.mar.moi.mieux' : 'an.mar.moi.moins';
+    const cle = (Math.abs(ecart) < 0.1 ? 'an.mar.moi.pareil'
+               : ecart > 0 ? 'an.mar.moi.mieux' : 'an.mar.moi.moins')
+               + (n === 1 ? '.1' : '');
     el.innerHTML = PC.t(cle, {
       n: anGras(String(n)),
       v: anGras(PC.pourcent(moi, 1), moi < 0 ? 'baisse' : 'hausse'),
@@ -15320,7 +15720,8 @@ document.addEventListener('error', function(ev){
         ? PC.t(forte ? 'an.cor.v.forte' : inv ? 'an.cor.v.inverse' : 'an.cor.v.nette',
                {a:anGras(echap(q.a)), b:anGras(echap(q.b)),
                 c:anGras(PC.nombre(q.c, 2).replace(/^-/, '\u2212'))})
-        : PC.t('an.cor.v.faible', {n:anGras(String(paires.length))});
+        : PC.t(paires.length === 1 ? 'an.cor.v.faible.1' : 'an.cor.v.faible',
+               {n:anGras(String(paires.length))});
     }
   }
 
