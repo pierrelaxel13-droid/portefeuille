@@ -12,7 +12,7 @@
    Les chiffres du client ne passent jamais par ici : ils vivent dans
    le stockage local du navigateur, que ce fichier ne touche pas. */
 
-const VERSION = 'pierrelco-portefeuille-261008.1218';
+const VERSION = 'pierrelco-portefeuille-261008.1332';
 const COQUILLE = [
   './',
   './index.html',

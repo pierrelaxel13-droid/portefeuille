@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261008.1218";</script>
+<script>window.PC_VERSION = "261008.1332";</script>
 </head>
 <body>
 
@@ -2066,6 +2066,26 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   color:var(--ink-3); margin:0 0 6px;
 }
 .an-sous{color:var(--ink-2); margin:0 0 18px; font-size:15px; text-wrap:pretty; max-width:70ch;}
+/* ===== LE CHAPITRE =====
+   Un cran au-dessus du titre de bloc, et il doit se VOIR comme tel :
+   pleine encre contre gris, un corps plus grand, et un filet qui
+   traverse la page jusqu'au bord. Sans ce filet, deux etiquettes de
+   taille voisine se lisent comme deux etiquettes ; avec lui, la
+   seconde se lit comme un debut.
+
+   L'air au-dessus fait le reste : un chapitre separe deux sujets,
+   donc il lui faut plus de blanc qu'il n'y en a entre deux blocs du
+   meme sujet. */
+.an-part{
+  display:flex; align-items:center; gap:clamp(12px,1.6vw,18px);
+  margin:clamp(30px,4.4vw,48px) 0 clamp(16px,2.2vw,24px);
+  font-family:'IBM Plex Mono', ui-monospace, monospace;
+  font-size:13px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ink); line-height:1.3;
+}
+.an-part::after{content:""; flex:1 1 auto; height:1px; background:var(--rule-strong);}
+/* Le premier chapitre suit le titre de l'onglet : l'air est deja la. */
+.an-part:first-of-type{margin-top:0;}
 /* Le choix de la ligne. Un <select> natif, comme la langue et la
    devise : sur telephone c'est la liste du systeme qui s'ouvre, la
    seule qui reste utilisable a une main. */
@@ -4160,6 +4180,9 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   /* Le panneau d'analyse, le plus long de tous. */
   .an-bloc + .an-bloc{margin-top:26px;}
   .an-sous{font-size:13.5px; margin-bottom:14px;}
+  /* Sur telephone le chapitre garde son rang, pas sa place. */
+  .an-part{margin:28px 0 12px; font-size:12px; gap:12px;}
+  .an-part:first-of-type{margin-top:0;}
   .an-ligne{padding:14px;}
   .an-ligne__n{font-size:15.5px;}
   .an-sp{height:52px; margin:11px 0 2px;}
@@ -6177,7 +6200,8 @@ window.PC = (function(){
      seul — la correlation entre deux lignes surtout. Deux placements
      qui montent et descendent ensemble ne sont pas une
      diversification, et personne ne le calcule a la main. */
-  'an.mar.t':           ["Les march\u00e9s aujourd'hui","The markets today","Los mercados hoy","Die M\u00e4rkte heute"],
+  'an.part.marche':     ["Le marché","The market","El mercado","Der Markt"],
+  'an.part.moi':        ["Vos lignes","Your lines","Sus líneas","Ihre Positionen"],
   'an.mar.d':           ["Relevé à {{h}} · {{n}} lignes","Read at {{h}} · {{n}} lines","Tomado a las {{h}} · {{n}} líneas","Erhoben um {{h}} · {{n}} Werte"],
   'an.mar.vif':         ["En direct de {{s}} · 7 j et 30 j au relevé de {{h}}","Live from {{s}} · 7 d and 30 d as of {{h}}","En directo desde {{s}} · 7 y 30 días a las {{h}}","Live von {{s}} · 7 und 30 Tage Stand {{h}}"],
   'an.mar.fige':        ["Pas de cotation continue sur ce marché.","No continuous quote on this market.","Sin cotización continua en este mercado.","Keine fortlaufende Notierung an diesem Markt."],
@@ -6188,7 +6212,7 @@ window.PC = (function(){
   'an.mar.ens.d':       ["Pondérée par la capitalisation.","Weighted by capitalisation.","Ponderada por la capitalización.","Nach Kapitalisierung gewichtet."],
   'an.mar.ens.ds':      ["Moyenne simple : la capitalisation des actions n'est pas servie.","Plain average: share capitalisation is not served.","Media simple: no se sirve la capitalización de las acciones.","Einfacher Durchschnitt: Aktien-Kapitalisierung wird nicht geliefert."],
   'an.mar.actif.dv':    ["{{p}} échangés dans la journée.","{{p}} traded during the day.","{{p}} negociados en el día.","{{p}} am Tag gehandelt."],
-  'an.mar.liste.t':     ["Ou une ligne en particulier","Or one line in particular","O una línea en particular","Oder eine einzelne Position"],
+  'an.mar.liste.t':     ["Ou une valeur en particulier","Or one security in particular","O un valor en particular","Oder ein bestimmter Wert"],
   'an.mar.h.non':       ["Ce fournisseur ne sert pas cette période pour ce marché.","This provider does not serve this period for this market.","Este proveedor no sirve este periodo para este mercado.","Dieser Anbieter liefert diesen Zeitraum für diesen Markt nicht."],
   'an.mar.sens.k':      ["En hausse","Up","Al alza","Im Plus"],
   'an.mar.sens.d':      ["Sur {{n}} lignes suivies.","Out of {{n}} lines followed.","De {{n}} líneas seguidas.","Von {{n}} verfolgten Werten."],
@@ -6203,7 +6227,7 @@ window.PC = (function(){
   'an.mar.actif.d':     ["{{p}} de sa capitalisation échangés aujourd'hui.","{{p}} of its capitalisation traded today.","{{p}} de su capitalización negociado hoy.","{{p}} seiner Kapitalisierung heute gehandelt."],
   'an.mar.vous.k':      ["Vos lignes l\u00e0-dedans","Your lines in it","Sus l\u00edneas en todo esto","Ihre Positionen darin"],
   'an.mar.vous.d':      ["sur une de ces cotations.","on one of these quotes.","en una de estas cotizaciones.","auf einer dieser Notierungen."],
-  'an.calc.t':          ["Et vos lignes là-dedans","And your lines in it","Y sus líneas en todo esto","Und Ihre Positionen darin"],
+  'an.calc.t':          ["Une ligne en détail","One line in detail","Una línea en detalle","Eine Position im Detail"],
   'an.calc.d':          ["Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.","Twelve months of real prices where there are any, your dated statements otherwise.","Doce meses de cotizaciones reales cuando las hay, sus informes fechados si no.","Zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
   'an.jours':           ["{{n}} séances lues","{{n}} sessions read","{{n}} sesiones leídas","{{n}} Handelstage gelesen"],
@@ -6272,7 +6296,7 @@ window.PC = (function(){
   'an.aide.moi':     ["<p><b>L'amplitude</b>, ou volatilité, mesure de combien votre total s'écarte de sa moyenne, ramenée à l'année. Trente pour cent veut dire qu'une année ordinaire le fait passer trente pour cent au-dessus ou au-dessous : dans les deux sens, et ce n'est pas une prévision.</p><p><b>Le pire recul</b> est la plus forte chute depuis un sommet, et non l'écart entre le plus haut et le plus bas de l'année. Si le plus bas précède le plus haut, cette chute-là n'a jamais existé. C'est ce qu'il a fallu traverser.</p><p><b>Versé</b> et <b>fait par le marché</b> séparent les deux raisons qu'un total a de monter. Un total qui gagne dix mille euros parce qu'on y a versé dix mille euros n'a rien gagné : c'est la confusion la plus courante, et aucun relevé de banque ne la lève.</p><p><b>La part suivie par un cours</b> dit ce que valent les mesures ci-dessus. Sur un portefeuille dont les trois quarts sont un appartement, une amplitude reste juste — mais sur le quart restant seulement.</p>","<p><b>How much it moves</b>, or volatility, measures how far your total strays from its average, scaled to a year. Thirty percent means an ordinary year takes it thirty percent above or below: both ways, and it is not a forecast.</p><p><b>The worst fall</b> is the largest drop from a peak, not the gap between the year's high and low. If the low comes before the high, that drop never existed. This is what had to be lived through.</p><p><b>Paid in</b> and <b>done by the market</b> separate the two reasons a total has for rising. A total that gains ten thousand because ten thousand was paid into it has gained nothing: it is the commonest confusion, and no bank statement clears it up.</p><p><b>The share followed by a price</b> tells you what the figures above are worth. On a portfolio three quarters of which is a flat, a volatility stays correct — but only on the remaining quarter.</p>","<p><b>La amplitud</b>, o volatilidad, mide cuánto se aparta su total de su media, llevada al año. Treinta por ciento quiere decir que un año corriente lo lleva treinta por ciento por encima o por debajo: en los dos sentidos, y no es una previsión.</p><p><b>La peor caída</b> es el mayor descenso desde un máximo, no la diferencia entre el máximo y el mínimo del año. Si el mínimo precede al máximo, esa caída nunca existió. Es lo que hubo que atravesar.</p><p><b>Aportado</b> y <b>hecho por el mercado</b> separan las dos razones que tiene un total para subir. Un total que gana diez mil euros porque se le han aportado diez mil euros no ha ganado nada: es la confusión más común, y ningún extracto bancario la deshace.</p><p><b>La parte seguida por una cotización</b> dice lo que valen las cifras de arriba. En una cartera de la que tres cuartos son un piso, una volatilidad sigue siendo correcta — pero solo sobre el cuarto restante.</p>","<p><b>Die Schwankung</b>, oder Volatilität, misst, wie weit Ihr Gesamtwert von seinem Durchschnitt abweicht, auf das Jahr gerechnet. Dreißig Prozent heißt, ein gewöhnliches Jahr bringt ihn dreißig Prozent darüber oder darunter: in beide Richtungen, und es ist keine Prognose.</p><p><b>Der schlimmste Rückgang</b> ist der größte Fall von einem Hoch, nicht die Spanne zwischen Jahreshoch und Jahrestief. Liegt das Tief vor dem Hoch, hat dieser Fall nie existiert. Das ist, was durchzustehen war.</p><p><b>Eingezahlt</b> und <b>vom Markt bewirkt</b> trennen die zwei Gründe, aus denen ein Gesamtwert steigt. Ein Gesamtwert, der zehntausend gewinnt, weil zehntausend eingezahlt wurden, hat nichts gewonnen: das ist die häufigste Verwechslung, und kein Kontoauszug klärt sie auf.</p><p><b>Der Anteil mit Marktkurs</b> sagt, was die Zahlen oben wert sind. Bei einem Portfolio, das zu drei Vierteln eine Wohnung ist, bleibt eine Volatilität richtig — aber nur auf dem restlichen Viertel.</p>"],
   'an.aide.l':       ["<p><b>L'amplitude annualisée</b> part des variations d'un jour sur l'autre : on en prend l'écart-type, puis on le multiplie par la racine de 252, le nombre de séances d'une année boursière. Elle ne dit pas un sens, seulement une taille de secousse.</p><p><b>Le pire recul</b> suit le sommet atteint et mesure la plus grande chute depuis ce sommet, avec ses dates. Aucun recul du tout est une réponse, et c'est la plus forte qu'une série puisse rendre.</p><p><b>La position dans l'année</b> place le cours du jour entre son plus bas et son plus haut des douze mois. Elle ne prédit rien : elle situe.</p><p>Une ligne qui n'a pas de cours est mesurée sur <b>vos relevés datés</b>. Un recul et une position s'y lisent ; une amplitude annualisée, non — 252 est un nombre de séances, et en prendre la racine sur des écarts mensuels rendrait un chiffre environ trois fois trop grand.</p>","<p><b>Annualised volatility</b> starts from the day-to-day moves: take their standard deviation, then multiply by the square root of 252, the number of sessions in a market year. It gives no direction, only a size of jolt.</p><p><b>The worst fall</b> tracks the peak reached and measures the largest drop from that peak, with its dates. No fall at all is an answer, and the strongest a series can give.</p><p><b>The position in the year</b> places today's price between its twelve-month low and high. It predicts nothing: it locates.</p><p>A line with no market price is measured on <b>your dated statements</b>. A fall and a position can be read there; an annualised volatility cannot — 252 is a number of sessions, and taking its root on monthly gaps would return a figure about three times too large.</p>","<p><b>La amplitud anualizada</b> parte de las variaciones de un día a otro: se toma su desviación típica y se multiplica por la raíz de 252, el número de sesiones de un año bursátil. No da un sentido, solo un tamaño de sacudida.</p><p><b>La peor caída</b> sigue el máximo alcanzado y mide el mayor descenso desde ese máximo, con sus fechas. Ninguna caída es una respuesta, y la más fuerte que una serie puede dar.</p><p><b>La posición en el año</b> coloca la cotización de hoy entre su mínimo y su máximo de doce meses. No predice nada: sitúa.</p><p>Una línea sin cotización se mide sobre <b>sus extractos fechados</b>. Allí se leen una caída y una posición; una amplitud anualizada, no — 252 es un número de sesiones, y tomar su raíz sobre diferencias mensuales daría una cifra unas tres veces demasiado grande.</p>","<p><b>Die annualisierte Schwankung</b> geht von den Tagesveränderungen aus: man nimmt deren Standardabweichung und multipliziert sie mit der Wurzel aus 252, der Zahl der Handelstage eines Börsenjahres. Sie gibt keine Richtung, nur eine Größe des Stoßes.</p><p><b>Der schlimmste Rückgang</b> folgt dem erreichten Hoch und misst den größten Fall von diesem Hoch, mit seinen Daten. Gar kein Rückgang ist eine Antwort, und die stärkste, die eine Reihe geben kann.</p><p><b>Die Position im Jahr</b> setzt den heutigen Kurs zwischen sein Zwölfmonatstief und -hoch. Sie sagt nichts voraus: sie ordnet ein.</p><p>Eine Position ohne Marktkurs wird auf <b>Ihren datierten Auszügen</b> gemessen. Ein Rückgang und eine Position lassen sich dort lesen; eine annualisierte Schwankung nicht — 252 ist eine Zahl von Handelstagen, und ihre Wurzel auf Monatsabständen ergäbe eine etwa dreimal zu große Zahl.</p>"],
   'an.aide.cor':     ["<p><b>Un coefficient de corrélation</b> va de −1 à +1. À +1 les deux lignes montent et descendent exactement ensemble ; à 0 elles s'ignorent ; à −1 l'une monte quand l'autre descend.</p><p>Il se calcule sur les variations quotidiennes des <b>séances communes</b> seulement. Une crypto cote sept jours sur sept, une action cinq : aligner un lundi sur un dimanche rendrait un chiffre qui ne veut rien dire.</p><p>Ce qu'il sert à voir : <b>deux lignes au-dessus de 0,8 sont, en pratique, le même pari</b>. Les détenir toutes les deux vous expose deux fois au même risque sans rien diversifier — et c'est ce que le bloc « ce que votre répartition vous rend » chiffre en points.</p>","<p><b>A correlation coefficient</b> runs from −1 to +1. At +1 the two lines rise and fall exactly together; at 0 they ignore each other; at −1 one rises as the other falls.</p><p>It is computed on the daily moves of the <b>shared sessions</b> only. A crypto trades seven days a week, a share five: lining a Monday up against a Sunday would return a meaningless figure.</p><p>What it is for: <b>two lines above 0.8 are, in practice, the same bet</b>. Holding both exposes you twice to the same risk without diversifying anything — and that is what the block « what your spread gives back » puts a number on.</p>","<p><b>Un coeficiente de correlación</b> va de −1 a +1. En +1 las dos líneas suben y bajan exactamente juntas; en 0 se ignoran; en −1 una sube cuando la otra baja.</p><p>Se calcula sobre las variaciones diarias de las <b>sesiones comunes</b> únicamente. Una cripto cotiza siete días de siete, una acción cinco: alinear un lunes con un domingo daría una cifra sin sentido.</p><p>Para qué sirve: <b>dos líneas por encima de 0,8 son, en la práctica, la misma apuesta</b>. Tenerlas las dos le expone dos veces al mismo riesgo sin diversificar nada — y eso es lo que el bloque « lo que le devuelve su reparto » cifra en puntos.</p>","<p><b>Ein Korrelationskoeffizient</b> reicht von −1 bis +1. Bei +1 steigen und fallen die beiden Positionen genau gemeinsam; bei 0 ignorieren sie sich; bei −1 steigt die eine, wenn die andere fällt.</p><p>Er wird nur auf den Tagesveränderungen der <b>gemeinsamen Handelstage</b> berechnet. Eine Krypto notiert sieben Tage von sieben, eine Aktie fünf: einen Montag gegen einen Sonntag zu stellen ergäbe eine bedeutungslose Zahl.</p><p>Wozu er dient: <b>zwei Positionen über 0,8 sind in der Praxis dieselbe Wette</b>. Beide zu halten setzt Sie zweimal demselben Risiko aus, ohne etwas zu streuen — und genau das beziffert der Block « was Ihre Aufteilung einbringt » in Punkten.</p>"],
-  'an.ia.d':         ["Un modèle de langage lit les chiffres ci-dessus et en écrit un commentaire. Les mesures, elles, sont calculées ici et ne passent par aucun modèle.","A language model reads the figures above and writes them up. The measurements themselves are computed here and go through no model.","Un modelo de lenguaje lee las cifras de arriba y escribe un comentario. Las mediciones, en cambio, se calculan aquí y no pasan por ningún modelo.","Ein Sprachmodell liest die Zahlen oben und schreibt einen Kommentar dazu. Die Messungen selbst werden hier berechnet und laufen durch kein Modell."],
+  'an.ia.d':         ["Un modèle de langage reprend les mesures ci-dessus, les marchés du jour et les titres de presse, et en écrit un commentaire. Les mesures, elles, sont calculées ici et ne passent par aucun modèle.","A language model takes the measurements above, the day's markets and the press headlines, and writes them up. The measurements themselves are computed here and go through no model.","Un modelo de lenguaje retoma las mediciones de arriba, los mercados del día y los titulares de prensa, y escribe un comentario. Las mediciones, en cambio, se calculan aquí y no pasan por ningún modelo.","Ein Sprachmodell nimmt die Messungen oben, die Märkte des Tages und die Presseschlagzeilen und schreibt einen Kommentar dazu. Die Messungen selbst werden hier berechnet und laufen durch kein Modell."],
   'an.mar.n.crypto':    ["Les vingt-quatre premi\u00e8res par capitalisation. Pour une autre valeur, le champ ci-dessous cherche dans tout ce que les fournisseurs servent.","The twenty-four largest by market capitalisation. For any other security, the field below searches everything the providers serve.","Las veinticuatro primeras por capitalizaci\u00f3n. Para otro valor, el campo de abajo busca en todo lo que sirven los proveedores.","Die vierundzwanzig gr\u00f6\u00dften nach Marktkapitalisierung. F\u00fcr einen anderen Wert sucht das Feld unten in allem, was die Anbieter liefern."],
   'an.mar.n.bourse':    ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse."],
   'an.mar.n.matieres':  ["L'or et l'argent arrivent sans rien installer\u00a0; le platine, le cuivre, le p\u00e9trole et les autres passent par le relais.","Gold and silver arrive with nothing installed; platinum, copper, oil and the rest go through the relay.","El oro y la plata llegan sin instalar nada; el platino, el cobre, el petr\u00f3leo y los dem\u00e1s pasan por el rel\u00e9.","Gold und Silber kommen ohne Installation; Platin, Kupfer, \u00d6l und die \u00fcbrigen laufen \u00fcber das Relais."],
@@ -6325,6 +6349,7 @@ window.PC = (function(){
   'an.sens.d':          ["{{h}} en hausse, {{b}} en baisse.","{{h}} up, {{b}} down.","{{h}} al alza, {{b}} a la baja.","{{h}} im Plus, {{b}} im Minus."],
   /* La correlation : le chiffre qui justifie l'abonnement. */
   'an.cor.t':           ["Ce qui bouge ensemble","What moves together","Lo que se mueve junto","Was sich zusammen bewegt"],
+  'an.cor.pli':         ["Les paires, une par une","The pairs, one by one","Los pares, uno a uno","Die Paare, eines nach dem anderen"],
   'an.cor.echelle':     ["\u22121 en sens contraire  \u00b7  0 indépendantes  \u00b7  +1 ensemble","\u22121 opposite  \u00b7  0 independent  \u00b7  +1 together","\u22121 en sentido contrario  \u00b7  0 independientes  \u00b7  +1 juntas","\u22121 gegenläufig  \u00b7  0 unabhängig  \u00b7  +1 gemeinsam"],
   'an.cor.paire':       ["{{a}} et {{b}}","{{a}} and {{b}}","{{a}} y {{b}}","{{a}} und {{b}}"],
   'an.cor.forte':       ["presque ensemble","almost together","casi juntas","fast gemeinsam"],
@@ -6337,7 +6362,7 @@ window.PC = (function(){
   'an.cor.v.inverse':   ["{{a}} et {{b}} vont en sens contraire ({{c}})\u00a0: quand l'une baisse, l'autre amortit.","{{a}} and {{b}} go opposite ways ({{c}}): when one falls, the other cushions.","{{a}} y {{b}} van en sentido contrario ({{c}}): cuando una baja, la otra amortigua.","{{a}} und {{b}} laufen gegenläufig ({{c}}): fällt die eine, federt die andere ab."],
   'an.cor.v.faible':    ["Aucune de vos {{n}} paires cotées ne bouge vraiment avec une autre\u00a0: vos lignes ne portent pas le même pari.","None of your {{n}} quoted pairs really moves with another: your lines are not the same bet.","Ninguno de sus {{n}} pares cotizados se mueve realmente con otro: sus líneas no son la misma apuesta.","Keines Ihrer {{n}} notierten Paare bewegt sich wirklich mit einem anderen: Ihre Positionen sind nicht dieselbe Wette."],
   'an.cor.n':           ["Mesuré sur {{n}} séances communes.","Measured on {{n}} shared sessions.","Medido sobre {{n}} sesiones comunes.","Gemessen an {{n}} gemeinsamen Handelstagen."],
-  'an.ia.t':            ["Le marché du jour, écrit en clair","Today's market, written up plainly","El mercado del día, redactado con claridad","Der heutige Markt, klar formuliert"],
+  'an.ia.t':            ["Vos chiffres, écrits en clair","Your figures, written up plainly","Sus cifras, redactadas con claridad","Ihre Zahlen, klar formuliert"],
   'cmp.analyse':        ["L'analyse de vos lignes cotées : volatilité, pire recul, ce qui bouge ensemble", "Analysis of your listed lines: volatility, worst drawdown, what moves together", "El análisis de sus líneas cotizadas: volatilidad, peor caída, lo que se mueve junto", "Die Analyse Ihrer notierten Positionen: Volatilität, schlimmster Rückgang, was sich zusammen bewegt"],
   'cmp.analyseIA':      ["La même analyse commentée en clair par une IA", "The same analysis written up plainly by an AI", "El mismo análisis comentado con claridad por una IA", "Dieselbe Analyse, von einer KI klar kommentiert"],
   'cmp.lectures':       ["Les lectures : vos chiffres commentés en clair", "Readings: your figures explained plainly", "Las lecturas: sus cifras comentadas con claridad", "Die Lesarten: Ihre Zahlen klar kommentiert"],
@@ -8804,6 +8829,25 @@ document.addEventListener('error', function(ev){
             <h2 data-i18n="an.h2">Vos chiffres, dans le marché d'aujourd'hui.</h2>
           </div>
         </div>
+        <!-- ===== DEUX CHAPITRES =====
+             Les cinq blocs portaient exactement le meme titre : onze
+             pixels de mono gris, en capitales. « Les marches
+             aujourd'hui » et « Et vos lignes la-dedans » avaient donc
+             le meme poids, et rien ne disait qu'on avait change de
+             sujet entre les deux — ce qui faisait lire la mesure
+             d'une de VOS lignes comme une mesure de marche.
+
+             Un titre de bloc ne peut pas servir a la fois d'etiquette
+             et de chapitre. On en ajoute donc un cran AU-DESSUS, et
+             les titres de bloc descendent d'autant : h3 pour le
+             chapitre, h4 pour le bloc, h5 pour ses sous-parties. La
+             hierarchie est reelle et pas seulement dessinee — c'est
+             celle qu'un lecteur d'ecran parcourt.
+
+             Le chapitre des marches n'a qu'un bloc : il porte donc
+             son titre, et le h3 qui disait « Les marches
+             aujourd'hui » a disparu plutot que de le repeter. -->
+        <h3 class="an-part mono" data-i18n="an.part.marche">Le marché</h3>
 
         <!-- LES MARCHES D'ABORD. C'est ce qu'on vient voir : l'etat
              du monde, avant l'etat de son propre portefeuille. Tout y
@@ -8811,7 +8855,6 @@ document.addEventListener('error', function(ev){
              aucun appel de plus que la liste des marches, et chaque
              chiffre porte la phrase qui dit comment il est obtenu. -->
         <div class="an-bloc" id="an-marche">
-          <h3 class="an-titre mono" data-i18n="an.mar.t">Les marchés aujourd'hui</h3>
           <p class="an-sous" id="an-mar-sous"></p>
           <!-- Les trois marches, comme dans l'onglet Marches. Ce sont
                les memes sources : il n'y avait aucune raison que
@@ -8855,7 +8898,7 @@ document.addEventListener('error', function(ev){
                ce que fait l'ensemble ; celui-ci laisse ouvrir n'importe
                laquelle et en mesurer les douze mois. -->
           <details class="an-mar-l" id="an-mar-liste" hidden open>
-            <summary class="an-mar-l__t mono" data-i18n="an.mar.liste.t">Ou une ligne en particulier</summary>
+            <summary class="an-mar-l__t mono" data-i18n="an.mar.liste.t">Ou une valeur en particulier</summary>
             <div class="an-mar-l__c" id="an-mar-lignes"></div>
             <!-- CE QUE CETTE LISTE EST, SELON LA SOURCE. « Les valeurs
                  de tete » n'est vrai que des cryptos, ou le classement
@@ -8866,12 +8909,6 @@ document.addEventListener('error', function(ev){
             <p class="an-mar-l__n mono" id="an-mar-note"></p>
           </details>
 
-          <!-- ET N'IMPORTE QUELLE AUTRE. Le champ etait plus bas, dans
-               le bloc de vos lignes, et il ne s'affichait qu'a partir
-               d'un actif saisi : quelqu'un qui n'avait rien saisi ne
-               pouvait analyser que les dix valeurs posees la. Il
-               remonte ici, a cote des valeurs de tete, et il ne depend
-               plus de ce qu'on possede. -->
           <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
                annualisee, un recul depuis un sommet et un coefficient
                de correlation ne se lisent pas de naissance : la phrase
@@ -8884,15 +8921,16 @@ document.addEventListener('error', function(ev){
             <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
             <div class="an-aide__c" data-i18n-html="an.aide.mar"></div>
           </details>
-          <div class="an-choix" id="an-choix-boite">
-            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Une autre valeur&nbsp;?</label>
-            <div class="an-q">
-              <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
-                     spellcheck="false" data-i18n-titre="an.cherche.t">
-              <div class="sug an-q__s" id="an-sug" hidden></div>
-            </div>
-          </div>
         </div>
+
+        <!-- Tout ce qui suit parle de CE QU'ON POSSEDE : l'ensemble
+             d'abord, puis une ligne, puis ce qui bouge ensemble, puis
+             le commentaire ecrit par la machine. Celui-la vient en
+             dernier parce qu'il reprend tout ce qui est au-dessus de
+             lui — il etait jusqu'ici entre l'ensemble et le detail,
+             et il coupait en deux la seule partie qui parle de
+             vous. -->
+        <h3 class="an-part mono" data-i18n="an.part.moi">Vos lignes</h3>
 
         <!-- ===== VOUS, LA-DEDANS =====
              Le bloc du dessus dit ce que fait le marche ; celui du
@@ -8901,7 +8939,7 @@ document.addEventListener('error', function(ev){
              ce que fait l'ensemble de ce qu'on possede, et d'ou
              vient ce qu'il a fait. -->
         <div class="an-bloc" id="an-moi" hidden>
-          <h3 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h3>
+          <h4 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h4>
           <p class="an-verdict" id="an-moi-verdict"></p>
           <!-- D'OU VIENT CE QUI A CHANGE. « Vous avez mis X, ca vaut Y »
                ne dit pas si Y vient du marche ou de vos versements. Un
@@ -8915,8 +8953,8 @@ document.addEventListener('error', function(ev){
           </details>
           <!-- D'ou vient l'argent : la contribution de chaque ligne au
                resultat, en euros. Voir la feuille de style. -->
-          <h4 class="an-titre mono" id="an-moi-ct" style="margin-top:clamp(22px,2.6vw,30px)"
-              data-i18n="an.moi.port.t">Ce qui a porté, ce qui a pesé</h4>
+          <h5 class="an-titre mono" id="an-moi-ct" style="margin-top:clamp(22px,2.6vw,30px)"
+              data-i18n="an.moi.port.t">Ce qui a porté, ce qui a pesé</h5>
           <p class="an-verdict" id="an-moi-port"></p>
           <details class="an-plus" id="an-moi-portp" open>
             <summary class="an-plus__t mono" data-i18n="an.moi.port.pli">Ligne par ligne</summary>
@@ -8929,8 +8967,8 @@ document.addEventListener('error', function(ev){
                pas un ensemble a 50 % : elles ne descendent pas le meme
                jour. L'ecart se chiffre, et c'est le seul chiffre qui
                mette un prix sur la diversification. -->
-          <h4 class="an-titre mono" id="an-moi-dt" style="margin-top:clamp(22px,2.6vw,30px)"
-              data-i18n="an.div.t" hidden>Ce que votre répartition vous rend</h4>
+          <h5 class="an-titre mono" id="an-moi-dt" style="margin-top:clamp(22px,2.6vw,30px)"
+              data-i18n="an.div.t" hidden>Ce que votre répartition vous rend</h5>
           <p class="an-verdict" id="an-moi-divv"></p>
           <!-- Le meme ecart, vu autrement : une amplitude annualisee
                reste une abstraction, une chute qu'on a traversee non.
@@ -8954,34 +8992,12 @@ document.addEventListener('error', function(ev){
           </details>
         </div>
 
-        <div class="an-bloc" id="an-ia" hidden>
-          <h3 class="an-titre mono" data-i18n="an.ia.t">Le marché du jour, écrit en clair</h3>
-          <!-- CE QUE LE BOUTON VA FAIRE, AVANT DE L'AVOIR PRESSE. Le
-               bloc etait le seul de la page a ne rien dire tant qu'on
-               n'avait pas clique : un titre, un bouton, et aucune idee
-               de ce qui allait apparaitre ni d'ou ca viendrait. -->
-          <p class="an-sous" data-i18n="an.ia.d">Un modèle de langage lit les chiffres ci-dessus et en écrit un commentaire. Les mesures, elles, sont calculées ici et ne passent par aucun modèle.</p>
-          <div class="analyse__b">
-            <button class="pill" type="button" id="an-lancer" data-i18n="an.lancer">Analyser mes chiffres</button>
-          </div>
-          <p class="analyse__m" id="an-mot" hidden></p>
-          <div class="analyse__t" id="an-texte" hidden></div>
-          <p class="analyse__q" id="an-quand" hidden></p>
-          <!-- L'avertissement vit DANS le bloc de l'IA : il parle du
-               texte ecrit par la machine, pas des ecarts-types du bloc
-               au-dessus, qui n'ont besoin d'aucune reserve. -->
-          <p class="lectures__pied" id="an-pied" data-i18n="an.pied" hidden>Ce texte est écrit par une
-            machine et il peut se tromper. Il ne constitue pas un conseil en investissement, et
-            Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers.
-            Vérifiez tout chiffre avant de vous en servir.</p>
-        </div>
-
         <!-- L'ANALYSE CALCULEE. Rien d'ecrit par un modele ici : des
              ecarts-types, des maximums et des correlations, tires des
              douze mois de cours deja en memoire. Gratuite, instantanee,
              et elle ne peut pas se tromper. -->
         <div class="an-bloc" id="an-calc">
-          <h3 class="an-titre mono" data-i18n="an.calc.t">Et vos lignes là-dedans</h3>
+          <h4 class="an-titre mono" data-i18n="an.calc.t">Une ligne en détail</h4>
           <p class="an-sous" data-i18n="an.calc.d">Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.</p>
           <!-- Choisir la ligne. Toutes a la fois se lisait a trois
                lignes et plus du tout a douze — et sur telephone, ou
@@ -8994,6 +9010,27 @@ document.addEventListener('error', function(ev){
                recherche fait les deux : vide, il liste vos lignes ; rempli,
                il va chercher n'importe quelle crypto ou action chez le
                fournisseur de cours et en mesure les douze mois. -->
+          <!-- LE CHAMP EST DANS LE BLOC QU'IL COMMANDE. Il vivait
+               dans celui des marches, et ce qu'il produisait
+               apparaissait deux blocs plus bas, sous un autre titre :
+               on tapait un nom a un endroit et la reponse sortait a un
+               autre. C'est l'une des deux raisons pour lesquelles
+               « analyser vos lignes » se confondait avec l'analyse des
+               marches ; l'autre etait que les cinq blocs portaient le
+               meme titre, au meme corps et dans le meme gris.
+
+               Il ne depend pas de ce qu'on possede, et c'est voulu :
+               vide, il liste vos lignes ; rempli, il va chercher
+               n'importe quelle crypto, action ou matiere premiere chez
+               le fournisseur de cours et en mesure les douze mois. -->
+          <div class="an-choix" id="an-choix-boite">
+            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Une autre valeur&nbsp;?</label>
+            <div class="an-q">
+              <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
+                     spellcheck="false" data-i18n-titre="an.cherche.t">
+              <div class="sug an-q__s" id="an-sug" hidden></div>
+            </div>
+          </div>
           <p class="analyse__m" id="an-calc-mot" hidden></p>
           <div class="an-lignes" id="an-calc-lignes"></div>
           <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
@@ -9014,16 +9051,24 @@ document.addEventListener('error', function(ev){
              seul, et celle qui compte le plus : deux lignes correlees
              ne sont pas une diversification. -->
         <div class="an-bloc" id="an-cor" hidden>
-          <h3 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h3>
+          <h4 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h4>
           <!-- L'echelle, dite une fois : sans elle le curseur montre une
                position sans dire de quoi. -->
           <!-- Ce que les paires veulent dire, en une phrase : trois
                fois « bougent plutot independamment » n'est pas une
                conclusion, c'est la meme donnee recopiee. -->
           <p class="an-verdict" id="an-cor-verdict"></p>
-          <p class="an-echelle mono" data-i18n="an.cor.echelle">−1 en sens contraire · 0 indépendantes · +1 ensemble</p>
-          <div class="an-paires" id="an-cor-paires"></div>
-          <p class="analyse__q" id="an-cor-n"></p>
+          <!-- Et les paires elles-memes derriere un mot, sur telephone :
+               la phrase ci-dessus dit s'il y a un pari tenu deux fois,
+               et c'est la seule chose qu'on vient chercher. Huit lignes
+               de coefficients sont l'instrument, pas la conclusion —
+               meme regle que les grilles de mesures. -->
+          <details class="an-plus" id="an-cor-plus" open>
+            <summary class="an-plus__t mono" data-i18n="an.cor.pli">Les paires, une par une</summary>
+            <p class="an-echelle mono" data-i18n="an.cor.echelle">−1 en sens contraire · 0 indépendantes · +1 ensemble</p>
+            <div class="an-paires" id="an-cor-paires"></div>
+            <p class="analyse__q" id="an-cor-n"></p>
+          </details>
           <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
                annualisee, un recul depuis un sommet et un coefficient
                de correlation ne se lisent pas de naissance : la phrase
@@ -9036,6 +9081,28 @@ document.addEventListener('error', function(ev){
             <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
             <div class="an-aide__c" data-i18n-html="an.aide.cor"></div>
           </details>
+        </div>
+
+        <div class="an-bloc" id="an-ia" hidden>
+          <h4 class="an-titre mono" data-i18n="an.ia.t">Vos chiffres, écrits en clair</h4>
+          <!-- CE QUE LE BOUTON VA FAIRE, AVANT DE L'AVOIR PRESSE. Le
+               bloc etait le seul de la page a ne rien dire tant qu'on
+               n'avait pas clique : un titre, un bouton, et aucune idee
+               de ce qui allait apparaitre ni d'ou ca viendrait. -->
+          <p class="an-sous" data-i18n="an.ia.d">Un modèle de langage reprend les mesures ci-dessus, les marchés du jour et les titres de presse, et en écrit un commentaire. Les mesures, elles, sont calculées ici et ne passent par aucun modèle.</p>
+          <div class="analyse__b">
+            <button class="pill" type="button" id="an-lancer" data-i18n="an.lancer">Analyser mes chiffres</button>
+          </div>
+          <p class="analyse__m" id="an-mot" hidden></p>
+          <div class="analyse__t" id="an-texte" hidden></div>
+          <p class="analyse__q" id="an-quand" hidden></p>
+          <!-- L'avertissement vit DANS le bloc de l'IA : il parle du
+               texte ecrit par la machine, pas des ecarts-types du bloc
+               au-dessus, qui n'ont besoin d'aucune reserve. -->
+          <p class="lectures__pied" id="an-pied" data-i18n="an.pied" hidden>Ce texte est écrit par une
+            machine et il peut se tromper. Il ne constitue pas un conseil en investissement, et
+            Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers.
+            Vérifiez tout chiffre avant de vous en servir.</p>
         </div>
 
         <!-- Le commentaire ecrit par l'IA : formule Max seulement. -->
@@ -14651,7 +14718,8 @@ document.addEventListener('error', function(ev){
        seulement — sinon le repli se refermerait sous les doigts de
        celui qui vient de l'ouvrir, toutes les quarante-cinq
        secondes. */
-    ['an-mar-plus', 'an-moi-plus', 'an-moi-divp', 'an-moi-portp'].forEach(function(id){
+    ['an-mar-plus', 'an-moi-plus', 'an-moi-divp', 'an-moi-portp',
+     'an-cor-plus'].forEach(function(id){
       const d = document.getElementById(id);
       if (!d || d.dataset.pose === tel) return;
       d.dataset.pose = tel;
