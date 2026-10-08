@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261007.2209";</script>
+<script>window.PC_VERSION = "261008.1118";</script>
 </head>
 <body>
 
@@ -2358,6 +2358,58 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   .an-plus > summary{display:block;}
 }
 
+/* LA SECONDE PHRASE. Le verdict dit ou on en est ; celle-ci dit D'OU
+   CA VIENT — ce qu'on a verse, ce que le marche a fait. Deux temps
+   d'une seule reponse : elles se suivent de pres, et la seconde se
+   compose d'un cran plus bas pour qu'on voie laquelle vient
+   d'abord. */
+.an-verdict--2{
+  margin-top:calc(clamp(14px,1.8vw,20px) * -.5);
+  font-size:clamp(15px,1.35vw,17px);
+}
+/* Une phrase vide garde sa marge et ouvre un trou qui se lit comme
+   une panne. Plusieurs de ces paragraphes se vident legitimement —
+   un marche qui n'a pas repondu, un portefeuille ou rien n'a bouge. */
+.an-verdict:empty{display:none;}
+
+/* ============================================================
+   QUELQUES PHRASES POUR EXPLIQUER
+   ------------------------------------------------------------
+   Une volatilite annualisee, un recul depuis un sommet et un
+   coefficient de correlation ne se lisent pas de naissance. La
+   phrase de tete donne l'echelle avec des mots — « c'est agite » —
+   mais elle ne dit pas CE QUE la mesure mesure, ni pourquoi
+   celle-la plutot qu'une autre, ni ce qu'elle ne dit pas.
+
+   Replie, et a TOUS les formats, contrairement au detail chiffre
+   qui s'ouvre hors telephone : une definition se lit une fois, pas
+   a chaque visite. L'ouvrir par defaut rendrait a l'onglet les deux
+   ecrans de texte qu'on vient d'en retirer, et pour un texte qui ne
+   change jamais — c'est exactement la prose qu'on finit par sauter,
+   en emportant avec elle les phrases qui, elles, sont calculees.
+   ============================================================ */
+.an-aide{
+  margin-top:clamp(18px,2.2vw,26px);
+  border-top:1px solid var(--rule); padding-top:13px;
+}
+.an-aide > summary{
+  cursor:pointer; list-style:none;
+  font-size:11.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+.an-aide > summary::-webkit-details-marker{display:none;}
+.an-aide > summary::after{content:" +"; color:var(--accent);}
+.an-aide[open] > summary::after{content:" \2013";}
+.an-aide > summary:hover{color:var(--ink-2);}
+.an-aide > summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+.an-aide__c{padding-top:13px; max-width:66ch;}
+.an-aide__c p{
+  margin:0 0 .72em; font-size:clamp(14px,1.2vw,15.5px);
+  line-height:1.62; color:var(--ink-2); text-wrap:pretty;
+}
+.an-aide__c p:last-child{margin-bottom:0;}
+.an-aide__c b{color:var(--ink); font-weight:600;}
+
 /* ============================================================
    D'OU VIENT L'ARGENT
    ------------------------------------------------------------
@@ -2746,6 +2798,38 @@ body.vue-espace .field{opacity:.95;}
   background:color-mix(in srgb, var(--paper-2) 62%, transparent);
   border:1px solid var(--verre-filet); border-radius:var(--r-2);
   padding:13px 14px 15px;
+}
+
+/* ===== UNE MESURE DE TETE DANS LES GRILLES DU PORTEFEUILLE =====
+   Onze cases de meme poids ne disent pas quoi regarder en premier :
+   c'est exactement la faute que le bloc des marches avait corrigee,
+   et que les grilles du portefeuille reproduisaient des qu'elles ont
+   grossi. Celle de tete prend la rangee et porte son chiffre plus
+   grand — le resultat d'un cote, ce que la repartition rend de
+   l'autre ; les autres cases les precisent.
+
+   Pas le traitement de verre et d'Archivo du bloc des marches : ces
+   cases-ci vivent DANS une carte, et une surface en relief posee sur
+   une surface en relief ne se lit plus. Un corps plus grand et toute
+   la largeur suffisent a dire le rang. */
+#an-moi-mes .an-m--tete,
+#an-moi-divm .an-m--tete{flex:1 1 100%; padding:16px 16px 18px;}
+#an-moi-mes .an-m--tete .an-m__v,
+#an-moi-divm .an-m--tete .an-m__v{font-size:clamp(30px,4.2vw,44px); margin:8px 0 4px;}
+@media (min-width:860px){
+  /* Le detail se range A COTE du chiffre : le nombre est court, la
+     phrase est longue, et les empiler laisse une bande vide. */
+  #an-moi-mes .an-m--tete,
+  #an-moi-divm .an-m--tete{
+    display:grid; grid-template-columns:minmax(0,auto) minmax(0,1fr);
+    align-items:baseline; gap:4px 36px;
+  }
+  #an-moi-mes .an-m--tete .an-m__k,
+  #an-moi-divm .an-m--tete .an-m__k{grid-column:1 / -1;}
+  #an-moi-mes .an-m--tete .an-m__v,
+  #an-moi-divm .an-m--tete .an-m__v{margin:6px 0 0;}
+  #an-moi-mes .an-m--tete .an-m__d,
+  #an-moi-divm .an-m--tete .an-m__d{margin:0;}
 }
 
 /* Les tableaux repliables du detail : memes angles, meme filet. Ici
@@ -6130,6 +6214,9 @@ window.PC = (function(){
   'an.mar.verdict.baisse': ["Les {{n}} valeurs suivies reculent de {{e}} en moyenne {{p}}. {{h}} d'entre elles montent tout de même, et {{d}} points séparent la meilleure de la pire.","The {{n}} securities followed are down {{e}} on average {{p}}. {{h}} of them are rising all the same, and {{d}} points separate the best from the worst.","Los {{n}} valores seguidos bajan un {{e}} de media {{p}}. Aun así {{h}} de ellos suben, y {{d}} puntos separan el mejor del peor.","Die {{n}} verfolgten Werte geben {{p}} im Schnitt um {{e}} nach. {{h}} davon steigen dennoch, und {{d}} Punkte trennen den besten vom schlechtesten."],
   'an.mar.verdict.plat': ["Les {{n}} valeurs suivies ne bougent presque pas {{p}}\u00a0: {{h}} en hausse, et {{d}} points entre la meilleure et la pire.","The {{n}} securities followed barely move {{p}}: {{h}} rising, and {{d}} points between the best and the worst.","Los {{n}} valores seguidos apenas se mueven {{p}}: {{h}} al alza, y {{d}} puntos entre el mejor y el peor.","Die {{n}} verfolgten Werte bewegen sich {{p}} kaum: {{h}} im Plus, und {{d}} Punkte zwischen dem besten und dem schlechtesten."],
   'an.mar.verdict.une': ["Cette valeur fait {{e}} {{p}}.","This security is {{e}} {{p}}.","Este valor hace {{e}} {{p}}.","Dieser Wert macht {{p}} {{e}}."],
+  'an.mar.moi.mieux':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} points de mieux.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} points better.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} puntos mejor.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} Punkte besser."],
+  'an.mar.moi.moins':      ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période, contre {{e}} pour l'ensemble : {{d}} points de moins.","Your {{n}} lines followed by these quotes are {{v}} over the same period, against {{e}} for the whole: {{d}} points less.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo, frente al {{e}} del conjunto: {{d}} puntos menos.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum, gegenüber {{e}} für das Ganze: {{d}} Punkte weniger."],
+  'an.mar.moi.pareil':     ["Vos {{n}} lignes suivies par ces cotations font {{v}} sur la même période : comme l'ensemble, à un dixième de point près.","Your {{n}} lines followed by these quotes are {{v}} over the same period: like the whole, to within a tenth of a point.","Sus {{n}} líneas seguidas por estas cotizaciones hacen un {{v}} en el mismo periodo: como el conjunto, con una décima de punto de margen.","Ihre {{n}} von diesen Kursen verfolgten Positionen machen {{v}} im selben Zeitraum: wie das Ganze, auf ein Zehntelpunkt genau."],
   'an.moi.t':           ["Votre portefeuille dans son ensemble","Your portfolio as a whole","Su cartera en conjunto","Ihr Portfolio als Ganzes"],
   'an.moi.verdict':     ["Vous avez mis {{i}}. Votre portefeuille vaut {{v}} aujourd'hui, soit {{p}}.","You put in {{i}}. Your portfolio is worth {{v}} today, that is {{p}}.","Ha puesto {{i}}. Su cartera vale {{v}} hoy, es decir {{p}}.","Sie haben {{i}} eingezahlt. Ihr Portfolio ist heute {{v}} wert, also {{p}}."],
   'an.moi.cote':        ["{{n}} de cette valeur suit un cours de marché\u00a0; le reste repose sur ce que vous avez saisi.","{{n}} of that value follows a market price; the rest rests on what you entered.","{{n}} de ese valor sigue una cotización de mercado; el resto se basa en lo que ha introducido.","{{n}} dieses Werts folgt einem Marktkurs; der Rest beruht auf Ihren Eingaben."],
@@ -6143,6 +6230,7 @@ window.PC = (function(){
   'an.moi.cat.un':      ["catégorie","category","categoría","Kategorie"],
   'an.moi.cat.plus':    ["catégories","categories","categorías","Kategorien"],
   'an.moi.liq.k':       ["Disponible tout de suite","Available right away","Disponible de inmediato","Sofort verfügbar"],
+  'an.moi.port.pli':   ["Ligne par ligne","Line by line","Línea a línea","Position für Position"],
   'an.moi.port.t':      ["Ce qui a porté, ce qui a pesé","What carried, what weighed","Lo que ha tirado, lo que ha pesado","Was getragen hat, was gewogen hat"],
   'an.moi.port.1':      ["Sur un résultat de {{g}}, {{q}} apporte {{m}} à elle seule.","Out of a {{g}} result, {{q}} brings {{m}} on its own.","De un resultado de {{g}}, {{q}} aporta {{m}} por sí sola.","Von einem Ergebnis von {{g}} bringt {{q}} allein {{m}}."],
   'an.moi.port.2':      ["Sur un résultat de {{g}}, {{q}} apporte {{m}} quand {{q2}} en retire {{m2}}.","Out of a {{g}} result, {{q}} brings {{m}} while {{q2}} takes {{m2}} away.","De un resultado de {{g}}, {{q}} aporta {{m}} mientras {{q2}} resta {{m2}}.","Von einem Ergebnis von {{g}} bringt {{q}} {{m}}, während {{q2}} {{m2}} abzieht."],
@@ -6156,6 +6244,34 @@ window.PC = (function(){
   'an.l.cran.agitee':   ["c'est agité","that is restless","es agitado","das ist unruhig"],
   'an.l.cran.extreme':  ["c'est extrême","that is extreme","es extremo","das ist extrem"],
   'an.detail':          ["Le détail, chiffre par chiffre","The detail, figure by figure","El detalle, cifra a cifra","Das Detail, Zahl für Zahl"],
+  'an.moi.src':      ["Sur les {{j}} derniers jours, votre total est passé de {{a}} à {{b}}. Vous y avez versé {{m}}, et le marché a fait {{x}}.","Over the last {{j}} days your total went from {{a}} to {{b}}. You paid in {{m}}, and the market did {{x}}.","En los últimos {{j}} días su total ha pasado de {{a}} a {{b}}. Usted ha aportado {{m}}, y el mercado ha hecho {{x}}.","In den letzten {{j}} Tagen ging Ihr Gesamtwert von {{a}} auf {{b}}. Sie haben {{m}} eingezahlt, und der Markt hat {{x}} gemacht."],
+  'an.moi.src.0':    ["Sur les {{j}} derniers jours, votre total est passé de {{a}} à {{b}} sans un euro de plus : tout vient du marché.","Over the last {{j}} days your total went from {{a}} to {{b}} without a cent added: all of it comes from the market.","En los últimos {{j}} días su total ha pasado de {{a}} a {{b}} sin un euro más: todo viene del mercado.","In den letzten {{j}} Tagen ging Ihr Gesamtwert von {{a}} auf {{b}}, ohne einen Euro mehr: alles kommt vom Markt."],
+  'an.moi.mouv':     ["Il a bougé de {{v}} par an, et son pire recul depuis un sommet a été de {{r}}.","It moved {{v}} a year, and its worst fall from a peak was {{r}}.","Se ha movido un {{v}} al año, y su peor caída desde un máximo ha sido de {{r}}.","Er hat sich um {{v}} pro Jahr bewegt, und sein schlimmster Rückgang von einem Hoch war {{r}}."],
+  'an.moi.mouv.0':   ["Il a bougé de {{v}} par an, et il n'est jamais repassé sous un sommet précédent.","It moved {{v}} a year, and it never fell back below a previous peak.","Se ha movido un {{v}} al año, y nunca ha vuelto a caer por debajo de un máximo anterior.","Er hat sich um {{v}} pro Jahr bewegt und ist nie unter ein früheres Hoch zurückgefallen."],
+  'an.moi.vol.k':    ["Amplitude du total","How much the total moves","Amplitud del total","Schwankung des Gesamtwerts"],
+  'an.moi.rec.k':    ["Pire recul du total","Worst fall of the total","Peor caída del total","Schlimmster Rückgang"],
+  'an.moi.verse.k':  ["Versé sur la période","Paid in over the period","Aportado en el periodo","Im Zeitraum eingezahlt"],
+  'an.moi.bouge.k':  ["Fait par le marché","Done by the market","Hecho por el mercado","Vom Markt bewirkt"],
+  'an.moi.sens.k':   ["Jours en hausse","Days up","Días al alza","Tage im Plus"],
+  'an.moi.sens.d':   ["{{h}} jours sur {{n}} mesurés","{{h}} days out of {{n}} measured","{{h}} días de {{n}} medidos","{{h}} von {{n}} gemessenen Tagen"],
+  'an.moi.jours':    ["sur {{n}} jours","over {{n}} days","en {{n}} días","über {{n}} Tage"],
+  'an.div.t':        ["Ce que votre répartition vous rend","What your spread gives back","Lo que le devuelve su reparto","Was Ihre Aufteilung einbringt"],
+  'an.div.v':        ["Vos {{n}} lignes cotées bougent de {{a}} par an en moyenne. Prises ensemble, aux poids d'aujourd'hui, elles ne bougent que de {{b}} : les {{d}} points d'écart sont ce que votre répartition vous rend, parce qu'elles ne descendent pas toutes le même jour.","Your {{n}} quoted lines move {{a}} a year on average. Taken together, at today's weights, they move only {{b}}: the {{d}} point gap is what your spread gives back, because they do not all fall on the same day.","Sus {{n}} líneas cotizadas se mueven un {{a}} al año de media. Tomadas juntas, con los pesos de hoy, solo se mueven un {{b}}: los {{d}} puntos de diferencia son lo que le devuelve su reparto, porque no bajan todas el mismo día.","Ihre {{n}} notierten Positionen bewegen sich im Schnitt um {{a}} pro Jahr. Zusammen genommen, zu den heutigen Gewichten, nur um {{b}}: die {{d}} Punkte Differenz sind, was Ihre Aufteilung einbringt, weil sie nicht alle am selben Tag fallen."],
+  'an.div.v.0':      ["Vos {{n}} lignes cotées bougent de {{a}} par an en moyenne, et prises ensemble de {{b}} : votre répartition ne vous rend presque rien, parce que ces lignes montent et descendent ensemble.","Your {{n}} quoted lines move {{a}} a year on average, and {{b}} taken together: your spread gives back almost nothing, because these lines rise and fall together.","Sus {{n}} líneas cotizadas se mueven un {{a}} al año de media, y un {{b}} tomadas juntas: su reparto no le devuelve casi nada, porque estas líneas suben y bajan juntas.","Ihre {{n}} notierten Positionen bewegen sich im Schnitt um {{a}} pro Jahr, zusammen um {{b}}: Ihre Aufteilung bringt fast nichts ein, weil diese Positionen gemeinsam steigen und fallen."],
+  'an.div.rec':      ["Sur ces {{j}} séances communes, l'ensemble est descendu de {{r}} au pire, quand {{q}}, la plus touchée, perdait {{rl}}.","Over those {{j}} shared sessions the whole fell {{r}} at worst, while {{q}}, the hardest hit, lost {{rl}}.","En esas {{j}} sesiones comunes el conjunto cayó un {{r}} en el peor momento, mientras {{q}}, la más afectada, perdía un {{rl}}.","In diesen {{j}} gemeinsamen Handelstagen fiel das Ganze im schlimmsten Fall um {{r}}, während {{q}}, die am stärksten betroffene, {{rl}} verlor."],
+  'an.div.vol.k':    ["Amplitude de l'ensemble","How much the whole moves","Amplitud del conjunto","Schwankung des Ganzen"],
+  'an.div.moy.k':    ["Moyenne de vos lignes","Average of your lines","Media de sus líneas","Durchschnitt Ihrer Positionen"],
+  'an.div.ecart.k':  ["Ce que la répartition rend","What the spread gives back","Lo que devuelve el reparto","Was die Aufteilung einbringt"],
+  'an.div.ecart.d':  ["{{n}} points de moins que la moyenne de vos lignes","{{n}} points less than the average of your lines","{{n}} puntos menos que la media de sus líneas","{{n}} Punkte weniger als der Durchschnitt Ihrer Positionen"],
+  'an.div.pire.k':   ["Pire recul de l'ensemble","Worst fall of the whole","Peor caída del conjunto","Schlimmster Rückgang des Ganzen"],
+  'an.div.pire.d':   ["{{q}}, la plus touchée, perdait {{r}}","{{q}}, the hardest hit, lost {{r}}","{{q}}, la más afectada, perdía un {{r}}","{{q}}, die am stärksten betroffene, verlor {{r}}"],
+  'an.div.seances':  ["{{n}} séances communes","{{n}} shared sessions","{{n}} sesiones comunes","{{n}} gemeinsame Handelstage"],
+  'an.aide':         ["Comment lire ces chiffres","How to read these figures","Cómo leer estas cifras","Wie diese Zahlen zu lesen sind"],
+  'an.aide.mar':     ["<p><b>La moyenne</b> est celle des variations, chaque valeur comptant pour une. Elle dit l'humeur du marché, pas la performance d'un indice, qui pondère par la taille des entreprises.</p><p><b>Le nombre de hausses</b> dit si le mouvement est général ou tenu par deux ou trois valeurs. Dix hausses sur vingt-quatre pendant que la moyenne monte, c'est une hausse portée par peu de monde.</p><p><b>L'écart</b> se compte en points de pourcentage, pas en pourcent : il sépare la meilleure de la pire. Large, il dit que le marché trie ; étroit, qu'il bouge en bloc.</p><p><b>Et vous, sur la même période</b> compare ce qu'ont fait vos lignes suivies par ces cotations à la moyenne ci-dessus. Vos lignes y sont pondérées par leur montant : c'est ce que votre argent a fait, et non ce qu'a fait la ligne moyenne de votre liste.</p>","<p><b>The average</b> is the average of the moves, each security counting once. It tells you the mood of the market, not the performance of an index, which weights by company size.</p><p><b>The number rising</b> tells you whether the move is broad or carried by two or three securities. Ten rising out of twenty-four while the average climbs is a rise held up by very few.</p><p><b>The spread</b> is counted in percentage points, not in percent: it separates the best from the worst. Wide, it says the market is sorting; narrow, that it moves as a block.</p><p><b>And you, over the same period</b> compares what your lines followed by these quotes did against the average above. Your lines are weighted by their amount: it is what your money did, not what the average line of your list did.</p>","<p><b>La media</b> es la de las variaciones, contando cada valor una vez. Dice el humor del mercado, no el rendimiento de un índice, que pondera por el tamaño de las empresas.</p><p><b>El número de subidas</b> dice si el movimiento es general o lo sostienen dos o tres valores. Diez subidas de veinticuatro mientras la media sube es un alza sostenida por muy pocos.</p><p><b>La diferencia</b> se cuenta en puntos porcentuales, no en porcentaje: separa el mejor del peor. Amplia, dice que el mercado selecciona; estrecha, que se mueve en bloque.</p><p><b>Y usted, en el mismo periodo</b> compara lo que han hecho sus líneas seguidas por estas cotizaciones con la media de arriba. Sus líneas se ponderan por su importe: es lo que ha hecho su dinero, no lo que ha hecho la línea media de su lista.</p>","<p><b>Der Durchschnitt</b> ist der der Veränderungen, jeder Wert zählt einmal. Er sagt die Stimmung des Marktes, nicht die Leistung eines Index, der nach Unternehmensgröße gewichtet.</p><p><b>Die Zahl der Gewinner</b> sagt, ob die Bewegung breit ist oder von zwei oder drei Werten getragen wird. Zehn Gewinner von vierundzwanzig bei steigendem Durchschnitt ist ein Anstieg, den sehr wenige tragen.</p><p><b>Die Spanne</b> wird in Prozentpunkten gezählt, nicht in Prozent: sie trennt den besten vom schlechtesten. Weit heißt, der Markt sortiert; eng, er bewegt sich im Block.</p><p><b>Und Sie, im selben Zeitraum</b> vergleicht, was Ihre von diesen Kursen verfolgten Positionen gemacht haben, mit dem Durchschnitt oben. Ihre Positionen sind nach ihrem Betrag gewichtet: es ist, was Ihr Geld gemacht hat, nicht was die durchschnittliche Position Ihrer Liste gemacht hat.</p>"],
+  'an.aide.moi':     ["<p><b>L'amplitude</b>, ou volatilité, mesure de combien votre total s'écarte de sa moyenne, ramenée à l'année. Trente pour cent veut dire qu'une année ordinaire le fait passer trente pour cent au-dessus ou au-dessous : dans les deux sens, et ce n'est pas une prévision.</p><p><b>Le pire recul</b> est la plus forte chute depuis un sommet, et non l'écart entre le plus haut et le plus bas de l'année. Si le plus bas précède le plus haut, cette chute-là n'a jamais existé. C'est ce qu'il a fallu traverser.</p><p><b>Versé</b> et <b>fait par le marché</b> séparent les deux raisons qu'un total a de monter. Un total qui gagne dix mille euros parce qu'on y a versé dix mille euros n'a rien gagné : c'est la confusion la plus courante, et aucun relevé de banque ne la lève.</p><p><b>La part suivie par un cours</b> dit ce que valent les mesures ci-dessus. Sur un portefeuille dont les trois quarts sont un appartement, une amplitude reste juste — mais sur le quart restant seulement.</p>","<p><b>How much it moves</b>, or volatility, measures how far your total strays from its average, scaled to a year. Thirty percent means an ordinary year takes it thirty percent above or below: both ways, and it is not a forecast.</p><p><b>The worst fall</b> is the largest drop from a peak, not the gap between the year's high and low. If the low comes before the high, that drop never existed. This is what had to be lived through.</p><p><b>Paid in</b> and <b>done by the market</b> separate the two reasons a total has for rising. A total that gains ten thousand because ten thousand was paid into it has gained nothing: it is the commonest confusion, and no bank statement clears it up.</p><p><b>The share followed by a price</b> tells you what the figures above are worth. On a portfolio three quarters of which is a flat, a volatility stays correct — but only on the remaining quarter.</p>","<p><b>La amplitud</b>, o volatilidad, mide cuánto se aparta su total de su media, llevada al año. Treinta por ciento quiere decir que un año corriente lo lleva treinta por ciento por encima o por debajo: en los dos sentidos, y no es una previsión.</p><p><b>La peor caída</b> es el mayor descenso desde un máximo, no la diferencia entre el máximo y el mínimo del año. Si el mínimo precede al máximo, esa caída nunca existió. Es lo que hubo que atravesar.</p><p><b>Aportado</b> y <b>hecho por el mercado</b> separan las dos razones que tiene un total para subir. Un total que gana diez mil euros porque se le han aportado diez mil euros no ha ganado nada: es la confusión más común, y ningún extracto bancario la deshace.</p><p><b>La parte seguida por una cotización</b> dice lo que valen las cifras de arriba. En una cartera de la que tres cuartos son un piso, una volatilidad sigue siendo correcta — pero solo sobre el cuarto restante.</p>","<p><b>Die Schwankung</b>, oder Volatilität, misst, wie weit Ihr Gesamtwert von seinem Durchschnitt abweicht, auf das Jahr gerechnet. Dreißig Prozent heißt, ein gewöhnliches Jahr bringt ihn dreißig Prozent darüber oder darunter: in beide Richtungen, und es ist keine Prognose.</p><p><b>Der schlimmste Rückgang</b> ist der größte Fall von einem Hoch, nicht die Spanne zwischen Jahreshoch und Jahrestief. Liegt das Tief vor dem Hoch, hat dieser Fall nie existiert. Das ist, was durchzustehen war.</p><p><b>Eingezahlt</b> und <b>vom Markt bewirkt</b> trennen die zwei Gründe, aus denen ein Gesamtwert steigt. Ein Gesamtwert, der zehntausend gewinnt, weil zehntausend eingezahlt wurden, hat nichts gewonnen: das ist die häufigste Verwechslung, und kein Kontoauszug klärt sie auf.</p><p><b>Der Anteil mit Marktkurs</b> sagt, was die Zahlen oben wert sind. Bei einem Portfolio, das zu drei Vierteln eine Wohnung ist, bleibt eine Volatilität richtig — aber nur auf dem restlichen Viertel.</p>"],
+  'an.aide.l':       ["<p><b>L'amplitude annualisée</b> part des variations d'un jour sur l'autre : on en prend l'écart-type, puis on le multiplie par la racine de 252, le nombre de séances d'une année boursière. Elle ne dit pas un sens, seulement une taille de secousse.</p><p><b>Le pire recul</b> suit le sommet atteint et mesure la plus grande chute depuis ce sommet, avec ses dates. Aucun recul du tout est une réponse, et c'est la plus forte qu'une série puisse rendre.</p><p><b>La position dans l'année</b> place le cours du jour entre son plus bas et son plus haut des douze mois. Elle ne prédit rien : elle situe.</p><p>Une ligne qui n'a pas de cours est mesurée sur <b>vos relevés datés</b>. Un recul et une position s'y lisent ; une amplitude annualisée, non — 252 est un nombre de séances, et en prendre la racine sur des écarts mensuels rendrait un chiffre environ trois fois trop grand.</p>","<p><b>Annualised volatility</b> starts from the day-to-day moves: take their standard deviation, then multiply by the square root of 252, the number of sessions in a market year. It gives no direction, only a size of jolt.</p><p><b>The worst fall</b> tracks the peak reached and measures the largest drop from that peak, with its dates. No fall at all is an answer, and the strongest a series can give.</p><p><b>The position in the year</b> places today's price between its twelve-month low and high. It predicts nothing: it locates.</p><p>A line with no market price is measured on <b>your dated statements</b>. A fall and a position can be read there; an annualised volatility cannot — 252 is a number of sessions, and taking its root on monthly gaps would return a figure about three times too large.</p>","<p><b>La amplitud anualizada</b> parte de las variaciones de un día a otro: se toma su desviación típica y se multiplica por la raíz de 252, el número de sesiones de un año bursátil. No da un sentido, solo un tamaño de sacudida.</p><p><b>La peor caída</b> sigue el máximo alcanzado y mide el mayor descenso desde ese máximo, con sus fechas. Ninguna caída es una respuesta, y la más fuerte que una serie puede dar.</p><p><b>La posición en el año</b> coloca la cotización de hoy entre su mínimo y su máximo de doce meses. No predice nada: sitúa.</p><p>Una línea sin cotización se mide sobre <b>sus extractos fechados</b>. Allí se leen una caída y una posición; una amplitud anualizada, no — 252 es un número de sesiones, y tomar su raíz sobre diferencias mensuales daría una cifra unas tres veces demasiado grande.</p>","<p><b>Die annualisierte Schwankung</b> geht von den Tagesveränderungen aus: man nimmt deren Standardabweichung und multipliziert sie mit der Wurzel aus 252, der Zahl der Handelstage eines Börsenjahres. Sie gibt keine Richtung, nur eine Größe des Stoßes.</p><p><b>Der schlimmste Rückgang</b> folgt dem erreichten Hoch und misst den größten Fall von diesem Hoch, mit seinen Daten. Gar kein Rückgang ist eine Antwort, und die stärkste, die eine Reihe geben kann.</p><p><b>Die Position im Jahr</b> setzt den heutigen Kurs zwischen sein Zwölfmonatstief und -hoch. Sie sagt nichts voraus: sie ordnet ein.</p><p>Eine Position ohne Marktkurs wird auf <b>Ihren datierten Auszügen</b> gemessen. Ein Rückgang und eine Position lassen sich dort lesen; eine annualisierte Schwankung nicht — 252 ist eine Zahl von Handelstagen, und ihre Wurzel auf Monatsabständen ergäbe eine etwa dreimal zu große Zahl.</p>"],
+  'an.aide.cor':     ["<p><b>Un coefficient de corrélation</b> va de −1 à +1. À +1 les deux lignes montent et descendent exactement ensemble ; à 0 elles s'ignorent ; à −1 l'une monte quand l'autre descend.</p><p>Il se calcule sur les variations quotidiennes des <b>séances communes</b> seulement. Une crypto cote sept jours sur sept, une action cinq : aligner un lundi sur un dimanche rendrait un chiffre qui ne veut rien dire.</p><p>Ce qu'il sert à voir : <b>deux lignes au-dessus de 0,8 sont, en pratique, le même pari</b>. Les détenir toutes les deux vous expose deux fois au même risque sans rien diversifier — et c'est ce que le bloc « ce que votre répartition vous rend » chiffre en points.</p>","<p><b>A correlation coefficient</b> runs from −1 to +1. At +1 the two lines rise and fall exactly together; at 0 they ignore each other; at −1 one rises as the other falls.</p><p>It is computed on the daily moves of the <b>shared sessions</b> only. A crypto trades seven days a week, a share five: lining a Monday up against a Sunday would return a meaningless figure.</p><p>What it is for: <b>two lines above 0.8 are, in practice, the same bet</b>. Holding both exposes you twice to the same risk without diversifying anything — and that is what the block « what your spread gives back » puts a number on.</p>","<p><b>Un coeficiente de correlación</b> va de −1 a +1. En +1 las dos líneas suben y bajan exactamente juntas; en 0 se ignoran; en −1 una sube cuando la otra baja.</p><p>Se calcula sobre las variaciones diarias de las <b>sesiones comunes</b> únicamente. Una cripto cotiza siete días de siete, una acción cinco: alinear un lunes con un domingo daría una cifra sin sentido.</p><p>Para qué sirve: <b>dos líneas por encima de 0,8 son, en la práctica, la misma apuesta</b>. Tenerlas las dos le expone dos veces al mismo riesgo sin diversificar nada — y eso es lo que el bloque « lo que le devuelve su reparto » cifra en puntos.</p>","<p><b>Ein Korrelationskoeffizient</b> reicht von −1 bis +1. Bei +1 steigen und fallen die beiden Positionen genau gemeinsam; bei 0 ignorieren sie sich; bei −1 steigt die eine, wenn die andere fällt.</p><p>Er wird nur auf den Tagesveränderungen der <b>gemeinsamen Handelstage</b> berechnet. Eine Krypto notiert sieben Tage von sieben, eine Aktie fünf: einen Montag gegen einen Sonntag zu stellen ergäbe eine bedeutungslose Zahl.</p><p>Wozu er dient: <b>zwei Positionen über 0,8 sind in der Praxis dieselbe Wette</b>. Beide zu halten setzt Sie zweimal demselben Risiko aus, ohne etwas zu streuen — und genau das beziffert der Block « was Ihre Aufteilung einbringt » in Punkten.</p>"],
+  'an.ia.d':         ["Un modèle de langage lit les chiffres ci-dessus et en écrit un commentaire. Les mesures, elles, sont calculées ici et ne passent par aucun modèle.","A language model reads the figures above and writes them up. The measurements themselves are computed here and go through no model.","Un modelo de lenguaje lee las cifras de arriba y escribe un comentario. Las mediciones, en cambio, se calculan aquí y no pasan por ningún modelo.","Ein Sprachmodell liest die Zahlen oben und schreibt einen Kommentar dazu. Die Messungen selbst werden hier berechnet und laufen durch kein Modell."],
   'an.mar.n.crypto':    ["Les vingt-quatre premi\u00e8res par capitalisation. Pour une autre valeur, le champ ci-dessous cherche dans tout ce que les fournisseurs servent.","The twenty-four largest by market capitalisation. For any other security, the field below searches everything the providers serve.","Las veinticuatro primeras por capitalizaci\u00f3n. Para otro valor, el campo de abajo busca en todo lo que sirven los proveedores.","Die vierundzwanzig gr\u00f6\u00dften nach Marktkapitalisierung. F\u00fcr einen anderen Wert sucht das Feld unten in allem, was die Anbieter liefern."],
   'an.mar.n.bourse':    ["Une poign\u00e9e de valeurs connues, pas un classement\u00a0: aucun fournisseur gratuit n'en sert un pour la bourse.","A handful of well-known securities, not a ranking: no free provider serves one for stock markets.","Un pu\u00f1ado de valores conocidos, no un ranking: ning\u00fan proveedor gratuito lo ofrece para la bolsa.","Eine Handvoll bekannter Werte, kein Ranking: Kein kostenloser Anbieter liefert eines f\u00fcr die B\u00f6rse."],
   'an.mar.n.matieres':  ["L'or et l'argent arrivent sans rien installer\u00a0; le platine, le cuivre, le p\u00e9trole et les autres passent par le relais.","Gold and silver arrive with nothing installed; platinum, copper, oil and the rest go through the relay.","El oro y la plata llegan sin instalar nada; el platino, el cobre, el petr\u00f3leo y los dem\u00e1s pasan por el rel\u00e9.","Gold und Silber kommen ohne Installation; Platin, Kupfer, \u00d6l und die \u00fcbrigen laufen \u00fcber das Relais."],
@@ -8717,6 +8833,13 @@ document.addEventListener('error', function(ev){
           <!-- Ce que les six chiffres veulent dire, en une phrase.
                Voir la feuille de style, « LA PHRASE DE TETE ». -->
           <p class="an-verdict" id="an-mar-verdict"></p>
+          <!-- ET VOUS, SUR LA MEME PERIODE ? La question qu'on se
+               pose en lisant une moyenne de marche, et la seule a
+               laquelle la page ne repondait nulle part. Elle vit ici
+               et non dans le bloc du portefeuille, parce que c'est
+               ici que le choix de la periode se fait : 24 h, 7 j ou
+               30 j, et la comparaison doit suivre. -->
+          <p class="an-verdict an-verdict--2" id="an-mar-moi"></p>
           <!-- SUR TELEPHONE, LA PHRASE SUFFIT. Elle porte deja la
                moyenne, le nombre de hausses et l'ecart : les six
                tuiles les repetent en chiffres. On les range donc
@@ -8748,6 +8871,18 @@ document.addEventListener('error', function(ev){
                pouvait analyser que les dix valeurs posees la. Il
                remonte ici, a cote des valeurs de tete, et il ne depend
                plus de ce qu'on possede. -->
+          <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
+               annualisee, un recul depuis un sommet et un coefficient
+               de correlation ne se lisent pas de naissance : la phrase
+               de tete donne l'echelle avec des mots, mais elle ne dit
+               pas CE QUE la mesure mesure. Replie, parce qu'une
+               definition se lit une fois et pas a chaque visite —
+               l'ouvrir par defaut rendrait a la page les deux ecrans
+               de texte qu'on vient d'en retirer. -->
+          <details class="an-aide" id="an-aide-mar">
+            <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
+            <div class="an-aide__c" data-i18n-html="an.aide.mar"></div>
+          </details>
           <div class="an-choix" id="an-choix-boite">
             <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Une autre valeur&nbsp;?</label>
             <div class="an-q">
@@ -8767,6 +8902,12 @@ document.addEventListener('error', function(ev){
         <div class="an-bloc" id="an-moi" hidden>
           <h3 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h3>
           <p class="an-verdict" id="an-moi-verdict"></p>
+          <!-- D'OU VIENT CE QUI A CHANGE. « Vous avez mis X, ca vaut Y »
+               ne dit pas si Y vient du marche ou de vos versements. Un
+               total qui monte de dix mille euros parce qu'on y a verse
+               dix mille euros n'a rien gagne, et c'est la confusion la
+               plus courante qu'un releve de banque entretienne. -->
+          <p class="an-verdict an-verdict--2" id="an-moi-source"></p>
           <details class="an-plus" id="an-moi-plus" open>
             <summary class="an-plus__t mono" data-i18n="an.detail">Le détail, chiffre par chiffre</summary>
             <div class="an-mes" id="an-moi-mes"></div>
@@ -8776,11 +8917,49 @@ document.addEventListener('error', function(ev){
           <h4 class="an-titre mono" id="an-moi-ct" style="margin-top:clamp(22px,2.6vw,30px)"
               data-i18n="an.moi.port.t">Ce qui a porté, ce qui a pesé</h4>
           <p class="an-verdict" id="an-moi-port"></p>
-          <div class="an-contrib" id="an-moi-contrib"></div>
+          <details class="an-plus" id="an-moi-portp" open>
+            <summary class="an-plus__t mono" data-i18n="an.moi.port.pli">Ligne par ligne</summary>
+            <div class="an-contrib" id="an-moi-contrib"></div>
+          </details>
+          <!-- ===== CE QUE LA REPARTITION REND =====
+               La mesure que personne ne montre, et la seule qui
+               justifie de detenir plusieurs lignes plutot qu'une.
+               Deux lignes qui bougent chacune de 50 % par an ne font
+               pas un ensemble a 50 % : elles ne descendent pas le meme
+               jour. L'ecart se chiffre, et c'est le seul chiffre qui
+               mette un prix sur la diversification. -->
+          <h4 class="an-titre mono" id="an-moi-dt" style="margin-top:clamp(22px,2.6vw,30px)"
+              data-i18n="an.div.t" hidden>Ce que votre répartition vous rend</h4>
+          <p class="an-verdict" id="an-moi-divv"></p>
+          <!-- Le meme ecart, vu autrement : une amplitude annualisee
+               reste une abstraction, une chute qu'on a traversee non.
+               Deux temps, donc deux paragraphes. -->
+          <p class="an-verdict an-verdict--2" id="an-moi-divr"></p>
+          <details class="an-plus" id="an-moi-divp" open>
+            <summary class="an-plus__t mono" data-i18n="an.detail">Le détail, chiffre par chiffre</summary>
+            <div class="an-mes" id="an-moi-divm"></div>
+          </details>
+          <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
+               annualisee, un recul depuis un sommet et un coefficient
+               de correlation ne se lisent pas de naissance : la phrase
+               de tete donne l'echelle avec des mots, mais elle ne dit
+               pas CE QUE la mesure mesure. Replie, parce qu'une
+               definition se lit une fois et pas a chaque visite —
+               l'ouvrir par defaut rendrait a la page les deux ecrans
+               de texte qu'on vient d'en retirer. -->
+          <details class="an-aide" id="an-aide-moi">
+            <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
+            <div class="an-aide__c" data-i18n-html="an.aide.moi"></div>
+          </details>
         </div>
 
         <div class="an-bloc" id="an-ia" hidden>
           <h3 class="an-titre mono" data-i18n="an.ia.t">Le marché du jour, écrit en clair</h3>
+          <!-- CE QUE LE BOUTON VA FAIRE, AVANT DE L'AVOIR PRESSE. Le
+               bloc etait le seul de la page a ne rien dire tant qu'on
+               n'avait pas clique : un titre, un bouton, et aucune idee
+               de ce qui allait apparaitre ni d'ou ca viendrait. -->
+          <p class="an-sous" data-i18n="an.ia.d">Un modèle de langage lit les chiffres ci-dessus et en écrit un commentaire. Les mesures, elles, sont calculées ici et ne passent par aucun modèle.</p>
           <div class="analyse__b">
             <button class="pill" type="button" id="an-lancer" data-i18n="an.lancer">Analyser mes chiffres</button>
           </div>
@@ -8816,6 +8995,18 @@ document.addEventListener('error', function(ev){
                fournisseur de cours et en mesure les douze mois. -->
           <p class="analyse__m" id="an-calc-mot" hidden></p>
           <div class="an-lignes" id="an-calc-lignes"></div>
+          <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
+               annualisee, un recul depuis un sommet et un coefficient
+               de correlation ne se lisent pas de naissance : la phrase
+               de tete donne l'echelle avec des mots, mais elle ne dit
+               pas CE QUE la mesure mesure. Replie, parce qu'une
+               definition se lit une fois et pas a chaque visite —
+               l'ouvrir par defaut rendrait a la page les deux ecrans
+               de texte qu'on vient d'en retirer. -->
+          <details class="an-aide" id="an-aide-l">
+            <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
+            <div class="an-aide__c" data-i18n-html="an.aide.l"></div>
+          </details>
         </div>
 
         <!-- CE QUI BOUGE ENSEMBLE. La mesure qu'aucun tableur ne donne
@@ -8832,6 +9023,18 @@ document.addEventListener('error', function(ev){
           <p class="an-echelle mono" data-i18n="an.cor.echelle">−1 en sens contraire · 0 indépendantes · +1 ensemble</p>
           <div class="an-paires" id="an-cor-paires"></div>
           <p class="analyse__q" id="an-cor-n"></p>
+          <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
+               annualisee, un recul depuis un sommet et un coefficient
+               de correlation ne se lisent pas de naissance : la phrase
+               de tete donne l'echelle avec des mots, mais elle ne dit
+               pas CE QUE la mesure mesure. Replie, parce qu'une
+               definition se lit une fois et pas a chaque visite —
+               l'ouvrir par defaut rendrait a la page les deux ecrans
+               de texte qu'on vient d'en retirer. -->
+          <details class="an-aide" id="an-aide-cor">
+            <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
+            <div class="an-aide__c" data-i18n-html="an.aide.cor"></div>
+          </details>
         </div>
 
         <!-- Le commentaire ecrit par l'IA : formule Max seulement. -->
@@ -13129,6 +13332,233 @@ document.addEventListener('error', function(ev){
   }
 
   /* ============================================================
+     L'ENSEMBLE PRIS COMME UNE SEULE LIGNE
+     ------------------------------------------------------------
+     Chaque ligne avait sa volatilite et son pire recul. Le TOTAL
+     n'en avait aucun — et c'est pourtant le seul chiffre qui
+     decrive ce qu'on vit : personne ne detient une ligne, on
+     detient un ensemble, et c'est l'ensemble qui descend le jour ou
+     ca descend.
+
+     La courbe reconstituee donne un point par jour sur la derniere
+     annee, et un point par MOIS avant. On ne garde que la partie
+     quotidienne. Prendre la racine de 252 sur des ecarts mensuels
+     rendrait une amplitude environ trois fois trop grande : c'est
+     exactement la faute qu'on refuse ligne par ligne, et il n'y a
+     aucune raison de se l'autoriser sur le total.
+     ============================================================ */
+  const JOUR_MS = 24 * 3600 * 1000;
+  /* Le jour d'un instant, en nombre : une cle qui se TRIE. `anJour`
+     rend « 2026-1-5 », qui se trie apres « 2026-11-2 » et que
+     Date.parse ne lit pas de la meme facon partout. */
+  function anJourT(t){
+    const d = new Date(t);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  }
+
+  /* ===== LA RECONSTITUTION NE SE REFAIT PAS A CHAQUE TICK =====
+     `historiqueComplet` rebatit six cents points en interrogeant
+     chaque serie, et `prixAu` parcourt la serie a chaque fois : un
+     bon million d'operations par appel. La page en faisait deja
+     trois par rendu pour ses courbes ; un quatrieme pour une mesure
+     annuelle, a chaque battement du flux, serait le genre de
+     depense qu'on ne voit pas et qui se sent.
+
+     La signature couvre tout ce qui change le resultat : les
+     montants, les quantites, les codes, les taux, les dates
+     d'acquisition, le nombre de relevés, les series arrivees, et le
+     jour. Elle ne couvre pas l'heure — une mesure sur douze mois n'a
+     pas besoin d'etre refaite a la minute. */
+  let memTotal = null, memTotalCle = '';
+  function anTotalCle(){
+    let k = jourISO(Date.now()) + '|' + historique.length + '|' +
+            Object.keys(SERIES).length;
+    actifs.forEach(function(a){
+      k += '|' + a.id + ':' + a.val + ':' + a.inv + ':' + (a.q || '') + ':' +
+           (a.sym || '') + ':' + (a.taux || '') + ':' + (a.depuis || '') + ':' +
+           (a.achat || '') + ':' + (a.rev || '') + ':' + (a.revP || '') + ':' +
+           (a.revDepuis || '');
+    });
+    return k;
+  }
+
+  function anTotal(){
+    const cle = anTotalCle();
+    if (cle === memTotalCle) return memTotal;
+    memTotalCle = cle;
+    memTotal = anTotalCalc();
+    return memTotal;
+  }
+
+  function anTotalCalc(){
+    let h = null;
+    try { h = historiqueComplet(); } catch (e){ return null; }
+    if (!h || h.length < 3) return null;
+    const pts = [], inv = [], comp = [];
+    h.forEach(function(r){
+      const t = Date.parse(r.d + 'T00:00:00Z');
+      if (isNaN(t) || !(r.val > 0)) return;
+      pts.push([t, r.val]); inv.push(r.inv || 0);
+      /* Quelles lignes comptaient ce jour-la. Voir plus bas : c'est
+         ce qui permet de reconnaitre le jour ou une ligne entre. */
+      comp.push(Object.keys(r.lignes || {}).sort().join('|'));
+    });
+    if (pts.length < 3) return null;
+    /* LA FENETRE QUOTIDIENNE, ET RIEN D'AUTRE. On remonte tant que
+       deux points se suivent a quatre jours pres ; le premier trou
+       plus large est la couture entre les deux grilles, et la
+       franchir ferait passer un mois pour une seance. */
+    let i0 = pts.length - 1;
+    while (i0 > 0 && pts[i0][0] - pts[i0 - 1][0] <= 4 * JOUR_MS) i0--;
+    const q = pts.slice(i0), qi = inv.slice(i0), qc = comp.slice(i0);
+    if (q.length < 3) return null;
+    const der = q.length - 1;
+
+    /* ===== UN VERSEMENT N'EST PAS UNE PERFORMANCE =====
+       La faute qui rendait cette mesure absurde, et qu'on ne voyait
+       qu'en la regardant : la courbe d'un patrimoine monte aussi
+       parce qu'on y verse. Prise telle quelle, elle donnait une
+       amplitude de 398 % par an et « 100 % de jours en hausse » —
+       une mesure d'epargnant regulier, pas de marche.
+
+       On retire donc de chaque variation ce qui a ete verse ce
+       jour-la : la hausse nette rapportee a la veille. C'est le
+       rendement dit « pondere par le temps », et c'est la seule
+       facon de comparer un portefeuille ou l'on verse a un marche ou
+       l'on ne verse pas.
+
+       ET LE JOUR OU UNE LIGNE ENTRE NE SE MESURE PAS. Une ligne
+       reconstituee arrive a son cours du jour pendant que son
+       montant investi arrive, lui, a son prix d'achat : la
+       difference est tout le gain qu'elle avait deja fait avant
+       d'entrer, et le compter en une seance rendrait un pic qui n'a
+       jamais existe. On saute donc la variation du jour ou la
+       composition change — une seance par ligne, sur trois cent
+       soixante. */
+    const v = [];
+    let sautes = 0;
+    for (let i = 1; i < q.length; i++){
+      const a = q[i - 1][1];
+      if (!(a > 0)) continue;
+      if (qc[i] !== qc[i - 1]){ sautes++; continue; }
+      const flux = qi[i] - qi[i - 1];
+      v.push({t:q[i][0], r:(q[i][1] - flux) / a - 1});
+    }
+    /* Le chemin de ce que le MARCHE a fait, base 100 : c'est sur lui
+       que se mesure le pire recul. Sur la courbe brute, un versement
+       au creux « reparerait » la chute, et le pire recul d'un
+       epargnant regulier serait toujours proche de zero. */
+    let base = 100;
+    const chemin = [[q[0][0], base]];
+    v.forEach(function(x){ base *= 1 + x.r; chemin.push([x.t, base]); });
+
+    const verse = qi[der] - qi[0];
+    const bouge = (q[der][1] - q[0][1]) - verse;
+    const monte = v.filter(function(x){ return x.r > 0; }).length;
+    /* ===== NE PAS MESURER UN MOUVEMENT QU'ON N'A PAS =====
+       La reconstitution ne prete un cours a une ligne qu'a partir de
+       sa date d'acquisition. Un portefeuille saisi hier n'a donc,
+       sur la fenetre, que ses lignes a taux garanti — qui montent de
+       quelques centimes PAR JOUR, dans un seul sens. L'ecart-type de
+       cette suite-la existe, vaut a peu pres zero, et s'affichait
+       « amplitude du total : 0 % » sur un portefeuille au quart en
+       crypto. Juste, et faux : la mesure etait exacte sur une serie
+       qui ne decrivait pas ce portefeuille.
+
+       Le symptome se reconnait sans rien deviner : trois cent
+       quarante seances qui montent TOUTES. Aucun marche ne fait ca ;
+       une formule, si. On rend donc la decomposition — versements
+       contre marche, exacte dans tous les cas — et on se tait sur
+       l'amplitude et le recul, plutot que d'en publier une version
+       qui aurait l'air d'une mesure. */
+    const mouvant = v.length >= 20 && monte > 0 && monte < v.length;
+    return {
+      pts:q, v:v, debut:q[0][1], fin:q[der][1],
+      jours:Math.max(1, Math.round((q[der][0] - q[0][0]) / JOUR_MS)),
+      mouvant:mouvant,
+      vol:mouvant ? anVolatilite(v) : null,
+      rec:mouvant ? anRecul(chemin) : null,
+      verse:verse, bouge:bouge,
+      monte:monte, seances:v.length, sautes:sautes
+    };
+  }
+
+  /* ============================================================
+     CE QUE LA REPARTITION REND
+     ------------------------------------------------------------
+     La mesure que personne ne montre, et la seule qui justifie de
+     detenir plusieurs lignes plutot qu'une. Deux lignes qui bougent
+     chacune de 50 % par an ne font pas un ensemble a 50 % : elles ne
+     descendent pas le meme jour, et l'ensemble bouge MOINS que la
+     moyenne de ses parts. L'ecart entre les deux est la seule chose
+     que la diversification ait jamais rendue — et il se chiffre.
+
+     Aux poids d'aujourd'hui, et sur les seances COMMUNES a toutes
+     les lignes : une crypto cote sept jours sur sept, une action
+     cinq. Melanger les calendriers ferait passer un dimanche sans
+     cotation pour une seance a zero, et ferait baisser l'amplitude
+     du panier pour une raison qui n'est pas une diversification.
+     ============================================================ */
+  function anPanier(cotees){
+    const util = (cotees || []).filter(function(c){
+      return c.val > 0 && c.v && c.v.length >= 20;
+    });
+    if (util.length < 2) return null;
+    const som = util.reduce(function(s, c){ return s + c.val; }, 0);
+    if (!(som > 0)) return null;
+    const cal = {};
+    util.forEach(function(c, k){
+      c.v.forEach(function(x){
+        const j = anJourT(x.t);
+        (cal[j] = cal[j] || {})[k] = x.r;
+      });
+    });
+    const jours = Object.keys(cal).map(Number).filter(function(j){
+      return Object.keys(cal[j]).length === util.length;
+    }).sort(function(a, b){ return a - b; });
+    /* Vingt seances communes : le meme plancher que partout ailleurs
+       pour un ecart-type annualise. En dessous, on ne rend rien
+       plutot qu'un chiffre qui aurait l'air d'une mesure. */
+    if (jours.length < 20) return null;
+    /* Une suite de variations devient une courbe : base 100, et on
+       multiplie. C'est ce qui permet de mesurer le recul du PANIER
+       avec exactement la fonction qui mesure celui d'une ligne. */
+    const chemin = function(rs){
+      let p = 100;
+      const out = [[jours[0] - JOUR_MS, p]];
+      rs.forEach(function(r, i){ p *= 1 + r; out.push([jours[i], p]); });
+      return out;
+    };
+    const rp = jours.map(function(j){
+      let s = 0;
+      util.forEach(function(c, k){ s += cal[j][k] * c.val / som; });
+      return {t:j, r:s};
+    });
+    const volP = anVolatilite(rp);
+    if (volP === null) return null;
+    /* La moyenne PONDEREE des amplitudes, pas la moyenne simple :
+       une ligne de cent euros ne pese pas comme une de cent mille,
+       et c'est a l'amplitude qu'on aurait subie que le panier se
+       compare. Chaque ligne est mesuree sur les MEMES seances que le
+       panier, sans quoi on comparerait deux fenetres differentes. */
+    let volM = 0, pireL = null;
+    util.forEach(function(c, k){
+      const rs = jours.map(function(j){ return cal[j][k]; });
+      const vk = anVolatilite(rs.map(function(r, i){ return {t:jours[i], r:r}; }));
+      if (vk !== null) volM += vk * c.val / som;
+      const rk = anRecul(chemin(rs));
+      if (rk && (!pireL || rk.part > pireL.part)) pireL = {nom:c.nom, part:rk.part};
+    });
+    if (!(volM > 0)) return null;
+    return {
+      n:util.length, jours:jours.length,
+      vol:volP, volMoyenne:volM, ecart:Math.max(0, volM - volP),
+      rec:anRecul(chemin(rp.map(function(x){ return x.r; }))),
+      pireLigne:pireL
+    };
+  }
+
+  /* ============================================================
      TOUTES LES LIGNES, PAS SEULEMENT LES COTEES
      ------------------------------------------------------------
      L'analyse ne parlait que des lignes liees a un cours de marche.
@@ -14139,6 +14569,7 @@ document.addEventListener('error', function(ev){
 
     const R = marResume(vus, marH);
     anVerdictMarche(R, vus);
+    anVerdictMoiMarche(R, vus);
     const poids = R.poids, hausses = R.hausses, haut = R.haut, bas = R.bas, actif = R.actif;
 
     let m = '';
@@ -14219,7 +14650,7 @@ document.addEventListener('error', function(ev){
        seulement — sinon le repli se refermerait sous les doigts de
        celui qui vient de l'ouvrir, toutes les quarante-cinq
        secondes. */
-    ['an-mar-plus', 'an-moi-plus'].forEach(function(id){
+    ['an-mar-plus', 'an-moi-plus', 'an-moi-divp', 'an-moi-portp'].forEach(function(id){
       const d = document.getElementById(id);
       if (!d || d.dataset.pose === tel) return;
       d.dataset.pose = tel;
@@ -14318,6 +14749,56 @@ document.addEventListener('error', function(ev){
   }
 
   /* ============================================================
+     ET VOUS, SUR LA MEME PERIODE ?
+     ------------------------------------------------------------
+     « Le marche monte de 2,4 % » appelle immediatement une seconde
+     question, et c'est la seule que personne ne se pose a voix
+     haute : et moi ? La page savait dire ce que fait le marche, et
+     ce que vaut votre portefeuille ; elle ne les avait jamais mis
+     cote a cote sur la MEME periode.
+
+     Ponderee par vos montants, et c'est le point : une ligne de
+     500 EUR qui prend 12 % ne doit pas peser comme une ligne de
+     50 000 EUR qui en prend 1. Ce qu'on rend ici est ce que VOTRE
+     ARGENT a fait, pas ce qu'a fait la ligne moyenne de votre liste.
+
+     Seulement vos lignes qui suivent une de ces cotations : le
+     reste n'a pas de cours sur 24 heures, et l'y faire entrer a sa
+     derniere valeur connue lui preterait un zero qui n'est pas une
+     mesure.
+     ============================================================ */
+  function anVerdictMoiMarche(R, vus){
+    const el = document.getElementById('an-mar-moi');
+    if (!el) return;
+    el.innerHTML = '';
+    if (!R || R.ensemble === null || !vus.length) return;
+    if (!droit('analyse') || !actifs.length) return;
+    const parCode = {};
+    vus.forEach(function(c){ parCode[String(c.id).toLowerCase()] = c; });
+    let poids = 0, somme = 0, n = 0;
+    actifs.forEach(function(a){
+      const code = a.sym && String(a.sym).trim().toLowerCase();
+      if (!code || !parCode[code] || !(a.val > 0)) return;
+      const v = marVar(parCode[code], marH);
+      if (v === null) return;
+      poids += a.val; somme += v * a.val; n++;
+    });
+    if (!n || !(poids > 0)) return;
+    const moi = somme / poids;
+    const ecart = moi - R.ensemble;
+    /* Sous un dixieme de point, « mieux » et « moins bien » sont deux
+       facons de dire la meme chose : vous faites comme le marche. */
+    const cle = Math.abs(ecart) < 0.1 ? 'an.mar.moi.pareil'
+              : ecart > 0 ? 'an.mar.moi.mieux' : 'an.mar.moi.moins';
+    el.innerHTML = PC.t(cle, {
+      n: anGras(String(n)),
+      v: anGras(PC.pourcent(moi, 1), moi < 0 ? 'baisse' : 'hausse'),
+      e: anGras(PC.pourcent(R.ensemble, 1), R.ensemble < 0 ? 'baisse' : 'hausse'),
+      d: anGras(PC.nombre(Math.abs(ecart), 1))
+    });
+  }
+
+  /* ============================================================
      VOUS, LA-DEDANS
      ------------------------------------------------------------
      Le bloc du dessus dit ce que fait le marche ; celui du dessous
@@ -14336,7 +14817,7 @@ document.addEventListener('error', function(ev){
   function anMoi(){
     const bloc = document.getElementById('an-moi');
     if (!bloc) return;
-    if (!droit('analyse') || !actifs.length){ bloc.hidden = true; return; }
+    if (!droit('analyse') || !actifs.length){ bloc.hidden = true; anDiv(null); return; }
     bloc.hidden = false;
 
     const t = totaux();
@@ -14359,6 +14840,43 @@ document.addEventListener('error', function(ev){
                     {n: anGras(part0(partCotee))});
     }
 
+    /* ---------- L'ENSEMBLE DANS LE TEMPS ----------
+       Les six tuiles d'origine sont toutes des photographies : un
+       investi, une valeur, des parts. Aucune ne porte la duree, et
+       c'est pourtant la duree qui fait l'analyse — ce qu'on a
+       traverse, et d'ou vient ce qui a change. La courbe
+       reconstituee le sait deja, ligne par ligne ; personne ne la
+       lisait au niveau du total. */
+    const TT = anTotal();
+    /* Une semaine : en dessous, « sur les 3 derniers jours votre
+       total est passe de X a Y » n'est pas une analyse, c'est la
+       variation du jour habillee en periode. */
+    const assezT = TT && TT.jours >= 7;
+    const src = document.getElementById('an-moi-source');
+    if (src){
+      if (!assezT) src.innerHTML = '';
+      else {
+        /* RIEN DE VERSE EST UN CAS, PAS UN ZERO. « Vous y avez verse
+           0 EUR » se lit comme une mesure manquante ; « sans un euro
+           de plus » dit la meme chose et se comprend. */
+        let ph = PC.t(Math.round(TT.verse) === 0 ? 'an.moi.src.0' : 'an.moi.src', {
+          j: anGras(String(TT.jours)),
+          a: anGras(eur.format(TT.debut)),
+          b: anGras(eur.format(TT.fin)),
+          m: anGras(eur.format(TT.verse)),
+          x: anGras((TT.bouge < 0 ? '\u2212' : '+') + eur.format(Math.abs(TT.bouge)),
+                    TT.bouge < 0 ? 'baisse' : 'hausse')
+        });
+        if (TT.mouvant && TT.vol !== null){
+          ph += ' ' + PC.t(TT.rec ? 'an.moi.mouv' : 'an.moi.mouv.0', {
+            v: anGras(anAmpleur(TT.vol), TT.vol >= 50 ? 'baisse' : ''),
+            r: anGras('\u2212' + anAmpleur(TT.rec ? TT.rec.part : 0), 'baisse')
+          });
+        }
+        src.innerHTML = ph;
+      }
+    }
+
     const hoteM = document.getElementById('an-moi-mes');
     if (hoteM){
       let m = '';
@@ -14376,8 +14894,51 @@ document.addEventListener('error', function(ev){
       if (t.liquide > 0){
         m += anMesure('an.moi.liq', part0(t.partLiquide), '', '', anBarre(t.partLiquide));
       }
+      /* L'instrument de la phrase ci-dessus. Il vient APRES les
+         photographies : une duree ne se lit qu'une fois qu'on sait
+         de quoi on parle. */
+      /* LA DECOMPOSITION D'ABORD, ET SANS CONDITION : elle ne tient
+         qu'a deux sommes, elle est exacte quoi qu'il arrive, et c'est
+         la mesure la plus parlante de la grille. */
+      if (assezT){
+        m += anMesure('an.moi.verse', eur.format(TT.verse),
+                      echap(PC.t('an.moi.jours', {n:String(TT.jours)})));
+        m += anMesure('an.moi.bouge',
+                      (TT.bouge < 0 ? '−' : '+') + eur.format(Math.abs(TT.bouge)),
+                      '', TT.bouge < 0 ? 'baisse' : 'hausse');
+      }
+      /* Et les mesures de mouvement seulement s'il y a eu du
+         mouvement. Voir anTotal, « ne pas mesurer un mouvement qu'on
+         n'a pas ». */
+      if (assezT && TT.mouvant){
+        if (TT.vol !== null){
+          m += anMesure('an.moi.vol', anAmpleur(TT.vol),
+                        echap(PC.t('an.moi.jours', {n:String(TT.jours)})),
+                        TT.vol >= 50 ? 'attention' : '', anJauge(TT.vol));
+        }
+        /* Pas de recul est une reponse, ici comme ligne par ligne :
+           un trou dans la grille se lirait comme une panne. */
+        m += TT.rec
+          ? anMesure('an.moi.rec', '−' + anAmpleur(TT.rec.part),
+                     echap(PC.t('an.recul.d', {a:anDate(TT.rec.debut), b:anDate(TT.rec.fin)})),
+                     TT.rec.part >= 30 ? 'baisse' : '')
+          : anMesure('an.moi.rec', echap(PC.t('an.recul.aucun')), '');
+        const part = TT.monte / TT.seances * 100;
+        m += anMesure('an.moi.sens', PC.nombre(part, 0) + ' %',
+                      echap(PC.t('an.moi.sens.d',
+                            {h:String(TT.monte), n:String(TT.seances)})),
+                      '', anBarre(part));
+      }
       hoteM.innerHTML = m;
     }
+
+    /* Le bloc de la repartition se rend ici, AVANT les sorties
+       anticipees du bas : un portefeuille dont rien n'a bouge n'a pas
+       de contributions a montrer, mais il a tres bien une
+       repartition, et la taire serait perdre la mesure la plus
+       interessante de la page pour une raison qui ne la concerne
+       pas. */
+    anDiv(anCotees());
 
     /* ---------- D'ou vient l'argent ---------- */
     const parts = actifs.map(function(a){
@@ -14385,6 +14946,7 @@ document.addEventListener('error', function(ev){
     }).filter(function(x){ return isFinite(x.d) && Math.round(x.d) !== 0; })
       .sort(function(x, y){ return Math.abs(y.d) - Math.abs(x.d); });
     const hoteC = document.getElementById('an-moi-contrib');
+    const pliC = document.getElementById('an-moi-portp');
     const titreC = document.getElementById('an-moi-ct');
     const motC = document.getElementById('an-moi-port');
     const max = parts.length ? Math.abs(parts[0].d) : 0;
@@ -14393,11 +14955,13 @@ document.addEventListener('error', function(ev){
          de repartition a montrer. On retire le titre AUSSI, sinon il
          annonce un bloc vide. */
       if (hoteC) hoteC.innerHTML = '';
+      if (pliC) pliC.hidden = true;
       if (titreC) titreC.hidden = true;
       if (motC) motC.innerHTML = '';
       return;
     }
     if (titreC) titreC.hidden = false;
+    if (pliC) pliC.hidden = false;
     if (hoteC){
       /* L'axe central ne sert que s'il y a quelque chose des deux
          cotes. Tout en positif, il laisserait la moitie gauche vide. */
@@ -14432,6 +14996,90 @@ document.addEventListener('error', function(ev){
         motC.innerHTML = PC.t('an.moi.port.0', {g:g,
           q:anGras(echap(moins.nom)), m:anGras(eur.format(Math.abs(moins.d)), 'baisse')});
       }
+    }
+  }
+
+  /* ============================================================
+     CE QUE VOTRE REPARTITION VOUS REND
+     ------------------------------------------------------------
+     Toute la page dit depuis le debut qu'il faut repartir, et
+     n'avait jamais chiffre ce que la repartition rendait. Elle se
+     chiffre pourtant, exactement : l'amplitude moyenne de vos
+     lignes, l'amplitude de l'ensemble, et l'ecart entre les deux.
+     Cet ecart est la seule chose que la diversification ait jamais
+     donnee — et il est en points, pas en opinion.
+
+     Il se lit avec le bloc des correlations, qui dit la meme chose
+     par l'autre bout : deux lignes a 0,9 ne rendent rien, et c'est
+     ici qu'on voit combien ce rien coute.
+     ============================================================ */
+  function anDiv(cotees){
+    const titre = document.getElementById('an-moi-dt');
+    const v     = document.getElementById('an-moi-divv');
+    const pli   = document.getElementById('an-moi-divp');
+    const mes   = document.getElementById('an-moi-divm');
+    const P = cotees ? anPanier(cotees) : null;
+    /* MOINS DE DEUX LIGNES COTEES : rien a mesurer, et rien a
+       expliquer non plus. Un titre suivi d'un cadre vide se lit
+       comme une panne ; on retire le titre avec le contenu, comme
+       pour la liste des contributions juste au-dessus. */
+    if (!P){
+      if (titre) titre.hidden = true;
+      if (v) v.innerHTML = '';
+      const vr0 = document.getElementById('an-moi-divr');
+      if (vr0) vr0.innerHTML = '';
+      if (pli) pli.hidden = true;
+      if (mes) mes.innerHTML = '';
+      return;
+    }
+    if (titre) titre.hidden = false;
+    if (pli) pli.hidden = false;
+    if (v){
+      /* Sous un point d'ecart, « votre repartition vous rend trois
+         dixiemes de point » est une facon savante de dire rien. */
+      let ph = PC.t(P.ecart < 1 ? 'an.div.v.0' : 'an.div.v', {
+        n: anGras(String(P.n)),
+        a: anGras(anAmpleur(P.volMoyenne)),
+        b: anGras(anAmpleur(P.vol)),
+        d: anGras(PC.nombre(P.ecart, 1))
+      });
+      v.innerHTML = ph;
+    }
+    /* LE MEME ECART, VU AUTREMENT. Une amplitude annualisee reste une
+       abstraction ; une chute qu'on a traversee, non. C'est ce qui
+       rend la premiere lisible — et ca se dit dans sa propre phrase,
+       sinon le telephone recoit dix lignes d'affilee. */
+    const vr = document.getElementById('an-moi-divr');
+    if (vr){
+      vr.innerHTML = '';
+      if (P.rec && P.pireLigne){
+        vr.innerHTML = PC.t('an.div.rec', {
+          j: anGras(String(P.jours)),
+          r: anGras(anAmpleur(P.rec.part), 'baisse'),
+          q: anGras(echap(P.pireLigne.nom)),
+          rl: anGras(anAmpleur(P.pireLigne.part), 'baisse')
+        });
+      }
+    }
+    if (mes){
+      let m = '';
+      m += anMesure('an.div.ecart', PC.t('an.mar.pt', {n:PC.nombre(P.ecart, 1)}),
+                    echap(PC.t('an.div.ecart.d', {n:PC.nombre(P.ecart, 1)})),
+                    '', '', 'an-m--tete');
+      m += anMesure('an.div.vol', anAmpleur(P.vol),
+                    echap(PC.t('an.div.seances', {n:String(P.jours)})),
+                    P.vol >= 50 ? 'attention' : '', anJauge(P.vol));
+      m += anMesure('an.div.moy', anAmpleur(P.volMoyenne), '',
+                    P.volMoyenne >= 50 ? 'attention' : '', anJauge(P.volMoyenne));
+      if (P.rec){
+        m += anMesure('an.div.pire', '−' + anAmpleur(P.rec.part),
+                      P.pireLigne
+                        ? echap(PC.t('an.div.pire.d', {q:P.pireLigne.nom,
+                                     r:anAmpleur(P.pireLigne.part)}))
+                        : '',
+                      P.rec.part >= 30 ? 'baisse' : '');
+      }
+      mes.innerHTML = m;
     }
   }
 
