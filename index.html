@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261009.1906";</script>
+<script>window.PC_VERSION = "261009.2004";</script>
 </head>
 <body>
 
@@ -1342,16 +1342,20 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
    suivie » n'est pas « capitalisation du marche », et c'est la
    phrase qui le dit. */
 .mar-ind{
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  /* `auto-flow:column` et non `repeat(3, ...)` : la carte porte trois
+     cases sur telephone et QUATRE des qu'il y a la place. Un nombre
+     fige aurait renvoye la quatrieme a la ligne. */
+  display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr);
   border:1px solid var(--rule); border-radius:var(--r-3);
   background:var(--paper-2); overflow:hidden; margin:0 0 10px;
 }
-/* Le haut ne s'etire pas sur 1 800 px. Trois cases, trois rangees et
-   six cartes etalees sur toute la largeur d'un ecran de bureau
-   mettaient un metre entre le nom d'une crypto et sa variation : on
-   ne lit plus une rangee, on la traverse. La liste complete, elle,
-   garde la pleine largeur — elle a sept colonnes a y mettre. */
-.mar-ind, .mar-sec, .mar-top, .mar-grille{max-width:720px;}
+/* Rien n'est bride en largeur : l'ecran est pris en entier. Ce qui
+   l'etait avant, c'etait pour eviter le metre de vide entre le nom
+   d'une crypto et sa variation — mais brider laissait un tiers de
+   l'ecran inutilise, ce qui est le meme defaut vu de l'autre cote.
+   La vraie reponse est plus bas : au-dela de 900 px, les deux blocs
+   du milieu se rangent COTE A COTE. Chacun garde la largeur ou on le
+   lit, et il n'y a plus de vide a droite. */
 .mar-ind__c{
   display:flex; flex-direction:column; gap:7px; min-width:0;
   padding:clamp(13px,1.8vw,19px) clamp(11px,1.4vw,18px);
@@ -1373,7 +1377,7 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
   font-variant-numeric:tabular-nums;
 }
 .mar-ind__d{font-size:11px; line-height:1.4; color:var(--ink-3); text-wrap:pretty;}
-.mar-src{margin:0 0 clamp(24px,3vw,32px); max-width:720px; text-wrap:pretty;}
+.mar-src{margin:0 0 clamp(24px,3vw,32px); text-wrap:pretty;}
 
 /* L'arc de l'humeur. Zero a gauche, cent a droite, le point sur la
    valeur et le nombre au centre. Le fond gris est l'arc entier : sans
@@ -1485,6 +1489,25 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
 }
 @media (min-width:700px){
   .mar-grille{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+/* ----- Deux colonnes, a partir de 900 px -----
+   A gauche ce qui monte, a droite ce qui s'echange. Chaque moitie
+   fait alors a peu pres la largeur d'un telephone : c'est la largeur
+   ou une rangee « logo - nom - variation - prix » se lit d'un coup
+   d'oeil, sans que l'oeil ait a traverser l'ecran entre le nom et le
+   chiffre. Les titres sont dans la grille eux aussi, sinon « Voir
+   tout » ne serait pas en face de sa liste. */
+@media (min-width:900px){
+  .mar-duo{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:clamp(32px,4vw,64px); align-items:start;
+    grid-template-areas:"th-a th-b" "li-a li-b";
+  }
+  #mar-sec-top{grid-area:th-a;}
+  #mar-top{grid-area:li-a; margin-bottom:0;}
+  #mar-sec-ech{grid-area:th-b;}
+  #mar-grille{grid-area:li-b; grid-template-columns:repeat(2,minmax(0,1fr)); margin-bottom:0;}
+  .mar-duo{margin-bottom:clamp(30px,4vw,44px);}
 }
 /* Sur telephone les trois cases d'indicateurs tiennent encore cote a
    cote — c'est la comparaison qui fait l'indicateur, les empiler les
@@ -9166,6 +9189,11 @@ document.addEventListener('error', function(ev){
              Trois lignes, et le sens se renverse d'un geste. C'est la
              premiere chose qu'on vient voir et elle etait au fond
              d'une liste de vingt-quatre rangees triees par taille. -->
+        <!-- Ces quatre-la vont par deux : sur grand ecran, ce qui monte
+             a gauche et ce qui s'echange a droite. Chacun garde alors
+             la largeur ou on le lit — celle d'un telephone — au lieu
+             de s'etirer sur un metre, et l'ecran est plein. -->
+        <div class="mar-duo">
         <div class="mar-sec" id="mar-sec-top">
           <button class="mar-sec__t" id="mar-sens" type="button" data-sens="haut">
             <span id="mar-sens-mot" data-i18n="m.gagnants">Top gagnants aujourd'hui</span>
@@ -9189,6 +9217,7 @@ document.addEventListener('error', function(ev){
           <span class="mar-sec__t2" data-i18n="m.echangees">Les plus échangées aujourd'hui</span>
         </div>
         <div class="mar-grille" id="mar-grille"></div>
+        </div>
 
         <div class="mar-sec" id="mar-sec-tout" hidden>
           <span class="mar-sec__t2" data-i18n="m.toutes">Toutes les valeurs</span>
@@ -20126,6 +20155,13 @@ document.addEventListener('error', function(ev){
      ============================================================ */
   let marSens = 'haut';   /* « haut » : ce qui monte. « bas » : ce qui tombe. */
 
+  /* La meme limite que la feuille de style : au-dela, les deux blocs
+     du milieu passent cote a cote et la carte d'indicateurs a la place
+     d'une quatrieme case. Deux endroits, une seule valeur — si elles
+     divergeaient, la carte aurait quatre cases dans une colonne faite
+     pour trois. */
+  const MAR_LARGE = window.matchMedia('(min-width:900px)');
+
   function marSomme(l, k){
     let s2 = 0, n = 0;
     l.forEach(function(c){
@@ -20217,11 +20253,24 @@ document.addEventListener('error', function(ev){
                     {n:String(vus.length)})) + '</span>')
         : marCase('m.i.suivies', String(vus.length),
                   '<span class="mar-ind__d">' + ech(PC.t('m.i.suivies.d')) + '</span>');
-      m += vol !== null
-        ? marCase('m.i.vol', gros(vol),
-                  '<span class="mar-ind__d">' + ech(PC.t('m.i.vol.d')) + '</span>')
-        : marCase('m.i.moy', moy === null ? '—' : PC.pourcent(moy, 1),
-                  '<span class="mar-ind__d">' + ech(PC.t('m.i.moy.d')) + '</span>');
+      const sousMoy = '<span class="mar-ind__d">' + ech(PC.t('m.i.moy.d')) + '</span>';
+      if (vol !== null){
+        m += marCase('m.i.vol', gros(vol),
+                     '<span class="mar-ind__d">' + ech(PC.t('m.i.vol.d')) + '</span>');
+        /* Sur grand ecran, la variation moyenne EN PLUS du volume. Les
+           deux dernieres cases ne disent pas la meme chose : l'humeur
+           compte COMBIEN de valeurs montent, la moyenne dit DE COMBIEN
+           elles bougent. Dix valeurs a +0,1 % et dix valeurs a +9 %
+           rendent la meme humeur. Sur telephone la place manque, et
+           c'est l'humeur qui reste — elle se lit d'un coup d'oeil. */
+        if (MAR_LARGE.matches && moy !== null){
+          m += marCase('m.i.moy', PC.pourcent(moy, 1), sousMoy);
+        }
+      } else {
+        /* Pas de volume servi : la moyenne prend sa place, a toute
+           largeur. Une case de tirets ne mesure rien. */
+        m += marCase('m.i.moy', moy === null ? '—' : PC.pourcent(moy, 1), sousMoy);
+      }
       m += '<div class="mar-ind__c mar-ind__c--j">' +
         '<span class="mar-ind__k">' + ech(PC.t('m.i.humeur')) + '</span>' +
         '<div class="mar-jauge__b">' + marArc(humeur) +
@@ -20233,10 +20282,14 @@ document.addEventListener('error', function(ev){
     }
     /* ---------- Ce qui monte, ou ce qui tombe ---------- */
     if (hTop){
+      /* Trois sur telephone, six des que les deux blocs passent cote a
+         cote : la colonne de gauche s'arretait a mi-hauteur de celle
+         de droite, et c'etait du vide, pas du blanc. Six valeurs sont
+         encore un classement — au-dela, ce serait la liste. */
       const tri = vus.slice().sort(function(a, b){
         const x = varOf(a, H24), y = varOf(b, H24);
         return marSens === 'bas' ? x - y : y - x;
-      }).slice(0, 3);
+      }).slice(0, MAR_LARGE.matches ? 6 : 3);
       hTop.innerHTML = tri.map(function(c, i){
         const v = varOf(c, H24);
         const monte = !(v < 0);
@@ -20927,6 +20980,16 @@ document.addEventListener('error', function(ev){
     poseInvite();
     if (rangs.length) peintHaut(rangs);
   });
+
+  /* La quatrieme case n'existe qu'au-dela d'une certaine largeur. En
+     agrandissant la fenetre elle n'arriverait qu'au rafraichissement
+     suivant — et en la retrecissant elle resterait, serree a l'etroit
+     avec les trois autres. On repeint donc au passage de la limite. */
+  (function(){
+    const suit = function(){ if (rangs.length) peintHaut(rangs); };
+    if (MAR_LARGE.addEventListener) MAR_LARGE.addEventListener('change', suit);
+    else if (MAR_LARGE.addListener) MAR_LARGE.addListener(suit);
+  })();
 
   /* Les trois lignes du haut et les six cases ouvrent la meme fiche
      que la liste. C'est la meme valeur : le geste ne peut pas dependre
