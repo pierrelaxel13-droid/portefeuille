@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261009.1239";</script>
+<script>window.PC_VERSION = "261009.1906";</script>
 </head>
 <body>
 
@@ -1282,6 +1282,223 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
 }
 .marches__q:focus{border-color:var(--accent); background:var(--paper); outline:none;}
 .marches__etat{font-size:12px; color:var(--ink-3); text-wrap:pretty;}
+
+/* ============================================================
+   LE HAUT D'UN MARCHE
+   Le nom en grand, les pastilles, trois indicateurs, ce qui monte
+   le plus, ce qui change le plus de mains. La liste complete de
+   vingt-quatre rangees vient APRES : c'etait elle qui occupait le
+   premier ecran, et ce n'est pas ce qu'on vient chercher.
+
+   Tout se calcule sur la liste deja servie. Pas un appel de plus,
+   pas un chiffre qui ne vienne de la meme source que la liste.
+   ============================================================ */
+
+/* ----- Le nom du marche, et la loupe ----- */
+.mar-tete{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; margin:0 0 clamp(16px,2.2vw,22px);
+}
+.mar-tete__t{font-size:clamp(30px,4vw,44px); line-height:1.04; letter-spacing:-.035em;}
+.mar-loupe{flex:none; border-radius:var(--r-pill);}
+.mar-loupe[aria-expanded="true"]{
+  border-color:var(--accent); background:var(--accent-soft); color:var(--accent);
+}
+/* Chercher n'a pas de sens quand le fournisseur ne repond pas. */
+.marches[data-etat="ko"] .mar-loupe{display:none;}
+/* Le titre et les pastilles ne font pas partie de l'attente : ils ne
+   dependent d'aucun appel. Les cacher jusqu'a la premiere reponse
+   donnait un ecran entierement vide, sans meme de quoi changer de
+   marche — et c'est sur le reseau le plus lent que ca durait. */
+.marches[data-etat="attente"] > .mar-tete,
+.marches[data-etat="attente"] > .mar-chips{display:flex;}
+
+/* ----- Les pastilles -----
+   Rondes et pleines quand c'est celle-la : trois marches cote a cote
+   se choisissent, ils ne se parcourent pas comme des onglets de
+   lecture. Le soulignement, lui, reste sur l'analyse — ou les quatre
+   vues SONT des pages d'un meme dossier. */
+.sous-onglets.mar-chips{
+  border-bottom:none; gap:8px; margin:0 0 clamp(18px,2.4vw,26px);
+  overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none;
+  align-items:stretch; min-width:0; max-width:100%;
+  scroll-snap-type:x proximity;
+}
+.sous-onglets.mar-chips::-webkit-scrollbar{display:none;}
+.mar-chips .sous-onglet{
+  flex:none; scroll-snap-align:start; padding:9px 17px 10px; font-size:14.5px;
+  border:1px solid var(--rule-strong); border-radius:var(--r-pill); color:var(--ink-2);
+  transition:color .2s, background .2s, border-color .2s;
+}
+.mar-chips .sous-onglet::after{display:none;}
+.mar-chips .sous-onglet:hover{border-color:var(--ink-3); color:var(--ink);}
+.mar-chips .sous-onglet[aria-selected="true"]{
+  background:var(--ink); border-color:var(--ink); color:var(--paper);
+}
+
+/* ----- Les trois indicateurs -----
+   Une carte, trois cases separees par un filet. Chaque case porte
+   une phrase de deux lignes sous le chiffre : « capitalisation
+   suivie » n'est pas « capitalisation du marche », et c'est la
+   phrase qui le dit. */
+.mar-ind{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  border:1px solid var(--rule); border-radius:var(--r-3);
+  background:var(--paper-2); overflow:hidden; margin:0 0 10px;
+}
+/* Le haut ne s'etire pas sur 1 800 px. Trois cases, trois rangees et
+   six cartes etalees sur toute la largeur d'un ecran de bureau
+   mettaient un metre entre le nom d'une crypto et sa variation : on
+   ne lit plus une rangee, on la traverse. La liste complete, elle,
+   garde la pleine largeur — elle a sept colonnes a y mettre. */
+.mar-ind, .mar-sec, .mar-top, .mar-grille{max-width:720px;}
+.mar-ind__c{
+  display:flex; flex-direction:column; gap:7px; min-width:0;
+  padding:clamp(13px,1.8vw,19px) clamp(11px,1.4vw,18px);
+  border-left:1px solid var(--rule);
+}
+.mar-ind__c:first-child{border-left:none;}
+.mar-ind__c--j{align-items:flex-start;}
+/* Deux lignes reservees : « capitalisation suivie » en prend deux et
+   « humeur du jour » une seule. Sans cette reserve les trois chiffres
+   ne partaient pas de la meme hauteur, et trois chiffres qu'on compare
+   doivent etre sur la meme ligne. */
+.mar-ind__k{
+  font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3); line-height:1.3; min-height:2.6em;
+}
+.mar-ind__v{
+  font-family:'Archivo Black', sans-serif; font-size:clamp(18px,2.4vw,25px);
+  letter-spacing:-.03em; line-height:1; color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.mar-ind__d{font-size:11px; line-height:1.4; color:var(--ink-3); text-wrap:pretty;}
+.mar-src{margin:0 0 clamp(24px,3vw,32px); max-width:720px; text-wrap:pretty;}
+
+/* L'arc de l'humeur. Zero a gauche, cent a droite, le point sur la
+   valeur et le nombre au centre. Le fond gris est l'arc entier : sans
+   lui on ne saurait pas de quel total le point est la fraction. */
+.mar-jauge__b{position:relative; width:62px; height:46px; margin:1px 0 2px;}
+.mar-jauge{display:block; width:62px; height:46px; overflow:visible;}
+.mar-jauge__f{fill:none; stroke:var(--rule-strong); stroke-width:5; stroke-linecap:round;}
+.mar-jauge__t{fill:none; stroke-width:5; stroke-linecap:round;}
+.mar-jauge__p{fill:var(--paper); stroke:var(--ink); stroke-width:2;}
+.mar-jauge__n{
+  position:absolute; inset:0; display:grid; place-items:center; padding-top:11px;
+  font-family:'Archivo Black', sans-serif; font-size:16px; letter-spacing:-.03em;
+  line-height:1; color:var(--ink); font-variant-numeric:tabular-nums;
+}
+
+/* ----- Les titres de rangee ----- */
+.mar-sec{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:14px; margin:0 0 12px;
+}
+.mar-sec__t, .mar-sec__t2{
+  font-family:'Archivo Black', sans-serif; font-size:clamp(16px,1.8vw,21px);
+  letter-spacing:-.028em; line-height:1.15; color:var(--ink);
+}
+.mar-sec__t{
+  display:inline-flex; align-items:center; gap:7px; min-width:0;
+  background:none; border:none; padding:0; cursor:pointer; text-align:left;
+  transition:color .2s;
+}
+.mar-sec__t svg{flex:none; color:var(--ink-3); transition:transform .28s cubic-bezier(.2,.7,.2,1);}
+.mar-sec__t[data-sens="bas"] svg{transform:rotate(180deg);}
+.mar-sec__t:hover{color:var(--accent);}
+.mar-sec__t:hover svg{color:var(--accent);}
+.mar-sec__v{
+  flex:none; background:none; border:none; padding:5px 0; cursor:pointer;
+  font-family:inherit; font-size:13.5px; font-weight:600; color:var(--accent);
+}
+.mar-sec__v:hover{text-decoration:underline;}
+@media (prefers-reduced-motion: reduce){
+  html:not([data-anim="force"]) .mar-sec__t svg{transition:none;}
+  /* La carte qui se souleve au survol : c'est un deplacement, et
+     c'est exactement ce que ce reglage demande de ne pas faire. La
+     bordure qui s'eclaircit reste — elle dit la meme chose sans
+     bouger. */
+  html:not([data-anim="force"]) .mar-g{transition:border-color .2s;}
+  html:not([data-anim="force"]) .mar-g:hover{transform:none;}
+  html:not([data-anim="force"]) .mar-t{transition:none;}
+}
+
+/* ----- Ce qui monte le plus, ou ce qui tombe le plus ----- */
+.mar-top{display:flex; flex-direction:column; gap:2px; margin:0 0 clamp(28px,3.4vw,38px);}
+.mar-t{
+  display:grid; grid-template-columns:16px auto minmax(0,1fr) auto;
+  align-items:center; gap:12px; width:100%;
+  background:none; border:none; border-radius:var(--r-2); cursor:pointer;
+  padding:11px 12px; text-align:left; color:var(--ink); font-family:inherit;
+  transition:background .18s;
+}
+.mar-t:hover{background:var(--paper-2);}
+.mar-t > img, .mar-t > .mono-logo{flex:none; border-radius:50%;}
+.mar-t__r{font-size:13px; font-weight:600; color:var(--ink-3); text-align:center;}
+.mar-t__n{display:flex; flex-direction:column; gap:2px; min-width:0;}
+.mar-t__n b{
+  font-size:15px; font-weight:600; letter-spacing:-.012em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.mar-t__n span{font-size:11.5px; color:var(--ink-3);}
+.mar-t__d{display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex:none;}
+.mar-t__v{
+  padding:4px 10px 5px; border-radius:var(--r-pill);
+  font-size:12.5px; font-weight:700; font-variant-numeric:tabular-nums;
+}
+.mar-t__v[data-dir="up"]{color:var(--gain); background:color-mix(in srgb, var(--gain) 13%, transparent);}
+.mar-t__v[data-dir="down"]{color:var(--loss); background:color-mix(in srgb, var(--loss) 13%, transparent);}
+.mar-t__p{font-size:13px; color:var(--ink-2); font-variant-numeric:tabular-nums;}
+
+/* ----- Ce qui change le plus de mains ----- */
+.mar-grille{
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;
+  margin:0 0 clamp(30px,4vw,44px);
+}
+.mar-g{
+  display:flex; flex-direction:column; align-items:flex-start; gap:8px; min-width:0;
+  background:var(--paper-2); border:1px solid var(--rule); border-radius:var(--r-3);
+  padding:14px; cursor:pointer; text-align:left; color:var(--ink); font-family:inherit;
+  transition:border-color .2s, transform .18s cubic-bezier(.2,.7,.2,1);
+}
+.mar-g:hover{border-color:var(--rule-strong); transform:translateY(-2px);}
+.mar-g__h{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; width:100%; min-width:0;
+}
+.mar-g__h > img, .mar-g__h > .mono-logo{flex:none; border-radius:50%;}
+.mar-g__v{
+  flex:none; padding:3px 9px 4px; border-radius:var(--r-pill);
+  font-size:11.5px; font-weight:700; font-variant-numeric:tabular-nums;
+}
+.mar-g__v[data-dir="up"]{color:var(--gain); background:color-mix(in srgb, var(--gain) 13%, transparent);}
+.mar-g__v[data-dir="down"]{color:var(--loss); background:color-mix(in srgb, var(--loss) 13%, transparent);}
+.mar-g__v[data-dir="rien"]{color:var(--ink-3); background:transparent;}
+.mar-g__t{
+  font-family:'Archivo Black', sans-serif; font-size:15px; font-weight:400;
+  letter-spacing:-.02em; line-height:1; max-width:100%;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.mar-g__n{
+  font-size:11.5px; color:var(--ink-3); line-height:1.3; max-width:100%;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+@media (min-width:700px){
+  .mar-grille{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+/* Sur telephone les trois cases d'indicateurs tiennent encore cote a
+   cote — c'est la comparaison qui fait l'indicateur, les empiler les
+   transformerait en trois chiffres sans rapport — mais elles se
+   serrent, et la jauge rapetisse avec elles. */
+@media (max-width:560px){
+  .mar-ind__c{padding:12px 9px; gap:5px;}
+  .mar-ind__k{font-size:9px; letter-spacing:.09em;}
+  .mar-ind__d{font-size:10px;}
+  .mar-jauge__b, .mar-jauge{width:54px; height:40px;}
+  .mar-jauge__n{font-size:14px; padding-top:9px;}
+  .mar-t{gap:10px; padding:10px 8px;}
+  .mar-t__n b{font-size:14px;}
+}
 
 /* Les colonnes, une seule fois : l'en-tête et les lignes partagent le
    même gabarit, sinon rien ne s'aligne. */
@@ -6916,10 +7133,25 @@ window.PC = (function(){
   'm.plagevide':        ["Cette p\u00e9riode n'a pas pu \u00eatre charg\u00e9e. Les autres restent disponibles.","This period could not be loaded. The others are still available.","Este periodo no se ha podido cargar. Los dem\u00e1s siguen disponibles.","Dieser Zeitraum konnte nicht geladen werden. Die anderen bleiben verf\u00fcgbar."],
   'm.onglet':           ["March\u00e9s","Markets","Mercados","M\u00e4rkte"],
   'm.courbe':           ["Le cours du march\u00e9","The market price","La cotizaci\u00f3n del mercado","Der Marktkurs"],
-  'm.h2':                 ["Les march\u00e9s, en direct.","The markets, live.","Los mercados, en directo.","Die M\u00e4rkte, live."],
   'm.cherche':            ["Chercher une crypto","Search a coin","Buscar una cripto","Krypto suchen"],
   'm.cherche.b':          ["Chercher une action, un ETF","Search a stock or ETF","Buscar una acci\u00f3n o un ETF","Aktie oder ETF suchen"],
   'm.cherche.mp':         ["Chercher une mati\u00e8re premi\u00e8re","Search a commodity","Buscar una materia prima","Rohstoff suchen"],
+  'm.loupe':              ["Chercher une valeur", "Search a security", "Buscar un valor", "Einen Wert suchen"],
+  'm.i.cap':              ["Capitalisation suivie", "Tracked market cap", "Capitalizaci\u00f3n seguida", "Verfolgte Kapitalisierung"],
+  'm.i.cap.d':            ["Les {{n}} valeurs de cette page, pas le march\u00e9 entier.", "The {{n}} securities on this page, not the whole market.", "Los {{n}} valores de esta p\u00e1gina, no el mercado entero.", "Die {{n}} Werte dieser Seite, nicht der ganze Markt."],
+  'm.i.suivies':          ["Valeurs suivies", "Tracked securities", "Valores seguidos", "Verfolgte Werte"],
+  'm.i.suivies.d':        ["Ce fournisseur ne sert pas la capitalisation.", "This provider does not serve market cap.", "Este proveedor no sirve la capitalizaci\u00f3n.", "Dieser Anbieter liefert keine Kapitalisierung."],
+  'm.i.vol':              ["\u00c9chang\u00e9 en 24\u00a0h", "Traded in 24h", "Negociado en 24\u00a0h", "Gehandelt in 24\u00a0Std."],
+  'm.i.vol.d':            ["Ce qui a chang\u00e9 de mains depuis hier.", "What changed hands since yesterday.", "Lo que cambi\u00f3 de manos desde ayer.", "Was seit gestern den Besitzer gewechselt hat."],
+  'm.i.moy':              ["Variation moyenne", "Average change", "Variaci\u00f3n media", "Mittlere Ver\u00e4nderung"],
+  'm.i.moy.d':            ["Chaque valeur compte pour une, quelle que soit sa taille.", "Each security counts once, whatever its size.", "Cada valor cuenta por uno, sea cual sea su tama\u00f1o.", "Jeder Wert z\u00e4hlt einmal, unabh\u00e4ngig von seiner Gr\u00f6\u00dfe."],
+  'm.i.humeur':           ["Humeur du jour", "Today's mood", "\u00c1nimo del d\u00eda", "Stimmung heute"],
+  'm.i.humeur.d':         ["{{h}} en hausse sur {{n}}.", "{{h}} up out of {{n}}.", "{{h}} en alza de {{n}}.", "{{h}} von {{n}} im Plus."],
+  'm.gagnants':           ["Top gagnants aujourd'hui", "Top gainers today", "Mayores subidas hoy", "Top-Gewinner heute"],
+  'm.perdants':           ["Top perdants aujourd'hui", "Top losers today", "Mayores bajadas hoy", "Top-Verlierer heute"],
+  'm.voirtout':           ["Voir tout", "See all", "Ver todo", "Alle ansehen"],
+  'm.echangees':          ["Les plus \u00e9chang\u00e9es aujourd'hui", "Most traded today", "Las m\u00e1s negociadas hoy", "Heute am meisten gehandelt"],
+  'm.toutes':             ["Toutes les valeurs", "All securities", "Todos los valores", "Alle Werte"],
   'm.rang':               ["Rang","Rank","Rango","Rang"],
   'm.nom':                ["Nom","Name","Nombre","Name"],
   'm.prix':               ["Prix","Price","Precio","Preis"],
@@ -8882,27 +9114,84 @@ document.addEventListener('error', function(ev){
 
     </div>
 
-    <!-- Les marchés vivent du côté connexion : ce sont les cours qui
-         font bouger un portefeuille, pas un argument de devanture. -->
-    <div class="sous-onglets" id="sous-marches" role="tablist" hidden>
-      <button class="sous-onglet" type="button" role="tab" data-sous="crypto"
-              aria-selected="true" data-i18n="b.sous.crypto">Cryptos</button>
-      <button class="sous-onglet" type="button" role="tab" data-sous="bourse"
-              aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
-      <button class="sous-onglet" type="button" role="tab" data-sous="matieres"
-              aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
-    </div>
 
     <div class="pan marches" id="pan-marches" role="tabpanel" aria-labelledby="ong-marches" tabindex="0" data-etat="attente" hidden>
-      <div class="section__head">
-        <h2 data-i18n="m.h2">Les marchés, en direct.</h2>
+      <!-- ===== L'EN-TETE D'UN MARCHE =====
+           Le nom du marche en grand, et la loupe a cote. Le champ de
+           recherche vit derriere elle : il occupait une rangee pleine
+           en permanence pour un geste qu'on fait une fois sur dix, et
+           c'est cette rangee-la qui repoussait les chiffres sous la
+           ligne de flottaison. -->
+      <div class="mar-tete">
+        <h2 class="mar-tete__t" id="mar-titre" data-i18n="m.onglet">Marchés</h2>
+        <button class="icon-btn mar-loupe" id="mar-loupe" type="button"
+                aria-expanded="false" data-i18n-aria="m.loupe">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Les marches vivent du cote connexion : ce sont les cours qui
+           font bouger un portefeuille, pas un argument de devanture.
+           En pastilles plutot qu'en onglets soulignes : trois marches
+           cote a cote se CHOISISSENT, ils ne se parcourent pas. -->
+      <div class="sous-onglets mar-chips" id="sous-marches" role="tablist" hidden>
+        <button class="sous-onglet" type="button" role="tab" data-sous="crypto"
+                aria-selected="true" data-i18n="b.sous.crypto">Cryptos</button>
+        <button class="sous-onglet" type="button" role="tab" data-sous="bourse"
+                aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
+        <button class="sous-onglet" type="button" role="tab" data-sous="matieres"
+                aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
       </div>
 
       <div class="marches__vue" id="mar-vue-liste">
-        <div class="marches__barre">
+        <div class="marches__barre" id="mar-barre" hidden>
           <input class="marches__q" id="mar-q" type="search" autocomplete="off"
                  spellcheck="false" data-i18n-titre="m.cherche">
-          <p class="marches__etat mono" id="mar-etat" role="status"></p>
+        </div>
+
+        <!-- ===== LES TROIS INDICATEURS =====
+             Ce que pese le marche qu'on regarde, ce qui s'y echange, et
+             son humeur du jour. Tout est calcule sur la liste deja
+             servie : aucun appel de plus, et chaque case dit de quoi
+             elle parle — « capitalisation suivie » n'est pas « la
+             capitalisation du marche », et ecrire le second serait
+             faux. -->
+        <div class="mar-ind" id="mar-ind" hidden></div>
+        <p class="marches__etat mono mar-src" id="mar-etat" role="status"></p>
+
+        <!-- ===== CE QUI MONTE LE PLUS, ET CE QUI TOMBE LE PLUS =====
+             Trois lignes, et le sens se renverse d'un geste. C'est la
+             premiere chose qu'on vient voir et elle etait au fond
+             d'une liste de vingt-quatre rangees triees par taille. -->
+        <div class="mar-sec" id="mar-sec-top">
+          <button class="mar-sec__t" id="mar-sens" type="button" data-sens="haut">
+            <span id="mar-sens-mot" data-i18n="m.gagnants">Top gagnants aujourd'hui</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <button class="mar-sec__v" id="mar-tout" type="button" data-i18n="m.voirtout">Voir tout</button>
+        </div>
+        <div class="mar-top" id="mar-top"></div>
+
+        <!-- ===== LES PLUS ECHANGEES =====
+             Pas « les tendances » : une tendance se mesure sur ce que
+             les gens REGARDENT, et aucun fournisseur gratuit ne sert
+             ca. Ce qu'on a, c'est ce qui CHANGE DE MAINS — rapporte a
+             la taille quand la capitalisation existe, en volume brut
+             sinon. C'est une mesure, pas une humeur, et elle porte son
+             vrai nom. -->
+        <div class="mar-sec" id="mar-sec-ech" hidden>
+          <span class="mar-sec__t2" data-i18n="m.echangees">Les plus échangées aujourd'hui</span>
+        </div>
+        <div class="mar-grille" id="mar-grille"></div>
+
+        <div class="mar-sec" id="mar-sec-tout" hidden>
+          <span class="mar-sec__t2" data-i18n="m.toutes">Toutes les valeurs</span>
         </div>
         <div class="marches__tete mono" aria-hidden="true">
           <span data-i18n="m.rang">Rang</span>
@@ -19816,7 +20105,193 @@ document.addEventListener('error', function(ev){
     if (!t || doux) etat.style.color = '';
   }
 
+  /* ============================================================
+     LE HAUT DE L'ECRAN : CE QU'ON VIENT VOIR
+     ------------------------------------------------------------
+     La liste repondait a « combien vaut chaque chose », triee par
+     taille. Elle ne repondait pas aux trois questions qu'on se pose
+     en ouvrant un marche : qu'est-ce que ce marche pese, qu'est-ce
+     qui monte, qu'est-ce qui s'echange. On les met donc en haut, et
+     la liste reste dessous pour qui cherche une valeur precise.
+
+     TOUT EST CALCULE SUR LA LISTE DEJA SERVIE. Pas un appel de plus :
+     la capitalisation, le volume, l'humeur et les classements sortent
+     des memes objets que les rangees. C'est ce qui permet de les
+     poser sans rien couter au fournisseur ni a personne.
+
+     ET CHAQUE CASE DIT DE QUOI ELLE PARLE. « Capitalisation suivie »
+     n'est pas « la capitalisation du marche » : on affiche la somme
+     des valeurs listees, pas celle des dix mille autres. Ecrire le
+     second serait faux d'un facteur trois.
+     ============================================================ */
+  let marSens = 'haut';   /* « haut » : ce qui monte. « bas » : ce qui tombe. */
+
+  function marSomme(l, k){
+    let s2 = 0, n = 0;
+    l.forEach(function(c){
+      if (typeof c[k] === 'number' && isFinite(c[k]) && c[k] > 0){ s2 += c[k]; n++; }
+    });
+    return n ? s2 : null;
+  }
+
+  /* L'arc de l'humeur. Zero a gauche, cent a droite, et un point sur
+     la valeur. Le degrade va de la perte a l'accent puis au gain : ce
+     sont les trois couleurs que la page emploie deja, et l'arc ne
+     fait que les ranger. */
+  function marArc(p100){
+    const R = 25, cx = 31, cy = 31, D = 240, A0 = 210;
+    const pt = function(t){
+      const a = (A0 - D * t) * Math.PI / 180;
+      return [(cx + R * Math.cos(a)).toFixed(2), (cy - R * Math.sin(a)).toFixed(2)];
+    };
+    const d0 = pt(0), d1 = pt(1), dv = pt(Math.max(0, Math.min(1, p100 / 100)));
+    const id = 'mar-jauge-degrade';
+    return '<svg class="mar-jauge" viewBox="0 0 62 46" aria-hidden="true">' +
+      '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="0">' +
+        '<stop offset="0" stop-color="var(--loss)"/>' +
+        '<stop offset=".5" stop-color="var(--accent)"/>' +
+        '<stop offset="1" stop-color="var(--gain)"/></linearGradient></defs>' +
+      '<path class="mar-jauge__f" d="M' + d0[0] + ' ' + d0[1] +
+        ' A' + R + ' ' + R + ' 0 1 1 ' + d1[0] + ' ' + d1[1] + '"/>' +
+      '<path class="mar-jauge__t" stroke="url(#' + id + ')" d="M' + d0[0] + ' ' + d0[1] +
+        ' A' + R + ' ' + R + ' 0 1 1 ' + d1[0] + ' ' + d1[1] + '"/>' +
+      '<circle class="mar-jauge__p" cx="' + dv[0] + '" cy="' + dv[1] + '" r="3.4"/>' +
+    '</svg>';
+  }
+
+  function marCase(cle, valeur, dessous){
+    return '<div class="mar-ind__c">' +
+      '<span class="mar-ind__k">' + ech(PC.t(cle)) + '</span>' +
+      '<span class="mar-ind__v">' + valeur + '</span>' +
+      (dessous || '') + '</div>';
+  }
+
+  /* La variation moyenne d'une liste, chaque valeur comptant pour une.
+     C'est l'humeur de l'ensemble des valeurs suivies, et non celle du
+     marche pondere — la difference est ecrite sous la case. */
+  function marMoyenne(l){
+    let s2 = 0, n = 0;
+    l.forEach(function(c){
+      const v = varOf(c, H24);
+      if (v !== null){ s2 += v; n++; }
+    });
+    return n ? s2 / n : null;
+  }
+
+  function peintHaut(l){
+    const hInd = document.getElementById('mar-ind');
+    const hTop = document.getElementById('mar-top');
+    const hGr  = document.getElementById('mar-grille');
+    const sTop = document.getElementById('mar-sec-top');
+    const sEch = document.getElementById('mar-sec-ech');
+    const sTout = document.getElementById('mar-sec-tout');
+    const vus = (l || []).filter(function(c){ return varOf(c, H24) !== null; });
+    /* `recherche` vaut '' au repos, une liste d'identifiants sinon. */
+    const filtre = !!(typeof recherche === 'string' ? recherche
+                                                    : (recherche && recherche.length));
+    const assez = vus.length >= 3 && !filtre;
+    [hInd, sTop, sEch, sTout].forEach(function(e){ if (e) e.hidden = !assez; });
+    if (!assez){
+      /* On vide, en plus de cacher. Des chiffres d'hier endormis dans
+         un bloc cache finissent toujours par reapparaitre le jour ou
+         quelqu'un retire le `hidden` — et ce seront ceux du marche
+         d'avant, sous le nom de celui d'apres. */
+      [hInd, hTop, hGr].forEach(function(e){ if (e) e.innerHTML = ''; });
+      return;
+    }
+
+    /* ---------- Les trois indicateurs ---------- */
+    if (hInd){
+      const cap = marcheSource === 'crypto' ? marSomme(vus, 'market_cap') : null;
+      const vol = marSomme(vus, 'total_volume');
+      const hausses = vus.filter(function(c){ return varOf(c, H24) > 0; }).length;
+      const humeur = hausses / vus.length * 100;
+      const moy = marMoyenne(vus);
+      let m = '';
+      /* En bourse et en matieres premieres la capitalisation n'est pas
+         servie : on met a sa place ce qu'on a vraiment, le nombre de
+         valeurs suivies. Une case de tirets ne mesure rien. */
+      m += cap !== null
+        ? marCase('m.i.cap', gros(cap),
+                  '<span class="mar-ind__d">' + ech(PC.t('m.i.cap.d',
+                    {n:String(vus.length)})) + '</span>')
+        : marCase('m.i.suivies', String(vus.length),
+                  '<span class="mar-ind__d">' + ech(PC.t('m.i.suivies.d')) + '</span>');
+      m += vol !== null
+        ? marCase('m.i.vol', gros(vol),
+                  '<span class="mar-ind__d">' + ech(PC.t('m.i.vol.d')) + '</span>')
+        : marCase('m.i.moy', moy === null ? '—' : PC.pourcent(moy, 1),
+                  '<span class="mar-ind__d">' + ech(PC.t('m.i.moy.d')) + '</span>');
+      m += '<div class="mar-ind__c mar-ind__c--j">' +
+        '<span class="mar-ind__k">' + ech(PC.t('m.i.humeur')) + '</span>' +
+        '<div class="mar-jauge__b">' + marArc(humeur) +
+          '<span class="mar-jauge__n">' + PC.nombre(humeur, 0) + '</span></div>' +
+        '<span class="mar-ind__d">' + ech(PC.t('m.i.humeur.d',
+          {h:String(hausses), n:String(vus.length)})) + '</span>' +
+      '</div>';
+      hInd.innerHTML = m;
+    }
+    /* ---------- Ce qui monte, ou ce qui tombe ---------- */
+    if (hTop){
+      const tri = vus.slice().sort(function(a, b){
+        const x = varOf(a, H24), y = varOf(b, H24);
+        return marSens === 'bas' ? x - y : y - x;
+      }).slice(0, 3);
+      hTop.innerHTML = tri.map(function(c, i){
+        const v = varOf(c, H24);
+        const monte = !(v < 0);
+        return '<button class="mar-t" type="button" data-piece="' + ech(c.id) + '">' +
+          '<span class="mar-t__r">' + (i + 1) + '</span>' +
+          logo(c, 34) +
+          '<span class="mar-t__n"><b>' + ech(c.name) + '</b>' +
+            '<span>' + ech((c.symbol || c.unite || c.id || '').toUpperCase()) + '</span></span>' +
+          '<span class="mar-t__d">' +
+            '<span class="mar-t__v" data-dir="' + (monte ? 'up' : 'down') + '">' +
+              (monte ? '▲' : '▼') + ' ' + PC.pourcent(v, 1) + '</span>' +
+            '<span class="mar-t__p">' + prix(c.current_price) + '</span>' +
+          '</span></button>';
+      }).join('');
+    }
+
+    /* ---------- Ce qui change le plus de mains ---------- */
+    if (hGr){
+      const ech6 = vus.filter(function(c){
+        return typeof c.total_volume === 'number' && c.total_volume > 0;
+      }).sort(function(a, b){
+        /* Rapporte a la taille quand elle existe : un milliard echange
+           sur une capitalisation de mille milliards n'est pas la meme
+           agitation qu'un milliard sur dix. */
+        const ra = (a.market_cap > 0) ? a.total_volume / a.market_cap : a.total_volume;
+        const rb = (b.market_cap > 0) ? b.total_volume / b.market_cap : b.total_volume;
+        return rb - ra;
+      }).slice(0, 6);
+      hGr.innerHTML = ech6.map(function(c){
+        const v = varOf(c, H24);
+        const monte = !(v < 0);
+        return '<button class="mar-g" type="button" data-piece="' + ech(c.id) + '">' +
+          '<span class="mar-g__h">' + logo(c, 30) +
+            '<span class="mar-g__v" data-dir="' + (v === null ? 'rien' : monte ? 'up' : 'down') + '">' +
+              (v === null ? '—' : (monte ? '▲' : '▼') + ' ' + PC.pourcent(v, 1)) +
+            '</span></span>' +
+          /* `symbol` D'ABORD. En matieres premieres, `unite` est l'unite
+             de cotation — « l'once troy », « le baril » — et non un
+             code : deux cartes affichaient « L'ONCE TROY » en gros,
+             l'une pour le platine et l'autre pour le palladium. */
+          '<b class="mar-g__t">' + ech((c.symbol || c.unite || c.id || '').toUpperCase()) + '</b>' +
+          '<span class="mar-g__n">' + ech(c.name) + '</span>' +
+        '</button>';
+      }).join('');
+    }
+  }
+
   function peint(liste){
+    /* Le haut se repeint a chaque fois, liste vide comprise : trois
+       lignes et six cases ne coutent rien, et un classement fige a
+       cote d'une liste qui avance se lirait comme un bogue — c'est
+       exactement le defaut qu'on a deja repare sur les variations.
+       Surtout : sur liste vide il FAUT passer ici, sinon le classement
+       de la crypto reste sous le titre « Bourse ». */
+    peintHaut(liste);
     if (!liste.length){
       boite.innerHTML = '<p class="marches__etat mono" style="padding:24px 4px">' +
         ech(PC.t('m.vide')) + '</p>';
@@ -20052,6 +20527,7 @@ document.addEventListener('error', function(ev){
            seulement que la mise à jour a échoué. */
         if (!rangs.length){
           hote.setAttribute('data-etat', 'ko');
+          peintHaut([]);
           boite.innerHTML = '<p class="marches__panne">' +
             ech(motDEchecListe(e)) + '</p>' + lienCadre();
           return;
@@ -20390,6 +20866,80 @@ document.addEventListener('error', function(ev){
     page++; dernier = 0; charge(true);
   });
 
+  /* ===== Les gestes du haut ===== */
+  const loupe   = document.getElementById('mar-loupe');
+  const barreQ  = document.getElementById('mar-barre');
+  const btnSens = document.getElementById('mar-sens');
+  const motSens = document.getElementById('mar-sens-mot');
+  const btnTout = document.getElementById('mar-tout');
+
+  function doux(){ return !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  /* Le champ de recherche vit derriere la loupe. Il tenait une rangee
+     pleine en permanence pour un geste qu'on fait une fois sur dix, et
+     c'est cette rangee-la qui repoussait les chiffres sous la ligne de
+     flottaison. Il se vide en se fermant : un filtre invisible est un
+     filtre qu'on ne comprend plus — on verrait vingt valeurs la ou le
+     marche en compte mille, sans rien a l'ecran qui le dise. */
+  if (loupe && barreQ) loupe.addEventListener('click', function(){
+    const ouvre2 = barreQ.hidden;
+    barreQ.hidden = !ouvre2;
+    loupe.setAttribute('aria-expanded', String(ouvre2));
+    if (ouvre2){ champ.focus(); return; }
+    if (champ.value){
+      champ.value = '';
+      recherche = ''; page = 1; dernier = 0; charge(true);
+    }
+  });
+
+  /* Un geste renverse le classement : ce qui tombe le plus se cherche
+     autant que ce qui monte le plus. Le mot change AVEC la liste —
+     « Top gagnants » au-dessus de trois baisses serait un mensonge —
+     et c'est `data-i18n` qu'on repose, pas seulement le texte, sinon
+     le prochain changement de langue remettrait « gagnants ». */
+  if (btnSens) btnSens.addEventListener('click', function(){
+    marSens = marSens === 'haut' ? 'bas' : 'haut';
+    btnSens.setAttribute('data-sens', marSens);
+    if (motSens){
+      const cle = marSens === 'bas' ? 'm.perdants' : 'm.gagnants';
+      motSens.setAttribute('data-i18n', cle);
+      motSens.textContent = PC.t(cle);
+    }
+    peintHaut(rangs);
+  });
+
+  /* « Voir tout » mene a la liste complete, qui est plus bas sur la
+     meme page. Elle y etait deja : ce bouton ne fait qu'eviter de la
+     chercher. */
+  if (btnTout) btnTout.addEventListener('click', function(){
+    const t = document.getElementById('mar-sec-tout');
+    const cible = (t && !t.hidden) ? t : boite;
+    cible.scrollIntoView({behavior: doux() ? 'smooth' : 'auto', block:'start'});
+  });
+
+  /* Le haut est ecrit en JavaScript, pas en `data-i18n` : l'applicateur
+     de langue ne le voit pas passer. Sans cette ligne « Capitalisation
+     suivie » restait en francais jusqu'au rafraichissement suivant —
+     quarante-cinq secondes dans la mauvaise langue, et l'invite du
+     champ de recherche etait dans le meme cas depuis plus longtemps
+     encore. */
+  if (PC.surChangement) PC.surChangement(function(){
+    poseInvite();
+    if (rangs.length) peintHaut(rangs);
+  });
+
+  /* Les trois lignes du haut et les six cases ouvrent la meme fiche
+     que la liste. C'est la meme valeur : le geste ne peut pas dependre
+     de l'endroit ou on la touche. */
+  ['mar-top', 'mar-grille'].forEach(function(id){
+    const h = document.getElementById(id);
+    if (!h) return;
+    h.addEventListener('click', function(e){
+      const b = e.target.closest('[data-piece]');
+      if (b) ouvre(b.getAttribute('data-piece'));
+    });
+  });
+
   /* La recherche interroge le fournisseur, pas la page : c'est ce qui
      donne accès aux milliers de cryptos hors des cinquante affichées. */
   let attente = null;
@@ -20470,9 +21020,18 @@ document.addEventListener('error', function(ev){
     poseInvite();
     rangs = []; recherche = ''; page = 1; dernier = 0; ouverte = null;
     if (champ) champ.value = '';
+    /* La recherche se referme en changeant de marche : le champ qu'on
+       vient de vider resterait ouvert et vide au-dessus d'une autre
+       liste, et son invite dirait « Chercher une crypto » au-dessus de
+       la bourse jusqu'au premier caractere tape. */
+    const bq = document.getElementById('mar-barre');
+    const lp = document.getElementById('mar-loupe');
+    if (bq) bq.hidden = true;
+    if (lp) lp.setAttribute('aria-expanded', 'false');
     vueFiche.hidden = true; vueListe.hidden = false;
     if (neuf !== 'matieres' && !urlListe()){
       hote.setAttribute('data-etat', 'ko');
+      peintHaut([]);
       boite.innerHTML = '<p class="marches__panne">' + ech(PC.t('b.sansrelais')) + '</p>' +
         boutonRelais();
       return;
