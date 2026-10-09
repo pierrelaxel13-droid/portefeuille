@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261008.1904";</script>
+<script>window.PC_VERSION = "261009.1239";</script>
 </head>
 <body>
 
@@ -2095,26 +2095,33 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
   color:var(--ink-3); margin:0 0 6px;
 }
 .an-sous{color:var(--ink-2); margin:0 0 18px; font-size:15px; text-wrap:pretty; max-width:70ch;}
-/* ===== LE CHAPITRE =====
-   Un cran au-dessus du titre de bloc, et il doit se VOIR comme tel :
-   pleine encre contre gris, un corps plus grand, et un filet qui
-   traverse la page jusqu'au bord. Sans ce filet, deux etiquettes de
-   taille voisine se lisent comme deux etiquettes ; avec lui, la
-   seconde se lit comme un debut.
+/* ===== LA RANGEE DES SUJETS =====
+   Les trois marches, puis ce qu'on possede. Le quatrieme onglet est
+   separe par un filet et un peu d'air : ce n'est pas un quatrieme
+   marche, c'est l'autre moitie de la page, et deux choses de nature
+   differente ne se posent pas cote a cote sans qu'on le dise.
 
-   L'air au-dessus fait le reste : un chapitre separe deux sujets,
-   donc il lui faut plus de blanc qu'il n'y en a entre deux blocs du
-   meme sujet. */
-.an-part{
-  display:flex; align-items:center; gap:clamp(12px,1.6vw,18px);
-  margin:clamp(30px,4.4vw,48px) 0 clamp(16px,2.2vw,24px);
-  font-family:'IBM Plex Mono', ui-monospace, monospace;
-  font-size:13px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
-  color:var(--ink); line-height:1.3;
+   Sur telephone la rangee DEFILE plutot que de passer a la ligne :
+   quatre onglets dont un long ne tiennent pas dans 390 px, et une
+   rangee d'onglets sur deux etages ne se lit plus comme une rangee
+   d'onglets. */
+.an-vues{margin-bottom:clamp(20px,2.6vw,28px);}
+.an-vues__moi{
+  margin-left:12px; padding-left:20px;
+  /* Pas --rule-strong : sur le papier sombre il vaut presque le fond,
+     et le filet qui doit dire « ici on change de nature » ne se
+     voyait pas. Un gris d'encre tient dans les deux themes. */
+  border-left:1px solid color-mix(in srgb, var(--ink-3) 55%, transparent);
 }
-.an-part::after{content:""; flex:1 1 auto; height:1px; background:var(--rule-strong);}
-/* Le premier chapitre suit le titre de l'onglet : l'air est deja la. */
-.an-part:first-of-type{margin-top:0;}
+@media (max-width:700px){
+  .an-vues{
+    overflow-x:auto; min-width:0; scrollbar-width:none;
+    scroll-snap-type:x proximity;
+  }
+  .an-vues::-webkit-scrollbar{display:none;}
+  .an-vues .sous-onglet{flex:none; scroll-snap-align:start; padding:10px 13px 12px; font-size:14.5px;}
+  .an-vues__moi{margin-left:8px; padding-left:13px;}
+}
 /* Le choix de la ligne. Un <select> natif, comme la langue et la
    devise : sur telephone c'est la liste du systeme qui s'ouvre, la
    seule qui reste utilisable a une main. */
@@ -4271,9 +4278,6 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   /* Le panneau d'analyse, le plus long de tous. */
   .an-bloc + .an-bloc{margin-top:26px;}
   .an-sous{font-size:13.5px; margin-bottom:14px;}
-  /* Sur telephone le chapitre garde son rang, pas sa place. */
-  .an-part{margin:28px 0 12px; font-size:12px; gap:12px;}
-  .an-part:first-of-type{margin-top:0;}
   .an-ligne{padding:14px;}
   .an-ligne__n{font-size:15.5px;}
   .an-sp{height:52px; margin:11px 0 2px;}
@@ -6311,8 +6315,6 @@ window.PC = (function(){
   'an.mar.taille.d':       ["Moyenne pondérée moins moyenne à l'unité. Au-dessus de zéro, les grosses mènent.","Weighted average minus per-security average. Above zero, the large caps lead.","Media ponderada menos media por valor. Por encima de cero, mandan las grandes.","Gewichteter Durchschnitt minus Durchschnitt je Wert. Über null führen die großen."],
   'an.mar.fort.k':         ["Ce qui bouge fort","Moving hard","Lo que se mueve fuerte","Was sich stark bewegt"],
   'an.mar.fort.d':         ["{{n}} valeurs font 5 % ou plus, dans un sens ou dans l'autre.","{{n}} securities move 5% or more, one way or the other.","{{n}} valores hacen un 5 % o más, en un sentido o en otro.","{{n}} Werte bewegen sich um 5 % oder mehr, in die eine oder andere Richtung."],
-  'an.part.marche':     ["Le marché","The market","El mercado","Der Markt"],
-  'an.part.moi':        ["Vos lignes","Your lines","Sus líneas","Ihre Positionen"],
   'an.mar.d':           ["Relevé à {{h}} · {{n}} lignes","Read at {{h}} · {{n}} lines","Tomado a las {{h}} · {{n}} líneas","Erhoben um {{h}} · {{n}} Werte"],
   'an.mar.d.1':            ["Relevé à {{h}} · une ligne","Read at {{h}} · one line","Leído a las {{h}} · una línea","Stand {{h}} · eine Position"],
   'an.mar.vif':         ["En direct de {{s}} · 7 j et 30 j au relevé de {{h}}","Live from {{s}} · 7 d and 30 d as of {{h}}","En directo desde {{s}} · 7 y 30 días a las {{h}}","Live von {{s}} · 7 und 30 Tage Stand {{h}}"],
@@ -6339,6 +6341,24 @@ window.PC = (function(){
   'an.mar.actif.d':     ["{{p}} de sa capitalisation échangés aujourd'hui.","{{p}} of its capitalisation traded today.","{{p}} de su capitalización negociado hoy.","{{p}} seiner Kapitalisierung heute gehandelt."],
   'an.mar.vous.k':      ["Vos lignes l\u00e0-dedans","Your lines in it","Sus l\u00edneas en todo esto","Ihre Positionen darin"],
   'an.mar.vous.d':      ["sur une de ces cotations.","on one of these quotes.","en una de estas cotizaciones.","auf einer dieser Notierungen."],
+  'an.cat.t':              ["Où est l'argent, et ce qu'il a rapporté","Where the money is, and what it returned","Dónde está el dinero, y lo que ha rendido","Wo das Geld steckt, und was es gebracht hat"],
+  'an.cat.pli':            ["Catégorie par catégorie","Category by category","Categoría por categoría","Kategorie für Kategorie"],
+  'an.cat.v':              ["Votre argent est surtout en {{c}} : {{p}} du total.","Your money sits mostly in {{c}}: {{p}} of the total.","Su dinero está sobre todo en {{c}}: {{p}} del total.","Ihr Geld steckt vor allem in {{c}}: {{p}} der Summe."],
+  'an.cat.v2':             ["C'est {{c}} qui a le plus rapporté, avec {{m}}.","{{c}} returned the most, with {{m}}.","{{c}} es lo que más ha rendido, con {{m}}.","Am meisten gebracht hat {{c}}, mit {{m}}."],
+  'an.cat.v2.meme':        ["Et c'est aussi ce qui a le plus rapporté, avec {{m}}.","And it is also what returned the most, with {{m}}.","Y es también lo que más ha rendido, con {{m}}.","Und hier wurde auch am meisten verdient, mit {{m}}."],
+  'an.cat.v2.rien':        ["Aucune catégorie n'est en gain pour l'instant.","No category is in profit for now.","Ninguna categoría está en ganancia por ahora.","Keine Kategorie ist derzeit im Plus."],
+  'an.moi.paran':          ["Hors versements, l'ensemble a fait {{p}} par an depuis {{d}}.","Excluding what you paid in, the whole returned {{p}} a year since {{d}}.","Sin contar las aportaciones, el conjunto ha hecho un {{p}} al año desde {{d}}.","Ohne Einzahlungen hat das Ganze seit {{d}} {{p}} pro Jahr gemacht."],
+  'an.moi.paran.k':        ["Par an, hors versements","A year, excluding what you paid in","Al año, sin aportaciones","Pro Jahr, ohne Einzahlungen"],
+  'an.moi.paran.d':        ["Depuis {{d}}, sur {{n}} jours reconstitués.","Since {{d}}, over {{n}} reconstructed days.","Desde {{d}}, sobre {{n}} días reconstruidos.","Seit {{d}}, über {{n}} rekonstruierte Tage."],
+  'an.moi.rev.k':          ["Revenus annoncés, par an","Declared income, per year","Ingresos declarados, al año","Angegebene Einkünfte, pro Jahr"],
+  'an.moi.rev.d':          ["{{p}} % de la valeur du portefeuille, loyers et dividendes que vous avez saisis.","{{p}}% of the portfolio value — the rents and dividends you entered.","{{p}} % del valor de la cartera — los alquileres y dividendos que ha introducido.","{{p}} % des Portfoliowerts — die Mieten und Dividenden, die Sie eingetragen haben."],
+  'an.div.risque':         ["{{q}} pèse {{p}} de vos lignes cotées et {{r}} de leur mouvement : vous y êtes exposé bien plus que son montant ne le dit.","{{q}} is {{p}} of your quoted lines and {{r}} of their movement: you are exposed to it far more than its amount suggests.","{{q}} pesa un {{p}} de sus líneas cotizadas y un {{r}} de su movimiento: está expuesto a ella mucho más de lo que dice su importe.","{{q}} macht {{p}} Ihrer notierten Positionen aus und {{r}} ihrer Bewegung: Sie sind ihr weit stärker ausgesetzt, als ihr Betrag vermuten lässt."],
+  'an.div.risque.egal':    ["Chaque ligne pèse dans le mouvement à peu près ce qu'elle pèse en euros.","Each line weighs in the movement about what it weighs in euros.","Cada línea pesa en el movimiento más o menos lo que pesa en euros.","Jede Position wiegt in der Bewegung ungefähr so viel wie in Euro."],
+  'an.div.risq.k':         ["Ce qui fait le mouvement","What makes the movement","Lo que hace el movimiento","Was die Bewegung macht"],
+  'an.div.risq.d':         ["{{q}} en fait cette part, pour {{p}} de la valeur.","{{q}} accounts for that share, for {{p}} of the value.","{{q}} representa esa parte, por un {{p}} del valor.","{{q}} macht diesen Anteil aus, bei {{p}} des Werts."],
+  'an.vue.moi':         ["Mes investissements","My investments","Mis inversiones","Meine Anlagen"],
+  'an.vues.aria':       ["Ce qu'on analyse","What is being analysed","Lo que se analiza","Was analysiert wird"],
+  'an.ext.t':           ["Une valeur en détail","One security in detail","Un valor en detalle","Ein Wert im Detail"],
   'an.calc.t':          ["Une ligne en détail","One line in detail","Una línea en detalle","Eine Position im Detail"],
   'an.calc.d':          ["Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.","Twelve months of real prices where there are any, your dated statements otherwise.","Doce meses de cotizaciones reales cuando las hay, sus informes fechados si no.","Zwölf Monate echter Kurse, wo es welche gibt, sonst Ihre datierten Auszüge."],
   'an.attente':         ["On charge l'historique de vos lignes cotées. L'analyse apparaît au fur et à mesure — une ligne à la fois, pour ne pas épuiser le fournisseur de cours.","Loading the history of your listed lines. The analysis appears as it arrives — one line at a time, so as not to exhaust the price provider.","Cargando el historial de sus líneas cotizadas. El análisis aparece a medida que llega — una línea a la vez, para no agotar al proveedor.","Der Verlauf Ihrer notierten Positionen wird geladen. Die Analyse erscheint nach und nach — eine Position auf einmal, um den Kursanbieter nicht zu erschöpfen."],
@@ -6417,7 +6437,7 @@ window.PC = (function(){
   'an.mar.n.matieres':  ["L'or et l'argent arrivent sans rien installer\u00a0; le platine, le cuivre, le p\u00e9trole et les autres passent par le relais.","Gold and silver arrive with nothing installed; platinum, copper, oil and the rest go through the relay.","El oro y la plata llegan sin instalar nada; el platino, el cobre, el petr\u00f3leo y los dem\u00e1s pasan por el rel\u00e9.","Gold und Silber kommen ohne Installation; Platin, Kupfer, \u00d6l und die \u00fcbrigen laufen \u00fcber das Relais."],
   'an.choix.vos':       ["Vos lignes","Your lines","Sus líneas","Ihre Positionen"],
   'an.choix.tout':      ["Toutes vos lignes","All your lines","Todas sus l\u00edneas","Alle Ihre Positionen"],
-  'an.cherche.t':       ["Une de vos lignes, ou n'importe quelle crypto, action ou matière première","One of your lines, or any crypto, share or commodity","Una de sus líneas, o cualquier cripto, acción o materia prima","Eine Ihrer Positionen, oder eine beliebige Krypto, Aktie oder Rohstoff"],
+  'an.cherche.t':       ["N'importe quelle crypto, action ou matière première","Any crypto, share or commodity","Cualquier cripto, acción o materia prima","Eine beliebige Krypto, Aktie oder Rohstoff"],
   'an.cherche.vos':     ["Vos lignes","Your lines","Sus l\u00edneas","Ihre Positionen"],
   'an.cherche.marche':  ["Sur les march\u00e9s","On the markets","En los mercados","An den M\u00e4rkten"],
   'an.cherche.tout':    ["Tapez deux lettres : cryptos, bourse et matières premières, chez tous les fournisseurs. Vos propres lignes sont au-dessus.","Type two letters: crypto, stocks and commodities, across every provider. Your own lines are above.","Escriba dos letras: criptos, bolsa y materias primas, en todos los proveedores. Sus propias líneas están arriba.","Tippen Sie zwei Buchstaben: Kryptos, Börse und Rohstoffe, bei allen Anbietern. Ihre eigenen Positionen stehen oben."],
@@ -8979,25 +8999,31 @@ document.addEventListener('error', function(ev){
             <h2 data-i18n="an.h2">Vos chiffres, dans le marché d'aujourd'hui.</h2>
           </div>
         </div>
-        <!-- ===== DEUX CHAPITRES =====
-             Les cinq blocs portaient exactement le meme titre : onze
-             pixels de mono gris, en capitales. « Les marches
-             aujourd'hui » et « Et vos lignes la-dedans » avaient donc
-             le meme poids, et rien ne disait qu'on avait change de
-             sujet entre les deux — ce qui faisait lire la mesure
-             d'une de VOS lignes comme une mesure de marche.
+        <!-- ===== QUATRE SUJETS, QUATRE ONGLETS =====
+             Les chapitres mettaient le marche et vos lignes l'un sous
+             l'autre sur la meme page : separes, mais lus a la suite,
+             et il suffisait de faire defiler pour passer de l'un a
+             l'autre sans s'en apercevoir. Des onglets les mettent
+             ailleurs — on ne voit jamais les deux a la fois, et le
+             sujet qu'on lit est celui qui est marque en haut.
 
-             Un titre de bloc ne peut pas servir a la fois d'etiquette
-             et de chapitre. On en ajoute donc un cran AU-DESSUS, et
-             les titres de bloc descendent d'autant : h3 pour le
-             chapitre, h4 pour le bloc, h5 pour ses sous-parties. La
-             hierarchie est reelle et pas seulement dessinee — c'est
-             celle qu'un lecteur d'ecran parcourt.
+             « Mes investissements » est pose a cote des trois marches
+             parce que c'est le meme geste — choisir ce qu'on regarde —
+             mais il en est separe par un filet : ce n'est pas un
+             quatrieme marche, c'est l'autre moitie de la page. -->
+        <div class="sous-onglets an-vues" id="an-vues" role="tablist"
+             data-i18n-aria="an.vues.aria" aria-label="Ce qu'on analyse">
+          <button class="sous-onglet" type="button" role="tab" data-vue="crypto"
+                  aria-selected="true" data-i18n="b.sous.crypto">Cryptos</button>
+          <button class="sous-onglet" type="button" role="tab" data-vue="bourse"
+                  aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
+          <button class="sous-onglet" type="button" role="tab" data-vue="matieres"
+                  aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
+          <button class="sous-onglet an-vues__moi" type="button" role="tab" data-vue="moi"
+                  aria-selected="false" data-i18n="an.vue.moi">Mes investissements</button>
+        </div>
 
-             Le chapitre des marches n'a qu'un bloc : il porte donc
-             son titre, et le h3 qui disait « Les marches
-             aujourd'hui » a disparu plutot que de le repeter. -->
-        <h3 class="an-part mono" data-i18n="an.part.marche">Le marché</h3>
+        <div id="an-vue-marche">
 
         <!-- LES MARCHES D'ABORD. C'est ce qu'on vient voir : l'etat
              du monde, avant l'etat de son propre portefeuille. Tout y
@@ -9009,14 +9035,6 @@ document.addEventListener('error', function(ev){
           <!-- Les trois marches, comme dans l'onglet Marches. Ce sont
                les memes sources : il n'y avait aucune raison que
                l'analyse ne parle que des cryptos. -->
-          <div class="sous-onglets an-mar__s" id="an-mar-sources" role="tablist">
-            <button class="sous-onglet" type="button" role="tab" data-src="crypto"
-                    aria-selected="true" data-i18n="b.sous.crypto">Cryptos</button>
-            <button class="sous-onglet" type="button" role="tab" data-src="bourse"
-                    aria-selected="false" data-i18n="b.sous.bourse">Bourse</button>
-            <button class="sous-onglet" type="button" role="tab" data-src="matieres"
-                    aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
-          </div>
           <div class="marches__horizons an-mar__h" id="an-mar-horizons" role="group"
                data-i18n-aria="m.horizon">
             <button class="marches__h" type="button" data-h="24h" aria-pressed="true">24 h</button>
@@ -9084,14 +9102,34 @@ document.addEventListener('error', function(ev){
           </details>
         </div>
 
-        <!-- Tout ce qui suit parle de CE QU'ON POSSEDE : l'ensemble
-             d'abord, puis une ligne, puis ce qui bouge ensemble, puis
-             le commentaire ecrit par la machine. Celui-la vient en
-             dernier parce qu'il reprend tout ce qui est au-dessus de
-             lui — il etait jusqu'ici entre l'ensemble et le detail,
-             et il coupait en deux la seule partie qui parle de
-             vous. -->
-        <h3 class="an-part mono" data-i18n="an.part.moi">Vos lignes</h3>
+
+        <!-- ===== LA VALEUR QU'ON EST ALLE CHERCHER =====
+             Le champ et ce qu'il produit vivaient dans le bloc de VOS
+             lignes : on cherchait une cotation du marche et la reponse
+             sortait sous le titre « une ligne en detail », au milieu
+             de ce qu'on possede. Les deux sont ici, du cote du marche,
+             et le meme travail se fait de l'autre cote pour vos
+             lignes a vous. -->
+        <div class="an-bloc" id="an-ext">
+          <h3 class="an-titre mono" data-i18n="an.ext.t">Une valeur en détail</h3>
+          <div class="an-choix" id="an-choix-boite">
+            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Ou une valeur du marché</label>
+            <div class="an-q">
+              <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
+                     spellcheck="false" data-i18n-titre="an.cherche.t">
+              <div class="sug an-q__s" id="an-sug" hidden></div>
+            </div>
+          </div>
+          <p class="analyse__m" id="an-ext-mot" hidden></p>
+          <div class="an-lignes" id="an-ext-lignes"></div>
+          <details class="an-aide" id="an-aide-lm">
+            <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
+            <div class="an-aide__c" data-i18n-html="an.aide.l"></div>
+          </details>
+        </div>
+        </div>
+
+        <div id="an-vue-moi" hidden>
 
         <!-- ===== VOUS, LA-DEDANS =====
              Le bloc du dessus dit ce que fait le marche ; celui du
@@ -9100,7 +9138,7 @@ document.addEventListener('error', function(ev){
              ce que fait l'ensemble de ce qu'on possede, et d'ou
              vient ce qu'il a fait. -->
         <div class="an-bloc" id="an-moi" hidden>
-          <h4 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h4>
+          <h3 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h4>
           <p class="an-verdict" id="an-moi-verdict"></p>
           <!-- D'OU VIENT CE QUI A CHANGE. « Vous avez mis X, ca vaut Y »
                ne dit pas si Y vient du marche ou de vos versements. Un
@@ -9114,8 +9152,8 @@ document.addEventListener('error', function(ev){
           </details>
           <!-- D'ou vient l'argent : la contribution de chaque ligne au
                resultat, en euros. Voir la feuille de style. -->
-          <h5 class="an-titre mono" id="an-moi-ct" style="margin-top:clamp(22px,2.6vw,30px)"
-              data-i18n="an.moi.port.t">Ce qui a porté, ce qui a pesé</h5>
+          <h4 class="an-titre mono" id="an-moi-ct" style="margin-top:clamp(22px,2.6vw,30px)"
+              data-i18n="an.moi.port.t">Ce qui a porté, ce qui a pesé</h4>
           <p class="an-verdict" id="an-moi-port"></p>
           <details class="an-plus" id="an-moi-portp" open>
             <summary class="an-plus__t mono" data-i18n="an.moi.port.pli">Ligne par ligne</summary>
@@ -9128,8 +9166,8 @@ document.addEventListener('error', function(ev){
                pas un ensemble a 50 % : elles ne descendent pas le meme
                jour. L'ecart se chiffre, et c'est le seul chiffre qui
                mette un prix sur la diversification. -->
-          <h5 class="an-titre mono" id="an-moi-dt" style="margin-top:clamp(22px,2.6vw,30px)"
-              data-i18n="an.div.t" hidden>Ce que votre répartition vous rend</h5>
+          <h4 class="an-titre mono" id="an-moi-dt" style="margin-top:clamp(22px,2.6vw,30px)"
+              data-i18n="an.div.t" hidden>Ce que votre répartition vous rend</h4>
           <p class="an-verdict" id="an-moi-divv"></p>
           <!-- Le meme ecart, vu autrement : une amplitude annualisee
                reste une abstraction, une chute qu'on a traversee non.
@@ -9153,12 +9191,28 @@ document.addEventListener('error', function(ev){
           </details>
         </div>
 
+        <!-- ===== OU EST L'ARGENT, ET CE QU'IL A RAPPORTE =====
+             Le bloc du dessus dit ce que fait l'ensemble, celui du
+             dessous ouvre une ligne. Entre les deux manquait l'etage
+             auquel on pense vraiment : les classes. « Mes cryptos
+             font quoi ? », « l'immobilier porte combien ? » — on ne
+             se demande pas ca ligne par ligne, on se le demande par
+             paquet, et c'est le paquet qui decide d'un arbitrage. -->
+        <div class="an-bloc" id="an-cat" hidden>
+          <h3 class="an-titre mono" data-i18n="an.cat.t">Où est l'argent, et ce qu'il a rapporté</h3>
+          <p class="an-verdict" id="an-cat-v"></p>
+          <details class="an-plus" id="an-cat-plus" open>
+            <summary class="an-plus__t mono" data-i18n="an.cat.pli">Catégorie par catégorie</summary>
+            <div class="an-contrib" id="an-cat-liste" data-axe="0"></div>
+          </details>
+        </div>
+
         <!-- L'ANALYSE CALCULEE. Rien d'ecrit par un modele ici : des
              ecarts-types, des maximums et des correlations, tires des
              douze mois de cours deja en memoire. Gratuite, instantanee,
              et elle ne peut pas se tromper. -->
         <div class="an-bloc" id="an-calc">
-          <h4 class="an-titre mono" data-i18n="an.calc.t">Une ligne en détail</h4>
+          <h3 class="an-titre mono" data-i18n="an.calc.t">Une ligne en détail</h4>
           <p class="an-sous" data-i18n="an.calc.d">Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.</p>
           <!-- Choisir la ligne. Toutes a la fois se lisait a trois
                lignes et plus du tout a douze — et sur telephone, ou
@@ -9171,19 +9225,6 @@ document.addEventListener('error', function(ev){
                recherche fait les deux : vide, il liste vos lignes ; rempli,
                il va chercher n'importe quelle crypto ou action chez le
                fournisseur de cours et en mesure les douze mois. -->
-          <!-- LE CHAMP EST DANS LE BLOC QU'IL COMMANDE. Il vivait
-               dans celui des marches, et ce qu'il produisait
-               apparaissait deux blocs plus bas, sous un autre titre :
-               on tapait un nom a un endroit et la reponse sortait a un
-               autre. C'est l'une des deux raisons pour lesquelles
-               « analyser vos lignes » se confondait avec l'analyse des
-               marches ; l'autre etait que les cinq blocs portaient le
-               meme titre, au meme corps et dans le meme gris.
-
-               Il ne depend pas de ce qu'on possede, et c'est voulu :
-               vide, il liste vos lignes ; rempli, il va chercher
-               n'importe quelle crypto, action ou matiere premiere chez
-               le fournisseur de cours et en mesure les douze mois. -->
           <!-- ===== VOS LIGNES D'UN COTE, LE MARCHE DE L'AUTRE =====
                Le champ s'appelle « une autre valeur » et sa liste
                proposait d'abord VOS lignes : on y retrouvait ses
@@ -9200,14 +9241,6 @@ document.addEventListener('error', function(ev){
             <span class="an-choix__k mono" data-i18n="an.choix.vos">Vos lignes</span>
             <div class="an-mien__l" id="an-mien-liste"></div>
           </div>
-          <div class="an-choix" id="an-choix-boite">
-            <label class="an-choix__k mono" for="an-q" data-i18n="an.choix">Ou une valeur du marché</label>
-            <div class="an-q">
-              <input class="reglage an-q__c" id="an-q" type="search" autocomplete="off"
-                     spellcheck="false" data-i18n-titre="an.cherche.t">
-              <div class="sug an-q__s" id="an-sug" hidden></div>
-            </div>
-          </div>
           <p class="analyse__m" id="an-calc-mot" hidden></p>
           <div class="an-lignes" id="an-calc-lignes"></div>
           <!-- QUELQUES PHRASES POUR EXPLIQUER. Une volatilite
@@ -9218,17 +9251,13 @@ document.addEventListener('error', function(ev){
                definition se lit une fois et pas a chaque visite —
                l'ouvrir par defaut rendrait a la page les deux ecrans
                de texte qu'on vient d'en retirer. -->
-          <details class="an-aide" id="an-aide-l">
-            <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
-            <div class="an-aide__c" data-i18n-html="an.aide.l"></div>
-          </details>
         </div>
 
         <!-- CE QUI BOUGE ENSEMBLE. La mesure qu'aucun tableur ne donne
              seul, et celle qui compte le plus : deux lignes correlees
              ne sont pas une diversification. -->
         <div class="an-bloc" id="an-cor" hidden>
-          <h4 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h4>
+          <h3 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h4>
           <!-- L'echelle, dite une fois : sans elle le curseur montre une
                position sans dire de quoi. -->
           <!-- Ce que les paires veulent dire, en une phrase : trois
@@ -9261,7 +9290,7 @@ document.addEventListener('error', function(ev){
         </div>
 
         <div class="an-bloc" id="an-ia" hidden>
-          <h4 class="an-titre mono" data-i18n="an.ia.t">Vos chiffres, écrits en clair</h4>
+          <h3 class="an-titre mono" data-i18n="an.ia.t">Vos chiffres, écrits en clair</h4>
           <!-- CE QUE LE BOUTON VA FAIRE, AVANT DE L'AVOIR PRESSE. Le
                bloc etait le seul de la page a ne rien dire tant qu'on
                n'avait pas clique : un titre, un bouton, et aucune idee
@@ -9280,6 +9309,7 @@ document.addEventListener('error', function(ev){
             machine et il peut se tromper. Il ne constitue pas un conseil en investissement, et
             Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers.
             Vérifiez tout chiffre avant de vous en servir.</p>
+        </div>
         </div>
 
         <!-- Le commentaire ecrit par l'IA : formule Max seulement. -->
@@ -13582,6 +13612,13 @@ document.addEventListener('error', function(ev){
     const d = new Date(t);
     return d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + d.getUTCDate();
   }
+  /* Le mois et l'annee, sans le jour : « depuis mars 2021 ». Le jour
+     exact n'apprend rien sur une duree de plusieurs annees, et il
+     donnerait a une reconstitution une precision qu'elle n'a pas. */
+  function anMois(t){
+    try { return new Date(t).toLocaleDateString(PC.locale(), {month:'long', year:'numeric'}); }
+    catch (e){ return ''; }
+  }
   function anDate(t){
     try { return new Date(t).toLocaleDateString(PC.locale(), {day:'numeric', month:'short', year:'numeric'}); }
     catch (e){ return ''; }
@@ -13725,6 +13762,38 @@ document.addEventListener('error', function(ev){
     const chemin = [[q[0][0], base]];
     v.forEach(function(x){ base *= 1 + x.r; chemin.push([x.t, base]); });
 
+    /* ===== CE QUE CA FAIT PAR AN, HORS VERSEMENTS =====
+       « +27,6 % depuis le depart » ne se compare a rien : ni a un
+       livret, ni a un indice, ni a l'annee derniere. C'est le chiffre
+       PAR AN qui se compare, et il ne s'obtient pas en divisant —
+       les interets se composent, et surtout un portefeuille ou l'on
+       verse ne fait pas « val / inv ».
+
+       On reprend donc le rendement pondere par le temps, mais sur
+       TOUTE la serie et non sur la seule fenetre quotidienne : les
+       points mensuels d'avant portent les annees, et un produit de
+       rendements se moque de l'espacement des points — c'est la
+       racine de 252 qui n'en voulait pas, et elle n'intervient pas
+       ici. Memes regles que plus haut : net des versements, et le
+       jour ou une ligne entre ne se mesure pas. */
+    let cum = 1, nTout = 0;
+    for (let i = 1; i < pts.length; i++){
+      const a0 = pts[i - 1][1];
+      if (!(a0 > 0) || comp[i] !== comp[i - 1]) continue;
+      const r = (pts[i][1] - (inv[i] - inv[i - 1])) / a0 - 1;
+      /* Un point reconstitue peut sauter : une ligne dont la quantite
+         a change, un relevé saisi a cote. Au-dela de +500 % ou de
+         -90 % en un pas, ce n'est pas un rendement, c'est une saisie —
+         et un seul de ces pas emporterait tout le produit. */
+      if (!(r > -0.9 && r < 5)) continue;
+      cum *= 1 + r; nTout++;
+    }
+    const joursTout = Math.round((pts[pts.length - 1][0] - pts[0][0]) / JOUR_MS);
+    /* Six mois au moins : en dessous, annualiser un rendement revient
+       a multiplier le hasard de quelques semaines par deux. */
+    const parAn = (joursTout >= 180 && nTout >= 3 && cum > 0)
+      ? (Math.pow(cum, 365.2425 / joursTout) - 1) * 100 : null;
+
     const verse = qi[der] - qi[0];
     const bouge = (q[der][1] - q[0][1]) - verse;
     const monte = v.filter(function(x){ return x.r > 0; }).length;
@@ -13752,6 +13821,7 @@ document.addEventListener('error', function(ev){
       vol:mouvant ? anVolatilite(v) : null,
       rec:mouvant ? anRecul(chemin) : null,
       verse:verse, bouge:bouge,
+      parAn:parAn, joursTout:joursTout, depuis:pts[0][0],
       monte:monte, seances:v.length, sautes:sautes
     };
   }
@@ -13814,20 +13884,47 @@ document.addEventListener('error', function(ev){
        et c'est a l'amplitude qu'on aurait subie que le panier se
        compare. Chaque ligne est mesuree sur les MEMES seances que le
        panier, sans quoi on comparerait deux fenetres differentes. */
+    /* ===== QUI FAIT LE MOUVEMENT =====
+       Le poids d'une ligne dit ce qu'elle pese en euros. Il ne dit pas
+       ce qu'elle pese dans les SECOUSSES, et les deux n'ont aucune
+       raison d'etre egaux : une ligne de 12 % qui bouge trois fois
+       plus que les autres fait la moitie du mouvement de l'ensemble.
+       C'est la seule facon de voir qu'on est expose autrement qu'on
+       ne le croit, et aucun releve ne la donne.
+
+       La part de risque d'une ligne est sa covariance avec le panier,
+       ponderee, rapportee a la variance du panier. Les parts
+       s'additionnent a cent : c'est ce qui en fait une repartition et
+       non une collection d'indices. */
+    const mp = rp.reduce(function(a2, x){ return a2 + x.r; }, 0) / rp.length;
+    let varp = 0;
+    rp.forEach(function(x){ varp += (x.r - mp) * (x.r - mp); });
+    varp /= (rp.length - 1);
+
     let volM = 0, pireL = null;
+    const risques = [];
     util.forEach(function(c, k){
       const rs = jours.map(function(j){ return cal[j][k]; });
       const vk = anVolatilite(rs.map(function(r, i){ return {t:jours[i], r:r}; }));
       if (vk !== null) volM += vk * c.val / som;
       const rk = anRecul(chemin(rs));
       if (rk && (!pireL || rk.part > pireL.part)) pireL = {nom:c.nom, part:rk.part};
+      if (varp > 0){
+        const mk = rs.reduce(function(a2, x){ return a2 + x; }, 0) / rs.length;
+        let cov = 0;
+        rs.forEach(function(x, i){ cov += (x - mk) * (rp[i].r - mp); });
+        cov /= (rs.length - 1);
+        risques.push({nom:c.nom, poids:c.val / som * 100,
+                      part:(c.val / som) * cov / varp * 100});
+      }
     });
+    risques.sort(function(x, y){ return y.part - x.part; });
     if (!(volM > 0)) return null;
     return {
       n:util.length, jours:jours.length,
       vol:volP, volMoyenne:volM, ecart:Math.max(0, volM - volP),
       rec:anRecul(chemin(rp.map(function(x){ return x.r; }))),
-      pireLigne:pireL
+      pireLigne:pireL, risques:risques
     };
   }
 
@@ -14012,6 +14109,12 @@ document.addEventListener('error', function(ev){
      le devient. */
   let anDefautFaible = false;
 
+  /* ===== CHAQUE SUJET DANS SA VUE =====
+     Une valeur cherchee sur le marche appartient au marche ; une de
+     vos lignes appartient a vos lignes. Le choix du sujet pose donc
+     l'onglet, et non l'inverse — sinon on cliquerait une crypto dans
+     la liste des marches et la reponse sortirait dans un onglet qu'on
+     ne regarde pas. */
   function anSujet(v){
     anChoix = v && v.id ? v.id : '';
     /* Choisi a la main : plus rien ne le remplace. */
@@ -14021,6 +14124,8 @@ document.addEventListener('error', function(ev){
     const q = document.getElementById('an-q');
     if (q) q.value = '';
     anFermeSug();
+    anVue = anExterne ? 'marche' : 'moi';
+    anPoseVue();
     anCalcule();
     if (anExterne) anChargeExterne();
   }
@@ -14286,8 +14391,15 @@ document.addEventListener('error', function(ev){
     if (!lignes.length && !anExterne){ anChoix = ''; }
   }
 
+  /* Le cadre actif : celui du marche quand on regarde une valeur
+     cherchee, celui de vos lignes sinon. Les deux existent toujours ;
+     un seul est rempli. */
+  function anHote(){
+    return document.getElementById(anExterne ? 'an-ext-lignes' : 'an-calc-lignes');
+  }
+
   function anBrancheTout(){
-    const hote = document.getElementById('an-calc-lignes');
+    const hote = anHote();
     if (!hote) return;
     hote.querySelectorAll('[data-an-tout]').forEach(function(b){
       b.addEventListener('click', function(){ anSujet(null); });
@@ -14297,8 +14409,7 @@ document.addEventListener('error', function(ev){
   /* Ce qui est analysé, écrit au-dessus des mesures. Sans cette ligne,
      un écran montrant une seule mesure ne dit pas s'il en manque. */
   function anDitSujet(lignes, montre){
-    const hote = document.getElementById('an-calc-lignes');
-    if (!hote) return '';
+    if (!anHote()) return '';
     if (anExterne){
       /* TROIS LIGNES POUR DIRE « ce n'est pas a vous » prenaient plus
          de place que la mesure qu'elles accompagnaient, et l'oeil y
@@ -14506,6 +14617,38 @@ document.addEventListener('error', function(ev){
      doit pas redemander ce qu'on vient de lire. */
   const marCache = {};
   let marSrc = 'crypto', marH = '24h', marEnVol = '', marEnVolDepuis = 0;
+  /* ===== CE QU'ON ANALYSE =====
+     « marche » montre l'un des trois marches, « moi » montre ce qu'on
+     possede. Les deux ne sont jamais a l'ecran en meme temps : c'est
+     tout l'objet des onglets, et c'est ce qui empeche de lire la
+     mesure d'une de ses lignes comme une mesure de marche. */
+  let anVue = 'marche';
+
+  function anPoseVue(){
+    const vm = document.getElementById('an-vue-marche');
+    const vo = document.getElementById('an-vue-moi');
+    if (vm) vm.hidden = anVue !== 'marche';
+    if (vo) vo.hidden = anVue !== 'moi';
+    const r = document.getElementById('an-vues');
+    if (!r) return;
+    r.querySelectorAll('[data-vue]').forEach(function(x){
+      const v = x.getAttribute('data-vue');
+      x.setAttribute('aria-selected',
+        String(anVue === 'moi' ? v === 'moi' : v === marSrc));
+    });
+    /* ===== L'ONGLET CHOISI DOIT SE VOIR =====
+       Sur telephone la rangee defile, et « Mes investissements » est
+       le dernier et le plus long : on arrivait dessus en n'en voyant
+       que le M. On l'amene donc dans le cadre — en posant
+       `scrollLeft` et non en appelant `scrollIntoView`, qui ferait
+       aussi defiler la PAGE et renverrait le lecteur ailleurs. */
+    const ici = r.querySelector('[aria-selected="true"]');
+    if (ici && r.scrollWidth > r.clientWidth + 1){
+      const g = ici.offsetLeft, d = g + ici.offsetWidth;
+      if (g < r.scrollLeft) r.scrollLeft = Math.max(0, g - 12);
+      else if (d > r.scrollLeft + r.clientWidth) r.scrollLeft = d - r.clientWidth + 12;
+    }
+  }
   /* Les cryptos ont une cotation continue accessible ; la bourse et les
      metaux, non. On ne fait donc pas semblant : la phrase sous le titre
      change avec, et le point qui bat n'apparait que la ou il y a
@@ -14615,7 +14758,8 @@ document.addEventListener('error', function(ev){
   }
 
   function marOuvreFlux(){
-    if (!MAR_VIF[marSrc] || vueCourante !== 'analyse' || !droit('analyse') || document.hidden){
+    if (!MAR_VIF[marSrc] || vueCourante !== 'analyse' || anVue !== 'marche' ||
+        !droit('analyse') || document.hidden){
       marCoupeFlux(); return;
     }
     const e = marEtat();
@@ -14832,30 +14976,34 @@ document.addEventListener('error', function(ev){
     /* Le choix du marche. Changer de marche redemande une liste — elle
        n'a rien a voir avec la precedente — mais la garde ensuite en
        cache : revenir sur les cryptos ne coute rien. */
-    const sources = document.getElementById('an-mar-sources');
+    const sources = document.getElementById('an-vues');
     if (sources && !sources.dataset.branche){
       sources.dataset.branche = '1';
       sources.addEventListener('click', function(e){
-        const b = e.target.closest ? e.target.closest('[data-src]') : null;
+        const b = e.target.closest ? e.target.closest('[data-vue]') : null;
         if (!b) return;
-        marSrc = b.getAttribute('data-src');
-        sources.querySelectorAll('[data-src]').forEach(function(x){
-          x.setAttribute('aria-selected', x === b ? 'true' : 'false');
-        });
+        const v = b.getAttribute('data-vue');
+        if (v === 'moi'){
+          anVue = 'moi';
+          /* Le flux des cours alimente un bloc qu'on ne regarde plus :
+             on le coupe. Une connexion ouverte pour rien coute au
+             fournisseur et a la batterie. */
+          marCoupeFlux();
+          anPoseVue();
+          return;
+        }
+        const change = (v !== marSrc);
+        marSrc = v; anVue = 'marche';
+        anPoseVue();
         /* Le flux d'un marche ne vaut rien pour un autre : on le coupe
            avant de changer, et on ne le rouvre que si le nouveau en a
            un. */
         marCoupeFlux();
-        anMarche();
-        anMarcheCharge();
+        if (change){ anMarche(); anMarcheCharge(); }
         marOuvreFlux();
       });
     }
-    if (sources){
-      sources.querySelectorAll('[data-src]').forEach(function(x){
-        x.setAttribute('aria-selected', x.getAttribute('data-src') === marSrc ? 'true' : 'false');
-      });
-    }
+    anPoseVue();
 
     const groupe = document.getElementById('an-mar-horizons');
     if (groupe && !groupe.dataset.branche){
@@ -15053,7 +15201,7 @@ document.addEventListener('error', function(ev){
        celui qui vient de l'ouvrir, toutes les quarante-cinq
        secondes. */
     ['an-mar-plus', 'an-moi-plus', 'an-moi-divp', 'an-moi-portp',
-     'an-cor-plus'].forEach(function(id){
+     'an-cor-plus', 'an-cat-plus'].forEach(function(id){
       const d = document.getElementById(id);
       if (!d || d.dataset.pose === tel) return;
       d.dataset.pose = tel;
@@ -15096,8 +15244,12 @@ document.addEventListener('error', function(ev){
         })[0];
         anSujet(mien ? {id:mien.id} : {code:c.id, nom:c.name || c.id});
         /* L'analyse s'ouvre plus bas : sans ce deplacement, on aurait
-           clique et rien ne bougerait a l'ecran. */
-        const cible = document.getElementById('an-calc');
+           clique et rien ne bougerait a l'ecran. Et elle ne s'ouvre
+           pas au meme endroit selon ce qu'on a clique : une valeur
+           qu'on ne possede pas reste du cote du marche, une ligne a
+           soi passe dans l'autre onglet — c'est anSujet qui vient de
+           poser la vue. */
+        const cible = document.getElementById(mien ? 'an-calc' : 'an-ext');
         if (cible && cible.scrollIntoView){
           const doux = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           cible.scrollIntoView({behavior: doux ? 'smooth' : 'auto', block:'start'});
@@ -15298,7 +15450,9 @@ document.addEventListener('error', function(ev){
   function anMoi(){
     const bloc = document.getElementById('an-moi');
     if (!bloc) return;
-    if (!droit('analyse') || !actifs.length){ bloc.hidden = true; anDiv(null); return; }
+    if (!droit('analyse') || !actifs.length){
+      bloc.hidden = true; anDiv(null); anParCategorie(); return;
+    }
     bloc.hidden = false;
 
     const t = totaux();
@@ -15348,6 +15502,14 @@ document.addEventListener('error', function(ev){
           x: anGras((TT.bouge < 0 ? '\u2212' : '+') + eur.format(Math.abs(TT.bouge)),
                     TT.bouge < 0 ? 'baisse' : 'hausse')
         });
+        /* LE CHIFFRE QUI SE COMPARE. « +27,6 % depuis le depart » ne
+           se compare a rien ; « 8,4 % par an » se compare a un
+           livret, a un indice, a l'an dernier. */
+        if (TT.parAn !== null){
+          ph += ' ' + PC.t('an.moi.paran', {
+            p: anGras(PC.pourcent(TT.parAn, 1), TT.parAn < 0 ? 'baisse' : 'hausse'),
+            d: anGras(anMois(TT.depuis))});
+        }
         if (TT.mouvant && TT.vol !== null){
           ph += ' ' + PC.t(TT.rec ? 'an.moi.mouv' : 'an.moi.mouv.0', {
             v: anGras(anAmpleur(TT.vol), TT.vol >= 50 ? 'baisse' : ''),
@@ -15378,7 +15540,22 @@ document.addEventListener('error', function(ev){
       /* L'instrument de la phrase ci-dessus. Il vient APRES les
          photographies : une duree ne se lit qu'une fois qu'on sait
          de quoi on parle. */
-      /* LA DECOMPOSITION D'ABORD, ET SANS CONDITION : elle ne tient
+      if (TT && TT.parAn !== null){
+        m += anMesure('an.moi.paran', PC.pourcent(TT.parAn, 1),
+                      echap(PC.t('an.moi.paran.d', {d:anMois(TT.depuis),
+                                 n:String(TT.joursTout)})),
+                      TT.parAn < 0 ? 'baisse' : 'hausse');
+      }
+      /* Les loyers et dividendes declares, rapportes a l'annee et a la
+         valeur : c'est le rendement qu'on TOUCHE, par opposition a
+         celui qu'on constate. */
+      const rev = revenuTotal();
+      if (rev > 0){
+        m += anMesure('an.moi.rev', eur.format(rev),
+                      echap(PC.t('an.moi.rev.d',
+                            {p:PC.nombre(t.val > 0 ? rev / t.val * 100 : 0, 1)})));
+      }
+      /* LA DECOMPOSITION ENSUITE, ET SANS CONDITION : elle ne tient
          qu'a deux sommes, elle est exacte quoi qu'il arrive, et c'est
          la mesure la plus parlante de la grille. */
       if (assezT){
@@ -15420,6 +15597,7 @@ document.addEventListener('error', function(ev){
        interessante de la page pour une raison qui ne la concerne
        pas. */
     anDiv(anCotees());
+    anParCategorie();
 
     /* ---------- D'ou vient l'argent ---------- */
     const parts = actifs.map(function(a){
@@ -15524,6 +15702,21 @@ document.addEventListener('error', function(ev){
         b: anGras(anAmpleur(P.vol)),
         d: anGras(anPoints(P.ecart))
       });
+      /* ===== ET QUI LE FAIT =====
+         Le poids d'une ligne dit ce qu'elle pese en euros ; sa part
+         de risque dit ce qu'elle pese dans les secousses. Quand les
+         deux s'ecartent de dix points, on est expose autrement qu'on
+         ne le croit — et c'est la seule phrase de la page qui le
+         dise. */
+      const rq = (P.risques || [])[0];
+      if (rq && rq.part - rq.poids >= 10){
+        ph += ' ' + PC.t('an.div.risque', {
+          q: anGras(echap(rq.nom)),
+          p: anGras(part0(rq.poids)),
+          r: anGras(part0(rq.part), rq.part >= 60 ? 'baisse' : '')});
+      } else if (rq){
+        ph += ' ' + PC.t('an.div.risque.egal');
+      }
       v.innerHTML = ph;
     }
     /* LE MEME ECART, VU AUTREMENT. Une amplitude annualisee reste une
@@ -15552,6 +15745,14 @@ document.addEventListener('error', function(ev){
                     P.vol >= 50 ? 'attention' : '', anJauge(P.vol));
       m += anMesure('an.div.moy', anAmpleur(P.volMoyenne), '',
                     P.volMoyenne >= 50 ? 'attention' : '', anJauge(P.volMoyenne));
+      const rq2 = (P.risques || [])[0];
+      if (rq2){
+        m += anMesure('an.div.risq', part0(rq2.part),
+                      echap(PC.t('an.div.risq.d',
+                            {q:rq2.nom, p:part0(rq2.poids)})),
+                      rq2.part >= 60 ? 'attention' : '',
+                      anBarre(rq2.part));
+      }
       if (P.rec){
         m += anMesure('an.div.pire', '−' + anAmpleur(P.rec.part),
                       P.pireLigne
@@ -15564,14 +15765,109 @@ document.addEventListener('error', function(ev){
     }
   }
 
+  /* ============================================================
+     OU EST L'ARGENT, ET CE QU'IL A RAPPORTE
+     ------------------------------------------------------------
+     Par CLASSE, et non par ligne. C'est l'etage auquel on pense :
+     personne ne se demande ce que fait la ligne 7, on se demande ce
+     que font « les cryptos » et « l'immobilier ». Et c'est a cet
+     etage que se decide un arbitrage.
+
+     Deux colonnes, qui ne disent pas la meme chose : la PART du
+     total, qui est ou se trouve l'argent, et le RESULTAT, qui est ce
+     qu'il a fait. Une classe peut porter la moitie du patrimoine et
+     n'avoir rien rapporte — c'est meme le cas le plus courant.
+     ============================================================ */
+  function anCats(){
+    const m = {};
+    actifs.forEach(function(a){
+      const k = a.cat || 'autre';
+      const o = m[k] || (m[k] = {cat:k, val:0, inv:0, n:0});
+      o.val += (a.val || 0); o.inv += (a.inv || 0); o.n++;
+    });
+    return Object.keys(m).map(function(k){
+      const o = m[k];
+      o.nom = nomCat(k);
+      o.gain = o.val - o.inv;
+      o.perf = o.inv > 0 ? o.gain / o.inv * 100 : null;
+      return o;
+    }).sort(function(x, y){ return y.val - x.val; });
+  }
+
+  function anParCategorie(){
+    const bloc = document.getElementById('an-cat');
+    const v = document.getElementById('an-cat-v');
+    const hote = document.getElementById('an-cat-liste');
+    if (!bloc) return;
+    const cats = (droit('analyse') && actifs.length) ? anCats() : [];
+    const t = cats.length ? totaux() : null;
+    /* Une seule categorie n'est pas une repartition : la phrase
+       dirait « votre argent est surtout en immobilier » sur un
+       portefeuille qui n'a que ca. */
+    if (cats.length < 2 || !t || !(t.val > 0)){
+      bloc.hidden = true;
+      if (v) v.innerHTML = '';
+      if (hote) hote.innerHTML = '';
+      return;
+    }
+    bloc.hidden = false;
+    const grosse = cats[0];
+    const gagne = cats.slice().sort(function(x, y){ return y.gain - x.gain; })[0];
+    if (v){
+      let ph = PC.t('an.cat.v', {
+        c: anGras(echap(grosse.nom)),
+        p: anGras(part0(grosse.val / t.val * 100))
+      });
+      if (gagne && gagne.gain > 0){
+        ph += ' ' + PC.t(gagne.cat === grosse.cat ? 'an.cat.v2.meme' : 'an.cat.v2', {
+          c: anGras(echap(gagne.nom)),
+          m: anGras(eur.format(gagne.gain), 'hausse')
+        });
+      } else {
+        ph += ' ' + PC.t('an.cat.v2.rien');
+      }
+      v.innerHTML = ph;
+    }
+    if (hote){
+      const max = cats[0].val;
+      hote.innerHTML = cats.map(function(c){
+        const ton = c.gain < 0 ? 'baisse' : 'hausse';
+        return '<div class="an-c">' +
+          '<span class="an-c__n">' + echap(c.nom) + '</span>' +
+          '<span class="an-c__b" aria-hidden="true"><i data-ton="neutre" style="left:0;width:' +
+            (c.val / max * 100).toFixed(1) + '%"></i></span>' +
+          '<span class="an-c__v" data-ton="' + ton + '">' +
+            echap(eur.format(c.val)) + ' · ' +
+            (c.perf === null ? '—' : PC.pourcent(c.perf, 1)) +
+          '</span></div>';
+      }).join('');
+    }
+  }
+
   function anCalcule(){
+    /* ===== DEUX CADRES, UN SEUL CALCUL =====
+       Le meme rendu sert les deux onglets : une valeur cherchee
+       s'ecrit du cote du marche, une de vos lignes du cote de vos
+       lignes. On vide l'autre a chaque fois, sinon la valeur
+       precedente resterait affichee dans l'onglet qu'on ne regarde
+       pas et reapparaitrait au prochain passage. */
     const bloc = document.getElementById('an-calc');
-    const hote = document.getElementById('an-calc-lignes');
-    const mot  = document.getElementById('an-calc-mot');
+    const vers = anExterne ? 'ext' : 'calc';
+    const hote = document.getElementById('an-' + vers + '-lignes');
+    const mot  = document.getElementById('an-' + vers + '-mot');
+    const autre = document.getElementById('an-' + (anExterne ? 'calc' : 'ext') + '-lignes');
+    const autreM = document.getElementById('an-' + (anExterne ? 'calc' : 'ext') + '-mot');
+    if (autre) autre.innerHTML = '';
+    if (autreM) autreM.hidden = true;
     const bcor = document.getElementById('an-cor');
     if (!bloc || !hote) return;
-    if (!droit('analyse')){ bloc.hidden = true; if (bcor) bcor.hidden = true; return; }
+    const bext = document.getElementById('an-ext');
+    if (!droit('analyse')){
+      bloc.hidden = true; if (bext) bext.hidden = true;
+      if (bcor) bcor.hidden = true; return;
+    }
     bloc.hidden = false;
+    if (bext) bext.hidden = false;
 
     /* Les correlations restent sur les lignes COTEES : elles se
        mesurent sur des variations quotidiennes communes, et deux
