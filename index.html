@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261010.1540";</script>
+<script>window.PC_VERSION = "261010.1632";</script>
 </head>
 <body>
 
@@ -7715,8 +7715,6 @@ window.PC = (function(){
   'al.note':              ["Une page web ne tourne que lorsqu'elle est ouverte\u00a0: un seuil franchi pendant la nuit se lit le lendemain, \u00e0 la r\u00e9ouverture. Laissez le champ vide pour ne rien surveiller.", "A web page only runs while it is open: a threshold crossed overnight is read the next morning, on reopening. Leave the field empty to watch nothing.", "Una p\u00e1gina web solo funciona mientras est\u00e1 abierta: un umbral cruzado de noche se lee al d\u00eda siguiente, al reabrir. Deje el campo vac\u00edo para no vigilar nada.", "Eine Webseite l\u00e4uft nur, solange sie offen ist: eine nachts \u00fcberschrittene Schwelle liest man am n\u00e4chsten Morgen beim \u00d6ffnen. Leer lassen, um nichts zu \u00fcberwachen."],
   've.vigies.1':          ["Vous surveillez 1 valeur du march\u00e9. Son seuil n'est pas atteint.", "You are watching 1 market price. Its threshold has not been reached.", "Vigila 1 valor del mercado. No se ha alcanzado su umbral.", "Sie beobachten 1 Marktwert. Seine Schwelle ist nicht erreicht."],
   've.vigies.n':          ["Vous surveillez {{n}} valeurs du march\u00e9. Aucun de leurs seuils n'est atteint.", "You are watching {{n}} market prices. None of their thresholds has been reached.", "Vigila {{n}} valores del mercado. No se ha alcanzado ninguno de sus umbrales.", "Sie beobachten {{n}} Marktwerte. Keine ihrer Schwellen ist erreicht."],
-  'e.k.net':              ["Patrimoine net", "Net worth", "Patrimonio neto", "Nettoverm\u00f6gen"],
-  'e.k.net.s':            ["une fois {{d}} de capital restant d\u00fb retir\u00e9", "after {{d}} still owed is taken out", "una vez descontados {{d}} de capital pendiente", "nach Abzug von {{d}} Restschuld"],
   'e.k.grosse':           ["Plus grosse ligne", "Largest holding", "Mayor posici\u00f3n", "Gr\u00f6\u00dfte Position"],
   'e.k.ech':              ["Prochaine \u00e9ch\u00e9ance", "Next deadline", "Pr\u00f3ximo vencimiento", "N\u00e4chster Termin"],
   'al.poser':             ["Ajouter une alerte", "Add an alert", "A\u00f1adir una alerta", "Alarm hinzuf\u00fcgen"],
@@ -14223,10 +14221,18 @@ document.addEventListener('error', function(ev){
        ============================================================ */
     const cases = [[PC.t('e.k.investi'), eur.format(t.inv), PC.t('e.k.investi.s')]];
 
-    if (t.dette > 0){
-      cases.push([PC.t('e.k.net'), eur.format(t.net),
-                  PC.t('e.k.net.s', {d:eur.format(t.dette)})]);
-    } else if (t.grosse && t.val){
+    /* LE NET N'EST PAS ICI, ET C'EST LE MEME PRINCIPE QU'AU-DESSUS.
+       Il y etait : « Patrimoine net / −24 455 € / une fois 184 125 €
+       de capital restant du retire ». Mais la ligne sous le total le
+       dit deja, en entier et deux cents pixels plus haut — « −24 455 €
+       de patrimoine net : 159 670 € d'actifs, moins 184 125 € qu'il
+       reste a rembourser ». On venait de retirer « Resultat » pour
+       cette raison exacte, et on recreait le defaut en dessous.
+
+       Le net reste donc sous le total, ou il corrige le chiffre qu'il
+       corrige, et la case garde la concentration — qui, elle, n'est
+       dite nulle part ailleurs sur cet ecran. */
+    if (t.grosse && t.val){
       /* `PC.part`, pas `pourcent` : le second POSE UN SIGNE, et
          « +49,8 % » sous « plus grosse ligne » se lit comme une
          performance. C'est une part d'un total, elle n'a pas de
@@ -22976,7 +22982,11 @@ document.addEventListener('error', function(ev){
            devant le meme chiffre ; l'un etait la, l'autre se trouvait
            trois ecrans plus loin, et seulement pour une valeur deja
            detenue. */
-        '<button class="pill" type="button" id="mar-vigie">' +
+        /* `--creux` : les deux boutons ne sont pas du meme rang.
+           Suivre la ligne est ce qu'on vient faire ici ; poser une
+           alerte est un geste de cote. Deux pleins cote a cote, de la
+           meme couleur, ne disent plus lequel est l'action. */
+        '<button class="pill pill--creux" type="button" id="mar-vigie">' +
           ech(PC.t(vigieDe(c) ? 'al.modif' : 'al.poser')) + '</button>' +
       '</div>' +
       blocVigie(c);
