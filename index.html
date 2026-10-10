@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261009.2127";</script>
+<script>window.PC_VERSION = "261010.1300";</script>
 </head>
 <body>
 
@@ -1282,6 +1282,267 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
 }
 .marches__q:focus{border-color:var(--accent); background:var(--paper); outline:none;}
 .marches__etat{font-size:12px; color:var(--ink-3); text-wrap:pretty;}
+
+/* ============================================================
+   LE CALENDRIER FISCAL
+   Une colonne de dates a gauche, ce qu'elles veulent dire a droite,
+   et sous chaque ligne la loi ou l'administration qui la pose. Cette
+   derniere ligne n'est pas une precaution d'avocat : une date
+   fiscale sans source est une date qu'on croit sur parole, et c'est
+   exactement ce qu'on reproche aux tableurs qui circulent.
+   ============================================================ */
+/* ===== LA FORMULE RETENUE SE DETACHE =====
+   Elle portait deja « le plus utilise » et un bouton plein, et la
+   carte ne levait pas d'un millimetre : la mention se lisait comme
+   une etiquette, pas comme une recommandation. Un fond un ton plus
+   clair et un filet d'accent suffisent — pas une ombre portee, la
+   grille est un tableau et non trois cartes posees. */
+.offre--phare{background:var(--paper-2);}
+.offre--phare::before{
+  content:""; position:absolute; inset:0 0 auto; height:2.5px;
+  background:var(--accent); pointer-events:none;
+}
+.offre{position:relative;}
+
+/* ===== LES QUATRE RAISONS, SUR LA DEVANTURE =====
+   Deux colonnes et non trois : chaque carte porte un paragraphe
+   qu'il faut lire, pas une formule qu'on survole. Trois colonnes
+   auraient donne des colonnes de quarante caracteres ou aucune
+   phrase ne respire. */
+.apercu__g{
+  /* PAS d'ecart d'un pixel qui ferait filet. Le fond de la grille
+     transparaissait des que les cartes ne la remplissaient pas au
+     pixel pres — le banc a mesure 32 000 px de gris a 1 280. Les
+     filets sont donc portes par les cartes elles-memes, et la
+     grille n'a plus de fond a montrer. */
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0; border:1px solid var(--rule);
+  border-radius:var(--r-3); overflow:hidden;
+  margin-top:clamp(28px,4vw,44px);
+}
+.ap-c{background:var(--paper); padding:clamp(22px,3vw,32px);}
+.ap-c:nth-child(odd){border-right:1px solid var(--rule);}
+.ap-c:nth-child(-n+2){border-bottom:1px solid var(--rule);}
+.ap-c__k{
+  display:block; font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:12px;
+}
+.ap-c__t{
+  font-family:'Archivo Black', sans-serif; font-size:clamp(18px,2.1vw,24px);
+  letter-spacing:-.03em; line-height:1.15; margin:0 0 12px;
+}
+.ap-c__p{font-size:14.5px; line-height:1.65; color:var(--ink-2); margin:0; text-wrap:pretty;}
+.apercu__loi{
+  margin:clamp(22px,3vw,32px) 0 0; max-width:78ch;
+  font-size:13px; line-height:1.7; color:var(--ink-3); text-wrap:pretty;
+}
+.apercu__loi b{color:var(--ink-2); font-weight:600;}
+@media (max-width:760px){
+  .apercu__g{grid-template-columns:1fr;}
+  /* En une colonne, le filet vertical n'a plus de voisin a separer,
+     et la derniere carte ne doit pas porter de trait du bas. */
+  .ap-c:nth-child(odd){border-right:none;}
+  .ap-c:not(:last-child){border-bottom:1px solid var(--rule);}
+}
+
+/* ============================================================
+   LA VEILLE
+   Des constats, et sous chacun ce qu'il implique mecaniquement. Pas
+   de rouge, pas de point d'exclamation : ce ne sont pas des alarmes,
+   ce sont des faits qu'on aurait rates.
+   ============================================================ */
+.veille{margin:clamp(26px,3.4vw,40px) 0 0;}
+.veille__c{padding:0;}
+.veille__reg{
+  background:none; border:none; cursor:pointer; display:block;
+  padding:11px 18px 13px; font-family:inherit; font-size:12.5px;
+  font-weight:600; color:var(--accent); text-align:left;
+}
+.veille__reg:hover{text-decoration:underline;}
+.veille__liste{display:flex; flex-direction:column;}
+.ve-a{background:var(--paper); padding:14px 18px 15px; border-bottom:1px solid var(--rule);}
+.ve-a--rien .ve-a__t{font-size:13.5px; color:var(--ink-3);}
+.ve-a__t{font-size:15px; line-height:1.5; color:var(--ink); margin:0; text-wrap:pretty;}
+.ve-a__t b{font-weight:700;}
+.ve-a__q{font-size:12.5px; line-height:1.55; color:var(--ink-3); margin:6px 0 0; text-wrap:pretty;}
+.veille__seuils{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px 16px;
+  border-top:1px solid var(--rule); background:var(--paper-2); padding:14px 18px 16px;
+}
+.ve-s{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12.5px; color:var(--ink-2);}
+.ve-s input{
+  width:5.5ch; flex:none; font-family:inherit; font-size:14px; text-align:center; color:var(--ink);
+  background:var(--paper); border:1px solid var(--rule-strong); border-radius:var(--r-1); padding:5px 4px;
+}
+.ve-s input:focus{border-color:var(--accent); outline:none;}
+.seuils{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px 16px;}
+.seuils__ch{display:flex; flex-direction:column; gap:5px;}
+.seuils__ch span{font-size:11.5px; font-weight:600; color:var(--ink-2);}
+.seuils__ch input{
+  font-family:inherit; font-size:15px; color:var(--ink); min-width:0;
+  background:var(--paper-2); border:1px solid var(--rule-strong); border-radius:var(--r-1); padding:9px 11px;
+}
+.seuils__ch input:focus{border-color:var(--accent); outline:none;}
+.seuils__c{grid-column:1 / -1; font-size:11.5px; color:var(--ink-3); margin:0;}
+.seuils__n{grid-column:1 / -1; font-size:11px; line-height:1.55; color:var(--ink-3); margin:0; text-wrap:pretty;}
+.veille__note{grid-column:1 / -1; font-size:11.5px; line-height:1.6; color:var(--ink-3); margin:6px 0 0; max-width:70ch; text-wrap:pretty;}
+
+/* ============================================================
+   LES PRETS
+   Un pret ne se lit pas comme un actif : on ne regarde pas sa
+   « performance », on regarde ce qu'il en reste. Quatre mesures,
+   une barre qui dit ou l'on en est, et le taux en petit pour qu'on
+   puisse verifier.
+   ============================================================ */
+.solde__net{font-size:13.5px; color:var(--ink-2); margin:6px 0 0;}
+.solde__net b{font-family:'Archivo Black', sans-serif; font-size:17px; letter-spacing:-.02em; color:var(--ink);}
+.solde__net[data-signe="moins"] b{color:var(--loss);}
+.prets{margin:clamp(26px,3.4vw,40px) 0 0;}
+.prets__tete{display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:14px;}
+.prets__k{font-family:'Archivo Black', sans-serif; font-size:clamp(16px,1.9vw,21px); letter-spacing:-.028em; margin:0;}
+.prets__liste{display:grid; gap:12px;}
+.pret{border:1px solid var(--rule); border-radius:var(--r-2); background:var(--paper-2); padding:15px 16px 16px;}
+.pret--solde{opacity:.6;}
+.pret__h{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:12px;}
+.pret__n{font-size:15.5px; font-weight:600; letter-spacing:-.012em;}
+.pret__x{
+  flex:none; background:none; border:none; cursor:pointer; padding:0 2px;
+  font-size:19px; line-height:1; color:var(--ink-3); transition:color .2s;
+}
+.pret__x:hover{color:var(--loss);}
+.pret__g{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px 16px;}
+.pret__m{display:flex; flex-direction:column; gap:3px; min-width:0;}
+.pret__k{font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); line-height:1.3;}
+.pret__m b{font-family:'Archivo Black', sans-serif; font-size:clamp(15px,1.8vw,18px); letter-spacing:-.025em; line-height:1.1; font-variant-numeric:tabular-nums;}
+.pret__s{font-size:10.5px; color:var(--ink-3);}
+.pret__b{height:5px; border-radius:999px; background:var(--rule); overflow:hidden; margin:14px 0 8px;}
+.pret__b span{display:block; height:100%; background:var(--accent); border-radius:999px;}
+.pret__p{font-size:11px; color:var(--ink-3); margin:0;}
+.prets__form{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px 16px;
+  border:1px dashed var(--rule-strong); border-radius:var(--r-2); padding:16px; margin-top:12px;
+}
+.prets__ch{display:flex; flex-direction:column; gap:5px; min-width:0;}
+.prets__ch label{font-size:11.5px; font-weight:600; color:var(--ink-2);}
+.prets__ch input{
+  font-family:inherit; font-size:15px; color:var(--ink); min-width:0;
+  background:var(--paper); border:1px solid var(--rule-strong); border-radius:var(--r-1); padding:9px 11px;
+}
+.prets__ch input:focus{border-color:var(--accent); outline:none;}
+.prets__aide{font-size:10.5px; color:var(--ink-3); line-height:1.45;}
+.prets__act{grid-column:1 / -1; display:flex; gap:10px; flex-wrap:wrap;}
+.prets__note{font-size:11.5px; line-height:1.6; color:var(--ink-3); margin:14px 0 0; max-width:70ch; text-wrap:pretty;}
+@media (max-width:620px){
+  .pret__g{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+
+.fisc__sous{color:var(--ink-2); max-width:62ch; text-wrap:pretty; margin:0 0 clamp(20px,3vw,28px);}
+.fisc__h3{
+  font-family:'Archivo Black', sans-serif; font-size:clamp(17px,2vw,22px);
+  letter-spacing:-.028em; line-height:1.15; margin:clamp(30px,4vw,44px) 0 8px;
+}
+.fisc__aide{font-size:12.5px; color:var(--ink-3); max-width:62ch; text-wrap:pretty; margin:0 0 16px;}
+.fisc__vide{font-size:14px; color:var(--ink-3); padding:20px 2px;}
+
+/* ----- Le departement ----- */
+.fisc__dep{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:8px;}
+.fisc__dep label{font-size:13.5px; font-weight:600; color:var(--ink);}
+.fisc__dep input{
+  width:5.5ch; font-family:inherit; font-size:16px; color:var(--ink); text-align:center;
+  background:var(--paper-2); border:1px solid var(--rule-strong); border-radius:var(--r-1);
+  padding:8px 6px; transition:border-color .2s;
+}
+.fisc__dep input:focus{border-color:var(--accent); outline:none;}
+.fisc__zone{font-size:11.5px; color:var(--ink-3);}
+
+/* ----- Une echeance ----- */
+.fisc__liste{display:flex; flex-direction:column; border-top:1px solid var(--rule); max-width:860px;}
+.fisc-e{
+  display:grid; grid-template-columns:minmax(0,13rem) minmax(0,1fr); gap:4px 22px;
+  padding:16px 2px 18px; border-bottom:1px solid var(--rule);
+}
+/* Ce qui approche se detache, et rien d'autre. Tout surligner, c'est
+   ne rien surligner. */
+.fisc-e--proche{border-left:2.5px solid var(--accent); padding-left:14px;}
+.fisc-e--fait{opacity:.55;}
+.fisc-e__d{display:flex; flex-direction:column; gap:3px; min-width:0;}
+.fisc-e__j{font-size:13.5px; color:var(--ink); font-variant-numeric:tabular-nums;}
+.fisc-e__r{font-size:11.5px; color:var(--ink-3);}
+.fisc-e--proche .fisc-e__r{color:var(--accent); font-weight:600;}
+.fisc-e__c{min-width:0;}
+.fisc-e__t{font-size:15.5px; font-weight:600; letter-spacing:-.012em; display:block;}
+.fisc-e__p{font-size:13.5px; line-height:1.55; color:var(--ink-2); margin:5px 0 0; text-wrap:pretty;}
+.fisc-e__s{font-size:11px; line-height:1.5; color:var(--ink-3); margin:8px 0 0; text-wrap:pretty;}
+
+/* ----- Les taux, ligne par ligne ----- */
+.fisc__taux{display:grid; gap:10px; max-width:860px;}
+.fisc-t{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 18px; align-items:baseline;
+  background:var(--paper-2); border:1px solid var(--rule); border-radius:var(--r-2);
+  padding:14px 16px 15px;
+}
+.fisc-t__n{display:flex; flex-direction:column; gap:3px; min-width:0;}
+.fisc-t__n b{font-size:15px; font-weight:600;}
+.fisc-t__n span{font-size:12px; color:var(--ink-3);}
+.fisc-t__v{display:flex; flex-direction:column; align-items:flex-end; gap:2px;}
+.fisc-t__v b{
+  font-family:'Archivo Black', sans-serif; font-size:21px; letter-spacing:-.03em;
+  line-height:1; font-variant-numeric:tabular-nums;
+}
+.fisc-t__v span{font-size:11.5px; color:var(--ink-3); font-variant-numeric:tabular-nums;}
+.fisc-t__s{grid-column:1 / -1; font-size:11px; line-height:1.5; color:var(--ink-3); margin:6px 0 0;}
+
+/* ----- L'avertissement, et la date de relecture ----- */
+.sim__ch{display:flex; flex-direction:column; gap:6px; max-width:420px; margin-bottom:16px;}
+.sim__ch label{font-size:12px; font-weight:600; color:var(--ink-2);}
+.sim__ch select{
+  font-family:inherit; font-size:15px; color:var(--ink);
+  background:var(--paper-2); border:1px solid var(--rule-strong);
+  border-radius:var(--r-1); padding:10px 12px;
+}
+.sim__ch select:focus{border-color:var(--accent); outline:none;}
+.sim__out{max-width:860px;}
+.sim__g{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px;
+  background:var(--rule); border:1px solid var(--rule); border-radius:var(--r-2);
+  overflow:hidden; margin-bottom:14px;
+}
+.sim-m{background:var(--paper-2); padding:14px 16px 15px; display:flex; flex-direction:column; gap:4px;}
+.sim-m__k{font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3);}
+.sim-m b{font-family:'Archivo Black', sans-serif; font-size:clamp(17px,2.2vw,23px); letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums;}
+.sim-m:last-child b{color:var(--gain);}
+.sim__d{font-size:13.5px; line-height:1.6; color:var(--ink-2); margin:0 0 8px; text-wrap:pretty;}
+.sim__piege{
+  font-size:13.5px; line-height:1.6; color:var(--ink); margin:10px 0;
+  border-left:2.5px solid var(--loss); padding-left:14px; text-wrap:pretty;
+}
+.sim__s{font-size:11px; color:var(--ink-3); margin:8px 0 0;}
+.sim__n{font-size:11.5px; line-height:1.6; color:var(--ink-3); margin:12px 0 0; max-width:70ch; text-wrap:pretty;}
+@media (max-width:620px){ .sim__g{grid-template-columns:1fr;} }
+.fisc__avert{
+  margin:clamp(30px,4vw,44px) 0 10px; max-width:70ch;
+  border-left:2px solid var(--rule-strong); padding-left:16px;
+  font-size:13px; line-height:1.65; color:var(--ink-2); text-wrap:pretty;
+}
+.fisc__maj{font-size:11px; color:var(--ink-3); margin:0 0 8px;}
+
+/* ----- LA RELANCE, EN PASTILLE SUR L'ONGLET -----
+   Un point sur l'onglet de l'analyse quand une echeance approche. Il
+   ne coute AUCUNE hauteur, et c'est tout son interet : la bande
+   qu'il remplace poussait les chiffres cles sous la barre du bas. */
+.barre-app__i--point{position:relative;}
+.barre-app__i--point::after{
+  content:""; position:absolute; top:5px; right:calc(50% - 18px);
+  width:7px; height:7px; border-radius:50%; background:var(--accent);
+  box-shadow:0 0 0 2px var(--paper);
+}
+
+@media (max-width:620px){
+  .fisc-e{grid-template-columns:1fr; gap:2px;}
+  .fisc-e__d{flex-direction:row; align-items:baseline; gap:10px; margin-bottom:5px;}
+  .fisc-t{grid-template-columns:1fr; }
+  .fisc-t__v{align-items:flex-start;}
+}
 
 /* ============================================================
    LE HAUT D'UN MARCHE
@@ -5948,7 +6209,7 @@ window.PC = (function(){
   'hero.w2':            ["argent,","money,","dinero,","Geld,"],
   'hero.w3':            ["enfin","finally","por fin","endlich"],
   'hero.w4':            ["réuni.","together.","reunido.","vereint."],
-  'hero.lede':          ["Livret, assurance-vie, PEA, immobilier, bitcoin. Vous saisissez, la page calcule\u00a0: ce que vous avez mis, ce que ça vaut aujourd'hui, et ce que ça vous rapporte.","Savings, life insurance, shares, property, bitcoin. You enter the figures, the page does the rest: what you put in, what it is worth today, and what it pays you.","Ahorro, seguro de vida, acciones, inmuebles, bitcoin. Usted introduce, la página calcula: lo que puso, lo que vale hoy y lo que le renta.","Sparbuch, Lebensversicherung, Aktien, Immobilien, Bitcoin. Sie tragen ein, die Seite rechnet: was Sie eingezahlt haben, was es heute wert ist und was es einbringt."],
+  'hero.lede':            ["Livret, assurance-vie, PEA, immobilier, bitcoin \u2014 et ce qu'il vous reste \u00e0 rembourser. Une page qui sait ce que vous d\u00e9tenez, ce que \u00e7a vaut net, et quelle \u00e9ch\u00e9ance fiscale vous concerne.", "Savings, life policies, shares, property, bitcoin \u2014 and what you still owe. A page that knows what you hold, what it is worth net, and which tax deadline concerns you.", "Ahorro, seguro de vida, bolsa, inmuebles, bitcoin \u2014 y lo que le queda por devolver. Una p\u00e1gina que sabe lo que posee, lo que vale neto, y qu\u00e9 vencimiento fiscal le afecta.", "Sparkonto, Lebensversicherung, Aktien, Immobilien, Bitcoin \u2014 und was Sie noch schulden. Eine Seite, die wei\u00df, was Sie halten, was es netto wert ist, und welche Steuerfrist Sie betrifft."],
   'hero.cta':           ["Connexion","Sign in","Conexi\u00f3n","Anmelden"],
   'hero.install':       ["Installer l'app","Install the app","Instalar la app","App installieren"],
   'hero.install.court': ["Installer","Install","Instalar","Installieren"],
@@ -5968,8 +6229,8 @@ window.PC = (function(){
 
   /* --- Aperçu --- */
   'apercu.eyebrow':     ["02 — Aperçu","02 — Preview","02 — Vista previa","02 — Vorschau"],
-  'apercu.h2':          ["Ce que vous verrez.","What you will see.","Lo que usted verá.","Was Sie sehen werden."],
-  'apercu.intro':       ["Un portefeuille d'exemple, affiché comme le sera le vôtre une fois vos actifs saisis. Rien de tout ceci ne vous appartient : votre espace démarre vide et se remplit à mesure que vous ajoutez des lignes.","A sample portfolio, displayed the way yours will be once your assets are entered. None of this belongs to you: your own space starts empty and fills up as you add holdings.","Una cartera de ejemplo, mostrada tal y como será la suya una vez introducidos sus activos. Nada de esto le pertenece: su espacio empieza vacío y se llena a medida que añade posiciones.","Ein Beispielportfolio, dargestellt so, wie Ihres aussehen wird, sobald Ihre Werte erfasst sind. Nichts davon gehört Ihnen: Ihr Bereich startet leer und füllt sich, sobald Sie Positionen hinzufügen."],
+  'apercu.h2':            ["Deux taux,<br>un seul portefeuille.", "Two rates,<br>one portfolio.", "Dos tipos,<br>una sola cartera.", "Zwei S\u00e4tze,<br>ein Portfolio."],
+  'apercu.intro':         ["Depuis 2026, les pr\u00e9l\u00e8vements sociaux ne sont plus les m\u00eames selon le support\u00a0: 18,6\u00a0% sur un compte-titres, 17,2\u00a0% sur une assurance-vie. Si vous avez les deux, vous subissez les deux. Aucun tableur ne le sait, et votre banque ne vous le dira pas non plus.", "Since 2026, social levies are no longer the same across holdings: 18.6% on a securities account, 17.2% on a life policy. Hold both and you bear both. No spreadsheet knows this, and your bank will not tell you either.", "Desde 2026, las cargas sociales ya no son iguales seg\u00fan el soporte: 18,6\u00a0% en una cuenta de valores, 17,2\u00a0% en un seguro de vida. Si tiene ambos, soporta ambos. Ninguna hoja de c\u00e1lculo lo sabe, y su banco tampoco se lo dir\u00e1.", "Seit 2026 sind die Sozialabgaben je nach Anlage verschieden: 18,6\u00a0% auf ein Wertpapierdepot, 17,2\u00a0% auf eine Lebensversicherung. Wer beides h\u00e4lt, tr\u00e4gt beides. Keine Tabelle wei\u00df das, und Ihre Bank sagt es Ihnen auch nicht."],
 
   /* --- Répartition --- */
   'rep.eyebrow':          ["Répartition","Allocation","Distribución","Aufteilung"],
@@ -6013,7 +6274,7 @@ window.PC = (function(){
   /* --- Formules --- */
   'off.eyebrow':          ["Formules","Plans","Planes","Tarife"],
   'off.h2':             ["Suivez votre portefeuille.","Track your portfolio.","Siga su cartera.","Behalten Sie Ihr Portfolio im Blick."],
-  'off.intro':          ["Un espace où vous saisissez vos actifs — comptes, crypto, immobilier, ce que vous voulez — et où tout se recalcule : répartition, performance, concentration, poids de chaque ligne. Vous gardez la main sur les chiffres, l'outil ne fait que les mettre en forme.","A space where you enter your assets — accounts, crypto, property, whatever you hold — and everything recalculates: allocation, performance, concentration, the weight of each line. You keep control of the figures; the tool only lays them out.","Un espacio donde introduce sus activos — cuentas, cripto, inmuebles, lo que quiera — y todo se recalcula: distribución, rentabilidad, concentración, peso de cada línea. Usted controla las cifras; la herramienta solo las presenta.","Ein Bereich, in dem Sie Ihre Werte eintragen — Konten, Krypto, Immobilien, was immer Sie halten — und alles neu gerechnet wird: Aufteilung, Wertentwicklung, Konzentration, Gewicht jeder Position. Die Zahlen bleiben Ihre; das Werkzeug bringt sie nur in Form."],
+  'off.intro':            ["Trois formules, la m\u00eame page. Ce qui change, c'est le nombre de lignes suivies et la profondeur de ce que la page en tire\u00a0: le calendrier fiscal, les pr\u00eats, la veille et le simulateur de cession arrivent \u00e0 partir de Pro.", "Three plans, the same page. What changes is how many holdings are followed and how deep the page goes: the tax calendar, loans, the watch and the sale simulator start at Pro.", "Tres planes, la misma p\u00e1gina. Lo que cambia es cu\u00e1ntas l\u00edneas se siguen y hasta d\u00f3nde llega la p\u00e1gina: el calendario fiscal, los pr\u00e9stamos, la vigilancia y el simulador empiezan en Pro.", "Drei Tarife, dieselbe Seite. Es \u00e4ndert sich, wie viele Positionen verfolgt werden und wie tief die Seite geht: Steuerkalender, Kredite, Wache und Verkaufsrechner ab Pro."],
   'off.1.tag':          ["L'essentiel","The essentials","Lo esencial","Das Wesentliche"],
   'off.1.nom':          ["Normal","Normal","Normal","Normal"],
   'off.1.prix':         ["{{m:5}}","{{m:5}}","{{m:5}}","{{m:5}}"],
@@ -7159,6 +7420,39 @@ window.PC = (function(){
   'm.cherche':            ["Chercher une crypto","Search a coin","Buscar una cripto","Krypto suchen"],
   'm.cherche.b':          ["Chercher une action, un ETF","Search a stock or ETF","Buscar una acci\u00f3n o un ETF","Aktie oder ETF suchen"],
   'm.cherche.mp':         ["Chercher une mati\u00e8re premi\u00e8re","Search a commodity","Buscar una materia prima","Rohstoff suchen"],
+
+  /* --- Les parametres fiscaux : chaque chiffre porte son nom, ce
+     qu'il vise, et la loi qui le pose. --- */
+  'f.p.psmob':            ["Pr\u00e9l\u00e8vements sociaux \u2014 revenus mobiliers", "Social levies \u2014 securities income", "Cargas sociales \u2014 rentas mobiliarias", "Sozialabgaben \u2014 Kapitaleink\u00fcnfte"],
+  'f.p.psmob.q':          ["Dividendes, int\u00e9r\u00eats, plus-values de valeurs mobili\u00e8res, PEA, PER en capital.", "Dividends, interest, securities capital gains, PEA, PER paid as capital.", "Dividendos, intereses, plusval\u00edas mobiliarias, PEA, PER en capital.", "Dividenden, Zinsen, Wertpapiergewinne, PEA, PER als Kapital."],
+  'f.p.psmob.n':          ["La CSG passe de 9,2 \u00e0 10,6\u00a0%\u00a0: c'est cette hausse qui porte le pr\u00e9l\u00e8vement forfaitaire unique \u00e0 31,4\u00a0% sur ces revenus-l\u00e0, et sur ceux-l\u00e0 seulement.", "The CSG rises from 9.2 to 10.6%: this is what takes the flat tax to 31.4% on these incomes, and only these.", "La CSG pasa del 9,2 al 10,6\u00a0%: es esta subida la que lleva el tipo \u00fanico al 31,4\u00a0% en estas rentas, y solo en estas.", "Die CSG steigt von 9,2 auf 10,6\u00a0%: das bringt die Pauschalsteuer auf 31,4\u00a0%, aber nur f\u00fcr diese Eink\u00fcnfte."],
+  'f.p.pspat':            ["Pr\u00e9l\u00e8vements sociaux \u2014 patrimoine", "Social levies \u2014 property income", "Cargas sociales \u2014 patrimonio", "Sozialabgaben \u2014 Verm\u00f6gen"],
+  'f.p.pspat.q':          ["Revenus fonciers, plus-values immobili\u00e8res, SCPI, assurance-vie. La hausse de 2026 ne les touche pas.", "Rental income, property capital gains, SCPI, life insurance. The 2026 rise does not touch them.", "Rentas inmobiliarias, plusval\u00edas inmobiliarias, SCPI, seguro de vida. La subida de 2026 no les afecta.", "Mieteink\u00fcnfte, Immobiliengewinne, SCPI, Lebensversicherung. Die Erh\u00f6hung von 2026 betrifft sie nicht."],
+  'f.p.irpfu':            ["Imp\u00f4t sur le revenu \u2014 part forfaitaire", "Income tax \u2014 flat portion", "Impuesto sobre la renta \u2014 parte fija", "Einkommensteuer \u2014 Pauschalanteil"],
+  'f.p.irpfu.q':          ["La part qui ne bouge pas du pr\u00e9l\u00e8vement forfaitaire unique. S'y ajoutent les pr\u00e9l\u00e8vements sociaux, qui eux d\u00e9pendent du support.", "The fixed part of the flat tax. Social levies are added on top, and those depend on the holding.", "La parte fija del tipo \u00fanico. Se a\u00f1aden las cargas sociales, que dependen del soporte.", "Der feste Teil der Pauschalsteuer. Dazu kommen die Sozialabgaben, die vom Anlageprodukt abh\u00e4ngen."],
+  'f.p.divabat':          ["Abattement sur les dividendes", "Dividend allowance", "Reducci\u00f3n sobre dividendos", "Freibetrag auf Dividenden"],
+  'f.p.divabat.q':        ["Il ne s'applique QUE si vous renoncez au pr\u00e9l\u00e8vement forfaitaire pour le bar\u00e8me progressif, par la case 2OP.", "It applies ONLY if you give up the flat tax for the progressive scale, via box 2OP.", "Solo se aplica si renuncia al tipo \u00fanico por la escala progresiva, casilla 2OP.", "Gilt NUR, wenn Sie die Pauschalsteuer zugunsten des Tarifs aufgeben, Feld 2OP."],
+  'f.p.avabat1':          ["Abattement assurance-vie \u2014 seul", "Life insurance allowance \u2014 single", "Reducci\u00f3n seguro de vida \u2014 soltero", "Freibetrag Lebensversicherung \u2014 allein"],
+  'f.p.avabat1.q':        ["Sur les gains retir\u00e9s, par an, apr\u00e8s huit ans de contrat. Il s'appr\u00e9cie au niveau du foyer, pas par contrat.", "On gains withdrawn, per year, after eight years. It is assessed per household, not per policy.", "Sobre las ganancias retiradas, al a\u00f1o, tras ocho a\u00f1os. Se calcula por hogar, no por contrato.", "Auf entnommene Gewinne, pro Jahr, nach acht Jahren. Gilt je Haushalt, nicht je Vertrag."],
+  'f.p.avabat2':          ["Abattement assurance-vie \u2014 couple", "Life insurance allowance \u2014 couple", "Reducci\u00f3n seguro de vida \u2014 pareja", "Freibetrag Lebensversicherung \u2014 Paar"],
+  'f.p.avabat2.q':        ["Mari\u00e9s ou pacs\u00e9s, imposition commune. M\u00eame r\u00e8gle, montant doubl\u00e9.", "Married or in a civil partnership, taxed jointly. Same rule, doubled.", "Casados o en pareja de hecho, tributaci\u00f3n conjunta. Misma regla, doble importe.", "Verheiratet oder verpartnert, gemeinsam veranlagt. Gleiche Regel, doppelt."],
+  'f.p.ifiseuil':         ["Seuil de l'IFI", "Property wealth tax threshold", "Umbral del impuesto sobre patrimonio inmobiliario", "Schwelle der Immobilienverm\u00f6gensteuer"],
+  'f.p.ifiseuil.q':       ["Patrimoine immobilier net taxable au 1\u1d49\u02b3 janvier. Les placements financiers en sont exclus\u00a0: livrets, comptes-titres, PEA, actions de soci\u00e9t\u00e9s non immobili\u00e8res.", "Net taxable property wealth on 1 January. Financial holdings are excluded: savings accounts, securities accounts, PEA, shares in non-property companies.", "Patrimonio inmobiliario neto imponible a 1 de enero. Se excluyen las inversiones financieras: cuentas de ahorro, de valores, PEA, acciones de sociedades no inmobiliarias.", "Steuerpflichtiges Netto-Immobilienverm\u00f6gen zum 1. Januar. Finanzanlagen sind ausgenommen: Sparkonten, Wertpapierdepots, PEA, Aktien nicht-immobilienbezogener Gesellschaften."],
+  'f.p.ifirp':            ["Abattement r\u00e9sidence principale", "Main home allowance", "Reducci\u00f3n vivienda habitual", "Freibetrag Hauptwohnsitz"],
+  'f.p.ifirp.q':          ["Sur la valeur v\u00e9nale de la r\u00e9sidence principale, pour le calcul de l'IFI.", "On the market value of the main home, for the property wealth tax.", "Sobre el valor de mercado de la vivienda habitual, para el impuesto.", "Auf den Verkehrswert des Hauptwohnsitzes, f\u00fcr die Verm\u00f6gensteuer."],
+  'f.p.cryseuil':         ["Seuil de cessions crypto", "Crypto disposal threshold", "Umbral de cesiones cripto", "Schwelle f\u00fcr Krypto-Ver\u00e4u\u00dferungen"],
+  'f.p.cryseuil.q':       ["Total des cessions dans l'ann\u00e9e. En dessous, la plus-value n'est pas impos\u00e9e. Au-dessus, elle l'est enti\u00e8rement, pas seulement au-del\u00e0 du seuil.", "Total disposals in the year. Below it, the gain is not taxed. Above it, the whole gain is, not just the excess.", "Total de cesiones del a\u00f1o. Por debajo, la plusval\u00eda no tributa. Por encima, tributa entera, no solo el exceso.", "Summe der Ver\u00e4u\u00dferungen im Jahr. Darunter ist der Gewinn steuerfrei. Dar\u00fcber ist er ganz steuerpflichtig, nicht nur der \u00dcberschuss."],
+  'f.p.cryamende':        ["Amende par compte non d\u00e9clar\u00e9", "Fine per undeclared account", "Multa por cuenta no declarada", "Geldbu\u00dfe je nicht gemeldetem Konto"],
+  'f.p.cryamende.q':      ["Chaque compte ouvert chez une plateforme \u00e0 l'\u00e9tranger se d\u00e9clare, m\u00eame inactif, m\u00eame vide.", "Every account held with a provider abroad must be declared, even dormant, even empty.", "Cada cuenta abierta en una plataforma extranjera debe declararse, aunque est\u00e9 inactiva o vac\u00eda.", "Jedes Konto bei einem Anbieter im Ausland ist zu melden, auch ruhend, auch leer."],
+  'f.p.cryamende.n':      ["Port\u00e9e au double si le solde a d\u00e9pass\u00e9 50\u00a0000\u00a0\u20ac \u00e0 un moment de l'ann\u00e9e.", "Doubled if the balance went above\u00a0\u20ac50,000 at any point in the year.", "Se duplica si el saldo super\u00f3 los 50\u00a0000\u00a0\u20ac en alg\u00fan momento del a\u00f1o.", "Verdoppelt, wenn der Saldo im Jahr \u00fcber 50\u00a0000\u00a0\u20ac lag."],
+  'f.p.peaplaf':          ["Plafond de versements du PEA", "PEA payment ceiling", "L\u00edmite de aportaciones del PEA", "Einzahlungsgrenze des PEA"],
+  'f.p.peaplaf.q':        ["Versements cumul\u00e9s, hors gains. Les plus-values peuvent porter le plan bien au-del\u00e0 sans rien enfreindre.", "Cumulative payments, gains excluded. Gains can take the plan well beyond without breaching anything.", "Aportaciones acumuladas, sin contar ganancias. Las plusval\u00edas pueden superarlo sin infringir nada.", "Kumulierte Einzahlungen, ohne Gewinne. Gewinne d\u00fcrfen den Plan weit dar\u00fcber hinaus tragen."],
+  'f.p.peaans':           ["Dur\u00e9e avant retrait sans perte d'avantage", "Years before a penalty-free withdrawal", "A\u00f1os antes de retirar sin perder la ventaja", "Jahre bis zur Entnahme ohne Nachteil"],
+  'f.p.peaans.q':         ["Un retrait avant ce terme ferme le plan, sauf exceptions pr\u00e9vues par la loi.", "A withdrawal before this term closes the plan, save for exceptions set out in law.", "Un reintegro antes de ese plazo cierra el plan, salvo excepciones legales.", "Eine Entnahme davor schlie\u00dft den Plan, von gesetzlichen Ausnahmen abgesehen."],
+  'f.p.avans':            ["Dur\u00e9e au-del\u00e0 de laquelle l'abattement s'ouvre", "Years after which the allowance opens", "A\u00f1os tras los que se abre la reducci\u00f3n", "Jahre, nach denen der Freibetrag greift"],
+  'f.p.avans.q':          ["Compt\u00e9s depuis l'ouverture du contrat, pas depuis le dernier versement.", "Counted from the opening of the policy, not from the last payment.", "Contados desde la apertura del contrato, no desde la \u00faltima aportaci\u00f3n.", "Gerechnet ab Vertragsbeginn, nicht ab der letzten Einzahlung."],
+  'f.d.meuble':           ["Les sources consult\u00e9es ne disent pas la m\u00eame chose pour la location meubl\u00e9e\u00a0: certaines la rangent avec les revenus mobiliers \u00e0 18,6\u00a0%, d'autres avec le foncier \u00e0 17,2\u00a0%. V\u00e9rifiez votre cas.", "Sources consulted disagree on furnished lettings: some place them with securities income at 18.6%, others with rental income at 17.2%. Check your own case.", "Las fuentes consultadas discrepan sobre el alquiler amueblado: unas lo sit\u00faan al 18,6\u00a0%, otras al 17,2\u00a0%. Compruebe su caso.", "Die gepr\u00fcften Quellen widersprechen sich bei m\u00f6blierter Vermietung: teils 18,6\u00a0%, teils 17,2\u00a0%. Pr\u00fcfen Sie Ihren Fall."],
+  'f.d.av':               ["Les sources consult\u00e9es ne s'accordent pas sur le p\u00e9rim\u00e8tre exact de la hausse pour l'assurance-vie. Le taux retenu ici est 17,2\u00a0%.", "Sources consulted do not agree on the exact scope of the rise for life insurance. The rate used here is 17.2%.", "Las fuentes no coinciden en el alcance exacto de la subida para el seguro de vida. Aqu\u00ed se usa el 17,2\u00a0%.", "Die Quellen sind sich \u00fcber den Umfang der Erh\u00f6hung bei Lebensversicherungen uneinig. Hier gilt 17,2\u00a0%."],
   'm.loupe':              ["Chercher une valeur", "Search a security", "Buscar un valor", "Einen Wert suchen"],
   'm.i.cap':              ["Capitalisation suivie", "Tracked market cap", "Capitalizaci\u00f3n seguida", "Verfolgte Kapitalisierung"],
   'm.i.cap.d':            ["Les {{n}} valeurs de cette page, pas le march\u00e9 entier.", "The {{n}} securities on this page, not the whole market.", "Los {{n}} valores de esta p\u00e1gina, no el mercado entero.", "Die {{n}} Werte dieser Seite, nicht der ganze Markt."],
@@ -7175,6 +7469,154 @@ window.PC = (function(){
   'm.voirtout':           ["Voir tout", "See all", "Ver todo", "Alle ansehen"],
   'm.echangees':          ["Les plus \u00e9chang\u00e9es aujourd'hui", "Most traded today", "Las m\u00e1s negociadas hoy", "Heute am meisten gehandelt"],
   'm.toutes':             ["Toutes les valeurs", "All securities", "Todos los valores", "Alle Werte"],
+
+  /* --- Le calendrier fiscal, ses echeances et son ecran --- */
+  'f.c.ifi1':             ["L'IFI s'appr\u00e9cie \u00e0 cette date", "Property wealth tax is assessed on this date", "El impuesto sobre patrimonio inmobiliario se calcula en esta fecha", "Die Immobilienverm\u00f6gensteuer wird zu diesem Datum bemessen"],
+  'f.c.ifi1.q':           ["Ce que vaut votre patrimoine immobilier ce jour-l\u00e0 d\u00e9cide de l'imp\u00f4t de toute l'ann\u00e9e. Ce que vous achetez ou vendez le 2 janvier compte pour l'an prochain.", "What your property is worth that day decides the tax for the whole year. What you buy or sell on 2 January counts for next year.", "Lo que valga su patrimonio inmobiliario ese d\u00eda decide el impuesto de todo el a\u00f1o. Lo que compre o venda el 2 de enero cuenta para el a\u00f1o siguiente.", "Was Ihr Immobilienverm\u00f6gen an diesem Tag wert ist, bestimmt die Steuer des ganzen Jahres. Was Sie am 2. Januar kaufen oder verkaufen, z\u00e4hlt f\u00fcrs n\u00e4chste Jahr."],
+  'f.c.avance':           ["Avance de r\u00e9ductions et cr\u00e9dits d'imp\u00f4t", "Advance on tax reductions and credits", "Anticipo de reducciones y cr\u00e9ditos fiscales", "Vorschuss auf Steuererm\u00e4\u00dfigungen und -gutschriften"],
+  'f.c.avance.q':         ["Soixante pour cent des r\u00e9ductions et cr\u00e9dits r\u00e9currents de l'an dernier sont vers\u00e9s. Si vos d\u00e9penses ont baiss\u00e9, le trop-per\u00e7u sera repris en septembre.", "Sixty per cent of last year's recurring reductions and credits is paid out. If your spending fell, the excess is clawed back in September.", "Se abona el sesenta por ciento de las reducciones y cr\u00e9ditos recurrentes del a\u00f1o anterior. Si sus gastos bajaron, lo cobrado de m\u00e1s se recupera en septiembre.", "Sechzig Prozent der wiederkehrenden Erm\u00e4\u00dfigungen des Vorjahres werden ausgezahlt. Sind Ihre Ausgaben gesunken, wird der \u00dcberschuss im September zur\u00fcckgefordert."],
+  'f.c.ouv':              ["Ouverture de la d\u00e9claration en ligne", "Online filing opens", "Apertura de la declaraci\u00f3n en l\u00ednea", "Online-Erkl\u00e4rung \u00f6ffnet"],
+  'f.c.ouv.q':            ["Le service ouvre. La d\u00e9claration des revenus et celle de l'IFI se font ensemble, sur le m\u00eame formulaire.", "The service opens. Income and property wealth tax are declared together, on the same return.", "El servicio abre. La renta y el impuesto sobre el patrimonio inmobiliario se declaran juntos.", "Der Dienst \u00f6ffnet. Einkommen und Immobilienverm\u00f6gen werden gemeinsam erkl\u00e4rt."],
+  'f.c.papier':           ["Date limite \u2014 d\u00e9claration papier", "Deadline \u2014 paper return", "Fecha l\u00edmite \u2014 declaraci\u00f3n en papel", "Frist \u2014 Papiererkl\u00e4rung"],
+  'f.c.papier.q':         ["Pour ceux qui d\u00e9clarent sur formulaire. Une seule date, quel que soit le d\u00e9partement.", "For those filing on paper. One date, whatever the department.", "Para quienes declaran en formulario. Una sola fecha, sea cual sea el departamento.", "F\u00fcr Papiererkl\u00e4rungen. Ein Datum, unabh\u00e4ngig vom Departement."],
+  'f.c.zone':             ["Date limite \u2014 d\u00e9claration en ligne", "Deadline \u2014 online return", "Fecha l\u00edmite \u2014 declaraci\u00f3n en l\u00ednea", "Frist \u2014 Online-Erkl\u00e4rung"],
+  'f.c.zone.q':           ["Votre d\u00e9partement d\u00e9cide. Celle-ci est la v\u00f4tre.", "Your department decides. This one is yours.", "Su departamento decide. Esta es la suya.", "Ihr Departement entscheidet. Dies ist Ihres."],
+  'f.c.ifipay':           ["Date limite de paiement de l'IFI", "Property wealth tax payment deadline", "Fecha l\u00edmite de pago del impuesto", "Zahlungsfrist der Verm\u00f6gensteuer"],
+  'f.c.ifipay.q':         ["En ligne, le d\u00e9lai court quelques jours de plus. Votre avis porte la date qui vous concerne.", "Online, the deadline runs a few days longer. Your assessment carries the date that applies to you.", "En l\u00ednea, el plazo dura unos d\u00edas m\u00e1s. Su notificaci\u00f3n lleva la fecha que le corresponde.", "Online l\u00e4uft die Frist einige Tage l\u00e4nger. Ihr Bescheid nennt Ihr Datum."],
+  'f.c.irsolde':          ["Pr\u00e9l\u00e8vement du solde de l'imp\u00f4t sur le revenu", "Income tax balance is taken", "Cobro del saldo del impuesto sobre la renta", "Abbuchung der Einkommensteuer-Restschuld"],
+  'f.c.irsolde.q':        ["Ce qui reste apr\u00e8s le pr\u00e9l\u00e8vement \u00e0 la source. Au-del\u00e0 d'un certain montant, il est \u00e9tal\u00e9 jusqu'en d\u00e9cembre.", "What is left after withholding. Above a certain amount it is spread until December.", "Lo que queda tras la retenci\u00f3n. Por encima de cierto importe se reparte hasta diciembre.", "Was nach dem Quellenabzug bleibt. \u00dcber einem bestimmten Betrag bis Dezember gestreckt."],
+  'f.c.tf':               ["Taxe fonci\u00e8re", "Property tax", "Impuesto sobre bienes inmuebles", "Grundsteuer"],
+  'f.c.tf.q':             ["Due par le propri\u00e9taire au 1\u1d49\u02b3 janvier, m\u00eame si le bien a \u00e9t\u00e9 vendu depuis.", "Owed by whoever owned it on 1 January, even if the property has been sold since.", "La debe quien era propietario el 1 de enero, aunque el bien se haya vendido despu\u00e9s.", "Geschuldet vom Eigent\u00fcmer am 1. Januar, auch wenn die Immobilie seither verkauft wurde."],
+  'f.c.fin':              ["Fin de l'ann\u00e9e fiscale", "End of the tax year", "Fin del ejercicio fiscal", "Ende des Steuerjahres"],
+  'f.c.fin.q':            ["Ce qui est fait apr\u00e8s cette date compte sur l'ann\u00e9e suivante. C'est la seule chose que cette ligne dit.", "Anything done after this date counts for the following year. That is all this line says.", "Lo hecho despu\u00e9s de esta fecha cuenta para el a\u00f1o siguiente. Es todo lo que dice esta l\u00ednea.", "Was nach diesem Datum geschieht, z\u00e4hlt f\u00fcrs Folgejahr. Mehr sagt diese Zeile nicht."],
+  'f.z.1':                ["D\u00e9partements 01 \u00e0 19, et non-r\u00e9sidents", "Departments 01 to 19, and non-residents", "Departamentos 01 a 19, y no residentes", "Departements 01 bis 19, und Nichtans\u00e4ssige"],
+  'f.z.2':                ["D\u00e9partements 20 \u00e0 54", "Departments 20 to 54", "Departamentos 20 a 54", "Departements 20 bis 54"],
+  'f.z.3':                ["D\u00e9partements 55 \u00e0 976", "Departments 55 to 976", "Departamentos 55 a 976", "Departements 55 bis 976"],
+  'f.a.av':               ["Les huit ans de ce contrat", "This policy turns eight", "Los ocho a\u00f1os de este contrato", "Acht Jahre f\u00fcr diesen Vertrag"],
+  'f.a.av.q':             ["\u00c0 partir de cette date, l'abattement annuel s'ouvre sur les gains que vous retirez. Avant, il n'existe pas.", "From this date, the yearly allowance opens on the gains you withdraw. Before it, there is none.", "A partir de esta fecha se abre la reducci\u00f3n anual sobre las ganancias retiradas. Antes, no existe.", "Ab diesem Datum greift der j\u00e4hrliche Freibetrag auf entnommene Gewinne. Davor gibt es keinen."],
+  'f.a.pea':              ["Les cinq ans de ce plan", "This plan turns five", "Los cinco a\u00f1os de este plan", "F\u00fcnf Jahre f\u00fcr diesen Plan"],
+  'f.a.pea.q':            ["Avant cette date, un retrait ferme le plan. Apr\u00e8s, il ne le ferme plus.", "Before this date, a withdrawal closes the plan. After it, it no longer does.", "Antes de esta fecha, un reintegro cierra el plan. Despu\u00e9s, ya no.", "Vor diesem Datum schlie\u00dft eine Entnahme den Plan. Danach nicht mehr."],
+  'f.a.fait':             ["atteint le {{d}}", "reached on {{d}}", "alcanzado el {{d}}", "erreicht am {{d}}"],
+  'f.titre':              ["Calendrier fiscal", "Tax calendar", "Calendario fiscal", "Steuerkalender"],
+  'f.onglet':             ["Fiscal", "Tax", "Fiscal", "Steuer"],
+  'f.sous':               ["Les \u00e9ch\u00e9ances qui vous concernent, d'apr\u00e8s ce que contient votre portefeuille. Celles qui ne concernent personne ici ne s'affichent pas.", "The deadlines that concern you, from what your portfolio holds. Those that concern nobody here are not shown.", "Los vencimientos que le afectan, seg\u00fan lo que contiene su cartera. Los que no afectan a nadie aqu\u00ed no se muestran.", "Die Fristen, die Sie betreffen, nach dem Inhalt Ihres Portfolios. Was hier niemanden betrifft, wird nicht gezeigt."],
+  'f.avert':              ["Cette page applique une r\u00e8gle publi\u00e9e \u00e0 des chiffres que vous avez saisis. C'est un calcul, pas un conseil\u00a0: elle ne dit \u00e0 personne ce qu'il faut faire de son argent. L'administration fait foi, et votre situation peut relever d'une r\u00e8gle que cette page ne conna\u00eet pas.", "This page applies a published rule to figures you entered. It is a calculation, not advice: it tells nobody what to do with their money. The tax authority is the reference, and your situation may fall under a rule this page does not know.", "Esta p\u00e1gina aplica una regla publicada a cifras que usted introdujo. Es un c\u00e1lculo, no un consejo: no dice a nadie qu\u00e9 hacer con su dinero. La administraci\u00f3n es la referencia, y su caso puede regirse por una regla que esta p\u00e1gina desconoce.", "Diese Seite wendet eine ver\u00f6ffentlichte Regel auf Ihre eigenen Zahlen an. Das ist eine Berechnung, keine Beratung: Sie sagt niemandem, was er mit seinem Geld tun soll. Ma\u00dfgeblich ist die Finanzverwaltung, und Ihr Fall kann unter eine Regel fallen, die diese Seite nicht kennt."],
+  'f.dep':                ["Votre d\u00e9partement", "Your department", "Su departamento", "Ihr Departement"],
+  'f.dep.aide':           ["Deux chiffres suffisent. Les dates de d\u00e9claration en ligne sont \u00e9chelonn\u00e9es, et sans lui la page vous en montrerait trois dont deux seraient fausses pour vous.", "Two digits are enough. Online filing deadlines are staggered, and without it the page would show you three dates, two of them wrong for you.", "Bastan dos cifras. Las fechas de declaraci\u00f3n en l\u00ednea est\u00e1n escalonadas, y sin \u00e9l la p\u00e1gina le mostrar\u00eda tres, dos de ellas err\u00f3neas para usted.", "Zwei Ziffern gen\u00fcgen. Die Online-Fristen sind gestaffelt; ohne sie zeigte die Seite drei Daten, zwei davon f\u00fcr Sie falsch."],
+  'f.dans':               ["dans {{n}} jours", "in {{n}} days", "en {{n}} d\u00edas", "in {{n}} Tagen"],
+  'f.dans.1':             ["demain", "tomorrow", "ma\u00f1ana", "morgen"],
+  'f.auj':                ["aujourd'hui", "today", "hoy", "heute"],
+  'f.verif':              ["Date publi\u00e9e pour {{an}}. V\u00e9rifiez la v\u00f4tre sur impots.gouv.fr \u2014 l'avis fait foi.", "Date published for {{an}}. Check yours on impots.gouv.fr \u2014 the assessment is what counts.", "Fecha publicada para {{an}}. Compruebe la suya en impots.gouv.fr \u2014 la notificaci\u00f3n es lo que cuenta.", "F\u00fcr {{an}} ver\u00f6ffentlichtes Datum. Pr\u00fcfen Sie Ihres auf impots.gouv.fr \u2014 der Bescheid gilt."],
+  'f.report':             ["Cette date \u00e9tait publi\u00e9e pour une autre ann\u00e9e. Report\u00e9e ici au m\u00eame jour, elle n'est plus qu'une estimation.", "This date was published for another year. Carried here to the same day, it is only an estimate.", "Esta fecha se public\u00f3 para otro a\u00f1o. Trasladada aqu\u00ed al mismo d\u00eda, es solo una estimaci\u00f3n.", "Dieses Datum galt f\u00fcr ein anderes Jahr. Hier auf denselben Tag \u00fcbertragen, ist es nur eine Sch\u00e4tzung."],
+  'f.report.court':       ["Date report\u00e9e, \u00e0 confirmer", "Date carried over, to be confirmed", "Fecha trasladada, por confirmar", "Datum \u00fcbertragen, zu best\u00e4tigen"],
+  'f.report.bloc':        ["Les dates de d\u00e9claration et de paiement sont fix\u00e9es chaque ann\u00e9e par l'administration. Celles qui portent \u00ab\u00a0\u00e0 confirmer\u00a0\u00bb sont report\u00e9es de l'ann\u00e9e pr\u00e9c\u00e9dente au m\u00eame jour\u00a0: elles donnent l'ordre de grandeur, pas la date. Celle qui fait foi est sur impots.gouv.fr et sur votre avis.", "Filing and payment dates are set each year by the tax authority. Those marked as to be confirmed are carried over from the previous year to the same day: they give the order of magnitude, not the date. The one that counts is on impots.gouv.fr and on your assessment.", "Las fechas de declaraci\u00f3n y pago las fija cada a\u00f1o la administraci\u00f3n. Las marcadas por confirmar se trasladan del a\u00f1o anterior al mismo d\u00eda: dan el orden de magnitud, no la fecha. La que cuenta est\u00e1 en impots.gouv.fr y en su notificaci\u00f3n.", "Erkl\u00e4rungs- und Zahlungstermine legt die Verwaltung jedes Jahr neu fest. Die mit \u00bbzu best\u00e4tigen\u00ab sind vom Vorjahr auf denselben Tag \u00fcbertragen: Sie geben die Gr\u00f6\u00dfenordnung, nicht das Datum. Ma\u00dfgeblich ist impots.gouv.fr und Ihr Bescheid."],
+  'f.regle':              ["R\u00e8gle permanente", "Standing rule", "Regla permanente", "Dauerregel"],
+  'f.maj':                ["Param\u00e8tres relus le {{d}}", "Parameters last checked {{d}}", "Par\u00e1metros revisados el {{d}}", "Parameter zuletzt gepr\u00fcft am {{d}}"],
+  'f.rien':               ["Rien dans les trois prochains mois.", "Nothing in the next three months.", "Nada en los pr\u00f3ximos tres meses.", "Nichts in den n\u00e4chsten drei Monaten."],
+  'f.prochaine':          ["Prochaine \u00e9ch\u00e9ance", "Next deadline", "Pr\u00f3ximo vencimiento", "N\u00e4chste Frist"],
+  'f.voir':               ["Voir le calendrier", "See the calendar", "Ver el calendario", "Kalender ansehen"],
+  'f.vos':                ["Vos dates \u00e0 vous", "Your own dates", "Sus propias fechas", "Ihre eigenen Daten"],
+  'f.vos.q':              ["Celles-ci ne sont \u00e9crites nulle part ailleurs que dans vos contrats. La page les compte depuis la date d'ouverture que vous avez saisie.", "These are written nowhere but in your own policies. The page counts them from the opening date you entered.", "Estas no est\u00e1n escritas en ning\u00fan sitio salvo en sus contratos. La p\u00e1gina las cuenta desde la fecha de apertura que introdujo.", "Diese stehen nirgends au\u00dfer in Ihren Vertr\u00e4gen. Die Seite z\u00e4hlt sie ab dem von Ihnen erfassten Er\u00f6ffnungsdatum."],
+  'f.taux.titre':         ["Les taux qui s'appliquent \u00e0 vos lignes", "The rates that apply to your holdings", "Los tipos que se aplican a sus l\u00edneas", "Die S\u00e4tze f\u00fcr Ihre Positionen"],
+  'f.taux.q':             ["Depuis 2026 ils ne sont plus les m\u00eames selon le support. Voici celui que la page retient pour chacune des v\u00f4tres, et d'o\u00f9 il vient.", "Since 2026 they are no longer the same across holdings. Here is the one the page uses for each of yours, and where it comes from.", "Desde 2026 ya no son los mismos seg\u00fan el soporte. Este es el que la p\u00e1gina aplica a cada una de sus l\u00edneas, y de d\u00f3nde viene.", "Seit 2026 sind sie je nach Anlage nicht mehr gleich. Hier der Satz, den die Seite f\u00fcr jede Ihrer Positionen ansetzt, und seine Herkunft."],
+  'f.source':             ["Source", "Source", "Fuente", "Quelle"],
+
+
+  'ap.1.k':               ["Le calendrier", "The calendar", "El calendario", "Der Kalender"],
+
+  'ap.1.t':               ["Les \u00e9ch\u00e9ances qui vous concernent, vous.", "The deadlines that concern you, personally.", "Los vencimientos que le afectan a usted.", "Die Fristen, die Sie betreffen."],
+
+  'ap.1.p':               ["Pas d'immobilier, pas d'IFI. Pas de crypto, pas de formulaire 3916-bis. La page voit ce que vous d\u00e9tenez et ne montre que le reste. Et elle conna\u00eet vos dates \u00e0 vous\u00a0: les huit ans d'une assurance-vie, les cinq ans d'un plan, qui ne sont \u00e9crites nulle part ailleurs que dans le contrat.", "No property, no wealth tax. No crypto, no foreign-account form. The page sees what you hold and shows only the rest. And it knows your own dates: the eight years of a life policy, the five of a plan, written nowhere but in the contract.", "Sin inmuebles, sin impuesto sobre el patrimonio. Sin cripto, sin formulario de cuentas en el extranjero. La p\u00e1gina ve lo que posee y muestra solo el resto. Y conoce sus fechas: los ocho a\u00f1os de un seguro, los cinco de un plan, escritos solo en el contrato.", "Keine Immobilien, keine Verm\u00f6gensteuer. Keine Krypto, kein Auslandskonto-Formular. Die Seite sieht, was Sie halten, und zeigt nur den Rest. Und sie kennt Ihre Daten: die acht Jahre einer Lebensversicherung, die f\u00fcnf eines Plans, die nirgends au\u00dfer im Vertrag stehen."],
+
+  'ap.2.k':               ["Le patrimoine net", "Net worth", "El patrimonio neto", "Das Nettoverm\u00f6gen"],
+
+  'ap.2.t':               ["Ce que vous avez, moins ce que vous devez.", "What you have, less what you owe.", "Lo que tiene, menos lo que debe.", "Was Sie haben, abz\u00fcglich dessen, was Sie schulden."],
+
+  'ap.2.p':               ["Un appartement de 300\u00a0000\u00a0\u20ac avec 220\u00a0000\u00a0\u20ac de cr\u00e9dit dessus ne fait pas 300\u00a0000\u00a0\u20ac de patrimoine. Saisissez le pr\u00eat\u00a0: capital restant d\u00fb, mensualit\u00e9, et ce que les int\u00e9r\u00eats auront co\u00fbt\u00e9 au bout \u2014 un chiffre que presque personne n'a en t\u00eate.", "A\u00a0\u20ac300,000 flat with a\u00a0\u20ac220,000 loan on it is not\u00a0\u20ac300,000 of wealth. Enter the loan: capital still owed, monthly payment, and what the interest will have cost in the end \u2014 a figure almost nobody has in mind.", "Un piso de 300\u00a0000\u00a0\u20ac con 220\u00a0000\u00a0\u20ac de cr\u00e9dito encima no son 300\u00a0000\u00a0\u20ac de patrimonio. Introduzca el pr\u00e9stamo: capital pendiente, cuota, y lo que los intereses habr\u00e1n costado al final \u2014 una cifra que casi nadie tiene en mente.", "Eine Wohnung f\u00fcr 300\u00a0000\u00a0\u20ac mit 220\u00a0000\u00a0\u20ac Kredit darauf sind keine 300\u00a0000\u00a0\u20ac Verm\u00f6gen. Erfassen Sie den Kredit: Restschuld, Rate, und was die Zinsen am Ende gekostet haben werden \u2014 eine Zahl, die fast niemand im Kopf hat."],
+
+  'ap.3.k':               ["La veille", "The watch", "La vigilancia", "Die Wache"],
+
+  'ap.3.t':               ["Ce qui a boug\u00e9 pendant que vous ne regardiez pas.", "What moved while you were not looking.", "Lo que se movi\u00f3 mientras no miraba.", "Was sich bewegt hat, w\u00e4hrend Sie wegsahen."],
+
+  'ap.3.p':               ["Un seuil de cours par ligne, et des constats sur la r\u00e9partition\u00a0: une ligne qui p\u00e8se la moiti\u00e9 du total, une cat\u00e9gorie qui d\u00e9cide de l'ann\u00e9e, un endettement qui monte. Des faits, jamais des conseils \u2014 et des seuils que vous r\u00e9glez, pour que la page se taise quand vous le voulez.", "A price threshold per holding, and observations on allocation: one line that is half the total, a category that decides the year, debt that climbs. Facts, never advice \u2014 and thresholds you set, so the page falls silent when you want.", "Un umbral de cotizaci\u00f3n por l\u00ednea, y constataciones sobre el reparto: una l\u00ednea que pesa la mitad del total, una categor\u00eda que decide el a\u00f1o, un endeudamiento que sube. Hechos, nunca consejos \u2014 y umbrales que usted ajusta.", "Eine Kursschwelle je Position und Feststellungen zur Aufteilung: eine Position, die die H\u00e4lfte ausmacht, eine Kategorie, die das Jahr entscheidet, steigende Schulden. Fakten, nie Ratschl\u00e4ge \u2014 und Schwellen, die Sie selbst setzen."],
+
+  'ap.4.k':               ["Si je vendais", "If I sold", "Si vendiera", "Wenn ich verkaufte"],
+
+  'ap.4.t':               ["Combien il reste apr\u00e8s imp\u00f4t.", "How much is left after tax.", "Cu\u00e1nto queda despu\u00e9s de impuestos.", "Wie viel nach Steuern bleibt."],
+
+  'ap.4.p':               ["Choisissez une ligne\u00a0: plus-value, taux qui s'applique \u00e0 CE support, et ce qu'il reste. Sur un bien d\u00e9tenu vingt-quatre ans, la page dit ce que presque tout le monde ignore \u2014 vous \u00eates exon\u00e9r\u00e9 d'imp\u00f4t sur le revenu, mais vous devez encore six ans de pr\u00e9l\u00e8vements sociaux.", "Pick a holding: gain, the rate that applies to THAT product, and what is left. On a property held twenty-four years, the page says what almost everyone misses \u2014 you are exempt from income tax, but you still owe six more years of social levies.", "Elija una l\u00ednea: plusval\u00eda, tipo que se aplica a ESE soporte, y lo que queda. En un bien con veinticuatro a\u00f1os, la p\u00e1gina dice lo que casi nadie sabe: est\u00e1 exento de renta, pero a\u00fan debe seis a\u00f1os de cargas sociales.", "W\u00e4hlen Sie eine Position: Gewinn, der Satz f\u00fcr GENAU dieses Produkt, und was bleibt. Bei einer Immobilie nach vierundzwanzig Jahren sagt die Seite, was fast alle \u00fcbersehen: Sie sind einkommensteuerfrei, schulden aber noch sechs Jahre Sozialabgaben."],
+
+  'ap.loi':               ["Chaque chiffre affich\u00e9 porte l'article qui le pose \u2014 <b>CGI art. 200 A</b> pour le pr\u00e9l\u00e8vement forfaitaire, <b>964 et 977</b> pour l'IFI, <b>125-0 A</b> pour l'assurance-vie, <b>150 VH bis</b> pour les actifs num\u00e9riques, <b>150 VC et VD</b> pour les plus-values immobili\u00e8res \u2014 et la date \u00e0 laquelle il a \u00e9t\u00e9 relu. Un calcul, jamais un conseil\u00a0: l'administration fait foi.", "Every figure shown carries the article behind it \u2014 <b>CGI art. 200 A</b> for the flat tax, <b>964 and 977</b> for property wealth tax, <b>125-0 A</b> for life policies, <b>150 VH bis</b> for digital assets, <b>150 VC and VD</b> for property gains \u2014 and the date it was last checked. A calculation, never advice: the tax authority is the reference.", "Cada cifra lleva el art\u00edculo que la sostiene \u2014 <b>CGI art. 200 A</b> para el tipo \u00fanico, <b>964 y 977</b> para el patrimonio inmobiliario, <b>125-0 A</b> para el seguro de vida, <b>150 VH bis</b> para los activos digitales, <b>150 VC y VD</b> para las plusval\u00edas inmobiliarias \u2014 y la fecha de su \u00faltima revisi\u00f3n. Un c\u00e1lculo, nunca un consejo.", "Jede Zahl tr\u00e4gt den Artikel, der sie begr\u00fcndet \u2014 <b>CGI Art. 200 A</b> f\u00fcr die Pauschalsteuer, <b>964 und 977</b> f\u00fcr die Immobilienverm\u00f6gensteuer, <b>125-0 A</b> f\u00fcr Lebensversicherungen, <b>150 VH bis</b> f\u00fcr digitale Verm\u00f6genswerte, <b>150 VC und VD</b> f\u00fcr Immobiliengewinne \u2014 und das Datum der letzten Pr\u00fcfung. Eine Berechnung, nie eine Beratung."],
+
+  /* --- Le simulateur de cession --- */
+  'si.titre':             ["Si je vendais cette ligne", "If I sold this holding", "Si vendiera esta l\u00ednea", "Wenn ich diese Position verkaufte"],
+  'si.q':                 ["La question \u00e0 laquelle aucun tableur ne r\u00e9pond\u00a0: combien reste-t-il apr\u00e8s imp\u00f4t. Tout vient de ce que vous avez d\u00e9j\u00e0 saisi.", "The question no spreadsheet answers: how much is left after tax. Everything comes from what you already entered.", "La pregunta que ninguna hoja de c\u00e1lculo responde: cu\u00e1nto queda despu\u00e9s de impuestos. Todo sale de lo que ya introdujo.", "Die Frage, die keine Tabelle beantwortet: Wie viel bleibt nach Steuern. Alles stammt aus dem, was Sie erfasst haben."],
+  'si.ligne':             ["La ligne", "The holding", "La l\u00ednea", "Die Position"],
+  'si.pv':                ["Plus-value", "Capital gain", "Plusval\u00eda", "Ver\u00e4u\u00dferungsgewinn"],
+  'si.impot':             ["Imp\u00f4t et pr\u00e9l\u00e8vements", "Tax and levies", "Impuesto y cargas", "Steuer und Abgaben"],
+  'si.net':               ["Ce qu'il reste", "What is left", "Lo que queda", "Was bleibt"],
+  'si.pfu':               ["Au pr\u00e9l\u00e8vement forfaitaire de {{t}}\u00a0%\u00a0: {{i}}\u00a0% d'imp\u00f4t sur le revenu et {{p}}\u00a0% de {{n}}.", "At the flat tax of {{t}}%: {{i}}% income tax and {{p}}% of {{n}}.", "Al tipo \u00fanico del {{t}}\u00a0%: {{i}}\u00a0% de impuesto sobre la renta y {{p}}\u00a0% de {{n}}.", "Zur Pauschalsteuer von {{t}}\u00a0%: {{i}}\u00a0% Einkommensteuer und {{p}}\u00a0% {{n}}."],
+  'si.immo':              ["L'immobilier ne rel\u00e8ve pas du pr\u00e9l\u00e8vement forfaitaire\u00a0: {{t1}}\u00a0% d'imp\u00f4t sur le revenu et {{t2}}\u00a0% de pr\u00e9l\u00e8vements sociaux, sur une assiette que la dur\u00e9e de d\u00e9tention r\u00e9duit.", "Property does not fall under the flat tax: {{t1}}% income tax and {{t2}}% social levies, on a base that the holding period reduces.", "El inmueble no entra en el tipo \u00fanico: {{t1}}\u00a0% de renta y {{t2}}\u00a0% de cargas sociales, sobre una base que el tiempo de tenencia reduce.", "Immobilien fallen nicht unter die Pauschalsteuer: {{t1}}\u00a0% Einkommensteuer und {{t2}}\u00a0% Sozialabgaben, auf eine durch die Haltedauer verringerte Bemessung."],
+  'si.ab':                ["D\u00e9tenu depuis {{a}} ans\u00a0: l'abattement atteint {{i}} sur l'imp\u00f4t sur le revenu et {{s}} sur les pr\u00e9l\u00e8vements sociaux.", "Held for {{a}} years: the allowance reaches {{i}} on income tax and {{s}} on social levies.", "En posesi\u00f3n {{a}} a\u00f1os: la reducci\u00f3n alcanza {{i}} en renta y {{s}} en cargas sociales.", "Seit {{a}} Jahren gehalten: Der Freibetrag erreicht {{i}} bei der Einkommensteuer und {{s}} bei den Sozialabgaben."],
+  'si.piege':             ["Vous \u00eates exon\u00e9r\u00e9 d'imp\u00f4t sur le revenu, mais pas de pr\u00e9l\u00e8vements sociaux\u00a0: il reste {{n}} ans avant qu'ils tombent \u00e0 z\u00e9ro. C'est l'endroit o\u00f9 l'on se trompe le plus souvent.", "You are exempt from income tax, but not from social levies: {{n}} years remain before those reach zero. This is where people get it wrong most often.", "Est\u00e1 exento de renta, pero no de cargas sociales: faltan {{n}} a\u00f1os para que lleguen a cero. Es donde m\u00e1s se equivoca la gente.", "Sie sind von der Einkommensteuer befreit, nicht aber von den Sozialabgaben: Noch {{n}} Jahre, bis diese null erreichen. Hier irrt man am h\u00e4ufigsten."],
+  'si.sansdate':          ["Sans date d'acquisition, la page ne peut pas appliquer les abattements pour dur\u00e9e de d\u00e9tention\u00a0: le chiffre ci-dessus suppose z\u00e9ro abattement, et il est donc trop \u00e9lev\u00e9.", "Without a purchase date the page cannot apply the holding-period allowances: the figure above assumes none, and is therefore too high.", "Sin fecha de compra la p\u00e1gina no puede aplicar las reducciones por tenencia: la cifra anterior supone cero, y por tanto es demasiado alta.", "Ohne Kaufdatum kann die Seite die Haltedauer-Freibetr\u00e4ge nicht anwenden: Die Zahl oben setzt null an und ist damit zu hoch."],
+  'si.note':              ["Les frais de cession, les travaux, les moins-values reportables et la surtaxe sur les plus-values \u00e9lev\u00e9es ne sont pas calcul\u00e9s. C'est un ordre de grandeur, pas une d\u00e9claration.", "Selling costs, works, carried-forward losses and the surtax on large gains are not computed. This is an order of magnitude, not a tax return.", "Los gastos de venta, las obras, las minusval\u00edas pendientes y el recargo sobre plusval\u00edas altas no se calculan. Es un orden de magnitud, no una declaraci\u00f3n.", "Ver\u00e4u\u00dferungskosten, Bauma\u00dfnahmen, vortragsf\u00e4hige Verluste und der Zuschlag auf hohe Gewinne werden nicht berechnet. Das ist eine Gr\u00f6\u00dfenordnung, keine Erkl\u00e4rung."],
+
+  /* --- Les seuils de cours --- */
+  'al.titre':             ["Pr\u00e9venez-moi si le cours passe", "Tell me if the price crosses", "Av\u00edseme si la cotizaci\u00f3n cruza", "Melden, wenn der Kurs \u00fcberschreitet"],
+  'al.haut':              ["Au-dessus de", "Above", "Por encima de", "\u00dcber"],
+  'al.bas':               ["En dessous de", "Below", "Por debajo de", "Unter"],
+  'al.actuel':            ["Cours du moment\u00a0: {{c}}", "Price right now: {{c}}", "Cotizaci\u00f3n actual: {{c}}", "Aktueller Kurs: {{c}}"],
+  'al.note':              ["Une page web ne tourne que lorsqu'elle est ouverte\u00a0: un seuil franchi pendant la nuit se lit le lendemain, \u00e0 la r\u00e9ouverture. Laissez le champ vide pour ne rien surveiller.", "A web page only runs while it is open: a threshold crossed overnight is read the next morning, on reopening. Leave the field empty to watch nothing.", "Una p\u00e1gina web solo funciona mientras est\u00e1 abierta: un umbral cruzado de noche se lee al d\u00eda siguiente, al reabrir. Deje el campo vac\u00edo para no vigilar nada.", "Eine Webseite l\u00e4uft nur, solange sie offen ist: eine nachts \u00fcberschrittene Schwelle liest man am n\u00e4chsten Morgen beim \u00d6ffnen. Leer lassen, um nichts zu \u00fcberwachen."],
+  'al.franchi.h':         ["<b>{{n}}</b> est \u00e0 {{c}}, au-dessus du seuil de {{s}} que vous avez pos\u00e9.", "<b>{{n}}</b> is at {{c}}, above the {{s}} threshold you set.", "<b>{{n}}</b> est\u00e1 a {{c}}, por encima del umbral de {{s}} que fij\u00f3.", "<b>{{n}}</b> steht bei {{c}}, \u00fcber Ihrer Schwelle von {{s}}."],
+  'al.franchi.h.q':       ["La page constate le franchissement. Ce qu'il faut en faire ne lui appartient pas.", "The page notes the crossing. What to do about it is not its call.", "La p\u00e1gina constata el cruce. Qu\u00e9 hacer con ello no le corresponde.", "Die Seite stellt die \u00dcberschreitung fest. Was daraus folgt, entscheidet sie nicht."],
+  'al.franchi.b':         ["<b>{{n}}</b> est \u00e0 {{c}}, sous le seuil de {{s}} que vous avez pos\u00e9.", "<b>{{n}}</b> is at {{c}}, below the {{s}} threshold you set.", "<b>{{n}}</b> est\u00e1 a {{c}}, bajo el umbral de {{s}} que fij\u00f3.", "<b>{{n}}</b> steht bei {{c}}, unter Ihrer Schwelle von {{s}}."],
+  'al.franchi.b.q':       ["La page constate le franchissement. Ce qu'il faut en faire ne lui appartient pas.", "The page notes the crossing. What to do about it is not its call.", "La p\u00e1gina constata el cruce. Qu\u00e9 hacer con ello no le corresponde.", "Die Seite stellt die \u00dcberschreitung fest. Was daraus folgt, entscheidet sie nicht."],
+
+  /* --- La veille : des constats, jamais des conseils --- */
+  've.titre':             ["Ce qui m\u00e9rite un coup d'\u0153il", "Worth a look", "Merece un vistazo", "Einen Blick wert"],
+  've.reglages':          ["R\u00e9gler les seuils", "Set the thresholds", "Ajustar los umbrales", "Schwellen einstellen"],
+  've.note':              ["Ce sont des constats, pas des conseils\u00a0: la page dit ce que vos chiffres montrent, et ce que cela implique m\u00e9caniquement. Elle ne dit \u00e0 personne quoi faire de son argent. Les seuils vous appartiennent \u2014 montez-les et la page se tait.", "These are observations, not advice: the page says what your figures show, and what that mechanically implies. It tells nobody what to do with their money. The thresholds are yours \u2014 raise them and the page falls silent.", "Son constataciones, no consejos: la p\u00e1gina dice lo que muestran sus cifras y lo que eso implica mec\u00e1nicamente. No le dice a nadie qu\u00e9 hacer con su dinero. Los umbrales son suyos: s\u00fabalos y la p\u00e1gina callar\u00e1.", "Das sind Feststellungen, keine Beratung: Die Seite sagt, was Ihre Zahlen zeigen und was daraus mechanisch folgt. Sie sagt niemandem, was er mit seinem Geld tun soll. Die Schwellen geh\u00f6ren Ihnen \u2014 erh\u00f6hen Sie sie, und die Seite schweigt."],
+  've.conc':              ["<b>{{n}}</b> p\u00e8se <b>{{p}}</b> de votre total.", "<b>{{n}}</b> is <b>{{p}}</b> of your total.", "<b>{{n}}</b> pesa <b>{{p}}</b> de su total.", "<b>{{n}}</b> macht <b>{{p}}</b> Ihres Gesamtwerts aus."],
+  've.conc.q':            ["Au-dessus de ce seuil, c'est cette ligne qui d\u00e9cide de votre ann\u00e9e\u00a0: les autres ne pourront pas compenser ce qu'elle fera.", "Above this threshold, that one holding decides your year: the others cannot offset what it does.", "Por encima de este umbral, esa l\u00ednea decide su a\u00f1o: las dem\u00e1s no podr\u00e1n compensar lo que haga.", "Oberhalb dieser Schwelle entscheidet diese eine Position Ihr Jahr: Die anderen k\u00f6nnen nicht ausgleichen, was sie tut."],
+  've.cat':               ["<b>{{n}}</b> repr\u00e9sente <b>{{p}}</b> du portefeuille.", "<b>{{n}}</b> is <b>{{p}}</b> of the portfolio.", "<b>{{n}}</b> representa <b>{{p}}</b> de la cartera.", "<b>{{n}}</b> macht <b>{{p}}</b> des Portfolios aus."],
+  've.cat.q':             ["Les lignes d'une m\u00eame cat\u00e9gorie montent et descendent souvent ensemble. En r\u00e9partir plusieurs \u00e0 l'int\u00e9rieur ne diversifie pas autant qu'on le croit.", "Holdings in one category often rise and fall together. Spreading across several of them diversifies less than it looks.", "Las l\u00edneas de una misma categor\u00eda suelen subir y bajar juntas. Repartir entre varias diversifica menos de lo que parece.", "Positionen einer Kategorie steigen und fallen oft gemeinsam. Sie auf mehrere zu verteilen diversifiziert weniger als es scheint."],
+  've.cats':              ["Votre portefeuille tient en <b>{{n}}</b> cat\u00e9gories.", "Your portfolio sits in <b>{{n}}</b> categories.", "Su cartera cabe en <b>{{n}}</b> categor\u00edas.", "Ihr Portfolio liegt in <b>{{n}}</b> Kategorien."],
+  've.cats.q':            ["Moins il y en a, plus un m\u00eame \u00e9v\u00e8nement touche tout en m\u00eame temps.", "The fewer there are, the more one event hits everything at once.", "Cuantas menos haya, m\u00e1s un mismo suceso lo afecta todo a la vez.", "Je weniger es sind, desto mehr trifft ein einzelnes Ereignis alles zugleich."],
+  've.liq':               ["<b>{{p}}</b> sortirait en quelques jours, soit {{m}}.", "<b>{{p}}</b> could be out in a few days, that is {{m}}.", "<b>{{p}}</b> saldr\u00eda en pocos d\u00edas, o sea {{m}}.", "<b>{{p}}</b> w\u00e4re in wenigen Tagen verf\u00fcgbar, das sind {{m}}."],
+  've.liq.q':             ["C'est ce chiffre qui d\u00e9cide si une mauvaise ann\u00e9e se traverse ou se subit\u00a0: le reste demande de vendre, et vendre au mauvais moment co\u00fbte.", "This figure decides whether a bad year is weathered or endured: the rest requires selling, and selling at the wrong moment costs.", "Esta cifra decide si un mal a\u00f1o se atraviesa o se sufre: el resto exige vender, y vender a destiempo cuesta.", "Diese Zahl entscheidet, ob ein schlechtes Jahr \u00fcberstanden oder erlitten wird: Der Rest verlangt Verk\u00e4ufe, und zur Unzeit zu verkaufen kostet."],
+  've.dette':             ["Vous devez <b>{{d}}</b>, soit <b>{{p}}</b> de ce que vous d\u00e9tenez.", "You owe <b>{{d}}</b>, that is <b>{{p}}</b> of what you hold.", "Debe <b>{{d}}</b>, es decir <b>{{p}}</b> de lo que posee.", "Sie schulden <b>{{d}}</b>, also <b>{{p}}</b> dessen, was Sie halten."],
+  've.dette.q':           ["La dette ne bouge pas quand les march\u00e9s baissent\u00a0: c'est l'actif qui bouge, et l'\u00e9cart se creuse des deux c\u00f4t\u00e9s \u00e0 la fois.", "Debt does not move when markets fall: the asset moves, and the gap widens from both sides at once.", "La deuda no se mueve cuando los mercados caen: se mueve el activo, y la brecha se abre por ambos lados a la vez.", "Schulden bewegen sich nicht, wenn M\u00e4rkte fallen: Der Verm\u00f6genswert bewegt sich, und die L\u00fccke \u00f6ffnet sich von beiden Seiten zugleich."],
+  've.rien':              ["Rien ne d\u00e9passe vos seuils aujourd'hui.", "Nothing is above your thresholds today.", "Nada supera sus umbrales hoy.", "Heute liegt nichts \u00fcber Ihren Schwellen."],
+  've.s.conc':            ["Une ligne au-del\u00e0 de", "One holding above", "Una l\u00ednea por encima de", "Eine Position \u00fcber"],
+  've.s.cat':             ["Une cat\u00e9gorie au-del\u00e0 de", "One category above", "Una categor\u00eda por encima de", "Eine Kategorie \u00fcber"],
+  've.s.cats':            ["Moins de \u2026 cat\u00e9gories", "Fewer than \u2026 categories", "Menos de \u2026 categor\u00edas", "Weniger als \u2026 Kategorien"],
+  've.s.liq':             ["Mobilisable en de\u00e7\u00e0 de", "Available below", "Disponible por debajo de", "Verf\u00fcgbar unter"],
+  've.s.dette':           ["Dette au-del\u00e0 de", "Debt above", "Deuda por encima de", "Schulden \u00fcber"],
+
+  /* --- Les prets, et le patrimoine net --- */
+  'pr.titre':             ["Ce que vous devez", "What you owe", "Lo que debe", "Was Sie schulden"],
+  'pr.ajouter':           ["Ajouter un pr\u00eat", "Add a loan", "A\u00f1adir un pr\u00e9stamo", "Kredit hinzuf\u00fcgen"],
+  'pr.sup':               ["Retirer ce pr\u00eat", "Remove this loan", "Quitar este pr\u00e9stamo", "Diesen Kredit entfernen"],
+  'pr.net':               ["de patrimoine net\u00a0: {{b}} d'actifs, moins {{d}} qu'il reste \u00e0 rembourser.", "net worth: {{b}} of assets, less {{d}} still to repay.", "de patrimonio neto: {{b}} de activos, menos {{d}} por devolver.", "Nettoverm\u00f6gen: {{b}} an Aktiva, abz\u00fcglich {{d}}, die noch zu tilgen sind."],
+  'pr.m.restant':         ["Capital restant d\u00fb", "Capital still owed", "Capital pendiente", "Restschuld"],
+  'pr.m.mens':            ["Mensualit\u00e9", "Monthly payment", "Cuota mensual", "Monatsrate"],
+  'pr.m.interets':        ["Int\u00e9r\u00eats d\u00e9j\u00e0 pay\u00e9s", "Interest paid so far", "Intereses ya pagados", "Bisher gezahlte Zinsen"],
+  'pr.m.interets.q':      ["sur {{t}} au total", "of {{t}} in all", "de {{t}} en total", "von insgesamt {{t}}"],
+  'pr.m.fin':             ["Derni\u00e8re \u00e9ch\u00e9ance", "Last payment", "\u00daltimo vencimiento", "Letzte Rate"],
+  'pr.m.fin.q':           ["{{n}} mensualit\u00e9s restantes", "{{n}} payments to go", "{{n}} cuotas restantes", "noch {{n}} Raten"],
+  'pr.ligne':             ["{{p}} rembours\u00e9 \u00b7 {{k}} mensualit\u00e9s sur {{n}} \u00b7 taux {{tx}}\u00a0%", "{{p}} repaid \u00b7 {{k}} payments of {{n}} \u00b7 rate {{tx}}%", "{{p}} devuelto \u00b7 {{k}} cuotas de {{n}} \u00b7 tipo {{tx}}\u00a0%", "{{p}} getilgt \u00b7 {{k}} von {{n}} Raten \u00b7 Satz {{tx}}\u00a0%"],
+  'pr.f.nom':             ["Intitul\u00e9", "Label", "Denominaci\u00f3n", "Bezeichnung"],
+  'pr.f.cap':             ["Capital emprunt\u00e9", "Amount borrowed", "Capital prestado", "Kreditsumme"],
+  'pr.f.taux':            ["Taux annuel, en\u00a0%", "Annual rate,\u00a0%", "Tipo anual,\u00a0%", "Jahreszins,\u00a0%"],
+  'pr.f.duree':           ["Dur\u00e9e, en mois", "Term, in months", "Plazo, en meses", "Laufzeit, in Monaten"],
+  'pr.f.debut':           ["Premi\u00e8re \u00e9ch\u00e9ance", "First payment", "Primer vencimiento", "Erste Rate"],
+  'pr.f.mens':            ["Mensualit\u00e9 r\u00e9elle", "Actual monthly payment", "Cuota real", "Tats\u00e4chliche Rate"],
+  'pr.f.mens.q':          ["Facultatif. Celle de votre \u00e9ch\u00e9ancier, assurance comprise. Sans elle, la page calcule la mensualit\u00e9 th\u00e9orique, qui est plus basse.", "Optional. The one on your schedule, insurance included. Without it the page computes the theoretical payment, which is lower.", "Opcional. La de su cuadro de amortizaci\u00f3n, con seguro. Sin ella, la p\u00e1gina calcula la cuota te\u00f3rica, que es menor.", "Optional. Die aus Ihrem Tilgungsplan, inklusive Versicherung. Ohne sie rechnet die Seite die theoretische Rate, die niedriger ist."],
+  'pr.f.ok':              ["Enregistrer", "Save", "Guardar", "Speichern"],
+  'pr.f.non':             ["Annuler", "Cancel", "Cancelar", "Abbrechen"],
+  'pr.note':              ["Amortissement \u00e0 mensualit\u00e9 constante. L'assurance emprunteur, les frais de dossier, un diff\u00e9r\u00e9, un taux variable ou un remboursement anticip\u00e9 ne sont pas calcul\u00e9s\u00a0: si votre pr\u00eat en porte un, saisissez la mensualit\u00e9 r\u00e9elle et c'est elle qui sera retenue.", "Constant-payment amortisation. Loan insurance, arrangement fees, a deferral, a variable rate or early repayment are not computed: if your loan has one, enter the actual payment and that is what will be used.", "Amortizaci\u00f3n con cuota constante. El seguro, los gastos de apertura, una carencia, un tipo variable o una amortizaci\u00f3n anticipada no se calculan: si su pr\u00e9stamo tiene alguno, introduzca la cuota real y ser\u00e1 la que se use.", "Tilgung mit konstanter Rate. Restschuldversicherung, Bearbeitungsgeb\u00fchren, tilgungsfreie Zeit, variabler Zins oder Sondertilgung werden nicht berechnet: Hat Ihr Kredit so etwas, tragen Sie die tats\u00e4chliche Rate ein, und diese wird verwendet."],
+
   'm.rang':               ["Rang","Rank","Rango","Rang"],
   'm.nom':                ["Nom","Name","Nombre","Name"],
   'm.prix':               ["Prix","Price","Precio","Preis"],
@@ -7729,6 +8171,362 @@ window.PC = (function(){
 })();
 
 /* ============================================================
+   LA TABLE DES PARAMETRES FISCAUX
+   ------------------------------------------------------------
+   AUCUN TAUX N'EST ECRIT EN DUR AILLEURS QUE LA. C'est la seule
+   regle de ce fichier, et elle a une raison precise : un taux change
+   par une loi de finances, et un taux recopie a six endroits en
+   change a cinq. Tout ce qui calcule de l'impot sur cette page lit
+   cette table, et affiche A COTE DU CHIFFRE le parametre employe, sa
+   reference et la date ou il a ete verifie.
+
+   POURQUOI CETTE TABLE EXISTE, ET POURQUOI ELLE EST LE COEUR DU
+   SUJET. Depuis 2026, DEUX taux de prelevements sociaux coexistent
+   selon le support : la LFSS 2026 a porte la CSG sur les revenus
+   mobiliers de 9,2 a 10,6 %, ce qui met ces revenus-la a 18,6 % et
+   le prelevement forfaitaire unique a 31,4 % ; le foncier,
+   l'immobilier et l'assurance-vie restent a 17,2 %, donc a 30 %.
+   Quelqu'un qui detient un compte-titres, une assurance-vie, une
+   SCPI et de la crypto subit donc deux taux differents sur un meme
+   portefeuille. Ce n'est pas une subtilite : c'est un ecart de 1,4
+   point qu'aucun tableur ne suit tout seul.
+
+   CE QUE CETTE TABLE N'EST PAS. Elle ne remplace ni l'administration
+   ni un conseil. Appliquer une regle publiee a des chiffres que le
+   lecteur a saisis lui-meme est un CALCUL ; dire a quelqu'un ce
+   qu'il devrait faire de son argent est un conseil, et c'est une
+   activite reglementee a laquelle cette page ne touche pas. Chaque
+   ecran qui s'appuie sur cette table le dit.
+
+   LES DESACCORDS SONT NOMMES, PAS TRANCHES. Sur certains points les
+   sources consultees ne disent pas la meme chose — le meuble, la
+   date d'effet. Un parametre porte alors `discute`, et l'ecran qui
+   l'emploie le signale au lieu de choisir en silence a la place du
+   lecteur.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  const FISC = {
+    /* La date a laquelle ces valeurs ont ete relues. Elle s'affiche
+       partout ou un chiffre de cette table sort : un taux sans date
+       est un taux qu'on croit. */
+    verifie: '2026-10-10',
+    autorite: 'impots.gouv.fr',
+    pays: 'FR',
+
+    p: {
+      /* ----- Prelevements sociaux : les deux taux de 2026 ----- */
+      'ps.mob': {
+        v:18.6, u:'%', cle:'f.p.psmob',
+        ref:'LFSS 2026, art. 12 — loi n° 2025-1403 du 30 décembre 2025',
+        quoi:'f.p.psmob.q',
+        note:'f.p.psmob.n',
+        genres:['actions','etf','obligations','crypto','trading','noncote','per']
+      },
+      'ps.pat': {
+        v:17.2, u:'%', cle:'f.p.pspat',
+        ref:'CSS, art. L. 136-6 et L. 136-7',
+        quoi:'f.p.pspat.q',
+        genres:['immo','scpi','av','liquid','minage','autre']
+      },
+      /* ----- Impot sur le revenu, part forfaitaire ----- */
+      'ir.pfu': {
+        v:12.8, u:'%', cle:'f.p.irpfu',
+        ref:'CGI, art. 200 A, 1-A',
+        quoi:'f.p.irpfu.q'
+      },
+      /* ----- Abattements et seuils ----- */
+      'div.abat': {
+        v:40, u:'%', cle:'f.p.divabat',
+        ref:'CGI, art. 158, 3-2°',
+        quoi:'f.p.divabat.q'
+      },
+      'av.abat.seul': {
+        v:4600, u:'€', cle:'f.p.avabat1',
+        ref:'CGI, art. 125-0 A, I-1°',
+        quoi:'f.p.avabat1.q'
+      },
+      'av.abat.couple': {
+        v:9200, u:'€', cle:'f.p.avabat2',
+        ref:'CGI, art. 125-0 A, I-1°',
+        quoi:'f.p.avabat2.q'
+      },
+      'ifi.seuil': {
+        v:1300000, u:'€', cle:'f.p.ifiseuil',
+        ref:'CGI, art. 964 et 977',
+        quoi:'f.p.ifiseuil.q'
+      },
+      'ifi.rp': {
+        v:30, u:'%', cle:'f.p.ifirp',
+        ref:'CGI, art. 973',
+        quoi:'f.p.ifirp.q'
+      },
+      'crypto.seuil': {
+        v:305, u:'€', cle:'f.p.cryseuil',
+        ref:'CGI, art. 150 VH bis, II-A',
+        quoi:'f.p.cryseuil.q'
+      },
+      'crypto.amende': {
+        v:750, u:'€', cle:'f.p.cryamende',
+        ref:'CGI, art. 1736, IV bis',
+        quoi:'f.p.cryamende.q',
+        note:'f.p.cryamende.n'
+      },
+      'pea.plafond': {
+        v:150000, u:'€', cle:'f.p.peaplaf',
+        ref:'CoMoFi, art. L. 221-30',
+        quoi:'f.p.peaplaf.q'
+      },
+      'pea.ans': {
+        v:5, u:'an', cle:'f.p.peaans',
+        ref:'CGI, art. 157, 5° bis',
+        quoi:'f.p.peaans.q'
+      },
+      'av.ans': {
+        v:8, u:'an', cle:'f.p.avans',
+        ref:'CGI, art. 125-0 A',
+        quoi:'f.p.avans.q'
+      }
+    },
+
+    /* ----- Le bareme de l'IFI, tranche par tranche ----- */
+    ifi: {
+      ref:'CGI, art. 977',
+      tranches:[
+        {de:0,        a:800000,   taux:0},
+        {de:800000,   a:1300000,  taux:0.5},
+        {de:1300000,  a:2570000,  taux:0.7},
+        {de:2570000,  a:5000000,  taux:1},
+        {de:5000000,  a:10000000, taux:1.25},
+        {de:10000000, a:null,     taux:1.5}
+      ],
+      /* La decote, entre 1,3 et 1,4 million : 17 500 euros moins
+         1,25 % du patrimoine net taxable. */
+      decote:{de:1300000, a:1400000, fixe:17500, part:1.25}
+    },
+
+    /* ----- Les abattements pour duree de detention, immobilier -----
+       Deux series differentes, et c'est tout le piege : un bien est
+       exonere d'impot sur le revenu a 22 ans et de prelevements
+       sociaux a 30 ans seulement. Entre les deux, on paie encore. */
+    pvimmo: {
+      ref:'CGI, art. 150 VC et 150 VD ; CSS, art. L. 136-7',
+      ir:{debut:6, parAn:6, derniere:{an:22, taux:4}, exonere:22},
+      ps:{debut:6, p1:{jusqu:21, taux:1.65}, p22:1.60, p23:{taux:9}, exonere:30}
+    },
+
+    /* ============================================================
+       LE CALENDRIER
+       ------------------------------------------------------------
+       Deux natures de lignes, et la difference est tout sauf un
+       detail :
+
+       `regle` — une REGLE, qui ne change pas d'une annee sur
+       l'autre. « L'IFI s'apprecie au 1er janvier » est vrai tous les
+       ans, et le restera tant que l'article 964 ne bougera pas.
+
+       `date` — une DATE PUBLIEE pour une annee donnee, fixee chaque
+       annee par l'administration. Elle porte donc l'annee pour
+       laquelle elle vaut, et l'ecran la signale comme a verifier.
+       Les sources consultees ne donnaient pas toutes les memes
+       dates pour 2026 ; plutot que de choisir la plus jolie, la page
+       affiche celle-ci, dit d'ou elle vient, et renvoie a
+       impots.gouv.fr qui fait foi.
+
+       `pour` — a qui la ligne s'adresse. Rien : tout le monde. Un
+       genre d'actif : seulement ceux qui en detiennent. « ifi » :
+       seulement si le patrimoine immobilier net depasse le seuil.
+       Un calendrier qui montre a tout le monde l'echeance de tout le
+       monde est un calendrier qu'on ne lit plus.
+       ============================================================ */
+    calendrier: [
+      {id:'ifi.fait',  sorte:'regle', m:1,  j:1,  cle:'f.c.ifi1',
+       ref:'CGI, art. 964', pour:'immo'},
+      {id:'avance',    sorte:'regle', m:1,  j:15, cle:'f.c.avance',
+       ref:'CGI, art. 1665 bis'},
+      {id:'ouv',       sorte:'date',  m:4,  j:9,  cle:'f.c.ouv',
+       ref:'impots.gouv.fr', an:2026},
+      {id:'papier',    sorte:'date',  m:5,  j:19, cle:'f.c.papier',
+       ref:'impots.gouv.fr', an:2026},
+      {id:'z1',        sorte:'date',  m:5,  j:21, cle:'f.c.zone',
+       ref:'impots.gouv.fr', an:2026, zone:1},
+      {id:'z2',        sorte:'date',  m:5,  j:28, cle:'f.c.zone',
+       ref:'impots.gouv.fr', an:2026, zone:2},
+      {id:'z3',        sorte:'date',  m:6,  j:4,  cle:'f.c.zone',
+       ref:'impots.gouv.fr', an:2026, zone:3},
+      {id:'ifi.pay',   sorte:'date',  m:9,  j:15, cle:'f.c.ifipay',
+       ref:'impots.gouv.fr', an:2026, pour:'ifi'},
+      {id:'ir.solde',  sorte:'date',  m:9,  j:25, cle:'f.c.irsolde',
+       ref:'impots.gouv.fr', an:2026},
+      {id:'tf',        sorte:'date',  m:10, j:15, cle:'f.c.tf',
+       ref:'impots.gouv.fr', an:2026, pour:'immo'},
+      {id:'fin',       sorte:'regle', m:12, j:31, cle:'f.c.fin',
+       ref:'CGI, art. 12'}
+    ],
+
+    /* Les trois zones de depot en ligne. Le departement decide, et
+       c'est pour cela que la page le demande une fois : afficher les
+       trois dates a tout le monde, c'est n'en afficher aucune. */
+    zones: [
+      {z:1, de:1,  a:19,  cle:'f.z.1'},
+      {z:2, de:20, a:54,  cle:'f.z.2'},
+      {z:3, de:55, a:976, cle:'f.z.3'}
+    ],
+
+    /* ----- Ce sur quoi les sources consultees divergent -----
+       Nommer le desaccord vaut mieux que trancher a la place du
+       lecteur. L'ecran qui emploie l'un de ces parametres le dit. */
+    discute: {
+      /* La cle est la CATEGORIE d'actif, pas le parametre : le
+         desaccord sur le meuble ne concerne pas les actions, et
+         l'afficher sous chaque ligne mobiliere le rendait invisible
+         a force d'etre partout. */
+      immo: 'f.d.meuble',
+      av:   'f.d.av'
+    }
+  };
+
+  /* LES ABATTEMENTS POUR DUREE DE DETENTION, immobilier.
+     Deux series DIFFERENTES, et c'est tout le piege : un bien est
+     exonere d'impot sur le revenu a 22 ans et de prelevements
+     sociaux a 30 ans seulement. Entre les deux, on croit ne plus
+     rien devoir et on doit encore. Rend la part IMPOSABLE restante,
+     de 0 a 1. */
+  FISC.abatImmo = function(ans){
+    const a = Math.max(0, Math.floor(ans || 0));
+    /* Impot sur le revenu : 6 % par an de la 6e a la 21e, 4 % la
+       22e. Exonere ensuite. */
+    let ir = 0;
+    if (a >= 22) ir = 100;
+    else if (a > 5) ir = Math.min(100, (a - 5) * 6);
+    /* Prelevements sociaux : 1,65 % par an de la 6e a la 21e,
+       1,60 % la 22e, puis 9 % par an de la 23e a la 30e. */
+    let ps = 0;
+    if (a >= 30) ps = 100;
+    else if (a >= 22) ps = Math.min(100, 16 * 1.65 + 1.60 + (a - 22) * 9);
+    else if (a > 5) ps = (a - 5) * 1.65;
+    return {ans:a, abatIR:Math.min(100, ir), abatPS:Math.min(100, ps),
+            partIR:1 - Math.min(100, ir) / 100, partPS:1 - Math.min(100, ps) / 100,
+            exonereIR:a >= 22, exonerePS:a >= 30,
+            ref:FISC.pvimmo.ref};
+  };
+
+  /* Lire un parametre. Rend l'objet entier, pas seulement le chiffre :
+     celui qui l'affiche a besoin de la reference et de la date. */
+  FISC.lire = function(cle){
+    const x = FISC.p[cle];
+    if (!x) return null;
+    return {v:x.v, u:x.u, cle:cle, nom:x.cle, ref:x.ref, quoi:x.quoi,
+            note:x.note || null, verifie:FISC.verifie};
+  };
+
+  /* Le taux de prelevements sociaux qui s'applique A CE GENRE DE
+     LIGNE. C'est la fonction qui porte tout le sujet : poser 17,2 %
+     partout, ou 18,6 % partout, serait faux dans la moitie des cas
+     depuis 2026. */
+  FISC.ps = function(genre){
+    const mob = FISC.p['ps.mob'];
+    return (mob.genres.indexOf(String(genre)) !== -1) ? FISC.lire('ps.mob')
+                                                      : FISC.lire('ps.pat');
+  };
+
+  /* Le prelevement forfaitaire unique pour ce genre : la part d'impot
+     sur le revenu, qui ne bouge pas, plus les prelevements sociaux,
+     qui dependent du support. */
+  FISC.pfu = function(genre){
+    const ir = FISC.lire('ir.pfu'), ps = FISC.ps(genre);
+    return {total:Math.round((ir.v + ps.v) * 100) / 100, ir:ir, ps:ps};
+  };
+
+  /* La zone de depot d'un departement. Rend null si on ne sait pas :
+     mieux vaut demander que supposer. */
+  FISC.zone = function(dep){
+    const n = parseInt(String(dep || '').replace(/\D/g, ''), 10);
+    if (!isFinite(n) || !n) return null;
+    for (let i = 0; i < FISC.zones.length; i++){
+      if (n >= FISC.zones[i].de && n <= FISC.zones[i].a) return FISC.zones[i].z;
+    }
+    return null;
+  };
+
+  /* LES ECHEANCES QUI VOUS CONCERNENT, datees, triees, a partir
+     d'aujourd'hui. `etat` dit ce qu'on detient et ce qu'on sait :
+     {genres:[...], ifi:true/false, zone:1|2|3|null}. Une echeance
+     deja passee cette annee revient pour l'annee suivante — un
+     calendrier qui s'epuise au 31 decembre ne sert plus a rien le
+     2 janvier. */
+  FISC.echeances = function(etat, aujourd){
+    etat = etat || {};
+    const auj = aujourd ? new Date(aujourd) : new Date();
+    auj.setHours(0, 0, 0, 0);
+    const genres = etat.genres || [];
+    const out = [];
+    FISC.calendrier.forEach(function(e){
+      /* Le filtre : a qui cette ligne s'adresse. */
+      if (e.zone && etat.zone && e.zone !== etat.zone) return;
+      if (e.zone && !etat.zone) return;        /* departement inconnu : on demande avant de montrer */
+      if (e.pour === 'ifi' && !etat.ifi) return;
+      if (e.pour && e.pour !== 'ifi' && genres.indexOf(e.pour) === -1) return;
+
+      /* Cette annee si elle est devant, l'an prochain sinon. Une date
+         publiee pour 2026 ne vaut PAS pour 2027 : on la reporte en la
+         marquant « a reverifier », plutot que de la taire. */
+      let an = auj.getFullYear();
+      let d = new Date(an, e.m - 1, e.j);
+      d.setHours(0, 0, 0, 0);
+      if (d < auj){ an += 1; d = new Date(an, e.m - 1, e.j); d.setHours(0, 0, 0, 0); }
+      const jours = Math.round((d - auj) / 86400000);
+      out.push({
+        id:e.id, cle:e.cle, ref:e.ref, sorte:e.sorte, pour:e.pour || null,
+        date:d, an:an, jours:jours,
+        /* Une date publiee pour une annee, reportee sur la suivante,
+           n'est plus une date : c'est une estimation. On le dit. */
+        aVerifier:e.sorte === 'date' && (!e.an || e.an !== an)
+      });
+    });
+    return out.sort(function(x, y){ return x.date - y.date; });
+  };
+
+  /* LES ANNIVERSAIRES QUI SONT LES VOTRES. C'est la partie que
+     personne ne tient : une assurance-vie ouverte en mars 2019
+     change de regime en mars 2027, et ce jour-la l'abattement annuel
+     s'ouvre. Un PEA de cinq ans cesse de se fermer a la moindre
+     sortie. Ces deux dates ne sont ecrites nulle part ailleurs que
+     dans le contrat, et la page les connait parce que vous avez
+     saisi la date d'ouverture. */
+  FISC.anniversaires = function(actifs, aujourd){
+    const auj = aujourd ? new Date(aujourd) : new Date();
+    auj.setHours(0, 0, 0, 0);
+    const regles = {av:{ans:8, cle:'f.a.av', par:'av.ans'},
+                    pea:{ans:5, cle:'f.a.pea', par:'pea.ans'}};
+    const out = [];
+    (actifs || []).forEach(function(a){
+      if (!a || !a.depuis) return;
+      /* Le PEA n'est pas une categorie a part : il se range dans les
+         actions. On ne devine pas — la ligne doit le dire. */
+      const q = a.cat === 'av' ? 'av'
+              : (/\bpea\b/i.test(String(a.nom || '')) ? 'pea' : null);
+      if (!q) return;
+      const r = regles[q];
+      const d0 = new Date(a.depuis);
+      if (isNaN(d0)) return;
+      const d = new Date(d0.getFullYear() + r.ans, d0.getMonth(), d0.getDate());
+      d.setHours(0, 0, 0, 0);
+      out.push({
+        id:'anniv.' + q + '.' + (a.id || a.nom), cle:r.cle, par:r.par,
+        nom:a.nom || '', ouvert:d0, date:d, ans:r.ans,
+        atteint:d <= auj,
+        jours:Math.round((d - auj) / 86400000)
+      });
+    });
+    return out.sort(function(x, y){ return x.date - y.date; });
+  };
+
+  window.PC_FISC = FISC;
+})();
+
+/* ============================================================
    UNE IMAGE QUI NE VIENT PAS LAISSE SON MONOGRAMME
    ------------------------------------------------------------
    Les logos des lignes de marche viennent d'un tiers : le fournisseur
@@ -8106,14 +8904,40 @@ document.addEventListener('error', function(ev){
   <div class="wrap">
     <div class="section__head">
       <div>
-        <h2 data-i18n-html="apercu.h2">Ce que<br>vous verrez.</h2>
+        <h2 data-i18n-html="apercu.h2">Deux taux,<br>un seul portefeuille.</h2>
       </div>
-      <p class="section__intro reveal" style="--rd:.12s" data-i18n-html="apercu.intro">
-        Un portefeuille d'exemple, affiché comme le sera le vôtre une fois vos actifs saisis.
-        Rien de tout ceci ne vous appartient&nbsp;: votre espace démarre vide et se remplit
-        à mesure que vous ajoutez des lignes.
-      </p>
+      <p class="section__intro reveal" style="--rd:.12s" data-i18n-html="apercu.intro"></p>
     </div>
+
+    <!-- ===== CE QUE LA PAGE TIENT A VOTRE PLACE =====
+         Quatre choses, et chacune porte un chiffre VRAI, pas une
+         promesse. Ce sont les quatre que personne ne tient dans un
+         tableur parce qu'elles demandent de suivre une loi, une
+         date d'ouverture, un amortissement ou un seuil. -->
+    <div class="apercu__g">
+      <article class="ap-c reveal" style="--rd:.18s">
+        <span class="ap-c__k mono" data-i18n="ap.1.k">Le calendrier</span>
+        <h3 class="ap-c__t" data-i18n="ap.1.t">Les échéances qui vous concernent, vous.</h3>
+        <p class="ap-c__p" data-i18n="ap.1.p"></p>
+      </article>
+      <article class="ap-c reveal" style="--rd:.24s">
+        <span class="ap-c__k mono" data-i18n="ap.2.k">Le patrimoine net</span>
+        <h3 class="ap-c__t" data-i18n="ap.2.t">Ce que vous avez, moins ce que vous devez.</h3>
+        <p class="ap-c__p" data-i18n="ap.2.p"></p>
+      </article>
+      <article class="ap-c reveal" style="--rd:.30s">
+        <span class="ap-c__k mono" data-i18n="ap.3.k">La veille</span>
+        <h3 class="ap-c__t" data-i18n="ap.3.t">Ce qui a bougé pendant que vous ne regardiez pas.</h3>
+        <p class="ap-c__p" data-i18n="ap.3.p"></p>
+      </article>
+      <article class="ap-c reveal" style="--rd:.36s">
+        <span class="ap-c__k mono" data-i18n="ap.4.k">Si je vendais</span>
+        <h3 class="ap-c__t" data-i18n="ap.4.t">Combien il reste après impôt.</h3>
+        <p class="ap-c__p" data-i18n="ap.4.p"></p>
+      </article>
+    </div>
+
+    <p class="apercu__loi reveal" style="--rd:.42s" data-i18n-html="ap.loi"></p>
   </div>
 </section>
 
@@ -8810,6 +9634,10 @@ document.addEventListener('error', function(ev){
     <nav class="onglets" id="onglets" role="tablist" data-i18n-aria="e.ong.aria" aria-label="Vues du portefeuille"></nav>
 
     <div class="pan" id="pan-general" role="tabpanel" aria-labelledby="ong-general" tabindex="0">
+      <!-- LA RELANCE. Un calendrier qu'il faut penser a ouvrir ne
+           rappelle rien : c'est un calendrier qu'on consulte apres
+           coup. La prochaine echeance vient donc au lecteur, la ou il
+           arrive, et elle ne s'affiche que quand elle approche. -->
 
       <p class="invite" id="perf-vide" hidden>
         <span class="invite__t" style="display:block" data-i18n="e.perf.vide.t">Rien à mesurer pour l'instant.</span>
@@ -8825,14 +9653,97 @@ document.addEventListener('error', function(ev){
           <!-- D'ou viennent les cours affiches, et quand. Cachee tant
                qu'aucune ligne ne suit de cours : sans code, la question
                ne se pose pas. -->
+          <!-- LE NET, quand il y a une dette. Un appartement de
+               300 000 euros avec 220 000 de credit dessus ne fait pas
+               300 000 euros de patrimoine, et c'est la seule reponse
+               honnete a « combien j'ai ». Sans credit la ligne ne
+               s'affiche pas : « net = brut » ne dit rien. -->
+          <p class="solde__net" id="solde-net" hidden></p>
           <p class="cours-etat" id="cours-etat" hidden></p>
           <div class="solde__actions">
             <button class="btn" type="button" id="solde-ajout" data-i18n="e.solde.ajout">Ajouter une ligne</button>
             <button class="btn btn--ghost" type="button" id="solde-jour" data-i18n="e.solde.jour">Valeur du jour</button>
+            <button class="btn btn--ghost" type="button" id="pr-ouvre" data-i18n="pr.ajouter">Ajouter un prêt</button>
           </div>
         </section>
 
     <div class="kpis" id="kpis"></div>
+
+    <!-- ============================================================
+         CE QUI MERITE UN COUP D'OEIL
+         ------------------------------------------------------------
+         Des CONSTATS, jamais des conseils. « Une ligne pese 48 % du
+         total » est un fait, verifiable, et il dit mecaniquement
+         quelque chose : c'est elle qui decide de l'annee. « Vous
+         devriez vendre » serait un conseil en investissement, une
+         activite reglementee a laquelle cette page ne touche pas.
+
+         Les seuils appartiennent au lecteur. Quelqu'un qui assume
+         une ligne a 60 % n'a pas a voir une alerte tous les matins :
+         il monte le seuil, et la page se tait. Un seuil qu'on ne
+         peut pas regler est une alarme qu'on finit par debrancher.
+         ============================================================ -->
+    <section class="veille carte avance" id="veille" aria-labelledby="ve-k" hidden>
+      <div class="carte__t">
+        <h3 id="ve-k" data-i18n="ve.titre">Ce qui mérite un coup d'œil</h3>
+      </div>
+      <div class="veille__c">
+        <div class="veille__liste" id="ve-liste"></div>
+        <button class="veille__reg" type="button" id="ve-reglages"
+                aria-expanded="false" data-i18n="ve.reglages">Régler les seuils</button>
+        <div class="veille__seuils" id="ve-seuils" hidden></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CE QUE VOUS DEVEZ
+         ------------------------------------------------------------
+         Un pret n'est pas un actif avec un signe moins : il n'a ni
+         cours, ni performance, ni part dans une repartition. Il a un
+         capital, un taux, une duree et une mensualite, et ce qu'on
+         veut en savoir est ailleurs — combien reste-t-il, combien
+         d'interets sont deja partis, et quand est-ce fini.
+         ============================================================ -->
+    <section class="prets" id="prets" aria-labelledby="pr-k" hidden>
+      <div class="prets__tete">
+        <h3 class="prets__k" id="pr-k" data-i18n="pr.titre">Ce que vous devez</h3>
+      </div>
+      <div class="prets__liste" id="pr-liste"></div>
+
+      <form class="prets__form" id="pr-form" hidden>
+        <div class="prets__ch">
+          <label for="pr-nom" data-i18n="pr.f.nom">Intitulé</label>
+          <input id="pr-nom" type="text" autocomplete="off" required>
+        </div>
+        <div class="prets__ch">
+          <label for="pr-cap" data-i18n="pr.f.cap">Capital emprunté</label>
+          <input id="pr-cap" type="number" min="1" step="any" inputmode="decimal" required>
+        </div>
+        <div class="prets__ch">
+          <label for="pr-taux" data-i18n="pr.f.taux">Taux annuel</label>
+          <input id="pr-taux" type="number" min="0" max="30" step="any" inputmode="decimal" required>
+        </div>
+        <div class="prets__ch">
+          <label for="pr-mois" data-i18n="pr.f.duree">Durée, en mois</label>
+          <input id="pr-mois" type="number" min="1" max="600" step="1" inputmode="numeric" required>
+        </div>
+        <div class="prets__ch">
+          <label for="pr-dep" data-i18n="pr.f.debut">Première échéance</label>
+          <input id="pr-dep" type="date" required>
+        </div>
+        <div class="prets__ch">
+          <label for="pr-mens" data-i18n="pr.f.mens">Mensualité réelle</label>
+          <input id="pr-mens" type="number" min="0" step="any" inputmode="decimal">
+          <span class="prets__aide" data-i18n="pr.f.mens.q"></span>
+        </div>
+        <div class="prets__act">
+          <button class="btn" type="submit" data-i18n="pr.f.ok">Enregistrer</button>
+          <button class="btn btn--ghost" type="button" id="pr-annule" data-i18n="pr.f.non">Annuler</button>
+        </div>
+      </form>
+
+      <p class="prets__note" data-i18n="pr.note"></p>
+    </section>
 
     <div class="carte" style="margin-bottom:30px">
       <div class="carte__t">
@@ -9339,6 +10250,8 @@ document.addEventListener('error', function(ev){
                   aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
           <button class="sous-onglet an-vues__moi" type="button" role="tab" data-vue="moi"
                   aria-selected="false" data-i18n="an.vue.moi">Mes investissements</button>
+          <button class="sous-onglet" type="button" role="tab" data-vue="fiscal"
+                  aria-selected="false" data-i18n="f.onglet">Fiscal</button>
         </div>
 
         <div id="an-vue-marche">
@@ -9445,6 +10358,77 @@ document.addEventListener('error', function(ev){
             <div class="an-aide__c" data-i18n-html="an.aide.l"></div>
           </details>
         </div>
+        </div>
+
+        <!-- ============================================================
+             LE CALENDRIER FISCAL
+             ------------------------------------------------------------
+             Une cinquieme lecture, et non une sixieme destination : la
+             barre du bas en portait six, elles ne tenaient pas sur un
+             telephone, et le banc l'a dit avant moi. Sa place est ici
+             parce que c'est ici qu'on lit ce que le portefeuille
+             IMPLIQUE — les quatre autres vues ne font pas autre chose.
+
+             Ce qu'elle sait faire et qu'un calendrier imprime ne sait
+             pas : elle connait ce que vous detenez, donc elle ne montre
+             que les echeances qui vous regardent. Et elle connait VOS
+             dates — les huit ans d'une assurance-vie, les cinq ans d'un
+             plan — qui ne sont ecrites nulle part ailleurs que dans le
+             contrat et qui decident l'impot d'un retrait.
+             ============================================================ -->
+        <div id="an-vue-fiscal" class="fisc" hidden>
+      <div class="mar-tete">
+        <h2 class="mar-tete__t" data-i18n="f.titre">Calendrier fiscal</h2>
+      </div>
+      <p class="fisc__sous" data-i18n="f.sous"></p>
+
+      <!-- Le departement, demande UNE fois. Sans lui, la page
+           afficherait les trois dates de depot en ligne, dont deux
+           seraient fausses pour le lecteur. -->
+      <div class="fisc__dep">
+        <label for="f-dep" data-i18n="f.dep">Votre département</label>
+        <input id="f-dep" type="text" inputmode="numeric" autocomplete="off"
+               maxlength="3" spellcheck="false" placeholder="75">
+        <span class="fisc__zone mono" id="f-zone"></span>
+      </div>
+      <p class="fisc__aide" data-i18n="f.dep.aide"></p>
+
+      <div class="fisc__liste" id="f-liste"></div>
+
+      <div id="f-vos-bloc" hidden>
+        <h3 class="fisc__h3" data-i18n="f.vos">Vos dates à vous</h3>
+        <p class="fisc__aide" data-i18n="f.vos.q"></p>
+        <div class="fisc__liste" id="f-vos"></div>
+      </div>
+
+      <div id="f-taux-bloc" hidden>
+        <h3 class="fisc__h3" data-i18n="f.taux.titre"></h3>
+        <p class="fisc__aide" data-i18n="f.taux.q"></p>
+        <div class="fisc__taux" id="f-taux"></div>
+      </div>
+
+      <!-- ============================================================
+           SI JE VENDAIS CETTE LIGNE
+           ------------------------------------------------------------
+           La question qu'on se pose vraiment, et a laquelle aucun
+           tableur ne repond : combien reste-t-il APRES. Tout vient de
+           ce qui est deja saisi — ce qu'on a mis, ce que ca vaut, et
+           depuis quand. Le taux employe est celui du support, affiche
+           avec sa loi, et il se corrige si votre cas differe.
+           ============================================================ -->
+      <div id="f-sim-bloc" hidden>
+        <h3 class="fisc__h3" data-i18n="si.titre">Si je vendais cette ligne</h3>
+        <p class="fisc__aide" data-i18n="si.q"></p>
+        <div class="sim__ch">
+          <label for="si-ligne" data-i18n="si.ligne">La ligne</label>
+          <select id="si-ligne"></select>
+        </div>
+        <div class="sim__out" id="si-out"></div>
+      </div>
+
+      <p class="fisc__avert" id="f-report" data-i18n="f.report.bloc" hidden></p>
+      <p class="fisc__avert" data-i18n="f.avert"></p>
+      <p class="fisc__maj mono" id="f-maj"></p>
         </div>
 
         <div id="an-vue-moi" hidden>
@@ -11532,7 +12516,8 @@ document.addEventListener('error', function(ev){
       if (!o) return null;
       if (Array.isArray(o.portefeuilles)) return o;
       if (Array.isArray(o.actifs)){
-        return {portefeuilles:[{id:'p1', nom:'', actifs:o.actifs, historique:o.historique || []}],
+        return {portefeuilles:[{id:'p1', nom:'', actifs:o.actifs,
+                                historique:o.historique || [], dettes:o.dettes || []}],
                 courant:'p1', connecte:o.connecte, formule:'normal'};
       }
       return null;
@@ -11567,13 +12552,17 @@ document.addEventListener('error', function(ev){
      C'est moins élégant qu'un accès direct, mais ça évite de réécrire
      les quarante fonctions qui les lisent. */
   let portefeuilles = [], courant = 'p1';
+  /* La liste de travail des dettes, en regard de `actifs`. Meme
+     raison que pour elle : quarante fonctions lisent `actifs`, on ne
+     les reecrit pas pour un acces direct au portefeuille. */
+  let dettes = [];
 
   function portefeuilleCourant(){
     return portefeuilles.filter(function(p){ return p.id === courant; })[0] || portefeuilles[0];
   }
   function rangePortefeuille(){
     const p = portefeuilleCourant();
-    if (p){ p.actifs = actifs; p.historique = historique; }
+    if (p){ p.actifs = actifs; p.historique = historique; p.dettes = dettes; }
   }
   function chargePortefeuille(id){
     rangePortefeuille();
@@ -11581,6 +12570,97 @@ document.addEventListener('error', function(ev){
     const p = portefeuilleCourant();
     actifs = p ? p.actifs : [];
     historique = p ? p.historique : [];
+    /* Les sauvegardes d'avant les prets n'ont pas ce champ : il naît
+       vide plutot que `undefined`, sinon la premiere boucle casse. */
+    dettes = (p && Array.isArray(p.dettes)) ? p.dettes : [];
+  }
+
+  /* ============================================================
+     UN PRET, MOIS PAR MOIS
+     ------------------------------------------------------------
+     Amortissement a mensualite constante, la forme de presque tous
+     les prets immobiliers francais. Trois lignes de mathematiques,
+     et elles se verifient :
+
+       m = taux annuel / 12 / 100
+       mensualite = C x m / (1 - (1+m)^-n)
+       capital restant du apres k = C x ((1+m)^n - (1+m)^k)
+                                       / ((1+m)^n - 1)
+
+     A taux zero — ca existe, le pret a taux zero est un vrai produit
+     — la formule generale divise par zero. On traite le cas a part
+     plutot que d'ajouter un epsilon qui fausserait tout le reste.
+
+     CE QUI N'EST PAS CALCULE ICI, et il faut le dire : l'assurance
+     emprunteur, les frais de dossier, une periode de differe, un
+     taux variable, un remboursement anticipe. Un pret qui porte
+     l'une de ces choses n'est pas celui-la, et la page affiche la
+     mensualite SAISIE plutot que la sienne des qu'on lui en donne
+     une.
+     ============================================================ */
+  function pretCalc(d, aujourd){
+    if (!d) return null;
+    const C = +d.capital || 0;
+    const n = Math.round(+d.mois || 0);
+    const t = +d.taux || 0;
+    if (C <= 0 || n <= 0) return null;
+    const m = t / 100 / 12;
+    const theorique = m > 0 ? (C * m) / (1 - Math.pow(1 + m, -n)) : C / n;
+    /* La mensualite saisie l'emporte : elle inclut ce que la formule
+       ne sait pas (assurance, frais), et c'est elle qui sort du
+       compte en banque. */
+    const mens = (+d.mensualite > 0) ? +d.mensualite : theorique;
+
+    const auj = aujourd ? new Date(aujourd) : new Date();
+    auj.setHours(0, 0, 0, 0);
+    const d0 = d.depuis ? new Date(d.depuis) : null;
+    let k = 0;
+    if (d0 && !isNaN(d0)){
+      k = (auj.getFullYear() - d0.getFullYear()) * 12 + (auj.getMonth() - d0.getMonth());
+      if (auj.getDate() < d0.getDate()) k -= 1;
+    }
+    k = Math.max(0, Math.min(n, k));
+
+    const restant = m > 0
+      ? C * (Math.pow(1 + m, n) - Math.pow(1 + m, k)) / (Math.pow(1 + m, n) - 1)
+      : C * (n - k) / n;
+    const rembourse = C - restant;
+    /* Ce qui est sorti du compte, moins ce qui a rembourse le
+       capital : la difference EST l'interet paye. */
+    const interetsPayes = Math.max(0, theorique * k - rembourse);
+    const interetsTotal = Math.max(0, theorique * n - C);
+
+    /* La prochaine echeance : le meme jour du mois, le mois
+       prochain. */
+    let proch = null, jours = null;
+    if (d0 && !isNaN(d0) && k < n){
+      proch = new Date(d0.getFullYear(), d0.getMonth() + k + 1, d0.getDate());
+      proch.setHours(0, 0, 0, 0);
+      jours = Math.round((proch - auj) / 86400000);
+    }
+    const fin = d0 && !isNaN(d0)
+      ? new Date(d0.getFullYear(), d0.getMonth() + n, d0.getDate()) : null;
+
+    return {
+      capital:C, mois:n, taux:t, mens:mens, theorique:theorique,
+      payes:k, reste:n - k,
+      restant:Math.max(0, restant), rembourse:rembourse,
+      interetsPayes:interetsPayes, interetsTotal:interetsTotal,
+      interetsRestants:Math.max(0, interetsTotal - interetsPayes),
+      part:C ? rembourse / C * 100 : 0,
+      prochaine:proch, jours:jours, fin:fin,
+      solde:k >= n
+    };
+  }
+
+  /* Ce que tous les prets pesent encore. */
+  function detteTotale(){
+    let t = 0;
+    (dettes || []).forEach(function(d){
+      const c = pretCalc(d);
+      if (c) t += c.restant;
+    });
+    return t;
   }
   /* Le premier portefeuille n'a pas de nom saisi : il prend celui de la
      langue courante, et suit donc la traduction. */
@@ -11743,8 +12823,15 @@ document.addEventListener('error', function(ev){
       if (!pire || p < pire.p) pire = {nom:a.nom, p:p};
     });
     const grosse = actifs.reduce((m,a) => (!m || a.val > m.val ? a : m), null);
+    /* LE PATRIMOINE NET. C'est la seule facon honnete de repondre a
+       « combien j'ai » quand on doit encore de l'argent : un
+       appartement de 300 000 euros avec 220 000 de credit dessus ne
+       fait pas 300 000 euros de patrimoine. `val` reste le brut, et
+       tout ce qui calculait dessus continue de le faire. */
+    const dette = detteTotale();
     return {
-      inv:inv, val:val, gain:val - inv, perf: inv ? (val - inv) / inv * 100 : 0,
+      inv:inv, val:val, dette:dette, net:val - dette,
+      gain:val - inv, perf: inv ? (val - inv) / inv * 100 : 0,
       cats:cats, nbCats:Object.keys(cats).length,
       liquide:liquide, partLiquide: val ? liquide / val * 100 : 0,
       meilleur:meilleur, pire:pire, grosse:grosse,
@@ -12070,6 +13157,636 @@ document.addEventListener('error', function(ev){
     }, 160);
   });
 
+  /* ============================================================
+     LES SEUILS DE COURS
+     ------------------------------------------------------------
+     Deux nombres par ligne : au-dessus de, en dessous de. Quand le
+     cours passe, la page le DIT — elle ne fait rien d'autre, et
+     surtout pas « il est temps de vendre ».
+
+     Ce qu'une page web peut rappeler, et ce qu'elle ne peut pas :
+     elle ne tourne que quand elle est ouverte. Un seuil franchi la
+     nuit se lit le lendemain matin, a la reouverture. C'est ecrit
+     sous le bloc plutot que promis a mots couverts — un rappel
+     auquel on croit a tort est pire qu'un rappel absent.
+     ============================================================ */
+  function blocSeuils(a){
+    const al = a.alerte || {};
+    const c = coursDe ? coursDe(a) : null;
+    return '<div class="seuils" data-seuils="' + echapAttr(a.id) + '">' +
+      '<label class="seuils__ch"><span>' + echap(PC.t('al.haut')) + '</span>' +
+        '<input type="number" step="any" min="0" inputmode="decimal" data-seuil-h ' +
+        'value="' + (al.haut > 0 ? al.haut : '') + '"></label>' +
+      '<label class="seuils__ch"><span>' + echap(PC.t('al.bas')) + '</span>' +
+        '<input type="number" step="any" min="0" inputmode="decimal" data-seuil-b ' +
+        'value="' + (al.bas > 0 ? al.bas : '') + '"></label>' +
+      (c !== null ? '<p class="seuils__c mono">' +
+        echap(PC.t('al.actuel', {c:eur.format(c)})) + '</p>' : '') +
+      '<p class="seuils__n">' + echap(PC.t('al.note')) + '</p>' +
+    '</div>';
+  }
+
+  /* Le cours d'une ligne, quand elle en suit un. `pu` EST le prix
+     unitaire tenu a jour par le module des cours : on le lit, on ne
+     le recalcule pas a partir de la valeur. */
+  function coursDe(a){
+    if (!a || !a.sym) return null;
+    return (typeof a.pu === 'number' && a.pu > 0) ? a.pu : null;
+  }
+
+  /* Les franchissements, releves sur l'etat courant. Pas d'historique
+     a tenir : on compare le cours d'aujourd'hui au seuil, et c'est
+     tout ce que la question demande. */
+  function seuilsFranchis(){
+    const out = [];
+    (actifs || []).forEach(function(a){
+      if (!a || !a.alerte || !a.sym) return;
+      const c = coursDe(a);
+      if (c === null) return;
+      if (a.alerte.haut > 0 && c >= a.alerte.haut){
+        out.push({id:'al.h.' + a.id, cle:'al.franchi.h', sens:'haut',
+                  vars:{n:echap(a.nom), c:eur.format(c), s:eur.format(a.alerte.haut)}});
+      }
+      if (a.alerte.bas > 0 && c <= a.alerte.bas){
+        out.push({id:'al.b.' + a.id, cle:'al.franchi.b', sens:'bas',
+                  vars:{n:echap(a.nom), c:eur.format(c), s:eur.format(a.alerte.bas)}});
+      }
+    });
+    return out;
+  }
+
+  document.addEventListener('input', function(e){
+    const t = e.target;
+    if (!t || !t.closest) return;
+    const b = t.closest('[data-seuils]');
+    if (!b) return;
+    const id = b.getAttribute('data-seuils');
+    const a = actifs.filter(function(x){ return String(x.id) === id; })[0];
+    if (!a) return;
+    const h = b.querySelector('[data-seuil-h]'), bs = b.querySelector('[data-seuil-b]');
+    const al = {haut:+(h && h.value) || 0, bas:+(bs && bs.value) || 0};
+    if (!al.haut && !al.bas) delete a.alerte; else a.alerte = al;
+    ecrire(true);
+    peintVeille();
+  });
+
+  /* ============================================================
+     LA VEILLE : CE QUI MERITE UN COUP D'OEIL
+     ------------------------------------------------------------
+     Cinq mesures, toutes tirees de ce qui est deja calcule, et
+     toutes exprimees en CONSTAT. La difference n'est pas de forme :
+     « votre plus grosse ligne pese 48 % » se verifie ; « vous
+     devriez alleger » est un avis sur l'avenir de quelqu'un
+     d'autre, et personne ici n'a qualite pour le donner.
+
+     Chaque alerte porte le chiffre, le seuil qui l'a declenchee, et
+     ce que ce chiffre IMPLIQUE mecaniquement — pas ce qu'il
+     faudrait en faire.
+     ============================================================ */
+  const VE_CLE = 'pierrelco.seuils.v1';
+  const VE_DEFAUT = {conc:35, cats:3, liq:10, cat:50, dette:60};
+  function veSeuils(){
+    try {
+      const o = JSON.parse(localStorage.getItem(VE_CLE) || 'null');
+      if (!o || typeof o !== 'object') return Object.assign({}, VE_DEFAUT);
+      const out = Object.assign({}, VE_DEFAUT);
+      Object.keys(VE_DEFAUT).forEach(function(k){
+        if (typeof o[k] === 'number' && isFinite(o[k])) out[k] = o[k];
+      });
+      return out;
+    } catch (e){ return Object.assign({}, VE_DEFAUT); }
+  }
+  function vePoseSeuil(k, v){
+    const o = veSeuils();
+    o[k] = v;
+    try { localStorage.setItem(VE_CLE, JSON.stringify(o)); } catch (e){}
+  }
+
+  function veCalcule(){
+    const t = totaux();
+    const se = veSeuils();
+    const out = [];
+    if (!actifs.length || !(t.val > 0)) return out;
+
+    /* 1. UNE LIGNE QUI DECIDE DE L'ANNEE. */
+    if (t.grosse && t.concentration >= se.conc){
+      out.push({id:'conc', seuil:'conc', v:t.concentration,
+                cle:'ve.conc', vars:{n:echap(t.grosse.nom),
+                p:PC.part(t.concentration, 0), s:PC.part(se.conc, 0)}});
+    }
+    /* 2. UNE CATEGORIE QUI PESE AUTANT QUE LE RESTE. */
+    let catMax = null;
+    Object.keys(t.cats).forEach(function(c){
+      const p = t.cats[c] / t.val * 100;
+      if (!catMax || p > catMax.p) catMax = {c:c, p:p};
+    });
+    if (catMax && catMax.p >= se.cat && t.nbCats > 1){
+      out.push({id:'cat', seuil:'cat', v:catMax.p,
+                cle:'ve.cat', vars:{n:echap(nomCat(catMax.c) || catMax.c),
+                p:PC.part(catMax.p, 0), s:PC.part(se.cat, 0)}});
+    }
+    /* 3. PEU DE CATEGORIES. */
+    if (t.nbCats < se.cats){
+      out.push({id:'cats', seuil:'cats', v:t.nbCats,
+                cle:'ve.cats', vars:{n:String(t.nbCats), s:String(Math.round(se.cats))}});
+    }
+    /* 4. CE QUI SORT EN QUELQUES JOURS. */
+    if (t.partLiquide < se.liq){
+      out.push({id:'liq', seuil:'liq', v:t.partLiquide,
+                cle:'ve.liq', vars:{p:PC.part(t.partLiquide, 0),
+                m:eur.format(t.liquide), s:PC.part(se.liq, 0)}});
+    }
+    /* 5. CE QU'ON DOIT, RAPPORTE A CE QU'ON A. */
+    if (t.dette > 0){
+      const r = t.dette / t.val * 100;
+      if (r >= se.dette){
+        out.push({id:'dette', seuil:'dette', v:r,
+                  cle:'ve.dette', vars:{p:PC.part(r, 0),
+                  d:eur.format(t.dette), s:PC.part(se.dette, 0)}});
+      }
+    }
+    return out;
+  }
+
+  function peintVeille(){
+    const sec = document.getElementById('veille');
+    const liste = document.getElementById('ve-liste');
+    if (!sec || !liste) return;
+    /* Les seuils de cours passent DEVANT : un franchissement est un
+       fait du jour, une concentration est un etat qui dure. */
+    const al = seuilsFranchis().concat(veCalcule());
+    sec.hidden = !actifs.length;
+    liste.innerHTML = al.length
+      ? al.map(function(a){
+          return '<div class="ve-a">' +
+            '<p class="ve-a__t">' + PC.t(a.cle, a.vars) + '</p>' +
+            '<p class="ve-a__q">' + echap(PC.t(a.cle + '.q')) + '</p>' +
+          '</div>';
+        }).join('')
+      : '<div class="ve-a ve-a--rien"><p class="ve-a__t">' +
+          echap(PC.t('ve.rien')) + '</p></div>';
+
+    /* Les seuils, regles a la main. */
+    const h = document.getElementById('ve-seuils');
+    if (h && !h.dataset.pose){
+      h.dataset.pose = '1';
+      const se = veSeuils();
+      h.innerHTML = Object.keys(VE_DEFAUT).map(function(k){
+        return '<label class="ve-s"><span>' + echap(PC.t('ve.s.' + k)) + '</span>' +
+          '<input type="number" data-seuil="' + k + '" value="' + se[k] + '" ' +
+          'min="0" max="100" step="1" inputmode="numeric"></label>';
+      }).join('') +
+        /* La note explique LES SEUILS : sa place est avec eux, pas
+           ouverte en permanence sous les alertes ou elle coutait
+           soixante pixels a chaque visite. */
+        '<p class="veille__note">' + echap(PC.t('ve.note')) + '</p>';
+    }
+  }
+
+  function veilleBranche(){
+    const b = document.getElementById('ve-reglages');
+    const h = document.getElementById('ve-seuils');
+    if (!b || !h || b.dataset.branche) return;
+    b.dataset.branche = '1';
+    b.addEventListener('click', function(){
+      h.hidden = !h.hidden;
+      b.setAttribute('aria-expanded', String(!h.hidden));
+    });
+    h.addEventListener('input', function(e){
+      const t = e.target;
+      if (!t || !t.dataset || !t.dataset.seuil) return;
+      const v = +t.value;
+      if (!isFinite(v)) return;
+      vePoseSeuil(t.dataset.seuil, v);
+      peintVeille();
+    });
+  }
+
+  /* ============================================================
+     L'ECRAN DES PRETS
+     ------------------------------------------------------------
+     Trois chiffres par pret, et ce sont ceux qu'on cherche : ce
+     qu'il reste a devoir, ce que les interets ont deja coute, et
+     quand c'est fini. La mensualite et le taux sont la pour qu'on
+     puisse verifier, pas pour impressionner.
+     ============================================================ */
+  function peintPrets(){
+    const sec = document.getElementById('prets');
+    const liste = document.getElementById('pr-liste');
+    if (!sec || !liste) return;
+    const form = document.getElementById('pr-form');
+    const enSaisie = form && !form.hidden;
+    /* La section n'apparait que s'il y a un pret ou si l'on est en
+       train d'en saisir un. Un bloc vide intitule « ce que vous
+       devez » sur le portefeuille de quelqu'un qui ne doit rien est
+       une inquietude gratuite. */
+    sec.hidden = !(dettes.length || enSaisie);
+
+    liste.innerHTML = (dettes || []).map(function(d){
+      const c = pretCalc(d);
+      if (!c) return '';
+      const fin = c.fin ? new Intl.DateTimeFormat(PC.locale(),
+        {month:'long', year:'numeric'}).format(c.fin) : '—';
+      return '<article class="pret' + (c.solde ? ' pret--solde' : '') + '">' +
+        '<div class="pret__h">' +
+          '<b class="pret__n">' + echap(d.nom || '') + '</b>' +
+          '<button class="pret__x" type="button" data-pret-sup="' + echapAttr(d.id) + '" ' +
+            'aria-label="' + echapAttr(PC.t('pr.sup')) + '">×</button>' +
+        '</div>' +
+        '<div class="pret__g">' +
+          '<div class="pret__m"><span class="pret__k">' + echap(PC.t('pr.m.restant')) + '</span>' +
+            '<b>' + echap(eur.format(c.restant)) + '</b></div>' +
+          '<div class="pret__m"><span class="pret__k">' + echap(PC.t('pr.m.mens')) + '</span>' +
+            '<b>' + echap(eur.format(c.mens)) + '</b></div>' +
+          '<div class="pret__m"><span class="pret__k">' + echap(PC.t('pr.m.interets')) + '</span>' +
+            '<b>' + echap(eur.format(c.interetsPayes)) + '</b>' +
+            '<span class="pret__s">' + echap(PC.t('pr.m.interets.q',
+              {t:eur.format(c.interetsTotal)})) + '</span></div>' +
+          '<div class="pret__m"><span class="pret__k">' + echap(PC.t('pr.m.fin')) + '</span>' +
+            '<b>' + echap(fin) + '</b>' +
+            '<span class="pret__s">' + echap(PC.t('pr.m.fin.q',
+              {n:String(c.reste)})) + '</span></div>' +
+        '</div>' +
+        '<div class="pret__b" role="img" aria-label="' +
+            echapAttr(PC.part(c.part, 0)) + '">' +
+          '<span style="width:' + Math.max(0, Math.min(100, c.part)).toFixed(1) + '%"></span>' +
+        '</div>' +
+        '<p class="pret__p mono">' + echap(PC.t('pr.ligne', {
+            p:PC.part(c.part, 0), k:String(c.payes), n:String(c.mois),
+            tx:PC.nombre(c.taux, 2)})) + '</p>' +
+      '</article>';
+    }).join('');
+
+    /* Le net, sous le solde. */
+    const t = totaux();
+    const hn = document.getElementById('solde-net');
+    if (hn){
+      hn.hidden = !(t.dette > 0);
+      if (t.dette > 0){
+        /* Un patrimoine net NEGATIF se lit comme une perte, pas
+           comme un montant ordinaire : devoir plus qu'on ne possede
+           est le fait le plus important de la page ce jour-la. */
+        hn.setAttribute('data-signe', t.net < 0 ? 'moins' : 'plus');
+        hn.innerHTML = '<b>' + echap(eur.format(t.net)) + '</b> ' +
+          echap(PC.t('pr.net', {b:eur.format(t.val), d:eur.format(t.dette)}));
+      }
+    }
+  }
+
+  function pretsBranche(){
+    const form = document.getElementById('pr-form');
+    if (!form || form.dataset.branche) return;
+    form.dataset.branche = '1';
+    const ouvre = document.getElementById('pr-ouvre');
+    const non = document.getElementById('pr-annule');
+    if (ouvre) ouvre.addEventListener('click', function(){
+      form.hidden = false;
+      peintPrets();
+      /* La section s'ouvre plus bas que le bouton : sans ce
+         deplacement, on clique et il ne se passe rien a l'ecran. */
+      const sec = document.getElementById('prets');
+      if (sec && sec.scrollIntoView){
+        const doux2 = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        sec.scrollIntoView({behavior: doux2 ? 'smooth' : 'auto', block:'center'});
+      }
+      const n2 = document.getElementById('pr-nom'); if (n2) n2.focus({preventScroll:true});
+    });
+    if (non) non.addEventListener('click', function(){ form.hidden = true; peintPrets(); });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const v = function(id){ const x = document.getElementById(id); return x ? x.value : ''; };
+      const d = {id:neufId(), nom:v('pr-nom').trim(), capital:+v('pr-cap'),
+                 taux:+v('pr-taux'), mois:Math.round(+v('pr-mois')),
+                 depuis:v('pr-dep'), mensualite:+v('pr-mens') || 0};
+      if (!d.nom || !(d.capital > 0) || !(d.mois > 0) || !d.depuis) return;
+      dettes.push(d);
+      ecrire(true);
+      form.reset();
+      form.hidden = true;
+      rendre();
+    });
+    document.addEventListener('click', function(e){
+      const b = e.target && e.target.closest ? e.target.closest('[data-pret-sup]') : null;
+      if (!b) return;
+      const id = b.getAttribute('data-pret-sup');
+      dettes = dettes.filter(function(x){ return x.id !== id; });
+      ecrire(true);
+      rendre();
+    });
+  }
+
+  /* ============================================================
+     LE CALENDRIER FISCAL
+     ------------------------------------------------------------
+     Tous les chiffres viennent de `PC_FISC`, et aucun n'est ecrit
+     ici : un taux recopie a deux endroits en change a un. Chaque
+     ligne affichee porte sa reference et la date ou elle a ete
+     relue, parce qu'une date fiscale sans source est une date qu'on
+     croit sur parole.
+     ============================================================ */
+  const F_DEP = 'pierrelco.departement.v1';
+  function fiscDep(){
+    try { return localStorage.getItem(F_DEP) || ''; } catch (e){ return ''; }
+  }
+  function fiscPoseDep(v){
+    try { if (v) localStorage.setItem(F_DEP, v); else localStorage.removeItem(F_DEP); }
+    catch (e){ /* stockage refuse : la page marche sans, en montrant moins */ }
+  }
+
+  /* CE QUE LE PORTEFEUILLE DIT DE VOUS. C'est tout l'interet d'avoir
+     les deux au meme endroit : le calendrier n'a pas a demander si
+     vous avez de la crypto, il le voit. */
+  function fiscEtat(){
+    const vus = {};
+    let immo = 0;
+    (actifs || []).forEach(function(a){
+      if (!a) return;
+      if (a.cat) vus[a.cat] = 1;
+      /* L'IFI ne se declenche pas sur « il possede un bien » mais sur
+         un patrimoine immobilier NET au-dessus du seuil. La nuance
+         vaut 1,3 million d'euros. */
+      if (a.cat === 'immo' || a.cat === 'scpi') immo += (+a.val || 0);
+    });
+    const seuil = PC_FISC.lire('ifi.seuil');
+    return {genres:Object.keys(vus), immo:immo,
+            ifi:immo >= seuil.v, seuil:seuil,
+            zone:PC_FISC.zone(fiscDep())};
+  }
+
+  /* « dans 12 jours », « demain », « aujourd'hui ». Trois cas, parce
+     que « dans 1 jours » et « dans 0 jours » ne se disent pas. */
+  function fiscDelai(n){
+    if (n <= 0) return PC.t('f.auj');
+    if (n === 1) return PC.t('f.dans.1');
+    return PC.t('f.dans', {n:String(n)});
+  }
+  function fiscJour(d){
+    try {
+      return new Intl.DateTimeFormat(PC.locale(),
+        {day:'numeric', month:'long', year:'numeric'}).format(d);
+    } catch (e){ return d.toISOString().slice(0, 10); }
+  }
+
+  function fiscLigne(e){
+    const proche = e.jours <= 30;
+    return '<div class="fisc-e' + (proche ? ' fisc-e--proche' : '') + '">' +
+      '<div class="fisc-e__d mono">' +
+        '<span class="fisc-e__j">' + echap(fiscJour(e.date)) + '</span>' +
+        '<span class="fisc-e__r">' + echap(fiscDelai(e.jours)) + '</span>' +
+      '</div>' +
+      '<div class="fisc-e__c">' +
+        '<b class="fisc-e__t">' + echap(PC.t(e.cle)) + '</b>' +
+        '<p class="fisc-e__p">' + echap(PC.t(e.cle + '.q')) + '</p>' +
+        '<p class="fisc-e__s mono">' +
+          (e.sorte === 'regle'
+            ? echap(PC.t('f.regle')) + ' · ' + echap(e.ref)
+            : echap(PC.t(e.aVerifier ? 'f.report.court' : 'f.verif', {an:String(e.an)})) +
+              ' · ' + echap(e.ref)) +
+        '</p>' +
+      '</div></div>';
+  }
+
+  function fiscLigneAnniv(a){
+    return '<div class="fisc-e' + (a.atteint ? ' fisc-e--fait' : (a.jours <= 90 ? ' fisc-e--proche' : '')) + '">' +
+      '<div class="fisc-e__d mono">' +
+        '<span class="fisc-e__j">' + echap(fiscJour(a.date)) + '</span>' +
+        '<span class="fisc-e__r">' + echap(a.atteint ? PC.t('f.a.fait', {d:fiscJour(a.date)})
+                                                     : fiscDelai(a.jours)) + '</span>' +
+      '</div>' +
+      '<div class="fisc-e__c">' +
+        '<b class="fisc-e__t">' + echap(PC.t(a.cle)) + '</b>' +
+        '<p class="fisc-e__p">' + echap(a.nom) + ' · ' + echap(PC.t(a.cle + '.q')) + '</p>' +
+        '<p class="fisc-e__s mono">' + echap(PC_FISC.lire(a.par).ref) + '</p>' +
+      '</div></div>';
+  }
+
+  /* LES TAUX, LIGNE PAR LIGNE. Le coeur du sujet : depuis 2026 deux
+     taux de prelevements sociaux coexistent selon le support, et
+     quelqu'un qui detient un compte-titres ET une assurance-vie en
+     subit deux sur le meme portefeuille. On ne l'affirme pas, on le
+     montre, avec la loi en dessous. */
+  function fiscTaux(){
+    const vus = {};
+    (actifs || []).forEach(function(a){ if (a && a.cat) vus[a.cat] = (vus[a.cat] || 0) + (+a.val || 0); });
+    const cats = Object.keys(vus);
+    if (!cats.length) return '';
+    return cats.sort(function(x, y){ return vus[y] - vus[x]; }).map(function(c){
+      const pfu = PC_FISC.pfu(c);
+      return '<div class="fisc-t">' +
+        '<div class="fisc-t__n"><b>' + echap(nomCat(c) || c) + '</b>' +
+          '<span class="mono">' + echap(eur.format(vus[c])) + '</span></div>' +
+        '<div class="fisc-t__v"><b>' + echap(PC.nombre(pfu.total, 1)) + ' %</b>' +
+          '<span>' + echap(PC.nombre(pfu.ir.v, 1)) + ' % + ' +
+                     echap(PC.nombre(pfu.ps.v, 1)) + ' %</span></div>' +
+        '<p class="fisc-t__s mono">' + echap(PC.t(pfu.ps.nom)) + ' · ' + echap(pfu.ps.ref) +
+          (PC_FISC.discute[c] ? '<br>' + echap(PC.t(PC_FISC.discute[c])) : '') + '</p>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* ============================================================
+     LE SIMULATEUR DE CESSION
+     ------------------------------------------------------------
+     Il ne devine rien. Il prend la plus-value telle qu'elle ressort
+     des chiffres saisis, applique le taux du support — celui de la
+     table, avec sa loi — et montre le reste. Pour un bien
+     immobilier il passe par les abattements pour duree de detention,
+     qui sont la vraie difficulte : deux baremes differents, et une
+     exoneration d'impot sur le revenu a vingt-deux ans qui NE
+     dispense PAS des prelevements sociaux avant trente.
+
+     Ce qu'il ne sait pas, et qu'il dit : les frais de cession, les
+     travaux, les abattements exceptionnels, les moins-values
+     reportables, la surtaxe sur les plus-values elevees. Il donne un
+     ordre de grandeur, pas une declaration.
+     ============================================================ */
+  function simLignes(){
+    return (actifs || []).filter(function(a){
+      return a && (+a.val || 0) > 0 && (+a.inv || 0) > 0 && a.val > a.inv;
+    });
+  }
+
+  function simCalcule(a){
+    if (!a) return null;
+    const pv = Math.max(0, (+a.val || 0) - (+a.inv || 0));
+    const pfu = PC_FISC.pfu(a.cat);
+    const immo = (a.cat === 'immo');
+    let ans = null, ab = null;
+    if (immo && a.depuis){
+      const d0 = new Date(a.depuis);
+      if (!isNaN(d0)){
+        ans = (Date.now() - d0.getTime()) / (365.25 * 86400000);
+        ab = PC_FISC.abatImmo(ans);
+      }
+    }
+    /* L'immobilier ne releve pas du forfaitaire : impot sur le revenu
+       a 19 % et prelevements sociaux a 17,2 %, sur une assiette
+       reduite par la duree. */
+    if (immo){
+      const tIR = 19, tPS = PC_FISC.lire('ps.pat').v;
+      const partIR = ab ? ab.partIR : 1, partPS = ab ? ab.partPS : 1;
+      const impIR = pv * partIR * tIR / 100;
+      const impPS = pv * partPS * tPS / 100;
+      return {pv:pv, immo:true, ans:ans, ab:ab,
+              tIR:tIR, tPS:tPS, impIR:impIR, impPS:impPS,
+              impot:impIR + impPS, net:pv - impIR - impPS,
+              ref:PC_FISC.pvimmo.ref};
+    }
+    const imp = pv * pfu.total / 100;
+    return {pv:pv, immo:false, pfu:pfu, impot:imp, net:pv - imp};
+  }
+
+  function peintSim(){
+    const bloc = document.getElementById('f-sim-bloc');
+    const sel = document.getElementById('si-ligne');
+    const out = document.getElementById('si-out');
+    if (!bloc || !sel || !out) return;
+    const ls = simLignes();
+    bloc.hidden = !ls.length;
+    if (!ls.length){ out.innerHTML = ''; return; }
+
+    const avant = sel.value;
+    sel.innerHTML = ls.map(function(a){
+      return '<option value="' + echapAttr(a.id) + '">' + echap(a.nom) + '</option>';
+    }).join('');
+    if (avant && ls.some(function(a){ return String(a.id) === avant; })) sel.value = avant;
+
+    const a = ls.filter(function(x){ return String(x.id) === sel.value; })[0] || ls[0];
+    const c = simCalcule(a);
+    if (!c){ out.innerHTML = ''; return; }
+
+    const m = function(k, v, q){
+      return '<div class="sim-m"><span class="sim-m__k">' + echap(PC.t(k)) + '</span>' +
+        '<b>' + echap(v) + '</b>' +
+        (q ? '<span class="sim-m__s">' + q + '</span>' : '') + '</div>';
+    };
+    let html = '<div class="sim__g">' +
+      m('si.pv', eur.format(c.pv)) +
+      m('si.impot', eur.format(c.impot)) +
+      m('si.net', eur.format(c.net)) +
+    '</div>';
+
+    if (c.immo){
+      html += '<p class="sim__d">' + echap(PC.t('si.immo', {
+        t1:PC.nombre(c.tIR, 0), t2:PC.nombre(c.tPS, 1)})) + '</p>';
+      if (c.ab){
+        html += '<p class="sim__d">' + echap(PC.t('si.ab', {
+          a:PC.nombre(c.ab.ans, 0),
+          i:PC.part(c.ab.abatIR, 0), s:PC.part(c.ab.abatPS, 0)})) + '</p>';
+        /* LE PIEGE, nomme. Exonere d'impot sur le revenu et pas de
+           prelevements sociaux : c'est la que les gens se trompent,
+           et c'est la seule raison d'etre de ce paragraphe. */
+        if (c.ab.exonereIR && !c.ab.exonerePS){
+          html += '<p class="sim__piege">' + echap(PC.t('si.piege', {
+            n:String(30 - c.ab.ans)})) + '</p>';
+        }
+      } else {
+        html += '<p class="sim__d">' + echap(PC.t('si.sansdate')) + '</p>';
+      }
+      html += '<p class="sim__s mono">' + echap(c.ref) + '</p>';
+    } else {
+      html += '<p class="sim__d">' + echap(PC.t('si.pfu', {
+        t:PC.nombre(c.pfu.total, 1), i:PC.nombre(c.pfu.ir.v, 1),
+        p:PC.nombre(c.pfu.ps.v, 1), n:PC.t(c.pfu.ps.nom)})) + '</p>';
+      html += '<p class="sim__s mono">' + echap(c.pfu.ir.ref) + ' · ' +
+              echap(c.pfu.ps.ref) + '</p>';
+    }
+    html += '<p class="sim__n">' + echap(PC.t('si.note')) + '</p>';
+    out.innerHTML = html;
+  }
+
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.id === 'si-ligne') peintSim();
+  });
+
+  function peintFiscal(){
+    const hote = document.getElementById('f-liste');
+    if (!hote || !window.PC_FISC) return;
+    const etat = fiscEtat();
+
+    /* Le departement, et ce qu'il ouvre. */
+    const champ = document.getElementById('f-dep');
+    if (champ && champ.value !== fiscDep() && document.activeElement !== champ){
+      champ.value = fiscDep();
+    }
+    const zh = document.getElementById('f-zone');
+    if (zh){
+      const z = etat.zone;
+      zh.textContent = z ? PC.t('f.z.' + z) : '';
+    }
+
+    /* Les echeances, bornees a un an : au-dela, une date publiee
+       n'est plus qu'une supposition, et on l'a deja dit une fois. */
+    const es = PC_FISC.echeances(etat).filter(function(e){ return e.jours <= 400; });
+    hote.innerHTML = es.length ? es.map(fiscLigne).join('')
+                               : '<p class="fisc__vide">' + echap(PC.t('f.rien')) + '</p>';
+
+    /* Vos dates a vous. */
+    const an = PC_FISC.anniversaires(actifs);
+    const bv = document.getElementById('f-vos-bloc');
+    const hv = document.getElementById('f-vos');
+    if (bv && hv){
+      bv.hidden = !an.length;
+      hv.innerHTML = an.map(fiscLigneAnniv).join('');
+    }
+
+    /* Les taux par ligne. */
+    const bt = document.getElementById('f-taux-bloc');
+    const ht = document.getElementById('f-taux');
+    if (bt && ht){
+      const m = fiscTaux();
+      bt.hidden = !m;
+      ht.innerHTML = m;
+    }
+
+    /* Le paragraphe long ne s'affiche que s'il y a au moins une
+       date reportee a expliquer. */
+    const rb = document.getElementById('f-report');
+    if (rb) rb.hidden = !es.some(function(e){ return e.aVerifier; });
+
+    peintSim();
+
+    const maj = document.getElementById('f-maj');
+    if (maj) maj.textContent = PC.t('f.maj', {d:fiscJour(new Date(PC_FISC.verifie))});
+
+    peintRelance(es);
+  }
+
+  /* LA RELANCE, EN PASTILLE SUR L'ONGLET.
+     Premiere version : une bande en haut de l'accueil. Le banc a
+     mesure ce qu'elle coutait — les chiffres cles passaient 40 px
+     sous la barre du bas. Un rappel qui cache ce qu'on vient voir
+     n'est pas un rappel, c'est un bandeau.
+     La pastille ne coute AUCUNE hauteur, se voit depuis n'importe
+     quel ecran de l'espace, et l'onglet qu'elle marque mene la ou
+     est le detail. Elle ne s'allume que dans les quarante-cinq
+     jours : allumee en permanence, elle cesserait d'etre vue au
+     bout de trois jours. */
+  let relance = null;
+  function peintRelance(es){
+    const p = (es || []).filter(function(e){ return e.jours >= 0 && e.jours <= 45; })[0];
+    relance = (p && droit('analyse')) ? p : null;
+    posePastille();
+  }
+  /* Appelee aussi par `construitBarreApp`, qui reecrit `innerHTML` et
+     emportait la classe avec les boutons. */
+  function posePastille(){
+    const b = barreApp && barreApp.querySelector('[data-dest="analyse"]');
+    if (!b) return;
+    b.classList.toggle('barre-app__i--point', !!relance);
+    if (relance) b.setAttribute('title', PC.t('f.prochaine') + '\u00a0: ' +
+                                PC.t(relance.cle) + ', ' + fiscDelai(relance.jours));
+    else b.removeAttribute('title');
+  }
+  document.addEventListener('input', function(e){
+    if (!e.target || e.target.id !== 'f-dep') return;
+    const v = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+    if (v !== e.target.value) e.target.value = v;
+    fiscPoseDep(v);
+    peintFiscal();
+  });
+  if (PC.surChangement) PC.surChangement(function(){ peintFiscal(); });
+
   function rendre(){
     majTaux(); majCours(); majRevenus(); chargeSeries();
     const t = totaux();
@@ -12081,6 +13798,14 @@ document.addEventListener('error', function(ev){
     /* La provenance des cours se réaffiche avec le reste : changer de
        langue ou de devise réécrit cette ligne comme les autres. */
     majEtatCours();
+    /* Les prets et le calendrier suivent le portefeuille : ajouter un
+       bien immobilier peut faire passer le seuil de l'IFI, et
+       l'echeance apparait alors sans qu'on ait rien demande. */
+    veilleBranche();
+    peintVeille();
+    pretsBranche();
+    peintPrets();
+    peintFiscal();
     document.getElementById('solde-delta').innerHTML =
       marque(t.perf, eur.format(Math.abs(t.gain)) + '  ·  ' + pourcent(t.perf));
     document.getElementById('solde-n').textContent =
@@ -12841,6 +14566,14 @@ document.addEventListener('error', function(ev){
         '</section>' +
       '</div>' +
 
+      /* LES SEUILS DE COURS. Seulement sur une ligne qui SUIT un
+         cours : poser un seuil sur un appartement dont la valeur est
+         saisie a la main serait un reveil qui ne sonnerait jamais. */
+      (a.sym ? '<section class="pa__sect">' +
+        '<h4 class="pa__h">' + PC.t('al.titre') + '</h4>' +
+        blocSeuils(a) +
+      '</section>' : '') +
+
       (droit('revenus') ? '<section class="pa__sect">' +
         '<h4 class="pa__h">' + PC.t('e.rev.titre') + '</h4>' +
         blocRevenu(a) +
@@ -13336,7 +15069,7 @@ document.addEventListener('error', function(ev){
     if (!nom) return;
     const id = 'p' + Date.now().toString(36);
     rangePortefeuille();
-    portefeuilles.push({id:id, nom:nom, actifs:[], historique:[]});
+    portefeuilles.push({id:id, nom:nom, actifs:[], historique:[], dettes:[]});
     chargePortefeuille(id);
     ouvert = null;
     ecrire();
@@ -13803,6 +15536,9 @@ document.addEventListener('error', function(ev){
       '</button>';
     }).join('');
     majBarreApp();
+    /* La pastille de la relance se repose ici : la ligne au-dessus
+       vient d'effacer les boutons qui la portaient. */
+    posePastille();
   }
 
   function majBarreApp(dest){
@@ -14945,14 +16681,19 @@ document.addEventListener('error', function(ev){
   function anPoseVue(){
     const vm = document.getElementById('an-vue-marche');
     const vo = document.getElementById('an-vue-moi');
+    const vf = document.getElementById('an-vue-fiscal');
     if (vm) vm.hidden = anVue !== 'marche';
     if (vo) vo.hidden = anVue !== 'moi';
+    if (vf) vf.hidden = anVue !== 'fiscal';
     const r = document.getElementById('an-vues');
     if (!r) return;
     r.querySelectorAll('[data-vue]').forEach(function(x){
       const v = x.getAttribute('data-vue');
+      /* Deux vues ne sont pas des marches — « mes investissements »
+         et « fiscal » — et pour elles c'est la vue qui decide, pas la
+         source de cotation. */
       x.setAttribute('aria-selected',
-        String(anVue === 'moi' ? v === 'moi' : v === marSrc));
+        String((anVue === 'moi' || anVue === 'fiscal') ? v === anVue : v === marSrc));
     });
     /* ===== L'ONGLET CHOISI DOIT SE VOIR =====
        Sur telephone la rangee defile, et « Mes investissements » est
@@ -15301,13 +17042,15 @@ document.addEventListener('error', function(ev){
         const b = e.target.closest ? e.target.closest('[data-vue]') : null;
         if (!b) return;
         const v = b.getAttribute('data-vue');
-        if (v === 'moi'){
-          anVue = 'moi';
-          /* Le flux des cours alimente un bloc qu'on ne regarde plus :
-             on le coupe. Une connexion ouverte pour rien coute au
-             fournisseur et a la batterie. */
+        /* Deux vues ne regardent aucun marche : on coupe le flux
+           des cours avant d'y aller. Une connexion ouverte pour
+           alimenter un bloc qu'on ne regarde plus coute au
+           fournisseur et a la batterie. */
+        if (v === 'moi' || v === 'fiscal'){
+          anVue = v;
           marCoupeFlux();
           anPoseVue();
+          if (v === 'fiscal') peintFiscal();
           return;
         }
         const change = (v !== marSrc);
@@ -19331,7 +21074,8 @@ document.addEventListener('error', function(ev){
     portefeuilles = sauve.portefeuilles.map(function(p, i){
       return {id:p.id || ('p' + (i + 1)), nom:p.nom || '',
               actifs:remetEnEtat(p.actifs),
-              historique:Array.isArray(p.historique) ? p.historique : []};
+              historique:Array.isArray(p.historique) ? p.historique : [],
+              dettes:Array.isArray(p.dettes) ? p.dettes : []};
     });
     courant = portefeuilles.some(function(p){ return p.id === sauve.courant; })
       ? sauve.courant : portefeuilles[0].id;
@@ -19349,7 +21093,7 @@ document.addEventListener('error', function(ev){
        /api/moi, et lui seul. */
     connecte = !!sauve.connecte;
   } else {
-    portefeuilles = [{id:'p1', nom:'', actifs:[], historique:[]}];
+    portefeuilles = [{id:'p1', nom:'', actifs:[], historique:[], dettes:[]}];
     courant = 'p1';
   }
 
@@ -19625,7 +21369,8 @@ document.addEventListener('error', function(ev){
       portefeuilles = o.portefeuilles.map(function(x, i){
         return {id:x.id || ('p' + (i + 1)), nom:x.nom || '',
                 actifs:remetEnEtat(x.actifs), 
-                historique:Array.isArray(x.historique) ? x.historique : []};
+                historique:Array.isArray(x.historique) ? x.historique : [],
+                dettes:Array.isArray(x.dettes) ? x.dettes : []};
       });
       courant = portefeuilles.some(function(x){ return x.id === o.courant; })
         ? o.courant : portefeuilles[0].id;
