@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261010.1300";</script>
+<script>window.PC_VERSION = "261010.1540";</script>
 </head>
 <body>
 
@@ -1397,9 +1397,33 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
 .solde__net{font-size:13.5px; color:var(--ink-2); margin:6px 0 0;}
 .solde__net b{font-family:'Archivo Black', sans-serif; font-size:17px; letter-spacing:-.02em; color:var(--ink);}
 .solde__net[data-signe="moins"] b{color:var(--loss);}
+/* UN BLOC VIDE PREND MOINS D'AIR. L'ecart au-dessus d'une section est
+   calibre sur ce qu'elle PESE : 40 px avant un bloc de cartes de pret
+   est juste, 40 px avant une ligne de quinze mots est une respiration
+   pour rien. Le marqueur est pose par `peintPrets`, qui est le seul a
+   savoir s'il y a un credit. */
 .prets{margin:clamp(26px,3.4vw,40px) 0 0;}
+.prets[data-vide="1"]{margin-top:clamp(16px,2vw,22px);}
+.prets[data-vide="1"] .prets__tete{margin-bottom:9px;}
 .prets__tete{display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:14px;}
 .prets__k{font-family:'Archivo Black', sans-serif; font-size:clamp(16px,1.9vw,21px); letter-spacing:-.028em; margin:0;}
+/* Le bouton est dans la tete du bloc, a droite du titre : la ou on
+   cherche « comment en ajouter un » apres avoir lu de quoi le bloc
+   parle. `align-self` le recale, la tete etant alignee sur la ligne
+   de base du titre. */
+.prets__add{align-self:center; flex:none;}
+/* Pas de cadre pointille : c'est une ligne d'etat, pas une zone de
+   depot. L'encadrer donnait a un bloc VIDE le poids visuel d'un bloc
+   plein, sur un ecran ou l'on se plaint deja d'avoir trop a lire. */
+.prets__vide{
+  margin:0; font-size:13px; line-height:1.5; color:var(--ink-3);
+  text-wrap:pretty;
+}
+/* La tuile du credit se distingue des categories d'actif : elle ne
+   mene pas au meme endroit, et une tuile qui ment sur sa destination
+   est pire qu'une tuile absente. Le filet suffit — pas de couleur
+   d'alerte : declarer un pret n'est pas une mauvaise nouvelle. */
+.tuile-cat--dette{border-style:dashed;}
 .prets__liste{display:grid; gap:12px;}
 .pret{border:1px solid var(--rule); border-radius:var(--r-2); background:var(--paper-2); padding:15px 16px 16px;}
 .pret--solde{opacity:.6;}
@@ -1979,8 +2003,23 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
    lire à côté de ce qu'elle résume. */
 .fiche-m__perf{
   margin:10px 0 0; font-family:'IBM Plex Mono', monospace; font-size:15px;
-  font-variant-numeric:tabular-nums; display:flex; gap:8px; align-items:baseline;
+  font-variant-numeric:tabular-nums; display:flex; gap:4px 8px; align-items:baseline;
+  /* SANS `wrap`, UNE RANGEE TROP LONGUE NE PASSE PAS A LA LIGNE : elle
+     ECRASE ses trois enfants, et c'est le premier — « ▲ +18,4 % » —
+     qui se coupe en deux au milieu. On lisait un triangle seul sur
+     une ligne, les euros et les dates sur la deuxieme, et le
+     pourcentage revenu tout en bas a gauche, detache de sa fleche.
+     Trois morceaux d'une meme phrase, dans le desordre. Avec `wrap`,
+     ce sont les blocs entiers qui descendent, dans l'ordre. */
+  flex-wrap:wrap;
 }
+/* Et les morceaux ne se coupent pas en interne : chacun descend d'un
+   bloc ou reste sur sa ligne. Sauf la mention de periode — « du
+   10 oct. 2025 au 10 oct. 2026 » fait a elle seule plus que la
+   largeur d'un telephone, et insecable elle depassait du cadre par
+   la gauche. */
+.fiche-m__perf > *{white-space:nowrap;}
+.fiche-m__perf > span{white-space:normal;}
 .fiche-m__perf[data-dir="nul"]{color:var(--ink-3); font-size:13px;}
 .fiche-m__perf[data-dir="up"]{color:var(--gain);}
 .fiche-m__perf[data-dir="down"]{color:var(--loss);}
@@ -2007,6 +2046,48 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
 }
 .fiche-m__stat .v{font-size:19px; font-weight:700; margin-top:4px; font-variant-numeric:tabular-nums;}
 .fiche-m__actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px;}
+
+/* ===== L'ALERTE SUR UNE VALEUR DU MARCHE =====
+   Elle est sous les deux boutons, pas dans une fenetre : on la regle
+   en gardant le cours et la courbe sous les yeux, et c'est tout
+   l'interet de la poser ICI plutot que dans l'espace. */
+.vigie{
+  margin-top:16px; padding:16px;
+  border:1px solid var(--rule-strong); border-radius:var(--r-2);
+  background:var(--paper-2);
+}
+.vigie__t{
+  margin:0 0 12px; font-family:'IBM Plex Mono', monospace;
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+/* Deux champs cote a cote tant qu'il y a la place. Sous 420 px ils
+   passent l'un sous l'autre : a 160 px de large, un champ de nombre
+   affiche « 50 0… » et on ne relit plus ce qu'on vient de taper. */
+.vigie__ch{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media (max-width:420px){ .vigie__ch{grid-template-columns:1fr;} }
+.vigie__ch label{display:flex; flex-direction:column; gap:5px; min-width:0;}
+.vigie__ch span{font-size:11.5px; font-weight:600; color:var(--ink-2);}
+.vigie__ch input{
+  width:100%; padding:9px 11px; font:inherit; font-size:15px;
+  color:var(--ink); background:var(--paper);
+  border:1px solid var(--rule-strong); border-radius:var(--r-1);
+  font-variant-numeric:tabular-nums;
+}
+.vigie__ch input:focus{border-color:var(--accent); outline:none;}
+.vigie__c{margin:12px 0 0; font-size:12.5px; color:var(--ink-2);}
+.vigie__n{margin:8px 0 0; font-size:11.5px; line-height:1.5; color:var(--ink-3);}
+.vigie__x{
+  margin-top:14px; padding:7px 13px; font:inherit; font-size:12.5px;
+  color:var(--loss); background:none; cursor:pointer;
+  border:1px solid var(--rule-strong); border-radius:var(--r-pill);
+}
+.vigie__x:hover{border-color:var(--loss);}
+/* Le repere d'une rangee surveillee : un point, a l'accent, de la
+   taille d'une lettre. Il tient dans la colonne du nom sans la
+   pousser, et il reste lisible en mode sombre parce qu'il prend la
+   couleur d'accent du theme et non une valeur figee. */
+.marches__vg{margin-left:7px; color:var(--accent); font-size:11px; flex:none;}
 
 /* ===== Notes ===== */
 .notes{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule);}
@@ -2482,7 +2563,21 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
 .kpi__k{font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
 .kpi__v{font-family:'Archivo Black', sans-serif; font-size:clamp(21px,2.4vw,27px); letter-spacing:-.03em; font-variant-numeric:tabular-nums; white-space:nowrap;}
 .kpi__v .delta{font-size:inherit; font-family:inherit; font-weight:400;}
-.kpi__s{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-3); font-variant-numeric:tabular-nums;}
+.kpi__s{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+  /* `anywhere`, PAS `break-word`. Depuis que cette ligne porte le nom
+     d'une ligne du portefeuille — « Plus grosse ligne : ISIN… » — elle
+     recoit du texte dont nous ne choisissons pas la longueur. Et les
+     deux valeurs ne font pas la meme chose : `break-word` coupe un mot
+     trop long MAIS laisse la largeur minimale de la boite egale au mot
+     entier. Dans une grille, cette largeur minimale pousse la colonne,
+     la colonne pousse la grille, et la page part de cote — 125 px de
+     debordement a 320 px de large avec un code de fonds de cinquante
+     caracteres. `anywhere` compte la coupure dans la largeur minimale :
+     la boite peut redescendre a une lettre, et la page ne bouge plus. */
+  overflow-wrap:anywhere;
+}
 .delta[data-dir="flat"]{color:var(--ink-3);}
 
 .grille{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:clamp(20px,3vw,38px); align-items:start; margin-bottom:30px;}
@@ -5148,9 +5243,33 @@ html[data-variante="1"] .hero{
    sombre pour tout le monde. L'encre et le papier restent donc ceux
    des themes ; c'est l'accent et la typographie qui s'alignent.
    ============================================================ */
-h1, h2, h3{font-family:var(--v1-titre);}
-h2{font-weight:700;}
-.split-h, .vue__t h3{font-family:var(--v1-titre);}
+/* 700, pas 400 : la regle de base donnait son poids a « Archivo
+   Black », dont le 400 EST une grasse. En passant sur Archivo
+   variable il faut le demander — sinon les titres maigrissent d'un
+   coup sur toute la page. */
+h1, h2, h3{font-family:var(--v1-titre); font-weight:700;}
+.split-h, .vue__t h3{font-family:var(--v1-titre); font-weight:700;}
+
+/* ===== L'APPROCHE SE MESURE PAR TAILLE, ELLE NE SE CHOISIT PAS =====
+   Une meme valeur d'`letter-spacing` sur tous les corps est fausse
+   quelque part, et toujours aux deux bouts : grossi a 90 px, un mot
+   compose a l'approche du texte courant se delite en lettres
+   separees ; reduit a 11 px, le meme reglage les colle.
+
+   La regle est inverse a la taille. Plus c'est gros, plus on serre ;
+   plus c'est petit, plus on ouvre. Les quatre paliers ci-dessous
+   suivent les corps reellement employes par la page. */
+/* Les quatre grands chiffres — le solde, le chiffre du heros, le
+   cours d'une fiche, le nom d'un marche — portent DEJA leur valeur,
+   mesuree sur leur corps a eux, et l'ovale trace a la main autour du
+   chiffre du heros est cale dessus. On n'y touche pas : les reprendre
+   ici les aurait tous DESSERRES de quelques millemes, et l'ovale
+   serait passe au travers du « 1 ». Reste le titre du heros, le seul
+   corps d'affichage a etre encore regle comme du texte courant. */
+.v1h__t{letter-spacing:-0.032em;}
+h1{letter-spacing:-0.025em;}
+h2{letter-spacing:-0.018em;}
+h3, .split-h, .vue__t h3{letter-spacing:-0.012em;}
 
 /* Les pilules du site, a la forme de la proposition. */
 .pill{
@@ -5189,16 +5308,42 @@ h2{font-weight:700;}
   --v1-accent:#7342E2;
   --v1-clair:#F2F2EE;
   --v1-feuille:#CFC8C5;
-  /* LE SECOURS EST INTER, PAS ARCHIVO BLACK. « Helvetica Now Display »
-     n'arrive pas toujours : le CDN qui la sert est refuse par certains
-     reseaux, et la visionneuse d'artefact n'autorise que Google Fonts.
-     Ce qui s'affichait alors etait Archivo Black — une grasse
-     d'affichage, large et lourde, qui ne ressemble en rien a la
-     neo-grotesque de la proposition. Inter en est proche, elle est
-     DEJA demandee par la proposition pour le corps de texte, et elle
-     passe partout. */
-  --v1-titre:'Helvetica Now Display Bold', 'Inter', system-ui, sans-serif;
-  --v1-corps:'Inter', system-ui, sans-serif;
+  /* ===== UNE SEULE FAMILLE, ET ELLE EST DANS LE FICHIER =====
+     Ce qui s'affichait reellement n'etait NI « Helvetica Now
+     Display » NI Archivo Black : c'etait Inter. Le CDN qui sert la
+     premiere est refuse par la visionneuse d'artefact — elle
+     n'autorise que Google Fonts — et par plusieurs reseaux
+     d'entreprise. Le titre tombait donc sur le secours, a chaque
+     ouverture, partout ou ca compte.
+
+     Trois consequences, et aucune n'est cosmetique.
+
+     1. CE N'EST PAS LE MEME SITE D'UNE MACHINE A L'AUTRE. Quand la
+        police du titre depend d'un serveur tiers, le rendu est tire
+        au sort. Un site qui ne se ressemble pas a lui-meme ne peut
+        pas avoir l'air serieux.
+
+     2. DEUX NEO-GROTESQUES QUI SE RESSEMBLENT NE FONT PAS UN COUPLE.
+        Inter au titre, Archivo au texte : assez proches pour qu'on ne
+        lise pas une intention, assez differentes pour qu'on sente un
+        defaut de reglage. C'est exactement l'impression d'amateur —
+        pas une faute visible, un flottement.
+
+     3. LA LICENCE. « Helvetica Now Display » appartient a Monotype.
+        Le CDN la redistribue sans droit. Sur un site qui vend un
+        abonnement, c'est une facture qui dort.
+
+     Archivo regle les trois d'un coup. Elle est DEJA dans le fichier,
+     en variable 400-700, 45 ko en base64 : zero requete, zero
+     dependance, le meme rendu sur toutes les machines. C'est une
+     neo-grotesque dessinee pour l'affichage ET pour le texte — une
+     famille, deux emplois, ce qui est la definition d'un systeme
+     typographique plutot que d'un assemblage.
+
+     Archivo Black reste, mais a sa place : le logotype et les
+     chiffres-reperes, la ou une grasse d'affichage est voulue. */
+  --v1-titre:'Archivo', system-ui, sans-serif;
+  --v1-corps:'Archivo', system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){--v1-texte:var(--ink);}
@@ -5490,7 +5635,7 @@ html:not(.v1-fond) .pieces{
 .v1h__t{
   font-family:var(--v1-titre); font-weight:700;
   font-size:clamp(1.65rem, 5vw, 3rem);
-  line-height:1.05; letter-spacing:-.01em;
+  line-height:1.05;   /* l'approche est posee plus bas, avec l'echelle */
   color:var(--v1-texte); margin:0; max-width:none;
 }
 /* LA SEULE ENTORSE A LA LETTRE, et elle est forcee. La proposition
@@ -7568,6 +7713,20 @@ window.PC = (function(){
   'al.bas':               ["En dessous de", "Below", "Por debajo de", "Unter"],
   'al.actuel':            ["Cours du moment\u00a0: {{c}}", "Price right now: {{c}}", "Cotizaci\u00f3n actual: {{c}}", "Aktueller Kurs: {{c}}"],
   'al.note':              ["Une page web ne tourne que lorsqu'elle est ouverte\u00a0: un seuil franchi pendant la nuit se lit le lendemain, \u00e0 la r\u00e9ouverture. Laissez le champ vide pour ne rien surveiller.", "A web page only runs while it is open: a threshold crossed overnight is read the next morning, on reopening. Leave the field empty to watch nothing.", "Una p\u00e1gina web solo funciona mientras est\u00e1 abierta: un umbral cruzado de noche se lee al d\u00eda siguiente, al reabrir. Deje el campo vac\u00edo para no vigilar nada.", "Eine Webseite l\u00e4uft nur, solange sie offen ist: eine nachts \u00fcberschrittene Schwelle liest man am n\u00e4chsten Morgen beim \u00d6ffnen. Leer lassen, um nichts zu \u00fcberwachen."],
+  've.vigies.1':          ["Vous surveillez 1 valeur du march\u00e9. Son seuil n'est pas atteint.", "You are watching 1 market price. Its threshold has not been reached.", "Vigila 1 valor del mercado. No se ha alcanzado su umbral.", "Sie beobachten 1 Marktwert. Seine Schwelle ist nicht erreicht."],
+  've.vigies.n':          ["Vous surveillez {{n}} valeurs du march\u00e9. Aucun de leurs seuils n'est atteint.", "You are watching {{n}} market prices. None of their thresholds has been reached.", "Vigila {{n}} valores del mercado. No se ha alcanzado ninguno de sus umbrales.", "Sie beobachten {{n}} Marktwerte. Keine ihrer Schwellen ist erreicht."],
+  'e.k.net':              ["Patrimoine net", "Net worth", "Patrimonio neto", "Nettoverm\u00f6gen"],
+  'e.k.net.s':            ["une fois {{d}} de capital restant d\u00fb retir\u00e9", "after {{d}} still owed is taken out", "una vez descontados {{d}} de capital pendiente", "nach Abzug von {{d}} Restschuld"],
+  'e.k.grosse':           ["Plus grosse ligne", "Largest holding", "Mayor posici\u00f3n", "Gr\u00f6\u00dfte Position"],
+  'e.k.ech':              ["Prochaine \u00e9ch\u00e9ance", "Next deadline", "Pr\u00f3ximo vencimiento", "N\u00e4chster Termin"],
+  'al.poser':             ["Ajouter une alerte", "Add an alert", "A\u00f1adir una alerta", "Alarm hinzuf\u00fcgen"],
+  'al.modif':             ["Modifier l'alerte", "Edit the alert", "Modificar la alerta", "Alarm \u00e4ndern"],
+  'al.oter':              ["Retirer l'alerte", "Remove the alert", "Quitar la alerta", "Alarm entfernen"],
+  'al.posee.2':           ["Alerte pos\u00e9e\u00a0: au-dessus de {{h}}, en dessous de {{b}}.", "Alert set: above {{h}}, below {{b}}.", "Alerta fijada: por encima de {{h}}, por debajo de {{b}}.", "Alarm gesetzt: \u00fcber {{h}}, unter {{b}}."],
+  'al.posee.h':           ["Alerte pos\u00e9e\u00a0: au-dessus de {{h}}.", "Alert set: above {{h}}.", "Alerta fijada: por encima de {{h}}.", "Alarm gesetzt: \u00fcber {{h}}."],
+  'al.posee.b':           ["Alerte pos\u00e9e\u00a0: en dessous de {{b}}.", "Alert set: below {{b}}.", "Alerta fijada: por debajo de {{b}}.", "Alarm gesetzt: unter {{b}}."],
+  'al.rep':               ["Une alerte est pos\u00e9e sur cette valeur", "An alert is set on this one", "Hay una alerta en este valor", "Auf diesem Wert liegt ein Alarm"],
+  'al.sansdet':           ["Vous n'avez pas besoin de d\u00e9tenir cette valeur pour la surveiller. L'alerte se lit sur le tableau de bord, \u00e0 c\u00f4t\u00e9 de celles de vos lignes.", "You do not have to own this one to watch it. The alert shows on your dashboard, next to the ones on your own holdings.", "No necesita poseer este valor para vigilarlo. La alerta aparece en el panel, junto a las de sus l\u00edneas.", "Sie m\u00fcssen diesen Wert nicht besitzen, um ihn zu beobachten. Der Alarm erscheint im \u00dcberblick, neben denen Ihrer eigenen Positionen."],
   'al.franchi.h':         ["<b>{{n}}</b> est \u00e0 {{c}}, au-dessus du seuil de {{s}} que vous avez pos\u00e9.", "<b>{{n}}</b> is at {{c}}, above the {{s}} threshold you set.", "<b>{{n}}</b> est\u00e1 a {{c}}, por encima del umbral de {{s}} que fij\u00f3.", "<b>{{n}}</b> steht bei {{c}}, \u00fcber Ihrer Schwelle von {{s}}."],
   'al.franchi.h.q':       ["La page constate le franchissement. Ce qu'il faut en faire ne lui appartient pas.", "The page notes the crossing. What to do about it is not its call.", "La p\u00e1gina constata el cruce. Qu\u00e9 hacer con ello no le corresponde.", "Die Seite stellt die \u00dcberschreitung fest. Was daraus folgt, entscheidet sie nicht."],
   'al.franchi.b':         ["<b>{{n}}</b> est \u00e0 {{c}}, sous le seuil de {{s}} que vous avez pos\u00e9.", "<b>{{n}}</b> is at {{c}}, below the {{s}} threshold you set.", "<b>{{n}}</b> est\u00e1 a {{c}}, bajo el umbral de {{s}} que fij\u00f3.", "<b>{{n}}</b> steht bei {{c}}, unter Ihrer Schwelle von {{s}}."],
@@ -7596,6 +7755,8 @@ window.PC = (function(){
 
   /* --- Les prets, et le patrimoine net --- */
   'pr.titre':             ["Ce que vous devez", "What you owe", "Lo que debe", "Was Sie schulden"],
+  'pr.tuile':             ["Un cr\u00e9dit", "A loan", "Un cr\u00e9dito", "Ein Kredit"],
+  'pr.vide':              ["Aucun cr\u00e9dit enregistr\u00e9. Ajoutez-en un et le total devient un patrimoine net.", "No loan recorded. Add one and the total becomes a net worth.", "Ning\u00fan cr\u00e9dito registrado. A\u00f1ada uno y el total pasa a ser un patrimonio neto.", "Kein Kredit erfasst. Tragen Sie einen ein, und aus der Summe wird ein Nettoverm\u00f6gen."],
   'pr.ajouter':           ["Ajouter un pr\u00eat", "Add a loan", "A\u00f1adir un pr\u00e9stamo", "Kredit hinzuf\u00fcgen"],
   'pr.sup':               ["Retirer ce pr\u00eat", "Remove this loan", "Quitar este pr\u00e9stamo", "Diesen Kredit entfernen"],
   'pr.net':               ["de patrimoine net\u00a0: {{b}} d'actifs, moins {{d}} qu'il reste \u00e0 rembourser.", "net worth: {{b}} of assets, less {{d}} still to repay.", "de patrimonio neto: {{b}} de activos, menos {{d}} por devolver.", "Nettoverm\u00f6gen: {{b}} an Aktiva, abz\u00fcglich {{d}}, die noch zu tilgen sind."],
@@ -8524,6 +8685,151 @@ window.PC = (function(){
   };
 
   window.PC_FISC = FISC;
+})();
+
+/* ============================================================
+   LES VIGIES : UNE ALERTE DE COURS POSEE DEPUIS LE MARCHE
+   ------------------------------------------------------------
+   Il existait deja des seuils de cours, mais seulement sur une ligne
+   DETENUE, et seulement depuis sa fiche dans l'espace. Deux limites,
+   et la seconde annule la premiere : on ne decide pas de surveiller
+   un cours au moment ou on consulte son portefeuille, on le decide au
+   moment ou on regarde le cours. L'ecran des marches est le seul
+   endroit ou la question se pose, et c'etait le seul ou l'on ne
+   pouvait pas y repondre.
+
+   Une vigie ne suppose donc PAS qu'on detienne la valeur. « Prevenez-
+   moi si le bitcoin repasse sous 50 000 » est une phrase qu'on dit
+   quand on n'en a pas — c'est meme la raison la plus frequente de la
+   dire.
+
+   CE QUE CE MAGASIN PORTE, ET POURQUOI IL EST A PART.
+   Les seuils des lignes detenues vivent dans l'actif lui-meme
+   (`a.alerte`) : ils suivent la ligne, ils partent avec elle. Une
+   vigie ne s'accroche a rien — elle designe une valeur du marche par
+   son marche et son identifiant. Les deux coexistent sans se marcher
+   dessus, et la veille les affiche cote a cote.
+
+   LE COURS EST RECOPIE ICI, et ce n'est pas de la duplication. Les
+   marches ne tournent que sur l'ecran des marches ; la veille, elle,
+   se lit sur le tableau de bord. Sans le dernier cours vu — et la
+   date a laquelle il a ete vu — le tableau de bord ne pourrait rien
+   dire d'une vigie, ou pire : il dirait quelque chose de faux a
+   partir d'un cours de la semaine derniere. D'ou `px` et `t`, et
+   d'ou la peremption plus bas.
+
+   CE QU'UNE PAGE PEUT PROMETTRE. Rien ne tourne quand elle est
+   fermee. Un seuil franchi la nuit se lit le lendemain, a la
+   reouverture. C'est ecrit sous le bloc, en toutes lettres : une
+   alerte a laquelle on croit a tort est pire qu'une alerte absente.
+   ============================================================ */
+(function(){
+  'use strict';
+  const CLE = 'pierrelco.vigies.v1';
+  /* Au-dela de trois jours, le cours recopie n'est plus un cours,
+     c'est un souvenir. La veille le dit perime plutot que de comparer
+     un seuil a un chiffre d'avant-hier. */
+  const PEREMPTION = 3 * 24 * 3600 * 1000;
+
+  function lit(){
+    try {
+      const o = JSON.parse(localStorage.getItem(CLE) || 'null');
+      if (o && Array.isArray(o.l)) return o.l;
+    } catch (e){}
+    return [];
+  }
+  function ecrit(l){
+    try { localStorage.setItem(CLE, JSON.stringify({v:1, l:l})); } catch (e){}
+  }
+  function meme(x, c, id){ return x.c === c && String(x.id) === String(id); }
+
+  /* LE NOM NE VIENT PAS DE NOUS. « Bitcoin », « CAC 40 », « Once
+     d'or » : ce sont des chaines servies par le fournisseur de cours,
+     et une vigie les garde telles quelles pour les reafficher plus
+     tard. Or `franchis()` rend une phrase que la veille pose en
+     `innerHTML` — la cle « al.franchi.h » contient un <b>, elle ne
+     peut pas etre posee en texte.
+
+     Un nom contenant du balisage s'executerait donc chez le lecteur,
+     avec pour seule condition qu'un fournisseur tiers, ou un relais
+     compromis, le serve une fois. Le module echappe avant de rendre,
+     et il le fait LUI-MEME plutot que de compter sur l'appelant :
+     celui qui ecrit l'appelant suivant n'aura pas lu ce commentaire. */
+  const BAC = (typeof document !== 'undefined') ? document.createElement('span') : null;
+  function ech(x){
+    const t = String(x == null ? '' : x);
+    if (BAC){ BAC.textContent = t; return BAC.innerHTML; }
+    return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  const V = {
+    tout: function(){ return lit(); },
+    lis: function(c, id){
+      return lit().filter(function(x){ return meme(x, c, id); })[0] || null;
+    },
+    /* Pose ou remplace. Deux seuils vides effacent la vigie : c'est
+       le meme geste que pour les lignes detenues, et il evite une
+       corbeille de vigies mortes que personne ne va nettoyer. */
+    pose: function(o){
+      if (!o || !o.c || !o.id) return;
+      const haut = +o.haut || 0, bas = +o.bas || 0;
+      const l = lit().filter(function(x){ return !meme(x, o.c, o.id); });
+      if (haut > 0 || bas > 0){
+        l.push({c:o.c, id:String(o.id), nom:o.nom || String(o.id),
+                tic:o.tic || '', haut:haut, bas:bas,
+                px:(+o.px > 0 ? +o.px : 0), t:(+o.px > 0 ? Date.now() : 0)});
+      }
+      ecrit(l);
+    },
+    ote: function(c, id){
+      ecrit(lit().filter(function(x){ return !meme(x, c, id); }));
+    },
+    /* Appele par l'ecran des marches a chaque rafraichissement, avec
+       la liste ENTIERE d'un coup. Un appel par rangee aurait relu et
+       reecrit le stockage vingt-quatre fois toutes les quarante-cinq
+       secondes — vingt-quatre analyses JSON pour, le plus souvent,
+       une seule vigie a toucher. On lit une fois, on ecrit une fois,
+       et seulement si un chiffre a bouge.
+
+       `liste` : [{id, px}, …]. */
+    cours: function(c, liste){
+      if (!liste || !liste.length) return;
+      const l = lit();
+      if (!l.length) return;
+      const vus = {};
+      liste.forEach(function(x){
+        if (x && x.id && +x.px > 0) vus[String(x.id)] = +x.px;
+      });
+      let bouge = false;
+      const now = Date.now();
+      l.forEach(function(x){
+        if (x.c !== c) return;
+        const px = vus[String(x.id)];
+        if (px > 0 && x.px !== px){ x.px = px; x.t = now; bouge = true; }
+      });
+      if (bouge) ecrit(l);
+    },
+    /* Le meme contrat que `seuilsFranchis()` pour les lignes
+       detenues : {id, cle, sens, vars}. La veille les concatene sans
+       savoir d'ou ils viennent. */
+    franchis: function(fmt){
+      const out = [], now = Date.now();
+      const p = fmt || function(n){ return String(n); };
+      lit().forEach(function(x){
+        if (!(x.px > 0) || !x.t || (now - x.t) > PEREMPTION) return;
+        if (x.haut > 0 && x.px >= x.haut){
+          out.push({id:'vg.h.' + x.c + '.' + x.id, cle:'al.franchi.h', sens:'haut',
+                    vars:{n:ech(x.nom), c:ech(p(x.px)), s:ech(p(x.haut))}});
+        }
+        if (x.bas > 0 && x.px <= x.bas){
+          out.push({id:'vg.b.' + x.c + '.' + x.id, cle:'al.franchi.b', sens:'bas',
+                    vars:{n:ech(x.nom), c:ech(p(x.px)), s:ech(p(x.bas))}});
+        }
+      });
+      return out;
+    }
+  };
+  window.PC_VIGIES = V;
 })();
 
 /* ============================================================
@@ -9663,7 +9969,10 @@ document.addEventListener('error', function(ev){
           <div class="solde__actions">
             <button class="btn" type="button" id="solde-ajout" data-i18n="e.solde.ajout">Ajouter une ligne</button>
             <button class="btn btn--ghost" type="button" id="solde-jour" data-i18n="e.solde.jour">Valeur du jour</button>
-            <button class="btn btn--ghost" type="button" id="pr-ouvre" data-i18n="pr.ajouter">Ajouter un prêt</button>
+            <!-- « Ajouter un pret » etait ici, en troisieme bouton gris.
+                 Personne ne l'a trouve : on ne cherche pas un credit
+                 sous la valeur de ses actifs. Il est descendu dans le
+                 bloc « Ce que vous devez », qui porte son nom. -->
           </div>
         </section>
 
@@ -9707,7 +10016,15 @@ document.addEventListener('error', function(ev){
     <section class="prets" id="prets" aria-labelledby="pr-k" hidden>
       <div class="prets__tete">
         <h3 class="prets__k" id="pr-k" data-i18n="pr.titre">Ce que vous devez</h3>
+        <button class="btn btn--ghost prets__add" type="button" id="pr-ouvre"
+                data-i18n="pr.ajouter">Ajouter un prêt</button>
       </div>
+      <!-- L'ETAT VIDE EST LA RAISON D'ETRE DE CE BLOC.
+           Cache tant qu'aucun pret n'existait, il ne pouvait etre
+           trouve que par quelqu'un qui savait deja qu'il existait.
+           Une ligne suffit a le dire, et elle dit en meme temps ce
+           que le bloc CHANGE — le total cesse d'etre un brut. -->
+      <p class="prets__vide" id="pr-vide" data-i18n="pr.vide">Aucun crédit enregistré. Ajoutez-en un et le total devient un patrimoine net.</p>
       <div class="prets__liste" id="pr-liste"></div>
 
       <form class="prets__form" id="pr-form" hidden>
@@ -9742,7 +10059,13 @@ document.addEventListener('error', function(ev){
         </div>
       </form>
 
-      <p class="prets__note" data-i18n="pr.note"></p>
+      <!-- LA PETITE LIGNE NE PARLE QU'A QUI A UN PRET. Elle enumere
+           ce que le calcul d'amortissement ne couvre pas — assurance,
+           differe, taux variable. Affichee au-dessus d'un bloc vide,
+           c'etait quatre lignes de reserves sur un calcul que
+           personne n'avait demande. Elle arrive avec le premier
+           credit, et pas avant. -->
+      <p class="prets__note" id="pr-note" data-i18n="pr.note" hidden></p>
     </section>
 
     <div class="carte" style="margin-bottom:30px">
@@ -13312,10 +13635,25 @@ document.addEventListener('error', function(ev){
     const sec = document.getElementById('veille');
     const liste = document.getElementById('ve-liste');
     if (!sec || !liste) return;
-    /* Les seuils de cours passent DEVANT : un franchissement est un
-       fait du jour, une concentration est un etat qui dure. */
-    const al = seuilsFranchis().concat(veCalcule());
-    sec.hidden = !actifs.length;
+    /* TROIS SOURCES, UN SEUL BLOC, ET L'ORDRE N'EST PAS ARBITRAIRE.
+       Les franchissements passent devant — c'est un fait DU JOUR —
+       puis les constats de repartition, qui sont des etats qui
+       durent. Entre les deux familles de franchissements, aucune
+       hierarchie : un seuil sur une ligne detenue et une vigie posee
+       depuis les marches disent la meme chose, et le lecteur n'a pas
+       a savoir de quel magasin chacun sort.
+
+       `vigies` passe `eur.format` : le module ne connait ni la
+       devise ni la langue du lecteur, et il a raison de ne pas les
+       connaitre. */
+    const vigies = window.PC_VIGIES
+      ? PC_VIGIES.franchis(function(n){ return eur.format(n); }) : [];
+    const nVigies = window.PC_VIGIES ? PC_VIGIES.tout().length : 0;
+    const al = seuilsFranchis().concat(vigies).concat(veCalcule());
+    /* Une vigie peut exister sans qu'on detienne QUOI QUE CE SOIT :
+       c'est meme le cas le plus frequent au depart. Le bloc s'affiche
+       donc aussi pour elle. */
+    sec.hidden = !(actifs.length || nVigies);
     liste.innerHTML = al.length
       ? al.map(function(a){
           return '<div class="ve-a">' +
@@ -13324,7 +13662,21 @@ document.addEventListener('error', function(ev){
           '</div>';
         }).join('')
       : '<div class="ve-a ve-a--rien"><p class="ve-a__t">' +
-          echap(PC.t('ve.rien')) + '</p></div>';
+          echap(PC.t('ve.rien')) + '</p>' +
+          /* UNE ALERTE DONT ON NE VOIT AUCUNE TRACE EST UNE ALERTE
+             QU'ON NE CROIT PLUS. « Rien ne depasse vos seuils » ne
+             dit pas s'il y a des seuils : la phrase est la meme pour
+             quelqu'un qui en a pose douze et pour quelqu'un qui n'en
+             a pose aucun. On compte donc les valeurs surveillees,
+             sans les enumerer — le detail est sur leur fiche. */
+          /* `PC.pluriel` rend la phrase, pas la cle, et ne prend pas
+             de variables : ici il en faut une. Le compte est au
+             minimum de 1 — le bloc est sous un `nVigies ?` — donc
+             « plus d'un » suffit a trancher dans les quatre langues. */
+          (nVigies ? '<p class="ve-a__q">' +
+              echap(PC.t('ve.vigies.' + (nVigies > 1 ? 'n' : '1'),
+                         {n:String(nVigies)})) + '</p>' : '') +
+        '</div>';
 
     /* Les seuils, regles a la main. */
     const h = document.getElementById('ve-seuils');
@@ -13342,6 +13694,12 @@ document.addEventListener('error', function(ev){
         '<p class="veille__note">' + echap(PC.t('ve.note')) + '</p>';
     }
   }
+
+  /* L'ecran des marches pose les vigies et recopie les cours, mais il
+     ne peut pas repeindre la veille : elle vit dans un autre bloc et
+     lit d'autres variables. Un seul point d'entree, et il est nomme
+     plutot que devine. */
+  window.PC_VEILLE_MAJ = function(){ try { peintVeille(); } catch (e){} };
 
   function veilleBranche(){
     const b = document.getElementById('ve-reglages');
@@ -13376,11 +13734,35 @@ document.addEventListener('error', function(ev){
     if (!sec || !liste) return;
     const form = document.getElementById('pr-form');
     const enSaisie = form && !form.hidden;
-    /* La section n'apparait que s'il y a un pret ou si l'on est en
-       train d'en saisir un. Un bloc vide intitule « ce que vous
-       devez » sur le portefeuille de quelqu'un qui ne doit rien est
-       une inquietude gratuite. */
-    sec.hidden = !(dettes.length || enSaisie);
+    /* ELLE S'AFFICHE DES QU'IL Y A UN PORTEFEUILLE, vide ou non.
+       L'ancienne regle — n'apparaitre que s'il existe deja un pret —
+       se mordait la queue : le seul chemin vers le formulaire passait
+       par un bloc qui ne s'ouvrait qu'une fois le formulaire rempli.
+       Le reproche « ou sont les prets bancaires » est exactement ca.
+
+       Le risque qu'on evitait reste vrai : « Ce que vous devez » sur
+       le portefeuille de quelqu'un qui ne doit rien est une
+       inquietude gratuite. C'est la ligne d'etat vide qui le desamorce
+       — elle ne presume pas une dette, elle offre d'en declarer une.
+
+       Sur un espace entierement vide, en revanche, rien : la premiere
+       chose a faire est d'ajouter un actif, pas un credit. */
+    sec.hidden = !(actifs.length || dettes.length || enSaisie);
+    /* Et pendant la SAISIE, avant qu'un pret existe : `rendre()` ne
+       repasse qu'a l'enregistrement, donc c'est ici qu'il faut ouvrir
+       l'enveloppe, sinon le formulaire s'ouvre derriere un parent
+       cache et le clic semble n'avoir rien fait. */
+    if (dettes.length || enSaisie){
+      const env = document.getElementById('resultats');
+      const inv = document.getElementById('invite');
+      if (env) env.hidden = false;
+      if (inv) inv.hidden = true;
+    }
+    const vide = document.getElementById('pr-vide');
+    if (vide) vide.hidden = !!(dettes.length || enSaisie);
+    sec.setAttribute('data-vide', (dettes.length || enSaisie) ? '0' : '1');
+    const note = document.getElementById('pr-note');
+    if (note) note.hidden = !(dettes.length || enSaisie);
 
     liste.innerHTML = (dettes || []).map(function(d){
       const c = pretCalc(d);
@@ -13811,16 +14193,89 @@ document.addEventListener('error', function(ev){
     document.getElementById('solde-n').textContent =
       actifs.length + ' ' + PC.pluriel(actifs.length, 'e.actif.un', 'e.actif.plus');
 
-    document.getElementById('kpis').innerHTML = [
-      [PC.t('e.k.investi'), eur.format(t.inv), PC.t('e.k.investi.s')],
-      [PC.t('e.k.resultat'), marque(t.gain, eur.format(Math.abs(t.gain))), PC.t('e.k.resultat.s')],
-      [PC.t('e.k.perf'), marque(t.perf, pourcent(t.perf)), PC.t('e.k.perf.s')],
-      [PC.t('e.k.cats'), String(t.nbCats), PC.t(t.nbCats < 3 ? 'e.k.cats.peu' : 'e.k.cats.ok')],
-      [PC.t('e.k.ticket'), eur.format(t.moyenne), PC.t('e.k.lignes')]
-    /* Les deux derniers — nombre de catégories, ticket moyen — sont des
-       indicateurs de lecture, pas la réponse à « combien j'ai ». Ils
-       rejoignent le second rang. */
-    ].map((k, i) => '<div class="kpi' + (i >= 3 ? ' avance' : '') + '"><div class="kpi__k">' + k[0] + '</div><div class="kpi__v">' + k[1] + '</div><div class="kpi__s">' + k[2] + '</div></div>').join('');
+    /* ============================================================
+       TROIS CASES QUI DISENT TROIS CHOSES DIFFERENTES
+       ------------------------------------------------------------
+       Les deux premieres cases etaient « Resultat » et
+       « Performance » — c'est-a-dire le gain en euros et le gain en
+       pourcentage. Or la pastille, trois centimetres plus haut, sous
+       le grand chiffre, porte DEJA les deux : « 25 570 € · +19,1 % ».
+
+       Le premier ecran disait donc le meme gain trois fois, dans
+       trois boites de tailles differentes. Ce n'est pas de
+       l'insistance, c'est du bruit : le lecteur cherche ce que la
+       troisieme boite ajoute aux deux premieres, ne trouve rien, et
+       conclut — a juste titre — que la page ne sait pas ce qui
+       compte. C'est exactement le reproche « ce n'est pas assez
+       simple ».
+
+       Les trois cases visibles repondent maintenant a trois
+       questions qui n'ont pas la meme reponse :
+
+         combien ai-je MIS ?        l'apport cumule
+         combien ai-je VRAIMENT ?   le net, credits deduits
+         qu'est-ce qui ARRIVE ?     la prochaine echeance
+
+       La deuxieme n'a de sens que s'il y a une dette : sans credit,
+       « net » vaut « total » et on retomberait dans la repetition
+       qu'on vient de retirer. Elle laisse alors la place a la plus
+       grosse ligne, qui est le fait qui decide de l'annee.
+       ============================================================ */
+    const cases = [[PC.t('e.k.investi'), eur.format(t.inv), PC.t('e.k.investi.s')]];
+
+    if (t.dette > 0){
+      cases.push([PC.t('e.k.net'), eur.format(t.net),
+                  PC.t('e.k.net.s', {d:eur.format(t.dette)})]);
+    } else if (t.grosse && t.val){
+      /* `PC.part`, pas `pourcent` : le second POSE UN SIGNE, et
+         « +49,8 % » sous « plus grosse ligne » se lit comme une
+         performance. C'est une part d'un total, elle n'a pas de
+         sens de variation et elle ne peut pas etre negative. */
+      /* La legende est le NOM, rien de plus. Elle disait « Appartement
+         T3, part du total » : le titre dit deja « plus grosse ligne »
+         et la valeur porte un signe pourcent — « part du total » ne
+         restait que pour faire une phrase, et il faisait passer la
+         legende sur deux lignes, donc toute la grille sur une rangee
+         de plus.
+
+         `echap` sur le nom : les trois morceaux d'une case partent en
+         `innerHTML` quelques lignes plus bas, et celui-la est le seul
+         qui vienne de la personne. Un nom de ligne est un champ
+         libre — et un portefeuille s'importe. */
+      cases.push([PC.t('e.k.grosse'), PC.part(t.concentration, 1),
+                  echap(t.grosse.nom)]);
+    } else {
+      cases.push([PC.t('e.k.resultat'), marque(t.gain, eur.format(Math.abs(t.gain))),
+                  PC.t('e.k.resultat.s')]);
+    }
+
+    /* LA PROCHAINE ECHEANCE, A L'ENDROIT OU ON OUVRE LA PAGE. Elle
+       existait deja, mais au fond de l'onglet Analyse, derriere une
+       pastille — un point qui dit « quelque chose » la ou une ligne
+       peut dire QUOI et QUAND. */
+    let ech = null;
+    try {
+      const es = PC_FISC.echeances(fiscEtat(), new Date());
+      ech = (es || []).filter(function(e){ return e.jours >= 0; })[0] || null;
+    } catch (e){}
+    if (ech){
+      cases.push([PC.t('e.k.ech'), fiscDelai(ech.jours), PC.t(ech.cle)]);
+    } else {
+      cases.push([PC.t('e.k.perf'), marque(t.perf, pourcent(t.perf)), PC.t('e.k.perf.s')]);
+    }
+
+    /* Le second rang, replie sur telephone : des indicateurs de
+       lecture, pas la reponse a « combien j'ai ». */
+    cases.push([PC.t('e.k.cats'), String(t.nbCats), PC.t(t.nbCats < 3 ? 'e.k.cats.peu' : 'e.k.cats.ok')]);
+    cases.push([PC.t('e.k.ticket'), eur.format(t.moyenne), PC.t('e.k.lignes')]);
+    /* « Resultat » avait ete repousse ici plutot que retire. C'etait se
+       contredire : on venait d'enlever la case parce qu'elle redisait
+       la pastille, et on la remettait un cran plus bas, ou elle redit
+       exactement la meme chose a quelqu'un qui a deplie la vue. Le
+       gain en euros est sous le total, une fois, et c'est assez. */
+
+    document.getElementById('kpis').innerHTML = cases
+      .map((k, i) => '<div class="kpi' + (i >= 3 ? ' avance' : '') + '"><div class="kpi__k">' + k[0] + '</div><div class="kpi__v">' + k[1] + '</div><div class="kpi__s">' + k[2] + '</div></div>').join('');
 
     const paires = Object.keys(t.cats).map(c => [c, t.cats[c]]).sort((a,b) => b[1] - a[1]);
     document.getElementById('cat-info').textContent = paires.length ? paires.length + ' ' + PC.pluriel(paires.length, 'e.cat.une', 'e.cat.plus') : '—';
@@ -13836,7 +14291,15 @@ document.addEventListener('error', function(ev){
     /* Rien tant qu'aucun actif n'est saisi : l'invitation d'un côté, les
        résultats de l'autre. La cascade ne se joue qu'au passage de zéro
        à un actif — la rejouer à chaque ajout serait fatigant. */
-    const plein = actifs.length > 0;
+    /* UN CREDIT SUFFIT A REMPLIR L'ESPACE. `#prets` vit DANS
+       `#resultats` : tant que cette enveloppe se fermait sur le seul
+       compte des actifs, quelqu'un qui n'a qu'un pret ne voyait rien
+       — ni sa dette, ni son net, ni le bloc ou il vient de la saisir.
+       C'est aussi ce qui faisait de la tuile « Un credit » une
+       impasse sur un espace neuf : elle menait au formulaire, le
+       formulaire s'ouvrait, et l'enveloppe qui le contient restait
+       fermee. */
+    const plein = actifs.length > 0 || dettes.length > 0;
     const resultats = document.getElementById('resultats');
     const etaitVide = resultats.hidden;
     document.getElementById('invite').hidden = plein;
@@ -14959,22 +15422,18 @@ document.addEventListener('error', function(ev){
 
        Il reste trois choses a faire ici, et seulement trois. */
 
-    /* 1. LES DEUX POLICES, aux adresses qu'elles donnent. Le reste de
-          la page embarque les siennes en base64 et ne fait AUCUNE
-          requete vers l'exterieur ; ces deux-la sont les seules.
+    /* 1. PLUS AUCUNE POLICE N'EST ALLEE CHERCHER DEHORS. Les deux
+          liens qui etaient ici — « Helvetica Now Display » sur un CDN
+          qui la redistribue sans licence, Inter sur Google Fonts —
+          ont ete retires. La page embarque ses trois familles en
+          base64 : Archivo, Archivo Black, IBM Plex Mono. Elle ne fait
+          donc AUCUNE requete de police, et rend la meme chose hors
+          ligne, derriere un pare-feu d'entreprise et dans la
+          visionneuse d'artefact, qui n'autorisait que Google Fonts.
 
-          A savoir, et ce n'est pas un detail : « Helvetica Now
-          Display » est une police commerciale de Monotype, que ce CDN
-          redistribue sans licence. Sur un site qui vend, c'est une
-          licence a acheter. */
-    [['https://db.onlinewebfonts.com/c/04e6981992c0e2e7642af2074ebe3901?family=Helvetica+Now+Display+Bold', null],
-     ['https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap', null]
-    ].forEach(function(x){
-      const l = document.createElement('link');
-      l.rel = 'stylesheet';
-      l.href = x[0];
-      document.head.appendChild(l);
-    });
+          Le detail qui decide : le premier des deux liens echouait
+          deja partout ou la page est regardee. Ce qui s'affichait
+          n'etait pas le dessin choisi, c'etait son secours. */
 
     /* 2. LE RANG DES BLOCS QUI ARRIVENT. Les enfants directs d'un
           panneau sont des enveloppes de mise en page ; ce qu'on voit
@@ -20338,7 +20797,22 @@ document.addEventListener('error', function(ev){
           '<span class="tuile-cat__i" aria-hidden="true">' + TUILES[c].icone + '</span>' +
           '<span class="tuile-cat__n">' + echap(nomCat(c)) + '</span>' +
         '</button>';
-      }).join('');
+      }).join('') +
+      /* UN CREDIT N'EST PAS UNE CATEGORIE D'ACTIF, mais c'est la
+         meme question — « que voulez-vous ajouter ? » — et c'est ici
+         qu'on vient y repondre. Le separer dans un coin du tableau de
+         bord revenait a le cacher : il fallait savoir qu'il existait
+         pour le trouver.
+
+         Il ne rejoint pas CATEGORIES pour autant : un pret n'a ni
+         cours, ni part dans la repartition, ni plus-value, et le
+         glisser dans la liste des actifs aurait fausse les sept
+         endroits qui la parcourent. Il est en queue de grille,
+         marque, et son clic part ailleurs. */
+      '<button class="tuile-cat tuile-cat--dette" type="button" data-tuile="__pret">' +
+        '<span class="tuile-cat__i" aria-hidden="true">\ud83c\udfe6</span>' +
+        '<span class="tuile-cat__n">' + echap(PC.t('pr.tuile')) + '</span>' +
+      '</button>';
   }
 
   /* Peint la liste de l'etape 2. */
@@ -20535,7 +21009,21 @@ document.addEventListener('error', function(ev){
 
   document.addEventListener('click', function(e){
     const t = e.target && e.target.closest && e.target.closest('[data-tuile]');
-    if (t){ ouvreCategorie(t.getAttribute('data-tuile')); return; }
+    if (t){
+      /* Le pret vit dans le tableau de bord, pas dans ce panneau :
+         on y va, et on ouvre son formulaire. Deux clics simules
+         plutot qu'un appel direct — `poseVue` et le formulaire des
+         prets sont dans deux autres blocs, et la barre du bas est le
+         seul point de passage que les trois partagent. */
+      if (t.getAttribute('data-tuile') === '__pret'){
+        const acc = document.querySelector('#barre-app [data-dest="accueil"]');
+        if (acc) acc.click();
+        const po = document.getElementById('pr-ouvre');
+        if (po) setTimeout(function(){ po.click(); }, 60);
+        return;
+      }
+      ouvreCategorie(t.getAttribute('data-tuile')); return;
+    }
     const r = e.target && e.target.closest && e.target.closest('[data-retour]');
     if (r){
       const ou = r.getAttribute('data-retour');
@@ -21842,6 +22330,12 @@ document.addEventListener('error', function(ev){
         logo(c, 26) +
         '<b>' + ech(c.name) + '</b>' +
         '<span class="marches__tic">' + ech(c.unite || c.symbol) + '</span>' +
+        /* UN REPERE, PAS UN BOUTON. La rangee EST deja un bouton, et
+           un bouton dans un bouton n'est pas du HTML valide : le
+           navigateur defait l'imbrication et la rangee cesse de
+           s'ouvrir. Le repere dit seulement « il y en a une ici » ;
+           on la regle sur la fiche, ou il y a la place de l'ecrire. */
+        marque(c) +
       '</span>' +
       '<span class="marches__prix">' + prix(c.current_price) + '</span>' +
       caseVar(v, PC.t('actu.h.24h'), '24h') +
@@ -21853,6 +22347,40 @@ document.addEventListener('error', function(ev){
       '<span class="marches__cap">' +
         gros(marcheSource === 'crypto' ? c.market_cap : c.total_volume) + '</span>' +
     '</button>';
+  }
+
+  /* La cloche d'une valeur surveillee. Un caractere, pas une image :
+     il suit la taille du texte, il survit au mode sombre, et il ne
+     coute aucune requete. */
+  function marque(c){
+    if (!c || !window.PC_VIGIES) return '';
+    const v = PC_VIGIES.lis(marcheCle(), c.id);
+    if (!v) return '';
+    /* L'INFOBULLE DIT LE SEUIL, pas « il y a une alerte ici ». La
+       rangee ne peut pas porter deux nombres de plus sans devenir
+       illisible, mais le survol et le lecteur d'ecran, eux, ont la
+       place : on y met ce qui a ete regle, et on evite d'avoir a
+       ouvrir la fiche pour se le rappeler. */
+    const mot = (v.haut > 0 && v.bas > 0)
+      ? PC.t('al.posee.2', {h:prix(v.haut), b:prix(v.bas)})
+      : v.haut > 0 ? PC.t('al.posee.h', {h:prix(v.haut)})
+      : v.bas  > 0 ? PC.t('al.posee.b', {b:prix(v.bas)})
+      : PC.t('al.rep');
+    return '<span class="marches__vg" aria-label="' + ech(mot) +
+           '" title="' + ech(mot) + '">\u25c9</span>';
+  }
+
+  /* Le cours recopie dans les vigies, a chaque rafraichissement de la
+     liste. C'est ce qui permet au tableau de bord — qui ne parle a
+     aucun marche — de dire qu'un seuil est franchi. On ne recopie que
+     pour les valeurs reellement surveillees ; `cours` n'ecrit que si
+     le chiffre a bouge. */
+  function recopieCours(liste){
+    if (!window.PC_VIGIES || !liste || !liste.length) return;
+    PC_VIGIES.cours(marcheCle(), liste.map(function(c){
+      return {id: c && c.id, px: c && c.current_price};
+    }));
+    if (window.PC_VEILLE_MAJ) PC_VEILLE_MAJ();
   }
 
   /* L'horizon choisi ne change QUE ce qu'on montre : les trois
@@ -22090,6 +22618,11 @@ document.addEventListener('error', function(ev){
        Surtout : sur liste vide il FAUT passer ici, sinon le classement
        de la crypto reste sous le titre « Bourse ». */
     peintHaut(liste);
+    /* Les cours partent dans les vigies AVANT le rendu : le tableau
+       de bord lit le stockage, pas le DOM, et il doit pouvoir dire
+       qu'un seuil est franchi des que l'ecran des marches a tourne
+       une fois. */
+    recopieCours(liste);
     if (!liste.length){
       boite.innerHTML = '<p class="marches__etat mono" style="padding:24px 4px">' +
         ech(PC.t('m.vide')) + '</p>';
@@ -22109,6 +22642,19 @@ document.addEventListener('error', function(ev){
     if (!memes){ boite.innerHTML = liste.map(ligne).join(''); return; }
     liste.forEach(function(c, i){
       const b = boutons[i];
+      /* LE REPERE DOIT PASSER PAR ICI AUSSI. Il est pose par
+         `ligne()`, qui n'est appelee que lorsque la liste CHANGE —
+         or poser une alerte ne change pas la liste. On revenait donc
+         de la fiche sur une rangee sans repere, et il n'apparaissait
+         qu'au prochain changement de marche. Un reglage qui ne se
+         voit qu'apres un detour se lit comme un reglage perdu. */
+      const nom = b.querySelector('.marches__nom');
+      if (nom){
+        const vu = nom.querySelector('.marches__vg');
+        const veut = !!(window.PC_VIGIES && PC_VIGIES.lis(marcheCle(), c.id));
+        if (veut && !vu) nom.insertAdjacentHTML('beforeend', marque(c));
+        else if (!veut && vu) vu.remove();
+      }
       /* Meme lecture et meme precision que `caseVar` au premier
          trace : la variation passait de « −0,32 % » a « −0,3 % » au
          premier rafraichissement, et le champ lu n'etait pas le meme
@@ -22425,7 +22971,55 @@ document.addEventListener('error', function(ev){
            machine ne peut pas savoir. */
         '<button class="pill" type="button" id="mar-ajouter">' +
           ech(PC.t('m.suivre')) + '</button>' +
-      '</div>';
+        /* « Ajouter une alerte », ECRIT, a cote de « suivre cette
+           ligne ». Les deux gestes se decident au meme instant et
+           devant le meme chiffre ; l'un etait la, l'autre se trouvait
+           trois ecrans plus loin, et seulement pour une valeur deja
+           detenue. */
+        '<button class="pill" type="button" id="mar-vigie">' +
+          ech(PC.t(vigieDe(c) ? 'al.modif' : 'al.poser')) + '</button>' +
+      '</div>' +
+      blocVigie(c);
+  }
+
+  /* ===== L'ALERTE SUR UNE VALEUR DU MARCHE =====
+     Elle ne suppose pas qu'on la detienne : « prevenez-moi si le
+     bitcoin repasse sous 50 000 » est une phrase qu'on dit surtout
+     quand on n'en a pas. Le magasin est `PC_VIGIES`, partage avec le
+     tableau de bord ; ici on ne fait que l'ecran. */
+  function marcheCle(){
+    return marcheSource === 'bourse' ? 'bourse'
+         : marcheSource === 'matieres' ? 'matieres' : 'crypto';
+  }
+  function vigieDe(c){
+    if (!c || !window.PC_VIGIES) return null;
+    return PC_VIGIES.lis(marcheCle(), c.id);
+  }
+  function blocVigie(c){
+    if (!c || !window.PC_VIGIES) return '';
+    const v = vigieDe(c) || {};
+    /* Ouvert d'emblee quand une alerte existe : on vient la relire ou
+       la changer, et un panneau replie sur ce qu'on cherche est un
+       clic de plus pour rien. */
+    const ouvertDebut = !!(v.haut > 0 || v.bas > 0);
+    return '<div class="vigie" id="mf-vigie" data-vigie="' + ech(c.id) + '"' +
+             (ouvertDebut ? '' : ' hidden') + '>' +
+      '<p class="vigie__t">' + ech(PC.t('al.titre')) + '</p>' +
+      '<div class="vigie__ch">' +
+        '<label><span>' + ech(PC.t('al.haut')) + '</span>' +
+          '<input type="number" step="any" min="0" inputmode="decimal" data-vg-h ' +
+          'value="' + (v.haut > 0 ? v.haut : '') + '"></label>' +
+        '<label><span>' + ech(PC.t('al.bas')) + '</span>' +
+          '<input type="number" step="any" min="0" inputmode="decimal" data-vg-b ' +
+          'value="' + (v.bas > 0 ? v.bas : '') + '"></label>' +
+      '</div>' +
+      (c.current_price > 0 ? '<p class="vigie__c mono">' +
+        ech(PC.t('al.actuel', {c:prix(c.current_price)})) + '</p>' : '') +
+      '<p class="vigie__n">' + ech(PC.t('al.sansdet')) + '</p>' +
+      '<p class="vigie__n">' + ech(PC.t('al.note')) + '</p>' +
+      (ouvertDebut ? '<button class="vigie__x" type="button" id="mf-vigie-x">' +
+        ech(PC.t('al.oter')) + '</button>' : '') +
+    '</div>';
   }
 
   /* Sur une fiche ouverte, un rafraîchissement ne doit toucher que le
@@ -22627,6 +23221,12 @@ document.addEventListener('error', function(ev){
   function ferme(){
     ouverte = null;
     vueFiche.hidden = true; vueListe.hidden = false;
+    /* On repasse sur la liste en revenant : une alerte posee sur la
+       fiche doit avoir pose son repere AVANT qu'on relise la rangee.
+       Sans cette ligne il n'arrivait qu'au rafraichissement suivant,
+       quarante-cinq secondes plus tard — et dans l'intervalle le
+       reglage qu'on venait de faire semblait n'avoir rien produit. */
+    if (rangs && rangs.length) peint(rangs);
     vueListe.scrollIntoView({block:'start', behavior:'smooth'});
   }
 
@@ -22635,9 +23235,55 @@ document.addEventListener('error', function(ev){
     const b = e.target.closest('[data-piece]');
     if (b) ouvre(b.getAttribute('data-piece'));
   });
+
+  /* Chaque frappe pose la vigie. Deux champs vides l'effacent — c'est
+     le meme geste que pour les lignes detenues, et il evite une
+     corbeille d'alertes mortes que personne ne va nettoyer. */
+  vueFiche.addEventListener('input', function(e){
+    if (!e.target || !e.target.closest) return;
+    const bl = e.target.closest('#mf-vigie');
+    if (!bl || !window.PC_VIGIES) return;
+    const c = rangs.filter(function(x){ return x.id === ouverte; })[0];
+    if (!c) return;
+    const h = bl.querySelector('[data-vg-h]'), b2 = bl.querySelector('[data-vg-b]');
+    PC_VIGIES.pose({c:marcheCle(), id:c.id, nom:c.name,
+                    tic:c.symbol || c.unite || '', px:c.current_price,
+                    haut:+(h && h.value) || 0, bas:+(b2 && b2.value) || 0});
+    /* Le bouton change de mot sans que la fiche soit redessinee : la
+       redessiner pendant la frappe ferait sauter le curseur. */
+    const bt = document.getElementById('mar-vigie');
+    if (bt) bt.textContent = PC.t(vigieDe(c) ? 'al.modif' : 'al.poser');
+    if (window.PC_VEILLE_MAJ) PC_VEILLE_MAJ();
+  });
   vueFiche.addEventListener('click', function(e){
     const r = e.target.closest('#mar-retour');
     if (r){ ferme(); return; }
+    /* Le bouton ne fait qu'ouvrir et fermer le panneau. Ce qui ECRIT,
+       c'est la frappe dans les champs, plus bas : un « enregistrer »
+       de plus pour deux nombres serait un pas inutile, et un panneau
+       qu'on quitte sans avoir valide perdrait la saisie. */
+    if (e.target.closest('#mar-vigie')){
+      const bl = document.getElementById('mf-vigie');
+      if (bl){
+        bl.hidden = !bl.hidden;
+        if (!bl.hidden){
+          const prem = bl.querySelector('[data-vg-h]');
+          if (prem) prem.focus();
+          bl.scrollIntoView({block:'nearest', behavior: doux() ? 'smooth' : 'auto'});
+        }
+      }
+      return;
+    }
+    if (e.target.closest('#mf-vigie-x')){
+      const c0 = rangs.filter(function(x){ return x.id === ouverte; })[0];
+      if (c0 && window.PC_VIGIES){
+        PC_VIGIES.ote(marcheCle(), c0.id);
+        majFiche();
+        if (window.PC_VEILLE_MAJ) PC_VEILLE_MAJ();
+        peintHaut(rangs); peint(rangs);
+      }
+      return;
+    }
     if (e.target.closest('#mar-ajouter')){
       const c = rangs.filter(function(x){ return x.id === ouverte; })[0];
       /* L'espace tient le formulaire ; ce module tient la donnee. On
