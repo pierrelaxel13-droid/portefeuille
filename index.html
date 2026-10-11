@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261010.1632";</script>
+<script>window.PC_VERSION = "261011.1048";</script>
 </head>
 <body>
 
@@ -4660,52 +4660,64 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   border-radius:var(--r-2); padding:16px 18px;
   display:flex; flex-direction:column; gap:5px; min-width:0;
 }
-/* ===== BONNE OU MAUVAISE NOUVELLE =====
-   Une pastille en tete de carte, et la regle ecrite dessous : sur
-   vingt-quatre heures, une hausse est comptee comme une bonne
-   nouvelle, une baisse comme une mauvaise. Dit comme ca, ce n'est
-   plus un jugement cache — c'est une convention qu'on peut accepter
-   ou refuser en connaissance de cause.
-
-   Jamais la couleur seule : un mot et un glyphe la portent aussi. */
-.nouv{
-  align-self:flex-start; display:inline-flex; align-items:center; gap:6px;
-  font-family:'IBM Plex Mono', monospace; font-size:10px;
-  letter-spacing:.11em; text-transform:uppercase;
-  padding:3px 9px 3px 7px; border-radius:var(--r-pill);
-  border:1px solid currentColor; margin-bottom:3px;
-}
-.nouv[data-ton="bonne"]{color:var(--gain);}
-.nouv[data-ton="mauvaise"]{color:var(--loss);}
-.nouv[data-ton="neutre"]{color:var(--ink-3);}
-.nouv__g{font-size:.9em;}
+/* La pastille « BONNE NOUVELLE » et sa jumelle ont ete retirees. Sur
+   un telephone elles tenaient DEUX lignes en tete de chaque carte,
+   quatre fois de suite, pour redire en majuscules ce que le signe du
+   pourcentage dit trois centimetres plus bas. La regle etait honnete
+   et elle etait ecrite ; c'est la place qu'elle prenait qui ne se
+   defendait pas. */
 .actu-legende{
   font-family:'IBM Plex Mono', monospace; font-size:11px;
   color:var(--ink-3); margin:14px 0 0; text-wrap:pretty;
 }
+/* ===== LE NOM ET LE CODE SUR UNE LIGNE =====
+   `baseline` et non `center` : un nom en 14,5 px a cote d'un code en
+   10,5 px, centres l'un sur l'autre, flottent — alignes sur leur
+   ligne d'ecriture, ils se lisent comme une seule chose. Le nom prend
+   la place qui reste et se coupe ; le code ne se coupe jamais, c'est
+   lui qui identifie. */
+.cours-case__h1{
+  display:flex; align-items:baseline; gap:8px; min-width:0;
+}
 .cours-case__n{
   font-size:14.5px; font-weight:600; white-space:nowrap;
-  overflow:hidden; text-overflow:ellipsis;
+  overflow:hidden; text-overflow:ellipsis; min-width:0;
 }
 .cours-case__t{
   font-family:'IBM Plex Mono', monospace; font-size:10.5px;
   letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3);
+  flex:none;
 }
 .cours-case__p{
   font-family:'IBM Plex Mono', monospace; font-size:17px; font-weight:500;
   font-variant-numeric:tabular-nums; margin-top:2px;
 }
-/* Les trois horizons. L'etiquette a gauche, la variation a droite :
-   l'oeil descend une colonne de pourcentages alignes plutot que de
-   chercher trois nombres dans une phrase. */
-.cours-case__v{display:flex; flex-direction:column; gap:3px; margin-top:8px;}
+/* ===== LES TROIS HORIZONS, EMPILES ET SERRES =====
+   Essayes cote a cote, pour gagner de la hauteur : trois colonnes
+   dans une carte de 160 px sur un telephone, c'est 53 px par
+   colonne, et « +14,6 % » en demande 55. Les trois pourcentages se
+   chevauchaient — on lisait « +5,6 %+14,6-9,5 % ». Pire, `.delta`
+   passe a la ligne quand il manque la place : la fleche montait
+   au-dessus de son nombre, et une rangee gagnee en devenait trois.
+
+   Ils restent donc empiles, etiquette a gauche et valeur a droite :
+   l'oeil descend une colonne de pourcentages alignes. Ce qui a fait
+   maigrir la carte, c'est la pastille partie et le nom remonte a
+   cote du code, pas ces trois lignes-la — serrees, elles coutent
+   quarante-huit pixels. */
+.cours-case__v{
+  display:flex; flex-direction:column; gap:1px; margin-top:7px;
+}
 .cours-case__l{
   display:flex; align-items:baseline; justify-content:space-between; gap:10px;
 }
 .cours-case__h{
-  font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.12em;
+  font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:.1em;
   text-transform:uppercase; color:var(--ink-3);
 }
+/* La valeur ne se coupe jamais en deux : la fleche reste contre son
+   nombre, quelle que soit la largeur de la carte. */
+.cours-case__l .delta{flex-wrap:nowrap; white-space:nowrap; font-size:13.5px;}
 .actu-note{font-size:11.5px; color:var(--ink-3); margin:12px 0 0;}
 
 /* La presse. Une liste de liens, pas des cartes : ce sont des titres
@@ -6339,12 +6351,9 @@ window.PC = (function(){
   'actu.24h':            ["sur 24 heures","over 24 hours","en 24 horas","über 24 Stunden"],
   /* La convention est ecrite a cote des pastilles : un jugement qu'on
      ne dit pas est un jugement qu'on impose. */
-  'actu.bonne':          ["Bonne nouvelle","Good news","Buena noticia","Gute Nachricht"],
-  'actu.mauvaise':       ["Mauvaise nouvelle","Bad news","Mala noticia","Schlechte Nachricht"],
   'actu.neutre':         ["Sans changement","Unchanged","Sin cambios","Unverändert"],
-  'actu.legende':        ["Les plus fortes hausses et les plus fortes baisses du jour, prises parmi les soixante premières capitalisations et les matières premières \u2014 et non les plus grosses, qui bougent toutes ensemble. Sur vingt-quatre heures\u00a0: une hausse est comptée comme une bonne nouvelle, une baisse comme une mauvaise. En dessous de 0,2\u00a0%, rien n'est compté.","The day's biggest risers and biggest fallers, taken from the sixty largest capitalisations and from commodities \u2014 not the largest, which all move together. Over twenty-four hours: a rise counts as good news, a fall as bad. Below 0.2%, nothing is counted.","Las mayores subidas y las mayores bajadas del día, tomadas entre las sesenta primeras capitalizaciones y las materias primas \u2014 y no las más grandes, que se mueven todas juntas. En veinticuatro horas: una subida cuenta como buena noticia, una bajada como mala. Por debajo del 0,2\u00a0%, no se cuenta nada.","Die stärksten Gewinner und die stärksten Verlierer des Tages, aus den sechzig größten Marktkapitalisierungen und den Rohstoffen \u2014 nicht die größten, die sich alle gemeinsam bewegen. Über vierundzwanzig Stunden: ein Anstieg gilt als gute Nachricht, ein Rückgang als schlechte. Unter 0,2\u00a0% zählt nichts."],
+  'actu.legende':        ["Les plus fortes hausses et les plus fortes baisses du jour, prises parmi les soixante premi\u00e8res capitalisations et les mati\u00e8res premi\u00e8res \u2014 et non les plus grosses, qui bougent toutes ensemble.","The day's biggest risers and biggest fallers, taken from the sixty largest capitalisations and from commodities \u2014 not the largest, which all move together.","Las mayores subidas y las mayores bajadas del d\u00eda, tomadas entre las sesenta primeras capitalizaciones y las materias primas \u2014 y no las m\u00e1s grandes, que se mueven todas juntas.","Die st\u00e4rksten Gewinner und die st\u00e4rksten Verlierer des Tages, aus den sechzig gr\u00f6\u00dften Marktkapitalisierungen und den Rohstoffen \u2014 nicht die gr\u00f6\u00dften, die sich alle gemeinsam bewegen."],
   'actu.maj':            ["Mis à jour à {{h}}, puis chaque minute.","Updated at {{h}}, then every minute.","Actualizado a las {{h}}, y luego cada minuto.","Aktualisiert um {{h}}, danach jede Minute."],
-  'actu.p.legende':      ["Bonne ou mauvaise\u00a0: lu dans les mots du titre, pas dans le marché. Un titre qui n'en dit pas assez n'est pas marqué.","Good or bad: read from the wording of the headline, not from the market. A headline that says too little is left unmarked.","Buena o mala: leído en las palabras del titular, no en el mercado. Un titular que no dice bastante no se marca.","Gut oder schlecht: aus dem Wortlaut der Überschrift gelesen, nicht aus dem Markt. Eine Überschrift, die zu wenig sagt, bleibt unmarkiert."],
   'actu.journal':        ["Le journal","The journal","El diario","Das Journal"],
   'actu.journal.d':      ["Ce que je regarde, et pourquoi.","What I am watching, and why.","Lo que observo, y por qué.","Was ich beobachte, und warum."],
 
@@ -24394,25 +24403,37 @@ document.addEventListener('error', function(ev){
     }).join('') + '</div>';
   }
 
-  /* ===== BONNE OU MAUVAISE NOUVELLE =====
-     La regle, et toute la regle : au-dessus de +0,2 % sur vingt-quatre
-     heures c'est une bonne nouvelle, en dessous de -0,2 % une
-     mauvaise, entre les deux rien n'est dit. Le seuil existe parce
-     qu'un mouvement de trois centiemes de pour cent n'est pas une
-     nouvelle — l'appeler ainsi userait le mot.
+  /* La pastille « bonne / mauvaise nouvelle » a ete retiree des
+     cartes ET des titres de presse. Elle tenait sur une regle
+     honnete — au-dessus de +0,2 % c'est une hausse, en dessous de
+     −0,2 % une baisse — mais la regle ne sauvait pas ce qu'elle
+     produisait : un bandeau de deux lignes en tete de chaque carte,
+     repete quatre fois, pour redire en majuscules ce que le signe du
+     pourcentage disait deja trois centimetres plus bas.
 
-     Elle est ECRITE sous les cartes, en toutes lettres. Une pastille
-     qui juge sans dire sa regle n'est pas une information, c'est une
-     opinion deguisee en donnee. */
-  const SEUIL_NOUVELLE = 0.2;
-  function pastille(v){
-    const ton = (typeof v !== 'number' || !isFinite(v) || Math.abs(v) < SEUIL_NOUVELLE)
-      ? 'neutre' : (v > 0 ? 'bonne' : 'mauvaise');
-    const glyphe = ton === 'bonne' ? '▲' : (ton === 'mauvaise' ? '▼' : '—');
-    return '<span class="nouv" data-ton="' + ton + '">' +
-      '<span class="nouv__g" aria-hidden="true">' + glyphe + '</span>' +
-      echap(PC.t('actu.' + ton)) + '</span>';
-  }
+     Sur un titre de presse c'etait pire : le ton y etait devine des
+     MOTS du titre, par une liste d'expressions. « Les craintes
+     s'eloignent » y comptait pour une mauvaise nouvelle. Deviner
+     l'humeur d'un article qu'on n'a pas lu, et l'afficher comme une
+     donnee, c'est exactement ce que cette page s'interdit partout
+     ailleurs. La fleche et la couleur du pourcentage suffisent : ce
+     sont des faits, pas des avis. */
+
+  /* ===== LE PLANCHER DU MOUVEMENT =====
+     Il portait le nom de la pastille — SEUIL_MOUVEMENT — et il est
+     parti avec elle. A tort : la pastille n'etait qu'un de ses deux
+     emplois. L'autre, qui reste, est le TRI : `parMouvement` s'en
+     sert pour decider ce qui compte comme une hausse et ce qui
+     compte comme une baisse du jour. Sans lui, la fonction levait une
+     ReferenceError, l'appel etait avale par un `catch`, et la rangee
+     des quatre valeurs disparaissait sans un mot dans la console.
+
+     Trois centiemes de pour cent ne sont pas un mouvement : en
+     dessous de 0,2 % une valeur n'est rangee d'aucun cote, et elle ne
+     sert qu'a completer s'il manque des cases. C'est un seuil de
+     selection, pas un verdict — d'ou le nom. */
+  const SEUIL_MOUVEMENT = 0.2;
+
   /* La variation a vingt-quatre heures, quel que soit le nom du champ
      que rend le fournisseur. */
   function var24(x){
@@ -24440,15 +24461,24 @@ document.addEventListener('error', function(ev){
 
     hote2.innerHTML = bonnes.map(function(x){
       return '<div class="cours-case">' +
-        pastille(var24(x)) +
-        '<div class="cours-case__n">' + echap(x.name || '') + '</div>' +
-        '<div class="cours-case__t">' + echap(String(x.symbol || '').toUpperCase()) + '</div>' +
+        /* LE NOM ET LE CODE SUR UNE LIGNE. Ils etaient l'un sous
+           l'autre, sous une pastille qui prenait elle-meme deux
+           lignes : la carte d'UN actif faisait la moitie d'un
+           telephone. Le code est un complement du nom, pas une
+           information de plus — il se met a cote. */
+        '<div class="cours-case__h1">' +
+          '<span class="cours-case__n">' + echap(x.name || '') + '</span>' +
+          '<span class="cours-case__t">' +
+            echap(String(x.symbol || '').toUpperCase()) + '</span>' +
+        '</div>' +
         '<div class="cours-case__p">' + PC.argent(x.current_price,
             x.current_price < 10 ? 2 : 0) + '</div>' +
         /* Trois horizons, pas un. A 24 heures, un actif qui bouge de
            3 % par jour ne dit rien — c'est ce qu'affirme un des
            billets juste en dessous, et il serait malvenu de le
-           contredire trois centimetres plus haut. */
+           contredire trois centimetres plus haut. Mais ils tiennent
+           sur UNE rangee : trois etiquettes empilees a gauche de
+           trois nombres, c'etaient trois lignes pour trois chiffres. */
         variations(x) +
       '</div>';
     }).join('');
@@ -24463,6 +24493,10 @@ document.addEventListener('error', function(ev){
             {hour:'2-digit', minute:'2-digit'}); } catch (e){ h = ''; }
       note.textContent = h ? PC.t('actu.maj', {h:h}) : PC.t('actu.24h');
     }
+    /* La legende expliquait la regle de la pastille. La pastille
+       partie, elle n'explique plus rien : elle reste le texte qui dit
+       OU l'on puise ces quatre valeurs, sans la phrase sur la bonne
+       et la mauvaise nouvelle. */
     const leg = document.getElementById('actu-legende');
     if (leg) leg.textContent = PC.t('actu.legende');
     bloc.hidden = false;
@@ -24521,19 +24555,6 @@ document.addEventListener('error', function(ev){
      clairement n'est pas marque du tout, et pourquoi la legende dit
      d'ou vient la lecture. Mieux vaut ne rien dire que de se tromper
      en couleur sur une page qui parle d'argent. */
-  const MOTS_HAUSSE = /\b(hausse|bondit|s'envole|progress\w*|record|rebond\w*|gagn\w*|monte|gr[iî]mpe|optimis\w*|accord|croissance|surperform\w*|rallye|rise|rises|surge|soar\w*|jump\w*|rally|gain\w*|record|rebound|climb\w*|beat\w*|growth|sube|repunt\w*|r[ée]cord|ganan\w*|avanza|crece|steigt|gewinn\w*|erholung|rekord|w[aä]chst|anstieg)\b/gi;
-  const MOTS_BAISSE = /\b(chute|plonge|recul\w*|baisse|d[éè]visse?|craint\w*|crise|krach|effondr\w*|perd|perte\w*|alerte|sanction\w*|r[ée]cession|inqui[ée]t\w*|licenci\w*|fall\w*|drop\w*|plunge\w*|slump\w*|crash|tumbl\w*|loss\w*|fear\w*|warn\w*|sink\w*|slide\w*|cae|caída|desplom\w*|p[ée]rdid\w*|temor\w*|crisis|f[aä]llt|sturz|verlust\w*|angst|krise|einbruch|r[üu]ckgang)\b/gi;
-  function tonTitre(t){
-    const txt = String(t || '');
-    const h = (txt.match(MOTS_HAUSSE) || []).length;
-    const b = (txt.match(MOTS_BAISSE) || []).length;
-    if (h === b) return '';                     /* on ne dit rien */
-    const ton = h > b ? 'bonne' : 'mauvaise';
-    return '<span class="nouv" data-ton="' + ton + '">' +
-      '<span class="nouv__g" aria-hidden="true">' + (ton === 'bonne' ? '▲' : '▼') + '</span>' +
-      echap(PC.t('actu.' + ton)) + '</span>';
-  }
-
   function posePresse(lignes, sources){
     const bloc = document.getElementById('actu-presse');
     const hote3 = document.getElementById('actu-titres');
@@ -24548,7 +24569,6 @@ document.addEventListener('error', function(ev){
     hote3.innerHTML = bonnes.map(function(x){
       const age = ilYA(x.date);
       return '<div class="titre-p">' +
-        tonTitre(x.titre) +
         '<a class="titre-p__a" href="' + echap(x.lien) + '"' +
           ' target="_blank" rel="noopener noreferrer nofollow">' +
           echap(x.titre) + '</a>' +
@@ -24559,23 +24579,58 @@ document.addEventListener('error', function(ev){
 
     const pied = document.getElementById('actu-sources');
     if (pied){
+      /* Plus de legende sur le ton : il n'y a plus de ton a
+         expliquer. Reste ce qui est du : qui a ecrit ces titres. */
       const noms = (sources || []).map(nomSource).filter(Boolean);
-      pied.textContent = (noms.length ? PC.t('actu.p.via', {s:noms.join(', ')}) + ' \u00b7 ' : '') +
-                         PC.t('actu.p.legende');
+      pied.textContent = noms.length ? PC.t('actu.p.via', {s:noms.join(', ')}) : '';
     }
     bloc.hidden = false;
     presseFaite = true;
   }
 
+  /* ============================================================
+     D'OU VIENNENT LES TITRES
+     ------------------------------------------------------------
+     Un navigateur ne peut pas lire le flux d'un journal : le journal
+     refuse les appels venus d'une autre origine, et c'est son droit.
+     Il faut quelqu'un entre les deux, et il y en a deux possibles.
+
+     1. LE SERVEUR DE LA MAISON, « /api/actu ». C'est la voie d'un
+        site heberge chez soi, et elle existait seule jusqu'ici.
+     2. LE RELAIS, « ?actu=1 ». Le meme qui sert deja les cours de
+        bourse et des matieres premieres.
+
+     Le defaut qu'on repare : le site publie n'a PAS de serveur —
+     c'est un fichier sur GitHub Pages, et une page d'artefact.
+     « /api/actu » n'y repondait jamais, donc la rubrique restait
+     cachee en permanence et l'onglet Actualite ne montrait que des
+     cours et un journal ecrit a la main.
+
+     On essaie donc les deux, le serveur d'abord : chez quelqu'un qui
+     heberge, c'est sa liste de sources qui doit faire foi, pas celle
+     du relais. Le premier qui rend des titres gagne ; si aucun ne
+     repond, le bloc reste cache — on n'ecrit pas « erreur » sur une
+     devanture. */
+  function litPresse(url){
+    return fetch(url, {credentials:'omit'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d || !d.lignes || !d.lignes.length) return false;
+        posePresse(d.lignes, d.sources);
+        return presseFaite;
+      })
+      .catch(function(){ return false; });
+  }
+
   function cherchePresse(){
     /* Pas d'origine a interroger dans un fichier local. */
     if (location.protocol.indexOf('http') !== 0) return;
-    fetch('/api/actu', {credentials:'omit'})
-      .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(d){ if (d) posePresse(d.lignes, d.sources); })
-      /* Aucun serveur, ou un serveur muet : le bloc reste cache. On
-         n'ecrit pas « erreur » sur une devanture. */
-      .catch(function(){});
+    litPresse('/api/actu').then(function(fait){
+      if (fait) return;
+      const u = window.PC_RELAIS_ADRESSE && window.PC_RELAIS_ADRESSE();
+      if (!u) return;
+      return litPresse(u + (u.indexOf('?') === -1 ? '?' : '&') + 'actu=1');
+    });
   }
 
   /* ============================================================
@@ -24610,9 +24665,9 @@ document.addEventListener('error', function(ev){
        ne peut etre rangee d'aucun cote. Elle ne sert qu'a completer, et
        seulement s'il manque des cases. */
     const sans = liste.filter(function(x){ return var24(x) === null; });
-    const hausse = avec.filter(function(x){ return var24(x) >= SEUIL_NOUVELLE; })
+    const hausse = avec.filter(function(x){ return var24(x) >= SEUIL_MOUVEMENT; })
                        .sort(function(a, b){ return var24(b) - var24(a); });
-    const baisse = avec.filter(function(x){ return var24(x) <= -SEUIL_NOUVELLE; })
+    const baisse = avec.filter(function(x){ return var24(x) <= -SEUIL_MOUVEMENT; })
                        .sort(function(a, b){ return var24(a) - var24(b); });
     /* Une moitie chacun ; si un cote est plus court, l'autre prend la
        place libre plutot que de laisser un trou. */
