@@ -34,28 +34,49 @@
  "sources": [
   "France Info"
  ],
- "fait": "2026-10-14T18:50:59.104Z",
+ "fait": "2026-10-14T18:52:23.864Z",
  "flux": [
   {
    "nom": "France Info",
    "etat": 200,
-   "ms": 1112,
+   "ms": 1853,
    "titres": 5,
    "dit": null
   },
   {
-   "nom": "Banque de France",
+   "nom": "Service-public",
+   "etat": 200,
+   "ms": 2804,
+   "titres": 0,
+   "dit": "page web, et elle n'annonce aucun flux"
+  },
+  {
+   "nom": "Bercy",
    "etat": 403,
-   "ms": 966,
+   "ms": 1339,
    "titres": 0,
    "dit": null
   },
   {
-   "nom": "INSEE",
-   "etat": 500,
-   "ms": 689,
+   "nom": "Banque de France",
+   "etat": 200,
+   "ms": 1312,
    "titres": 0,
-   "dit": null
+   "dit": "page web, et elle n'annonce aucun flux"
+  },
+  {
+   "nom": "INSEE",
+   "etat": 200,
+   "ms": 2247,
+   "titres": 0,
+   "dit": "page web, et elle n'annonce aucun flux"
+  },
+  {
+   "nom": "AMF",
+   "etat": 200,
+   "ms": 1629,
+   "titres": 0,
+   "dit": "page web, et elle n'annonce aucun flux"
   }
  ]
 }
