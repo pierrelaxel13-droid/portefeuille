@@ -35,7 +35,16 @@ on:
     branches: [main]
     paths-ignore:
       - 'actu.json'
+  # ET A LA MAIN, avec la possibilite d'essayer une AUTRE liste pour
+  # ce passage-la seulement. Sans ce champ, verifier qu'une adresse
+  # repond demandait de changer la variable du depot, de lancer, puis
+  # de la remettre — trois gestes pour une question qui en vaut un.
   workflow_dispatch:
+    inputs:
+      flux:
+        description: "Liste a essayer pour ce passage (Nom|adresse, separes par des virgules). Vide : la liste habituelle."
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -56,7 +65,10 @@ jobs:
 
       - name: Lire les flux
         env:
-          ACTU_FLUX: ${{ vars.ACTU_FLUX }}
+          # Le champ du lancement a la main l'emporte sur la variable
+          # du depot, qui l'emporte sur la liste par defaut du
+          # programme. Trois niveaux, du plus ponctuel au plus durable.
+          ACTU_FLUX: ${{ inputs.flux != '' && inputs.flux || vars.ACTU_FLUX }}
         # Un echec ici est VOLONTAIREMENT visible : si une adresse a
         # change, mieux vaut une croix rouge qu'une rubrique qui
         # repete les titres d'avant-hier pendant six mois. L'ancien
