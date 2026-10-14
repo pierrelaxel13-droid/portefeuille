@@ -107,7 +107,36 @@ function quand(bloc){
   return isFinite(d.getTime()) ? d.toISOString() : null;
 }
 
-async function unFlux(f){
+/* ===== CE QU'UNE PAGE ANNONCE =====
+   Trois adresses sur six essayees n'existaient pas, et chercher la
+   bonne a la main est un travail sans fin : chaque site la range
+   ailleurs, et elle change. Un vrai lecteur de flux ne la cherche
+   pas — il lit la page d'accueil et prend celle qu'elle ANNONCE,
+   dans la balise prevue pour ca depuis vingt ans.
+
+   On fait donc un seul saut : si l'adresse donnee rend une page web
+   plutot qu'un flux, on y lit le lien annonce et on le suit. Un
+   seul, et pas de second — un site qui renverrait en boucle ne doit
+   pas nous y emmener. Cela veut dire qu'on peut desormais ecrire
+   « Bercy|https://www.economie.gouv.fr » et que ca marche. */
+function flairFlux(html, base){
+  const liens = html.match(/<link\b[^>]*>/gi) || [];
+  for (const l of liens){
+    if (!/rel\s*=\s*["']?alternate/i.test(l)) continue;
+    if (!/type\s*=\s*["'](application\/(rss|atom)\+xml|application\/xml|text\/xml)["']/i.test(l)) continue;
+    const h = /href\s*=\s*["']([^"']+)["']/i.exec(l);
+    if (!h) continue;
+    try { return new URL(entites(h[1]), base).href; } catch (e){ /* adresse illisible */ }
+  }
+  return null;
+}
+
+/* Les blocs d'un flux, quelle que soit sa famille. */
+function articles(brut){
+  return brut.match(/<(?:item|entry)\b[\s\S]*?<\/(?:item|entry)>/gi) || [];
+}
+
+async function unFlux(f, saut){
   const t0 = Date.now();
   const stop = new AbortController();
   const minuteur = setTimeout(() => stop.abort(), DELAI);
@@ -128,7 +157,27 @@ async function unFlux(f){
     });
     if (!r.ok) return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[]};
     const brut = (await r.text()).slice(0, MAX);
-    const blocs = brut.match(/<(?:item|entry)\b[\s\S]*?<\/(?:item|entry)>/gi) || [];
+    let blocs = articles(brut);
+    /* RIEN A LIRE DANS UNE REPONSE QUI VA BIEN : c'est presque
+       toujours une page web la ou on attendait un flux. On suit ce
+       qu'elle annonce, une fois. */
+    if (!blocs.length && !saut && /<html[\s>]/i.test(brut)){
+      const vers = flairFlux(brut, r.url || f.url);
+      if (vers && vers !== f.url){
+        const suite = await unFlux({nom:f.nom, url:vers}, true);
+        suite.dit = 'page web ; flux annonce suivi vers ' + vers.slice(0, 90);
+        return suite;
+      }
+      return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[],
+              dit:"page web, et elle n'annonce aucun flux"};
+    }
+    /* Une reponse qui va bien, qui n'est pas une page web, et ou l'on
+       ne trouve aucun article : on dit ce qui est arrive plutot que de
+       laisser un zero sans explication. */
+    if (!blocs.length){
+      return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[],
+              dit:'aucun article : ' + brut.replace(/\s+/g, ' ').slice(0, 110)};
+    }
     const lignes = [];
     for (const b of blocs){
       const titre = balise(b, 'title');
@@ -151,7 +200,13 @@ async function unFlux(f){
 const sources = flux();
 /* En parallele : trois journaux lents l'un apres l'autre, c'est
    vingt-quatre secondes pour rien. */
-const lus = await Promise.all(sources.map(unFlux));
+/* `sources.map(unFlux)` passe l'INDEX en deuxieme argument, et le
+   deuxieme argument de `unFlux` est « j'ai deja saute vers un flux
+   annonce ». Toutes les sources sauf la premiere croyaient donc avoir
+   deja saute, et ne suivaient jamais ce qu'une page annonce. Un
+   defaut qui ne casse rien : il rend juste une fonctionnalite
+   silencieusement inerte, ce qui est la pire des pannes. */
+const lus = await Promise.all(sources.map(f => unFlux(f)));
 const lignes = [];
 lus.forEach(x => x.lignes.forEach(l => lignes.push(l)));
 /* Les plus recents d'abord. Une ligne sans date passe derriere celles
