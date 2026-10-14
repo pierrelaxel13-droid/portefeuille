@@ -116,7 +116,14 @@ async function unFlux(f){
       signal: stop.signal,
       headers: {
         'Accept': 'application/rss+xml, application/atom+xml, application/xml, text/xml',
-        'User-Agent': 'pierrelco-actu/1.0 (+https://github.com/pierrelaxel13-droid/portefeuille)'
+        /* LA FORME CONVENUE D'UN LECTEUR DE FLUX. « pierrelco-actu/1.0 »
+           tout court recoit un 403 de certains serveurs : leur pare-feu
+           ne reconnait pas l'agent et refuse par defaut. Le prefixe
+           « Mozilla/5.0 (compatible; … ) » est la convention des
+           lecteurs RSS depuis vingt ans — il ne deguise rien, le nom du
+           programme et l'adresse de son depot restent ecrits en toutes
+           lettres, et c'est a cela qu'on nous reconnait. */
+        'User-Agent': 'Mozilla/5.0 (compatible; pierrelco-actu/1.0; +https://github.com/pierrelaxel13-droid/portefeuille)'
       }
     });
     if (!r.ok) return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[]};
