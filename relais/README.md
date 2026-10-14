@@ -241,6 +241,67 @@ montants et dit qu'elle n'a pas eu les cours.
 quantités, ni votre historique : uniquement la liste des symboles dont
 la page veut le prix. Tout le reste ne quitte pas votre navigateur.
 
+## La presse — `?actu=1`
+
+Le relais lit aussi des **flux RSS** et rend les titres du jour, que la
+page affiche dans son onglet *Actualité*, sous la rubrique « La presse ».
+
+Pourquoi passer par lui : un navigateur ne peut pas lire le flux d'un
+journal lui-même — le journal refuse les appels venus d'une autre
+origine, et c'est son droit. Il faut quelqu'un entre les deux, et la
+page en connaît **trois**, qu'elle essaie dans cet ordre :
+
+1. `/api/actu`, la route de votre propre serveur si vous en avez un ;
+2. `actu.json`, déposé à côté de la page par la tâche planifiée du
+   dépôt publié (voir `actu/README.md`) — même origine, rien à
+   déployer ;
+3. ce relais.
+
+Le relais vient donc **en dernier**, et c'est volontaire : il est le
+seul des trois à coûter un appel sortant et un quota. Il reste utile
+là où les deux premiers n'existent pas — une page ouverte ailleurs que
+depuis le dépôt publié, par exemple.
+
+**Ce qui est rendu, et rien de plus** : un titre, un lien, un nom de
+source, une date. Jamais le texte de l'article — il appartient à celui
+qui l'a écrit, et le lien renvoie chez lui. C'est l'usage pour lequel un
+flux RSS est publié.
+
+### Choisir vos sources — `ACTU_FLUX`
+
+- Clé (le nom) : `ACTU_FLUX`
+- Valeur : `Nom|adresse` séparés par des virgules, par exemple
+  `France Info|https://www.francetvinfo.fr/economie.rss,Banque de France|https://www.banque-france.fr/rss.xml`
+- Type : **Text** (ce n'est pas un secret)
+
+Sans cette variable, trois flux par défaut s'appliquent : France Info,
+Banque de France, INSEE.
+
+> **Ces adresses sont un point de départ, pas une autorisation.**
+> Vérifiez les conditions d'utilisation de chaque source avant la mise
+> en ligne, et retirez celles qui interdisent la reprise de titres.
+> Elles n'ont pas pu être jointes depuis l'environnement où ce code a
+> été écrit : le réseau y refuse les hôtes externes. Elles sont
+> plausibles, pas vérifiées.
+
+### Le vérifier après déploiement
+
+```
+https://VOTRE-RELAIS.workers.dev/?actu=1&diag=1
+```
+
+Le champ `flux` dit, pour **chaque** source : le code HTTP obtenu, le
+temps de réponse, le nombre de titres lus, et le message d'erreur s'il
+y en a un. C'est le premier endroit à regarder si la rubrique reste
+vide.
+
+| Ce que dit `flux` | Ce que ça veut dire |
+|---|---|
+| `"etat":200, "titres":0` | Le flux répond mais rien n'en sort : l'adresse rend sans doute une page HTML, pas du RSS. Ouvrez-la dans un navigateur. |
+| `"etat":404` ou `403` | L'adresse a changé, ou l'éditeur refuse les lecteurs automatiques. |
+| `"etat":0, "dit":"..."` | Le flux n'a pas répondu dans les cinq secondes, ou le nom de domaine n'existe pas. |
+| `sources` vide dans la réponse | Aucun flux n'a servi de titre : la rubrique restera cachée dans la page, sans message d'erreur. |
+
 ## Si ça ne marche pas
 
 | Ce que vous voyez | Ce qu'il faut regarder |
@@ -253,6 +314,7 @@ la page veut le prix. Tout le reste ne quitte pas votre navigateur.
 | `{"erreur":"le fournisseur a refuse", ...}` | La réponse contient `amont.message` : c'est le fournisseur qui parle, mot pour mot, et `quoi` dit la suite. Un message parlant de `API key` signifie que `TWELVEDATA` est absente, périmée ou mal recopiée. |
 | `{}` tout court | Le symbole n'est pas reconnu. Vérifiez le code : symbole et place, tels que le fournisseur les nomme. |
 | « Hello World » | L'étape 3 s'est arrêtée avant le collage du code. |
+| La rubrique « La presse » reste absente | **Regardez d'abord si `actu.json` existe dans le dépôt publié** : depuis qu'une tâche planifiée l'y dépose, c'est lui qui fait vivre la rubrique et le relais n'est appelé que s'il manque. Ensuite seulement, appelez `?actu=1&diag=1` et lisez le champ `flux` : il dit pour chaque source ce qui s'est passé. Une rubrique vide se tait volontairement — on n'écrit pas « erreur » sur une devanture. |
 | Dans la page : aucun fournisseur n'a répondu | L'adresse collée à l'étape 6 n'est pas celle de l'étape 3. |
 
 Pour voir ce que répond le relais, ouvrez directement dans un

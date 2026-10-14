@@ -1,0 +1,96 @@
+# ============================================================
+# LES TITRES DU JOUR, DEUX FOIS PAR JOUR
+#
+# Cette tache tourne chez GitHub, pas chez vous : rien a installer,
+# rien a maintenir, rien a payer. Elle lit les flux, ecrit
+# « actu.json » a cote de « index.html », et ne valide le fichier que
+# s'il a change — un depot ne doit pas accumuler un commit par jour
+# pour dire la meme chose.
+#
+# La page lit ce fichier en MEME ORIGINE : aucune permission a
+# demander a personne. Si le relais Cloudflare est deploye un jour, il
+# reprendra la main tout seul — la page essaie les deux.
+#
+# POUR CHANGER LES SOURCES, sans toucher a un fichier : Settings →
+# Secrets and variables → Actions → Variables → ACTU_FLUX, au format
+# « Nom|adresse », separes par des virgules.
+#
+# A SAVOIR : GitHub desactive une tache planifiee apres soixante jours
+# sans aucune activite dans le depot, et previent par courriel. Un
+# « Run workflow » suffit a la relancer.
+# ============================================================
+name: Les titres du jour
+
+on:
+  schedule:
+    # 06:07 et 16:07 UTC. Pas a l'heure pile : tout le monde s'y met,
+    # et les taches planifiees y partent avec du retard.
+    - cron: '7 6,16 * * *'
+  # ET A CHAQUE MISE EN LIGNE, pour que la rubrique ne soit pas vide
+  # entre le deploiement et la premiere heure ronde. Le commit que
+  # cette tache pousse ne la redeclenche pas : GitHub ne rejoue pas un
+  # workflow sur un commit signe par son propre jeton. Et « actu.json »
+  # est exclu par precaution, pour que ce soit vrai deux fois.
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'actu.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actu
+  cancel-in-progress: false
+
+jobs:
+  titres:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Lire les flux
+        env:
+          ACTU_FLUX: ${{ vars.ACTU_FLUX }}
+        # Un echec ici est VOLONTAIREMENT visible : si une adresse a
+        # change, mieux vaut une croix rouge qu'une rubrique qui
+        # repete les titres d'avant-hier pendant six mois. L'ancien
+        # fichier reste en place.
+        run: node actu/actu.mjs > actu.json.neuf
+
+      - name: Ne valider que si ca a change
+        run: |
+          # `require` choisit son interpreteur sur l'EXTENSION : un
+          # fichier « .neuf » serait lu comme du JavaScript, et un
+          # objet JSON n'en est pas. On lit donc le fichier et on
+          # l'analyse soi-meme. La date et le journal des flux sont
+          # retires avant la comparaison : ils changent a chaque
+          # passage sans qu'aucun titre ait bouge.
+          node -e '
+            const fs = require("fs");
+            const sans = p => {
+              const j = JSON.parse(fs.readFileSync(p, "utf8"));
+              delete j.fait; delete j.flux;
+              return JSON.stringify(j);
+            };
+            const neuf = sans("actu.json.neuf");
+            const vieux = fs.existsSync("actu.json") ? sans("actu.json") : null;
+            fs.writeFileSync("_change", neuf === vieux ? "non" : "oui");
+          '
+          if [ "$(cat _change)" = "non" ]; then
+            echo "les memes titres qu'au dernier passage — rien a valider."
+            rm -f actu.json.neuf _change
+            exit 0
+          fi
+          rm -f _change
+          mv actu.json.neuf actu.json
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add actu.json
+          git commit -m "Les titres du jour — $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push

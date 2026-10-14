@@ -7,5 +7,19 @@ compatibility_date = "2026-09-21"
 # Vide = ouvert a tous : votre quota devient celui de tout le monde.
 ORIGINES = "https://pierrelaxel13-droid.github.io"
 
+# Les flux de presse, « Nom|adresse » separes par des virgules.
+# Absente, la liste par defaut du worker s'applique : France Info,
+# Banque de France, INSEE.
+#
+# AVERTISSEMENT. Ces adresses sont des points de depart, PAS une
+# autorisation : verifiez les conditions de chaque source avant de
+# mettre en ligne, et retirez celles qui interdisent la reprise de
+# titres. Elles n'ont pas pu etre jointes depuis l'environnement ou
+# elles ont ete ecrites — le premier deploiement doit se terminer par
+# un appel a « ?actu=1&diag=1 », qui dit pour chaque flux s'il a
+# repondu et combien de titres il a rendus.
+#
+# ACTU_FLUX = "France Info|https://www.francetvinfo.fr/economie.rss,Banque de France|https://www.banque-france.fr/rss.xml"
+
 # La cle du fournisseur ne se met PAS ici : ce fichier est versionne.
 #   wrangler secret put TWELVEDATA

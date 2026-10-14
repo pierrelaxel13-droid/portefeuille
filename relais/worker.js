@@ -48,7 +48,7 @@
    deja corrige, simplement parce que rien ne disait quelle version
    repondait. Un champ de trop dans la reponse coute moins cher qu'un
    aller-retour de plus. */
-const VERSION = '2026-09-23.15';
+const VERSION = '2026-10-11.1';
 const FICHE = 'https://query1.finance.yahoo.com/v7/finance/quote';
 
 /* Ni Yahoo ni Stooq ne publient d'API : ce sont des sites web, et ils
@@ -795,6 +795,187 @@ async function courbe(symbole, jours){
   return pts;
 }
 
+
+/* ==================================================================
+   LA PRESSE
+   ------------------------------------------------------------------
+   Pourquoi cette route est ici, et pas ailleurs.
+
+   La page porte depuis longtemps une rubrique « La presse ». Elle
+   appelait « /api/actu », une route du serveur de la maison. Or le
+   site tel qu'il est publie n'a pas de serveur : c'est un fichier sur
+   GitHub Pages, et une page d'artefact. La rubrique restait donc
+   cachee en permanence, et l'onglet Actualite ne montrait que des
+   cours et un journal ecrit a la main — qui vieillit.
+
+   Un navigateur ne peut pas lire un flux RSS lui-meme : le journal
+   refuse les appels venus d'une autre origine, et c'est son droit.
+   Il faut quelqu'un entre les deux. Ce relais est deja ce
+   quelqu'un-la pour les cours de bourse ; il l'est maintenant pour
+   les titres, avec le meme garde d'origine et le meme cache.
+
+   CE QU'IL REND, et rien de plus : un titre, un lien, un nom de
+   source, une date. Jamais le texte de l'article — il appartient a
+   celui qui l'a ecrit, et le lien renvoie chez lui. C'est l'usage
+   pour lequel un flux RSS est publie.
+
+   CE QU'IL NE DECIDE PAS A VOTRE PLACE : les conditions de chaque
+   source. La liste par defaut ci-dessous est un point de depart, pas
+   une autorisation. Verifiez-les, et reglez ACTU_FLUX en consequence.
+
+   AVERTISSEMENT HONNETE sur ces adresses : elles n'ont PAS pu etre
+   jointes depuis l'environnement ou ce code a ete ecrit — le reseau
+   y refuse les hotes externes. Elles sont plausibles, pas verifiees.
+   Le premier deploiement doit se terminer par un appel a
+   « ?actu=1&diag=1 », qui dit pour chaque flux s'il a repondu, en
+   combien de temps, et combien de titres il a rendus.
+   ================================================================== */
+
+/* « Nom|adresse », separes par des virgules. Reglable par la variable
+   ACTU_FLUX, qui remplace entierement cette liste. */
+const ACTU_DEFAUT = [
+  'France Info|https://www.francetvinfo.fr/economie.rss',
+  'Banque de France|https://www.banque-france.fr/rss.xml',
+  'INSEE|https://www.insee.fr/fr/information/rss/1405599'
+].join(',');
+
+const ACTU_PAR_FLUX = 5;    /* une rubrique n'est pas une archive */
+const ACTU_TOTAL    = 12;
+const ACTU_DELAI    = 5000; /* un journal lent ne fait pas attendre la page */
+const ACTU_MAX      = 1024 * 1024;
+
+function actuFlux(env){
+  return String((env && env.ACTU_FLUX) || ACTU_DEFAUT)
+    .split(',').map(function(x){ return x.trim(); }).filter(Boolean)
+    .map(function(x){
+      const i = x.indexOf('|');
+      if (i < 1) return null;
+      const nom = x.slice(0, i).trim();
+      const url = x.slice(i + 1).trim();
+      /* Seuls http(s). Un flux mal regle ne doit pas pouvoir glisser
+         un « javascript: » jusqu'au navigateur du lecteur. */
+      return (nom && /^https?:\/\//i.test(url)) ? {nom:nom, url:url} : null;
+    }).filter(Boolean);
+}
+
+/* Les cinq entites que les flux emploient reellement, plus le
+   numerique. On ne monte pas un decodeur complet : un flux RSS est du
+   XML, pas du HTML, et ce sont les seules qui y sont obligatoires. */
+function dsEntites(t){
+  return String(t == null ? '' : t)
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+    .replace(/&#(\d+);/g, function(_, n){
+      const c = Number(n);
+      return (c > 0 && c < 0x110000) ? String.fromCodePoint(c) : '';
+    })
+    .replace(/&#x([0-9a-f]+);/gi, function(_, n){
+      const c = parseInt(n, 16);
+      return (c > 0 && c < 0x110000) ? String.fromCodePoint(c) : '';
+    })
+    /* En DERNIER, sans quoi « &amp;lt; » deviendrait « < ». */
+    .replace(/&amp;/g, '&');
+}
+
+/* Le contenu d'une balise, CDATA compris. Les editeurs emballent
+   presque toujours leurs titres dans du CDATA, parce qu'ils
+   contiennent des apostrophes et des esperluettes. */
+function dsBalise(bloc, nom){
+  const m = new RegExp('<' + nom + '(?:\\s[^>]*)?>([\\s\\S]*?)</' + nom + '>', 'i').exec(bloc);
+  if (!m) return '';
+  let t = m[1];
+  const cd = /<!\[CDATA\[([\s\S]*?)\]\]>/i.exec(t);
+  if (cd) t = cd[1];
+  /* Un titre peut porter du balisage : on le retire plutot que de le
+     laisser filer jusqu'au navigateur. La page echappe de son cote,
+     mais deux filets valent mieux qu'un sur du texte venu d'ailleurs. */
+  return dsEntites(t.replace(/<[^>]*>/g, '')).replace(/\s+/g, ' ').trim();
+}
+
+/* Atom met le lien dans un attribut, RSS dans le texte de la balise. */
+function dsLien(bloc){
+  const a = /<link[^>]*\srel=["']alternate["'][^>]*\shref=["']([^"']+)["']/i.exec(bloc) ||
+            /<link[^>]*\shref=["']([^"']+)["']/i.exec(bloc);
+  if (a) return dsEntites(a[1]).trim();
+  const b = dsBalise(bloc, 'link');
+  if (b) return b;
+  /* Dernier recours : certains flux ne mettent l'adresse que dans le
+     guid, et le signalent par isPermaLink. */
+  const g = /<guid[^>]*isPermaLink=["']true["'][^>]*>([\s\S]*?)<\/guid>/i.exec(bloc);
+  return g ? dsEntites(g[1]).trim() : '';
+}
+
+function dsDate(bloc){
+  const t = dsBalise(bloc, 'pubDate') || dsBalise(bloc, 'published') ||
+            dsBalise(bloc, 'updated') || dsBalise(bloc, 'dc:date');
+  if (!t) return null;
+  const d = new Date(t);
+  return isFinite(d.getTime()) ? d.toISOString() : null;
+}
+
+async function unFlux(f){
+  const t0 = Date.now();
+  const stop = new AbortController();
+  const minuteur = setTimeout(function(){ stop.abort(); }, ACTU_DELAI);
+  try {
+    const r = await fetch(f.url, {
+      signal: stop.signal,
+      headers: Object.assign({
+        'Accept': 'application/rss+xml, application/atom+xml, application/xml, text/xml'
+      }, ENTETES)
+    });
+    if (!r.ok) return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[]};
+    /* Un flux de douze mega ne sera pas lu : on coupe avant de tout
+       garder en memoire. */
+    const brut = (await r.text()).slice(0, ACTU_MAX);
+    const blocs = brut.match(/<(?:item|entry)\b[\s\S]*?<\/(?:item|entry)>/gi) || [];
+    const lignes = [];
+    for (const b of blocs){
+      const titre = dsBalise(b, 'title');
+      const lien = dsLien(b);
+      /* Sans lien on n'affiche pas : reprendre un titre sans renvoyer
+         chez celui qui l'a ecrit, c'est se l'approprier. */
+      if (!titre || !/^https?:\/\//i.test(lien)) continue;
+      lignes.push({titre:titre.slice(0, 240), lien:lien, source:f.nom, date:dsDate(b)});
+      if (lignes.length >= ACTU_PAR_FLUX) break;
+    }
+    return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:lignes};
+  } catch (e){
+    return {nom:f.nom, etat:0, ms:Date.now() - t0, lignes:[],
+            dit:String((e && e.message) || e).slice(0, 120)};
+  } finally {
+    clearTimeout(minuteur);
+  }
+}
+
+async function actu(env){
+  const flux = actuFlux(env);
+  if (!flux.length) return {lignes:[], sources:[], flux:[]};
+  /* En parallele : trois journaux lents l'un apres l'autre, c'est
+     quinze secondes, et la page aurait abandonne avant. */
+  const lus = await Promise.all(flux.map(unFlux));
+  const lignes = [];
+  lus.forEach(function(x){ x.lignes.forEach(function(l){ lignes.push(l); }); });
+  /* Les plus recents d'abord. Une ligne sans date passe derriere
+     celles qui en ont une : on ne la fait pas passer pour fraiche. */
+  lignes.sort(function(a, b){
+    const da = a.date ? Date.parse(a.date) : 0;
+    const db = b.date ? Date.parse(b.date) : 0;
+    return db - da;
+  });
+  return {
+    lignes: lignes.slice(0, ACTU_TOTAL),
+    /* On ne cite que les sources qui ont REELLEMENT servi un titre :
+       nommer un journal muet, c'est lui attribuer ce qu'un autre a
+       ecrit. */
+    sources: lus.filter(function(x){ return x.lignes.length; })
+                .map(function(x){ return x.nom; }),
+    flux: lus.map(function(x){
+      return {nom:x.nom, etat:x.etat, ms:x.ms, titres:x.lignes.length, dit:x.dit || null};
+    })
+  };
+}
+
 export default {
   async fetch(req, env){
     const origine = origineAutorisee(req, env);
@@ -842,6 +1023,22 @@ export default {
                      dit:x ? null : texteNu(t2, 140)};
       } catch (e){ out.fiche = {erreur:String(e && e.message)}; }
       return json(out, 200, origine);
+    }
+
+    /* La presse : « ?actu=1 ». Avec « &diag=1 », la reponse porte en
+       plus l'etat de chaque flux — c'est ce qu'il faut regarder au
+       premier deploiement, parce qu'aucune de ces adresses n'a pu
+       etre jointe depuis l'environnement ou elles ont ete ecrites. */
+    if (u.searchParams.get('actu')){
+      try {
+        const o = await actu(env);
+        const corps = {lignes:o.lignes, sources:o.sources};
+        if (u.searchParams.get('diag')) corps.flux = o.flux;
+        return json(corps, 200, origine);
+      } catch (e){
+        return json({erreur:'presse indisponible', lignes:[], sources:[],
+                     dit:String((e && e.message) || e)}, 502, origine);
+      }
     }
 
     /* La liste suivie : « ?marche=1&vs_currencies=eur », ou une

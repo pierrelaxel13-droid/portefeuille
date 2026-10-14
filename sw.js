@@ -12,7 +12,7 @@
    Les chiffres du client ne passent jamais par ici : ils vivent dans
    le stockage local du navigateur, que ce fichier ne touche pas. */
 
-const VERSION = 'pierrelco-portefeuille-261014.0947';
+const VERSION = 'pierrelco-portefeuille-261014.1418';
 const COQUILLE = [
   './',
   './index.html',
@@ -53,6 +53,34 @@ self.addEventListener('fetch', function(e){
   /* Rien de ce qui sort du domaine ne passe par le cache : un paiement
      ou une API tierce doit toujours atteindre le réseau. */
   if (new URL(req.url).origin !== self.location.origin) return;
+
+  /* LES TITRES DU JOUR NE SE GARDENT PAS. « actu.json » est le seul
+     fichier du site qui change sans que la version change : il est
+     reecrit deux fois par jour par la tache planifiee. Servi depuis le
+     cache comme les icônes, il serait figé au jour de l'installation
+     — exactement le défaut qu'on vient de corriger côté réseau.
+
+     Réseau d'abord, cache en secours : hors ligne, la rubrique montre
+     les derniers titres connus plutôt que rien, et c'est le bon
+     comportement pour une application installée. */
+  if (/\/actu\.json(\?|$)/.test(req.url)){
+    e.respondWith(
+      fetch(req)
+        .then(function(rep){
+          if (rep && rep.status === 200){
+            const copie = rep.clone();
+            caches.open(VERSION).then(function(c){ c.put(req, copie); });
+          }
+          return rep;
+        })
+        .catch(function(){
+          return caches.match(req).then(function(r){
+            return r || new Response('{}', {headers:{'Content-Type':'application/json'}});
+          });
+        })
+    );
+    return;
+  }
 
   if (req.mode === 'navigate'){
     e.respondWith(

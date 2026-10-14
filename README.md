@@ -16,8 +16,40 @@ sur un téléphone, qui fonctionne sans réseau une fois ouverte.
 | `sw.js` | service worker : la page reste utilisable hors réseau |
 | `icone.svg`, `icone-*.png` | icônes, dont une « maskable » pour Android |
 | `ange.jpg` | l'œuvre du premier écran, gardée comme fichier source : la page l'embarque désormais en base64 et ne la demande plus |
+| `actu.json` | les titres du jour, réécrits deux fois par jour par la tâche planifiée |
+| `actu/actu.mjs` | le lecteur de flux : sans dépendance, `node actu/actu.mjs > actu.json` |
+| `.github/workflows/actu.yml` | la tâche qui le fait tourner chez GitHub et valide le fichier s'il a changé |
 
-Aucune dépendance, aucun outil de compilation, aucun appel à un tiers.
+Aucune dépendance, aucun outil de compilation, aucun appel à un tiers
+depuis la page.
+
+## Les titres du jour
+
+Un navigateur ne peut pas lire le flux d'un journal : le journal refuse
+les appels venus d'une autre origine. La page connaît trois
+intermédiaires et prend le premier qui répond — `/api/actu` pour qui
+héberge chez soi, **`actu.json` déposé ici par la tâche planifiée**, et
+le relais Cloudflare en dernier.
+
+La deuxième voie n'a aucune condition : le fichier arrive avec le site.
+La tâche tourne chez GitHub, deux fois par jour, et ne valide le fichier
+que s'il a changé.
+
+- **Changer les sources** : Settings → Secrets and variables → Actions
+  → Variables → `ACTU_FLUX`, au format `Nom|adresse`, séparés par des
+  virgules. Par défaut : France Info (économie), Banque de France, INSEE.
+  **Vérifiez les conditions d'utilisation de chaque flux avant de
+  l'ajouter.**
+- **Ce qui est repris** : le titre, le lien, la source et la date. Jamais
+  le texte d'un article, jamais une image. Un titre sans lien n'est pas
+  affiché.
+- **Si aucune source ne répond**, la tâche échoue exprès : l'ancien
+  fichier reste en place et une croix rouge apparaît. Sans cela, une
+  adresse qui change laisserait la rubrique répéter les titres
+  d'avant-hier pendant des mois.
+- **GitHub désactive une tâche planifiée** après soixante jours sans
+  activité dans le dépôt, et prévient par courriel. Un « Run
+  workflow » suffit à la relancer.
 
 ## Mettre en ligne
 
