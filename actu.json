@@ -1,0 +1,61 @@
+{
+ "lignes": [
+  {
+   "titre": "\"C'est un restaurant classe, confortable, je viens direct\" : À Toulouse, un restaurateur propose un \"plat du peuple\" à 5 euros",
+   "lien": "https://www.franceinfo.fr/economie/c-est-un-restaurant-classe-confortable-je-viens-direct-a-toulouse-un-restaurateur-propose-un-plat-du-peuple-a-5-euros_8237329.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T14:33:52.000Z"
+  },
+  {
+   "titre": "L'application Yuka débarque sur les sites de vente de Carrefour et Intermarché",
+   "lien": "https://www.franceinfo.fr/replay-jt/france-2/13-heures/l-application-yuka-debarque-sur-les-sites-de-vente-de-carrefour-et-intermarche_8237281.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T14:06:45.000Z"
+  },
+  {
+   "titre": "\"La culture est une nouvelle fois, dans le projet de budget, la grande sacrifiée au même titre que l'Éducation\", déplore la CGT Spectacle",
+   "lien": "https://www.franceinfo.fr/economie/budget/la-culture-est-une-nouvelle-fois-dans-le-projet-de-budget-la-grande-sacrifiee-au-meme-titre-que-l-education-deplore-la-cgt-spectacle_8237293.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T14:03:02.000Z"
+  },
+  {
+   "titre": "La reprise de Duralex validée par le tribunal de commerce d'Orléans, 155 des 220 emplois sauvés",
+   "lien": "https://www.franceinfo.fr/economie/entreprises/la-reprise-de-l-entreprise-duralex-validee-par-le-tribunal-de-commerce-d-orleans-155-des-220-emplois-sauves_8237176.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T13:09:54.000Z"
+  },
+  {
+   "titre": "La campagne présidentielle va-t-elle plomber les discussions budgétaires ?",
+   "lien": "https://www.franceinfo.fr/elections/presidentielle/la-campagne-presidentielle-va-t-elle-plomber-les-discussions-budgetaires_8237191.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T12:36:15.000Z"
+  }
+ ],
+ "sources": [
+  "France Info"
+ ],
+ "fait": "2026-10-14T14:54:06.721Z",
+ "flux": [
+  {
+   "nom": "France Info",
+   "etat": 200,
+   "ms": 459,
+   "titres": 5,
+   "dit": null
+  },
+  {
+   "nom": "Banque de France",
+   "etat": 403,
+   "ms": 856,
+   "titres": 0,
+   "dit": null
+  },
+  {
+   "nom": "INSEE",
+   "etat": 500,
+   "ms": 625,
+   "titres": 0,
+   "dit": null
+  }
+ ]
+}
