@@ -73,9 +73,16 @@ jobs:
           # passage sans qu'aucun titre ait bouge.
           node -e '
             const fs = require("fs");
+            // On compare les titres ET l etat de chaque source, sans
+            // les durees : une source qui revient ou qui tombe est une
+            // nouvelle en soi, et le journal des flux doit la dire
+            // dans le fichier. Sans cela il resterait fige sur le
+            // diagnostic du premier passage, ce qui est pire qu une
+            // absence de diagnostic.
             const sans = p => {
               const j = JSON.parse(fs.readFileSync(p, "utf8"));
-              delete j.fait; delete j.flux;
+              delete j.fait;
+              j.flux = (j.flux || []).map(f => f.nom + ":" + f.etat + ":" + f.titres);
               return JSON.stringify(j);
             };
             const neuf = sans("actu.json.neuf");
