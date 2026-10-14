@@ -37,7 +37,9 @@ que s'il a changé.
 
 - **Changer les sources** : Settings → Secrets and variables → Actions
   → Variables → `ACTU_FLUX`, au format `Nom|adresse`, séparés par des
-  virgules. Par défaut : France Info (économie), Banque de France, INSEE.
+  virgules. Par défaut : **France Info** (économie), **Le Monde**
+  (économie) et **Capital** — les trois qui répondent, mesurées le
+  14 octobre 2026 ; le relevé complet est dans `actu/README.md`.
   **Vérifiez les conditions d'utilisation de chaque flux avant de
   l'ajouter.**
 - **Ce qui est repris** : le titre, le lien, la source et la date. Jamais

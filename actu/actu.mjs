@@ -22,14 +22,28 @@
    Il n'a aucune dependance : « node actu.mjs > actu.json ».
    ============================================================ */
 
-/* Trois sources publiques et francaises, choisies parce qu'elles
-   parlent d'argent a qui n'en fait pas metier. La liste se change
-   sans toucher au programme : ACTU_FLUX, « Nom|adresse », separes par
-   des virgules. */
+/* ===== TROIS SOURCES, ET ELLES SONT MESUREES =====
+   La premiere liste etait choisie sur l'intention — France Info, la
+   Banque de France, l'INSEE — et deux des trois ne repondaient pas.
+   Celle-ci est choisie sur un RELEVE, fait le 14 octobre 2026 depuis
+   la machine qui fait tourner la tache (voir README).
+
+   Ce qui en est sorti, et qui vaut d'etre su : les institutions
+   publiques francaises ont pour la plupart cesse de publier un flux.
+   Service-public, l'economie.gouv, la Banque de France, l'INSEE et
+   l'AMF repondent toutes — et aucune n'annonce de flux sur sa page.
+   Ce n'est pas une panne de ce programme, c'est l'etat du web.
+
+   « Capital » est donne par sa PAGE et non par son flux : l'adresse
+   du flux est chez un sous-traitant et peut changer, la page non.
+   C'est elle qui dit ou il est, et le programme la suit.
+
+   La liste se change sans toucher au programme : ACTU_FLUX,
+   « Nom|adresse », separes par des virgules. */
 const DEFAUT = [
   'France Info|https://www.francetvinfo.fr/economie.rss',
-  'Banque de France|https://www.banque-france.fr/rss.xml',
-  'INSEE|https://www.insee.fr/fr/information/rss/1405599'
+  'Le Monde|https://www.lemonde.fr/economie/rss_full.xml',
+  'Capital|https://www.capital.fr'
 ].join(',');
 
 const PAR_FLUX = 5;      /* une rubrique n'est pas une archive */
