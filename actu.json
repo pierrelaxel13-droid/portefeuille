@@ -1,6 +1,12 @@
 {
  "lignes": [
   {
+   "titre": "\"La récolte est plutôt bonne\" : sur les terres ardéchoises du marron glacé",
+   "lien": "https://www.franceinfo.fr/replay-jt/france-2/13-heures/la-recolte-est-plutot-bonne-sur-les-terres-ardechoises-du-marron-glace_8237359.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T14:56:53.000Z"
+  },
+  {
    "titre": "\"C'est un restaurant classe, confortable, je viens direct\" : À Toulouse, un restaurateur propose un \"plat du peuple\" à 5 euros",
    "lien": "https://www.franceinfo.fr/economie/c-est-un-restaurant-classe-confortable-je-viens-direct-a-toulouse-un-restaurateur-propose-un-plat-du-peuple-a-5-euros_8237329.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
@@ -23,37 +29,31 @@
    "lien": "https://www.franceinfo.fr/economie/entreprises/la-reprise-de-l-entreprise-duralex-validee-par-le-tribunal-de-commerce-d-orleans-155-des-220-emplois-sauves_8237176.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-10-14T13:09:54.000Z"
-  },
-  {
-   "titre": "La campagne présidentielle va-t-elle plomber les discussions budgétaires ?",
-   "lien": "https://www.franceinfo.fr/elections/presidentielle/la-campagne-presidentielle-va-t-elle-plomber-les-discussions-budgetaires_8237191.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-14T12:36:15.000Z"
   }
  ],
  "sources": [
   "France Info"
  ],
- "fait": "2026-10-14T14:54:06.721Z",
+ "fait": "2026-10-14T14:58:41.738Z",
  "flux": [
   {
    "nom": "France Info",
    "etat": 200,
-   "ms": 459,
+   "ms": 1203,
    "titres": 5,
    "dit": null
   },
   {
    "nom": "Banque de France",
    "etat": 403,
-   "ms": 856,
+   "ms": 1714,
    "titres": 0,
    "dit": null
   },
   {
    "nom": "INSEE",
    "etat": 500,
-   "ms": 625,
+   "ms": 821,
    "titres": 0,
    "dit": null
   }
