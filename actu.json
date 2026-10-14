@@ -1,10 +1,46 @@
 {
  "lignes": [
   {
-   "titre": "Lycéens, Gilets jaunes, syndicats… Qui ira dans la rue samedi 17 octobre ?",
-   "lien": "https://www.franceinfo.fr/replay-jt/france-2/20-heures/lyceens-gilets-jaunes-syndicats-qui-ira-dans-la-rue-samedi-17-octobre_8237680.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Pourquoi Lufthansa a gagné la course à la privatisation de TAP Air Portugal face à Air France-KLM",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/14/pourquoi-lufthansa-a-gagne-la-course-a-la-privatisation-de-tap-air-portugal-face-a-air-france-klm_6793797_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-14T20:00:11.000Z"
+  },
+  {
+   "titre": "\"Cela va prendre du temps avant de retrouver des niveaux susceptibles d'inspirer confiance\" : la France dans le viseur du Fonds monétaire international",
+   "lien": "https://www.franceinfo.fr/replay-jt/france-2/20-heures/cela-va-prendre-du-temps-avant-de-retrouver-des-niveaux-susceptibles-d-inspirer-confiance-la-france-dans-le-viseur-du-fonds-monetaire-international_8237737.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-10-14T18:53:56.000Z"
+   "date": "2026-10-14T19:58:45.000Z"
+  },
+  {
+   "titre": "VIDEO. Des rats qui se baladent dans les rayons d'un hypermarché Carrefour : images exclusives dans \"Complément d'enquête\"",
+   "lien": "https://www.franceinfo.fr/replay-magazine/france-2/complement-d-enquete/video-des-rats-qui-se-baladent-dans-les-rayons-d-un-hypermarche-carrefour-images-exclusives-dans-complement-d-enquete_8237374.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T19:33:46.000Z"
+  },
+  {
+   "titre": "Les retraites complémentaires du privé vont augmenter de 1,4% à partir du 1er novembre",
+   "lien": "https://www.franceinfo.fr/economie/retraite/les-retraites-complementaires-du-prive-vont-augmenter-de-1-4-a-partir-du-1er-novembre_8237698.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T19:27:28.000Z"
+  },
+  {
+   "titre": "Les prix risquent de flamber en supermarché... Michel-Edouard Leclerc lance un avertissement",
+   "lien": "https://www.capital.fr/economie-politique/les-prix-risquent-de-flamber-en-supermarche-michel-edouard-leclerc-lance-un-avertissement-1530996",
+   "source": "Capital",
+   "date": "2026-10-14T19:23:29.000Z"
+  },
+  {
+   "titre": "\"Faire de Duralex le verre le plus écologique au monde\" : l'ambition du repreneur de la verrerie française",
+   "lien": "https://www.franceinfo.fr/economie/industrie/faire-de-duralex-le-verre-le-plus-ecologique-au-monde-l-ambition-du-repreneur-de-la-verrerie-francaise_8237683.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T19:22:12.000Z"
+  },
+  {
+   "titre": "\"Pouvoir faire avancer un certain nombre de nos propositions\" : Gaëtan Dussausaye détaille la position du RN sur le budget 2027",
+   "lien": "https://www.franceinfo.fr/economie/budget/pouvoir-faire-avancer-un-certain-nombre-de-nos-propositions-gaetan-dussausaye-detaille-la-position-du-rn-sur-le-budget-2027_8237647.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T19:07:05.000Z"
   },
   {
    "titre": "«Nagui perçoit 2 500 euros pour 30 minutes d'émission», Chez Pascal Praud, Charles Alloncle revient sur la commission",
@@ -13,22 +49,10 @@
    "date": "2026-10-14T18:43:23.000Z"
   },
   {
-   "titre": "Les retraites complémentaires du privé revalorisées de 1,4% au 1er novembre",
-   "lien": "https://www.franceinfo.fr/economie/retraite/les-retraites-complementaires-des-salaries-du-prive-revalorisees-de-1-4-au-1er-novembre_8237563.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-14T18:13:33.000Z"
-  },
-  {
    "titre": "Le tribunal confie Duralex au repreneur de Tupperware France, 155 emplois sur 219 préservés",
    "lien": "https://www.capital.fr/entreprises-marches/le-tribunal-confie-duralex-au-repreneur-de-tupperware-france-155-emplois-sur-219-preserves-1530994",
    "source": "Capital",
    "date": "2026-10-14T17:51:00.000Z"
-  },
-  {
-   "titre": "Salon de l'automobile : une voiture 100% made in France, fantasme ou réalité ?",
-   "lien": "https://www.franceinfo.fr/replay-radio/la-question-des-informes/salon-de-l-automobile-une-voiture-100-made-in-france-fantasme-ou-realite_8217844.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-14T17:30:23.000Z"
   },
   {
    "titre": "Aux Etats-Unis, l’inflation atteint 3,7 % en septembre, portée par la flambée des cours du pétrole",
@@ -47,30 +71,6 @@
    "lien": "https://www.capital.fr/economie-politique/les-pirates-ont-regle-des-surgeles-a-150-degres-la-cyberattaque-des-supermarches-s-etend-1530990",
    "source": "Capital",
    "date": "2026-10-14T16:35:54.000Z"
-  },
-  {
-   "titre": "Un nouveau plan Vélo pour Paris, avec un objectif de « zéro mort et zéro blessé grave sur la route »",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/14/un-nouveau-plan-velo-pour-paris-avec-un-objectif-de-zero-mort-et-zero-blesse-grave-sur-la-route_6793776_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-14T16:33:46.000Z"
-  },
-  {
-   "titre": "« Le groupe EBRA tourne le dos à la mission de ses journaux en misant tout sur l’automatisation des tâches grâce à l’IA »",
-   "lien": "https://www.lemonde.fr/idees/article/2026/10/14/le-groupe-ebra-tourne-le-dos-a-la-mission-de-ses-journaux-en-misant-tout-sur-l-automatisation-des-taches-grace-a-l-ia_6793774_3232.html",
-   "source": "Le Monde",
-   "date": "2026-10-14T16:30:08.000Z"
-  },
-  {
-   "titre": "Encadrement des loyers : la Cour des comptes met en cause la fiabilité des données utilisées pour fixer les plafonds",
-   "lien": "https://www.lemonde.fr/societe/article/2026/10/14/encadrement-des-loyers-la-cour-des-comptes-met-en-cause-la-fiabilite-des-donnees-utilisees-pour-fixer-les-plafonds_6793772_3224.html",
-   "source": "Le Monde",
-   "date": "2026-10-14T16:06:07.000Z"
-  },
-  {
-   "titre": "Netflix va supprimer 1 000 postes dans le monde, soit 6 % de ses effectifs",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/14/netflix-va-supprimer-1-000-postes-dans-le-monde-soit-6-de-ses-effectifs_6793771_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-14T16:04:00.000Z"
   }
  ],
  "sources": [
@@ -78,26 +78,26 @@
   "Le Monde",
   "Capital"
  ],
- "fait": "2026-10-14T18:56:30.994Z",
+ "fait": "2026-10-14T20:09:30.922Z",
  "flux": [
   {
    "nom": "France Info",
    "etat": 200,
-   "ms": 1146,
+   "ms": 394,
    "titres": 5,
    "dit": null
   },
   {
    "nom": "Le Monde",
    "etat": 200,
-   "ms": 266,
+   "ms": 161,
    "titres": 5,
    "dit": null
   },
   {
    "nom": "Capital",
    "etat": 200,
-   "ms": 1002,
+   "ms": 205,
    "titres": 5,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20"
   }
