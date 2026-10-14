@@ -1,59 +1,59 @@
 {
  "lignes": [
   {
-   "titre": "\"La récolte est plutôt bonne\" : sur les terres ardéchoises du marron glacé",
-   "lien": "https://www.franceinfo.fr/replay-jt/france-2/13-heures/la-recolte-est-plutot-bonne-sur-les-terres-ardechoises-du-marron-glace_8237359.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Les retraites complémentaires du privé revalorisées de 1,4% au 1er novembre",
+   "lien": "https://www.franceinfo.fr/economie/retraite/les-retraites-complementaires-des-salaries-du-prive-revalorisees-de-1-4-au-1er-novembre_8237563.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-10-14T14:56:53.000Z"
+   "date": "2026-10-14T18:13:33.000Z"
   },
   {
-   "titre": "\"C'est un restaurant classe, confortable, je viens direct\" : À Toulouse, un restaurateur propose un \"plat du peuple\" à 5 euros",
-   "lien": "https://www.franceinfo.fr/economie/c-est-un-restaurant-classe-confortable-je-viens-direct-a-toulouse-un-restaurateur-propose-un-plat-du-peuple-a-5-euros_8237329.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Salon de l'automobile : une voiture 100% made in France, fantasme ou réalité ?",
+   "lien": "https://www.franceinfo.fr/replay-radio/la-question-des-informes/salon-de-l-automobile-une-voiture-100-made-in-france-fantasme-ou-realite_8217844.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-10-14T14:33:52.000Z"
+   "date": "2026-10-14T17:30:23.000Z"
   },
   {
-   "titre": "L'application Yuka débarque sur les sites de vente de Carrefour et Intermarché",
-   "lien": "https://www.franceinfo.fr/replay-jt/france-2/13-heures/l-application-yuka-debarque-sur-les-sites-de-vente-de-carrefour-et-intermarche_8237281.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Cantines, James Bond, redressements judiciaires… L'histoire mouvementée de Duralex, la marque aux verres incassables",
+   "lien": "https://www.franceinfo.fr/economie/entreprises/cantines-james-bond-redressements-judiciaires-l-histoire-mouvementee-de-duralex-la-marque-aux-verres-incassables_8237422.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-10-14T14:06:45.000Z"
+   "date": "2026-10-14T16:03:56.000Z"
   },
   {
-   "titre": "\"La culture est une nouvelle fois, dans le projet de budget, la grande sacrifiée au même titre que l'Éducation\", déplore la CGT Spectacle",
-   "lien": "https://www.franceinfo.fr/economie/budget/la-culture-est-une-nouvelle-fois-dans-le-projet-de-budget-la-grande-sacrifiee-au-meme-titre-que-l-education-deplore-la-cgt-spectacle_8237293.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Jacques Audiard, Justine Triet, les frères Dardenne et plus d'une centaine de cinéastes lancent un cri d'alarme au sujet du budget 2027, redoutant \"un effacement du cinéma français\"",
+   "lien": "https://www.franceinfo.fr/culture/cinema/jacques-audiard-justine-triet-les-freres-dardenne-et-plus-d-une-centaine-de-cineastes-lancent-un-cri-d-alarme-au-sujet-du-budget-2027-redoutant-un-effacement-du-cinema-francais_8237335.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-10-14T14:03:02.000Z"
+   "date": "2026-10-14T15:50:43.000Z"
   },
   {
-   "titre": "La reprise de Duralex validée par le tribunal de commerce d'Orléans, 155 des 220 emplois sauvés",
-   "lien": "https://www.franceinfo.fr/economie/entreprises/la-reprise-de-l-entreprise-duralex-validee-par-le-tribunal-de-commerce-d-orleans-155-des-220-emplois-sauves_8237176.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "L'accord sur le diesel entre les Etats-Unis et la Russie sera conclu \"dans les prochains jours\", assure le Kremlin",
+   "lien": "https://www.franceinfo.fr/economie/automobile/essence/l-accord-sur-le-diesel-entre-les-etats-unis-et-la-russie-aura-lieu-dans-les-prochains-jours-assure-le-kremlin_8237356.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-10-14T13:09:54.000Z"
+   "date": "2026-10-14T15:36:59.000Z"
   }
  ],
  "sources": [
   "France Info"
  ],
- "fait": "2026-10-14T14:58:41.738Z",
+ "fait": "2026-10-14T18:44:11.068Z",
  "flux": [
   {
    "nom": "France Info",
    "etat": 200,
-   "ms": 1203,
+   "ms": 859,
    "titres": 5,
    "dit": null
   },
   {
    "nom": "Banque de France",
    "etat": 403,
-   "ms": 1714,
+   "ms": 538,
    "titres": 0,
    "dit": null
   },
   {
    "nom": "INSEE",
    "etat": 500,
-   "ms": 821,
+   "ms": 589,
    "titres": 0,
    "dit": null
   }
