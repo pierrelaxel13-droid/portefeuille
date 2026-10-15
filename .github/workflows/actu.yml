@@ -15,6 +15,11 @@
 # Secrets and variables → Actions → Variables → ACTU_FLUX, au format
 # « Nom|adresse », separes par des virgules.
 #
+# ET LES SUJETS GARDES, au meme endroit : ACTU_SUJETS, des termes
+# separes par des virgules. Un titre n'est garde que s'il en contient
+# un — la rubrique « economie » d'un journal, c'est l'economie du
+# pays, et ce site parle d'un patrimoine.
+#
 # A SAVOIR : GitHub desactive une tache planifiee apres soixante jours
 # sans aucune activite dans le depot, et previent par courriel. Un
 # « Run workflow » suffit a la relancer.
@@ -45,6 +50,10 @@ on:
         description: "Liste a essayer pour ce passage (Nom|adresse, separes par des virgules). Vide : la liste habituelle."
         required: false
         default: ''
+      sujets:
+        description: "Sujets a essayer pour ce passage (termes separes par des virgules). Vide : la liste habituelle."
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -69,6 +78,10 @@ jobs:
           # du depot, qui l'emporte sur la liste par defaut du
           # programme. Trois niveaux, du plus ponctuel au plus durable.
           ACTU_FLUX: ${{ inputs.flux != '' && inputs.flux || vars.ACTU_FLUX }}
+          # IL FAUT LE PASSER EXPLICITEMENT : une variable du depot
+          # n'entre pas d'elle-meme dans l'environnement d'une etape.
+          # Sans cette ligne, ACTU_SUJETS serait documente et inerte.
+          ACTU_SUJETS: ${{ inputs.sujets != '' && inputs.sujets || vars.ACTU_SUJETS }}
         # Un echec ici est VOLONTAIREMENT visible : si une adresse a
         # change, mieux vaut une croix rouge qu'une rubrique qui
         # repete les titres d'avant-hier pendant six mois. L'ancien
