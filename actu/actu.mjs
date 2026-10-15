@@ -22,37 +22,66 @@
    Il n'a aucune dependance : « node actu.mjs > actu.json ».
    ============================================================ */
 
-/* ===== TROIS SOURCES, ET ELLES SONT MESUREES =====
+/* ===== HUIT SOURCES, ET ELLES SONT MESUREES =====
    La premiere liste etait choisie sur l'intention — France Info, la
    Banque de France, l'INSEE — et deux des trois ne repondaient pas.
-   Celle-ci est choisie sur un RELEVE, fait le 14 octobre 2026 depuis
-   la machine qui fait tourner la tache (voir README).
+   La deuxieme, mesuree, marchait mais lisait la rubrique
+   « economie » de journaux generalistes : l'economie du PAYS. Celle-ci
+   est mesuree AUSSI, et elle est choisie sur le SUJET.
 
-   Ce qui en est sorti, et qui vaut d'etre su : les institutions
-   publiques francaises ont pour la plupart cesse de publier un flux.
-   Service-public, l'economie.gouv, la Banque de France, l'INSEE et
-   l'AMF repondent toutes — et aucune n'annonce de flux sur sa page.
-   Ce n'est pas une panne de ce programme, c'est l'etat du web.
+   Releve du 15 octobre 2026, depuis la machine qui fait tourner la
+   tache. Ce qu'il a appris, et qui ne se devinait pas :
 
-   « Capital » est donne par sa PAGE et non par son flux : l'adresse
-   du flux est chez un sous-traitant et peut changer, la page non.
-   C'est elle qui dit ou il est, et le programme la suit.
+   — France Info publie une rubrique par SECTION, a l'adresse de la
+     section suivie de « .rss » : impots, immobilier, retraite. Cinq
+     titres sur sept, sur neuf, sur cinq — presque tout y concerne le
+     sujet, et le filtre n'a presque rien a ecarter.
+   — Le Monde a « /argent/ » a cote de « /economie/ » : cinq sur six.
+   — Capital accepte une CATEGORIE : sa page « votre-argent » annonce
+     le meme flux avec « categories=votre-argent ». On donne la page,
+     elle donne le flux — l'adresse du sous-traitant peut changer.
+   — MoneyVox n'annonce son flux que depuis sa page d'accueil.
+   — Et trois refusent l'appel : Boursier, Mieux Vivre Votre Argent et
+     Patrimoine (Les Echos) rendent 403. Le Revenu et La Finance pour
+     tous repondent, mais n'annoncent aucun flux.
+
+   LES DEUX RUBRIQUES GENERALES RESTENT, en queue de liste : c'est par
+   elles qu'arrivent la bourse, la BCE, l'inflation et l'or, dont
+   aucune rubrique « votre argent » ne parle. Le filtre y travaille
+   beaucoup — un titre sur quatre y concerne le sujet — et c'est son
+   role.
+
+   LE JOURNAL AVANT LA BARRE OBLIQUE, SA RUBRIQUE APRES. Quatre de
+   ces huit adresses sont le meme journal : une ligne doit porter le
+   nom de QUI L'A ECRITE — « France Info » — et le releve doit
+   pourtant savoir laquelle des quatre n'a rien rendu. D'ou les deux.
+   Sans barre, le nom sert des deux cotes.
 
    La liste se change sans toucher au programme : ACTU_FLUX,
-   « Nom|adresse », separes par des virgules. */
+   « Nom|adresse » ou « Journal/Rubrique|adresse », separes par des
+   virgules. */
 const DEFAUT = [
-  'France Info|https://www.francetvinfo.fr/economie.rss',
-  'Le Monde|https://www.lemonde.fr/economie/rss_full.xml',
-  'Capital|https://www.capital.fr'
+  'France Info/Impots|https://www.francetvinfo.fr/economie/impots.rss',
+  'France Info/Immobilier|https://www.francetvinfo.fr/economie/immobilier.rss',
+  'France Info/Retraite|https://www.francetvinfo.fr/economie/retraite.rss',
+  'Le Monde/Argent|https://www.lemonde.fr/argent/rss_full.xml',
+  'Capital/Votre argent|https://www.capital.fr/votre-argent',
+  'MoneyVox|https://www.moneyvox.fr',
+  'France Info/Economie|https://www.francetvinfo.fr/economie.rss',
+  'Le Monde/Economie|https://www.lemonde.fr/economie/rss_full.xml'
 ].join(',');
 
-const PAR_FLUX = 5;      /* une rubrique n'est pas une archive */
+/* TROIS PAR SOURCE, ET NON CINQ. Avec huit sources, cinq chacune
+   remplissait la rubrique avec les deux qui publient le plus souvent.
+   Trois, c'est au moins quatre sources sur les douze lignes — donc au
+   moins quatre sujets, ce qui est le but. */
+const PAR_FLUX = 3;
 const TOTAL    = 12;
 const DELAI    = 8000;   /* un journal lent ne retient pas les autres */
 const MAX      = 400000; /* on ne garde pas douze mega en memoire */
 
 /* un flux ouvre sur ce qui fait l'actualite du jour, pas sur ce qui
-   nous concerne : il faut en regarder beaucoup pour en garder cinq */
+   nous concerne : il faut en regarder beaucoup pour en garder trois */
 const EXAMINES = 60;
 
 /* ===== LE SUJET DU SITE, ET RIEN D'AUTRE =====
@@ -202,12 +231,50 @@ function concerne(titre){
 }
 if (!TERMES.length) process.stderr.write('AUCUN SUJET — le filtre est desarme.\n');
 
+/* ===== LA MEME NOUVELLE DEUX FOIS =====
+   Deux journaux racontent la meme chose, et un journal la raconte
+   deux fois : « Les retraites complementaires du prive VONT AUGMENTER
+   de 1,4% » et « Les retraites complementaires du prive REVALORISEES
+   de 1,4% » sont la meme nouvelle, relevees le meme jour dans le meme
+   flux. Et des rubriques par section se recoupent par construction :
+   un article sur la taxe fonciere est dans « impots » et dans
+   « immobilier ». Douze lignes dont trois repetent la meme chose, ce
+   sont dix lignes.
+
+   On compare les mots longs — ceux de quatre lettres et plus, qui
+   portent le sens — et pas les tournures. « Vont augmenter » et
+   « revalorisees » different, mais « retraites »,
+   « complementaires », « prive » et « novembre » sont communs : quatre
+   sur cinq. */
+function mots(titre){
+  return normalise(titre).split(' ').filter(m => m.length >= 4);
+}
+function memeNouvelle(a, b){
+  const A = mots(a), B = mots(b);
+  if (!A.length || !B.length) return false;
+  const dedans = {};
+  B.forEach(m => { dedans[m] = 1; });
+  let communs = 0;
+  A.forEach(m => { if (dedans[m]) communs++; });
+  /* SUR LE PLUS COURT DES DEUX, et non sur la somme : un titre long
+     qui contient tout un titre court dit la meme chose que lui. Trois
+     cinquiemes, parce qu'au-dessous deux nouvelles differentes sur un
+     meme sujet — deux articles sur les retraites — se chasseraient
+     l'une l'autre. */
+  return communs / Math.min(A.length, B.length) >= 0.6;
+}
+
 /* ===== L'ESSAI, SANS RESEAU =====
    « node actu.mjs --essai "un titre" "un autre" » dit, pour chacun,
    s'il concerne le sujet. C'est ce qui permet de VERIFIER le filtre
    sur de vrais titres — ceux-la memes qui ont motive son ecriture —
    sans dependre de ce que les journaux publient aujourd'hui. Le banc
    s'en sert (test88). */
+if (process.argv[2] === '--doublon'){
+  const a = process.argv[3], b = process.argv[4];
+  process.stdout.write((memeNouvelle(a, b) ? 'meme' : 'autre') + '\n');
+  process.exit(0);
+}
 if (process.argv[2] === '--essai'){
   process.argv.slice(3).forEach(t => {
     const q = concerne(t);
@@ -226,7 +293,11 @@ function flux(){
       const url = x.slice(i + 1).trim();
       /* Seuls http(s). Un flux mal regle ne doit pas pouvoir glisser
          un « javascript: » jusqu'au navigateur du lecteur. */
-      return (nom && /^https?:\/\//i.test(url)) ? {nom, url} : null;
+      /* « France Info/Impots » : le journal, puis sa rubrique. Le
+         titre portera le journal, le releve gardera les deux. */
+      const j = nom.indexOf('/');
+      const journal = (j === -1 ? nom : nom.slice(0, j)).trim();
+      return (nom && journal && /^https?:\/\//i.test(url)) ? {nom, journal, url} : null;
     })
     .filter(Boolean);
 }
@@ -334,7 +405,7 @@ async function unFlux(f, saut){
         'User-Agent': 'Mozilla/5.0 (compatible; pierrelco-actu/1.0; +https://github.com/pierrelaxel13-droid/portefeuille)'
       }
     });
-    if (!r.ok) return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[]};
+    if (!r.ok) return {nom:f.nom, journal:f.journal, etat:r.status, ms:Date.now() - t0, lignes:[]};
     const brut = (await r.text()).slice(0, MAX);
     let blocs = articles(brut);
     /* RIEN A LIRE DANS UNE REPONSE QUI VA BIEN : c'est presque
@@ -343,18 +414,18 @@ async function unFlux(f, saut){
     if (!blocs.length && !saut && /<html[\s>]/i.test(brut)){
       const vers = flairFlux(brut, r.url || f.url);
       if (vers && vers !== f.url){
-        const suite = await unFlux({nom:f.nom, url:vers}, true);
+        const suite = await unFlux({nom:f.nom, journal:f.journal, url:vers}, true);
         suite.dit = 'page web ; flux annonce suivi vers ' + vers.slice(0, 90);
         return suite;
       }
-      return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[],
+      return {nom:f.nom, journal:f.journal, etat:r.status, ms:Date.now() - t0, lignes:[],
               dit:"page web, et elle n'annonce aucun flux"};
     }
     /* Une reponse qui va bien, qui n'est pas une page web, et ou l'on
        ne trouve aucun article : on dit ce qui est arrive plutot que de
        laisser un zero sans explication. */
     if (!blocs.length){
-      return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes:[],
+      return {nom:f.nom, journal:f.journal, etat:r.status, ms:Date.now() - t0, lignes:[],
               dit:'aucun article : ' + brut.replace(/\s+/g, ' ').slice(0, 110)};
     }
     const lignes = [];
@@ -372,7 +443,8 @@ async function unFlux(f, saut){
          rendrait la rubrique muette des qu'un journal ouvre sur une
          greve : il faut en lire beaucoup pour en garder cinq. */
       if (!concerne(titre)) continue;
-      lignes.push({titre: titre.slice(0, 240), lien: url, source: f.nom, date: quand(b)});
+      lignes.push({titre: titre.slice(0, 240), lien: url,
+                   source: f.journal || f.nom, date: quand(b)});
       if (lignes.length >= PAR_FLUX) break;
     }
     /* Un flux qui repond, qu'on a lu, et dont rien ne concerne le
@@ -381,9 +453,9 @@ async function unFlux(f, saut){
        n'y en a pas. */
     const dit = (vus && !lignes.length)
       ? vus + ' titres lus, aucun ne concerne le sujet du site' : undefined;
-    return {nom:f.nom, etat:r.status, ms:Date.now() - t0, lignes, vus, dit};
+    return {nom:f.nom, journal:f.journal, etat:r.status, ms:Date.now() - t0, lignes, vus, dit};
   } catch (e){
-    return {nom:f.nom, etat:0, ms:Date.now() - t0, lignes:[],
+    return {nom:f.nom, journal:f.journal, etat:0, ms:Date.now() - t0, lignes:[],
             dit: String((e && e.message) || e).slice(0, 120)};
   } finally {
     clearTimeout(minuteur);
@@ -391,8 +463,8 @@ async function unFlux(f, saut){
 }
 
 const sources = flux();
-/* En parallele : trois journaux lents l'un apres l'autre, c'est
-   vingt-quatre secondes pour rien. */
+/* En parallele : huit journaux lents l'un apres l'autre, ce serait
+   plus d'une minute pour rien. */
 /* `sources.map(unFlux)` passe l'INDEX en deuxieme argument, et le
    deuxieme argument de `unFlux` est « j'ai deja saute vers un flux
    annonce ». Toutes les sources sauf la premiere croyaient donc avoir
@@ -406,12 +478,39 @@ lus.forEach(x => x.lignes.forEach(l => lignes.push(l)));
    qui en ont une : on ne la fait pas passer pour fraiche. */
 lignes.sort((a, b) => (b.date ? Date.parse(b.date) : 0) - (a.date ? Date.parse(a.date) : 0));
 
+/* LES DOUZE, PRISES DANS L'ORDRE DE FRAICHEUR, sans repeter une
+   nouvelle deja prise. Le meme lien d'abord — un article peut etre
+   dans deux rubriques du meme journal, et c'est alors certain — puis
+   la meme nouvelle dite autrement. */
+const gardees = [];
+let doublons = 0;
+/* AU PLUS LA MOITIE DES LIGNES POUR UN MEME JOURNAL. Quatre des huit
+   rubriques sont France Info, et c'est aussi celle qui publie le plus
+   souvent : prises a la fraicheur seule, ses quatre rubriques
+   rempliraient la page. Douze lignes d'un seul journal ne sont plus
+   une revue de presse. */
+const PAR_JOURNAL = Math.ceil(TOTAL / 2);
+const compte = {};
+for (const l of lignes){
+  if (gardees.length >= TOTAL) break;
+  if ((compte[l.source] || 0) >= PAR_JOURNAL) continue;
+  if (gardees.some(g => g.lien === l.lien || memeNouvelle(g.titre, l.titre))){
+    doublons++;
+    continue;
+  }
+  compte[l.source] = (compte[l.source] || 0) + 1;
+  gardees.push(l);
+}
+
 const sortie = {
-  lignes: lignes.slice(0, TOTAL),
-  /* On ne cite que les sources qui ont REELLEMENT servi un titre :
-     nommer un journal muet, c'est lui attribuer ce qu'un autre a
-     ecrit. */
-  sources: lus.filter(x => x.lignes.length).map(x => x.nom),
+  lignes: gardees,
+  /* On ne cite que les sources qui ont REELLEMENT servi une des lignes
+     PUBLIEES : nommer un journal dont tout a ete coupe, c'est lui
+     attribuer ce qu'un autre a ecrit. L'ordre est celui de la liste,
+     pas celui du hasard. */
+  sources: lus.map(x => x.journal || x.nom)
+              .filter((n, i, tous) => gardees.some(l => l.source === n) &&
+                                      tous.indexOf(n) === i),
   fait: new Date().toISOString(),
   /* « vus » est ce qu'on a lu, « titres » ce qu'on a garde : l'ecart
      est le filtre, et il doit se voir. */
@@ -427,6 +526,11 @@ lus.forEach(x => {
     ' · ' + x.lignes.length + ' gardes sur ' + (x.vus || 0) + ' lus' +
     (x.dit ? ' · ' + x.dit : '') + '\n');
 });
+/* ET LE TRI FINAL SE DIT AUSSI : sans cela, huit sources qui donnent
+   chacune trois titres et douze lignes publiees ressemblent a une
+   perte, alors que c'est le plafond et les doublons. */
+process.stderr.write(sortie.lignes.length + ' publiees sur ' + lignes.length +
+  ' gardees' + (doublons ? ' (' + doublons + ' fois la meme nouvelle)' : '') + '\n');
 if (!sortie.lignes.length){
   /* Deux pannes tres differentes sous le meme zero : des flux muets,
      ou un jour sans rien qui nous concerne. Le journal doit trancher. */
