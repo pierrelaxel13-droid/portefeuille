@@ -54,6 +54,11 @@ on:
         description: "Sujets a essayer pour ce passage (termes separes par des virgules). Vide : la liste habituelle."
         required: false
         default: ''
+      sec:
+        description: "Passage a sec : lire, afficher, et ne RIEN valider dans le depot."
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -88,7 +93,16 @@ jobs:
         # fichier reste en place.
         run: node actu/actu.mjs > actu.json.neuf
 
+      # UN PASSAGE A SEC NE PUBLIE RIEN. Verifier qu'une adresse repond,
+      # ou qu'un sujet attrape bien ce qu'il doit, ne doit pas changer
+      # ce que le site montre : une mesure qui modifie ce qu'elle mesure
+      # n'est pas une mesure. On affiche le resultat, et on s'arrete.
+      - name: Montrer sans rien valider
+        if: ${{ inputs.sec }}
+        run: cat actu.json.neuf
+
       - name: Ne valider que si ca a change
+        if: ${{ !inputs.sec }}
         run: |
           # `require` choisit son interpreteur sur l'EXTENSION : un
           # fichier « .neuf » serait lu comme du JavaScript, et un

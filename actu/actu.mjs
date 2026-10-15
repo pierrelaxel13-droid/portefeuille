@@ -149,7 +149,8 @@ const SUJETS = [
   'cuivre',
 
   /* la macro qui change la valeur de ce qu'on detient */
-  'pib', 'croissance', 'deficit', 'dette publique', 'agence de notation',
+  'pib', 'croissance', 'deficit public', 'deficit budgetaire',
+  'dette publique', 'agence de notation',
   'moody s', 'fitch', 'spread', 'taux de change', 'euro numerique',
   'budget de l etat', 'projet de budget'
 ];
@@ -188,13 +189,16 @@ function sujets(){
 }
 const TERMES = sujets();
 
+/* Rend LE TERME qui a decide, pas un oui : regler une liste de cent
+   termes en ne sachant que le verdict, c'est deviner. Un terme est une
+   chaine non vide, donc vrai ; l'absence est nulle, donc fausse. */
 function concerne(titre){
   /* UNE LISTE VIDE NE REJETTE PAS TOUT, elle desarme le filtre : c'est
      la seule lecture utile, et elle se voit dans le journal. */
-  if (!TERMES.length) return true;
+  if (!TERMES.length) return 'sans filtre';
   const t = normalise(titre);
-  for (const m of TERMES) if (t.indexOf(m) !== -1) return true;
-  return false;
+  for (const m of TERMES) if (t.indexOf(m) !== -1) return m.trim();
+  return null;
 }
 if (!TERMES.length) process.stderr.write('AUCUN SUJET — le filtre est desarme.\n');
 
@@ -206,7 +210,8 @@ if (!TERMES.length) process.stderr.write('AUCUN SUJET — le filtre est desarme.
    s'en sert (test88). */
 if (process.argv[2] === '--essai'){
   process.argv.slice(3).forEach(t => {
-    process.stdout.write((concerne(t) ? 'oui' : 'non') + ' · ' + t + '\n');
+    const q = concerne(t);
+    process.stdout.write((q ? 'oui · ' + q : 'non') + ' · ' + t + '\n');
   });
   process.exit(0);
 }
