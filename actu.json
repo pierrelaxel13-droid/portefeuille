@@ -1,16 +1,22 @@
 {
  "lignes": [
   {
-   "titre": "L'inflation atteint 3,1% sur un an en septembre, au plus haut depuis janvier 2024",
-   "lien": "https://www.franceinfo.fr/economie/inflation/l-inflation-atteint-3-1-sur-un-an-en-septembre-au-plus-haut-depuis-janvier-2024_8238412.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-15T08:23:05.000Z"
+   "titre": "Les épargnants en France, premiers clients des sociétés d'investissement européennes",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/110825/les-epargnants-en-france-premiers-clients-des-societes-investissement-europeennes",
+   "source": "MoneyVox",
+   "date": "2026-10-15T08:46:06.000Z"
   },
   {
-   "titre": "Anthropic : avant une possible introduction en Bourse record, 17 milliards de dollars de revenus trimestriels annoncés !",
-   "lien": "https://www.capital.fr/entreprises-marches/anthropic-avant-une-possible-introduction-en-bourse-record-17-milliards-de-dollars-de-revenus-trimestriels-annonces-1531003",
-   "source": "Capital",
-   "date": "2026-10-15T08:18:41.000Z"
+   "titre": "La Bourse de Paris entre déroute de la tech et recul des taux d'emprunt",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/110823/la-bourse-de-paris-entre-deroute-de-la-tech-et-recul-des-taux-emprunt",
+   "source": "MoneyVox",
+   "date": "2026-10-15T08:33:46.000Z"
+  },
+  {
+   "titre": "France : l'inflation à 3,1% sur un an en septembre, au plus haut depuis janvier 2024",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110822/france-inflation-a-3-1-sur-un-an-en-septembre-au-plus-haut-depuis-janvier-2024",
+   "source": "MoneyVox",
+   "date": "2026-10-15T08:26:51.000Z"
   },
   {
    "titre": "Retraites complémentaires du privé : un accord sur fond de tensions entre acteurs sociaux",
@@ -37,12 +43,6 @@
    "date": "2026-10-15T06:12:21.000Z"
   },
   {
-   "titre": "L'or revient à des niveaux charnière, les actions de mines d'or sont-elles le bon moyen d'en profiter ?",
-   "lien": "https://www.capital.fr/entreprises-marches/l-or-revient-a-des-niveaux-charniere-les-actions-de-mines-d-or-sont-elles-le-bon-moyen-d-en-profiter-1530981",
-   "source": "Capital",
-   "date": "2026-10-15T05:00:00.000Z"
-  },
-  {
    "titre": "À suivre Loïc de la Mornais : les retraités doivent-ils faire un effort dans le prochain budget ?",
    "lien": "https://www.franceinfo.fr/replay-magazine/franceinfo/a-suivre-avec-loic-de-la-mornais/a-suivre-loic-de-la-mornais-les-retraites-doivent-ils-faire-un-effort-dans-le-prochain-budget_8238175.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
@@ -55,54 +55,94 @@
    "date": "2026-10-15T04:00:09.000Z"
   },
   {
-   "titre": "Crise de la dette : faut-il une intervention de la BCE ? «Cela pourrait nous aider», affirme François Pierrard de l’Observatoire Hexagone",
-   "lien": "https://www.capital.fr/economie-politique/crise-de-la-dette-faut-il-une-intervention-de-la-bce-cela-pourrait-nous-aider-affirme-francois-pierrard-de-lobservatoire-hexagone-1530997",
-   "source": "Capital",
-   "date": "2026-10-14T20:38:10.000Z"
+   "titre": "Marine Le Pen présentera \"de manière extrêmement précise\" sa réforme des retraites le 17 novembre",
+   "lien": "https://www.franceinfo.fr/elections/presidentielle/marine-le-pen-presentera-de-maniere-extremement-precise-sa-reforme-des-retraites-le-17-novembre_8237821.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T21:48:00.000Z"
+  },
+  {
+   "titre": "\"Ce n'est pas la priorité\" : ces Français qui ne souhaitent pas être propriétaires de leur résidence principale",
+   "lien": "https://www.franceinfo.fr/replay-jt/france-2/20-heures/ce-n-est-pas-la-priorite-ces-francais-qui-ne-souhaitent-pas-etre-proprietaires-de-leur-residence-principale_8237776.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-14T20:21:35.000Z"
   },
   {
    "titre": "Aux Etats-Unis, l’inflation atteint 3,7 % en septembre, portée par la flambée des cours du pétrole",
    "lien": "https://www.lemonde.fr/economie/article/2026/10/14/aux-etats-unis-l-inflation-atteint-3-7-en-septembre-portee-par-la-flambee-des-cours-du-petrole_6793785_3234.html",
    "source": "Le Monde",
    "date": "2026-10-14T17:06:20.000Z"
-  },
-  {
-   "titre": "Encadrement des loyers : la Cour des comptes met en cause la fiabilité des données utilisées pour fixer les plafonds",
-   "lien": "https://www.lemonde.fr/societe/article/2026/10/14/encadrement-des-loyers-la-cour-des-comptes-met-en-cause-la-fiabilite-des-donnees-utilisees-pour-fixer-les-plafonds_6793772_3224.html",
-   "source": "Le Monde",
-   "date": "2026-10-14T16:06:07.000Z"
   }
  ],
  "sources": [
   "France Info",
   "Le Monde",
-  "Capital"
+  "MoneyVox"
  ],
- "fait": "2026-10-15T08:37:45.941Z",
+ "fait": "2026-10-15T09:00:34.075Z",
  "flux": [
   {
-   "nom": "France Info",
+   "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 312,
-   "vus": 18,
-   "titres": 5,
-   "dit": null
-  },
-  {
-   "nom": "Le Monde",
-   "etat": 200,
-   "ms": 168,
-   "vus": 18,
-   "titres": 5,
-   "dit": null
-  },
-  {
-   "nom": "Capital",
-   "etat": 200,
-   "ms": 363,
-   "vus": 10,
+   "ms": 713,
+   "vus": 5,
    "titres": 3,
-   "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20"
+   "dit": null
+  },
+  {
+   "nom": "France Info/Immobilier",
+   "etat": 200,
+   "ms": 1230,
+   "vus": 6,
+   "titres": 3,
+   "dit": null
+  },
+  {
+   "nom": "France Info/Retraite",
+   "etat": 200,
+   "ms": 610,
+   "vus": 3,
+   "titres": 3,
+   "dit": null
+  },
+  {
+   "nom": "Le Monde/Argent",
+   "etat": 200,
+   "ms": 323,
+   "vus": 4,
+   "titres": 3,
+   "dit": null
+  },
+  {
+   "nom": "Capital/Votre argent",
+   "etat": 200,
+   "ms": 1016,
+   "vus": 4,
+   "titres": 3,
+   "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
+  },
+  {
+   "nom": "MoneyVox",
+   "etat": 200,
+   "ms": 189,
+   "vus": 3,
+   "titres": 3,
+   "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
+  },
+  {
+   "nom": "France Info/Economie",
+   "etat": 200,
+   "ms": 375,
+   "vus": 8,
+   "titres": 3,
+   "dit": null
+  },
+  {
+   "nom": "Le Monde/Economie",
+   "etat": 200,
+   "ms": 288,
+   "vus": 13,
+   "titres": 3,
+   "dit": null
   }
  ]
 }
