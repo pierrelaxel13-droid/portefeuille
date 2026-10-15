@@ -19,12 +19,6 @@
    "date": "2026-10-15T08:09:30.000Z"
   },
   {
-   "titre": "«On vend nos bijoux de famille», alerte l'économiste Marc Touati face au déficit record avec la Chine",
-   "lien": "https://www.capital.fr/economie-politique/on-vend-nos-bijoux-de-famille-alerte-l-economiste-marc-touati-face-au-deficit-record-avec-la-chine-1531001",
-   "source": "Capital",
-   "date": "2026-10-15T07:55:37.000Z"
-  },
-  {
    "titre": "\"Il faut qu'ils partent\" : le député RN Jean-Philippe Tanguy demande de départ d'Emmanuel Moulin, gouverneur de la Banque de France, et de Richard Ferrand, président du Conseil constitutionnel",
    "lien": "https://www.franceinfo.fr/politique/il-faut-qu-ils-partent-le-depute-rn-jean-philippe-tanguy-demande-de-depart-d-emmanuel-moulin-gouverneur-de-la-banque-de-france-et-de-richard-ferrand-president-du-conseil-constitutionnel_8238322.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
@@ -71,6 +65,12 @@
    "lien": "https://www.lemonde.fr/economie/article/2026/10/14/aux-etats-unis-l-inflation-atteint-3-7-en-septembre-portee-par-la-flambee-des-cours-du-petrole_6793785_3234.html",
    "source": "Le Monde",
    "date": "2026-10-14T17:06:20.000Z"
+  },
+  {
+   "titre": "Encadrement des loyers : la Cour des comptes met en cause la fiabilité des données utilisées pour fixer les plafonds",
+   "lien": "https://www.lemonde.fr/societe/article/2026/10/14/encadrement-des-loyers-la-cour-des-comptes-met-en-cause-la-fiabilite-des-donnees-utilisees-pour-fixer-les-plafonds_6793772_3224.html",
+   "source": "Le Monde",
+   "date": "2026-10-14T16:06:07.000Z"
   }
  ],
  "sources": [
@@ -78,12 +78,12 @@
   "Le Monde",
   "Capital"
  ],
- "fait": "2026-10-15T08:33:41.324Z",
+ "fait": "2026-10-15T08:37:45.941Z",
  "flux": [
   {
    "nom": "France Info",
    "etat": 200,
-   "ms": 568,
+   "ms": 312,
    "vus": 18,
    "titres": 5,
    "dit": null
@@ -91,7 +91,7 @@
   {
    "nom": "Le Monde",
    "etat": 200,
-   "ms": 254,
+   "ms": 168,
    "vus": 18,
    "titres": 5,
    "dit": null
@@ -99,9 +99,9 @@
   {
    "nom": "Capital",
    "etat": 200,
-   "ms": 296,
+   "ms": 363,
    "vus": 10,
-   "titres": 4,
+   "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20"
   }
  ]
