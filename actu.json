@@ -1,6 +1,24 @@
 {
  "lignes": [
   {
+   "titre": "Placement à 4%, fiscalité des donations, retraite majorée de 10%... Les 3 infos argent du vendredi 16 octobre 2026",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110870/placement-a-4-fiscalite-des-donations-retraite-majoree-de-10-les-3-infos-argent-du-vendredi-16-octobre-2026",
+   "source": "MoneyVox",
+   "date": "2026-10-16T18:00:48.000Z"
+  },
+  {
+   "titre": "Le nombre de créations d'entreprises en France au plus haut, malgré les faibles prévisions de croissance",
+   "lien": "https://www.franceinfo.fr/economie/entreprises/le-nombre-de-creations-d-entreprises-en-france-au-plus-haut-malgre-les-faibles-previsions-de-croissance_8240596.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-16T17:30:07.000Z"
+  },
+  {
+   "titre": "Donner 100 000 euros à son enfant sans impôt deviendrait possible pendant toute l'année 2027",
+   "lien": "https://www.capital.fr/votre-argent/donner-100-000-euros-a-son-enfant-sans-impot-deviendrait-possible-pendant-toute-l-annee-2027-1531058",
+   "source": "Capital",
+   "date": "2026-10-16T16:39:07.000Z"
+  },
+  {
    "titre": "Après le budget de l'Etat, les députés rejettent en commission celui de la Sécurité sociale pour 2027",
    "lien": "https://www.moneyvox.fr/votre-argent/actualites/110877/apres-le-budget-de-etat-les-deputes-rejettent-en-commission-celui-de-la-securite-sociale-pour-2027",
    "source": "MoneyVox",
@@ -23,12 +41,6 @@
    "lien": "https://www.franceinfo.fr/economie/fonction-publique-quel-est-le-vrai-cout-des-retraites-et-pourquoi-est-il-si-eleve_8240419.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-10-16T14:37:20.000Z"
-  },
-  {
-   "titre": "Taxe foncière : un big bang des bases de calcul dès 2028 ?",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/110867/taxe-fonciere-un-big-bang-des-bases-de-calcul-des-2028",
-   "source": "MoneyVox",
-   "date": "2026-10-16T13:46:05.000Z"
   },
   {
    "titre": "Faut-il acheter de l’or, «valeur refuge» ? Les conseils de l'économiste Marc Touati",
@@ -59,18 +71,6 @@
    "lien": "https://www.franceinfo.fr/economie/budget/budget-2027-les-deputes-rejettent-le-plafonnement-d-un-abattement-fiscal-pour-les-retraites_8238589.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-10-15T11:20:09.000Z"
-  },
-  {
-   "titre": "Epargne : la France compte le plus de clients auprès des sociétés d’investissement européennes",
-   "lien": "https://www.capital.fr/votre-argent/epargne-la-france-compte-le-plus-de-clients-aupres-des-societes-dinvestissement-europeennes-1531006",
-   "source": "Capital",
-   "date": "2026-10-15T09:38:07.000Z"
-  },
-  {
-   "titre": "En revalorisant les retraites complémentaires du secteur privé, l'Agirc-Arrco prend le gouvernement à contrepied",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/en-revalorisant-les-retraites-complementaires-du-secteur-prive-l-agirc-arrco-prend-le-gouvernement-a-contrepied_8217331.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-15T06:12:21.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-16T16:17:38.214Z",
+ "fait": "2026-10-16T19:04:40.111Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 707,
+   "ms": 606,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 385,
+   "ms": 1023,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 630,
+   "ms": 1060,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 241,
+   "ms": 307,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 900,
+   "ms": 1208,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 111,
-   "vus": 4,
+   "ms": 182,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 383,
+   "ms": 301,
    "vus": 20,
-   "titres": 1,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 348,
-   "vus": 14,
+   "ms": 319,
+   "vus": 16,
    "titres": 3,
    "dit": null
   }
