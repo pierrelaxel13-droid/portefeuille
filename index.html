@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261015.0844";</script>
+<script>window.PC_VERSION = "261016.1615";</script>
 </head>
 <body>
 
@@ -402,6 +402,29 @@ body.flux-vif .cours__vif::before{
   -webkit-backdrop-filter:blur(14px) saturate(1.4);
   border-bottom-color:var(--rule);
 }
+/* ===== DANS L'ANALYSE, LA BARRE DU HAUT NE COMMANDE RIEN =====
+   Sous 700 px elle est deja masquee dans l'espace. Au-dessus, elle
+   restait collee en haut de l'ecran le plus dense de la page, avec
+   deux pastilles qui n'y menent nulle part : « Connexion » quand on
+   est connecte, « Installer l'app » pour la troisieme fois.
+
+   Reste le nom — il dit ou l'on est — et le menu, qui porte la
+   langue, la devise et le theme : les retirer les rendrait
+   injoignables depuis cet ecran, et un reglage injoignable est un
+   reglage perdu.
+
+   ET ELLE CESSE D'ETRE COLLANTE. C'est la seule facon de rendre
+   vraiment les soixante-dix pixels : masquer les boutons d'une barre
+   qui reste en haut ne rend qu'une barre vide. On la retrouve en
+   remontant, la ou on va de toute facon pour changer d'ecran. */
+body.vue-espace[data-pan="analyse"] .site-head{
+  position:static;
+  background:transparent;
+  backdrop-filter:none; -webkit-backdrop-filter:none;
+  border-bottom-color:transparent;
+}
+body.vue-espace[data-pan="analyse"] .site-head__in{padding-top:10px; padding-bottom:4px;}
+body.vue-espace[data-pan="analyse"] .head-tools .pill{display:none;}
 @media (prefers-reduced-motion: reduce){
   html:not([data-anim="force"]) .site-head{transition:none;}
 }
@@ -1397,6 +1420,12 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
 .solde__net{font-size:13.5px; color:var(--ink-2); margin:6px 0 0;}
 .solde__net b{font-family:'Archivo Black', sans-serif; font-size:17px; letter-spacing:-.02em; color:var(--ink);}
 .solde__net[data-signe="moins"] b{color:var(--loss);}
+/* Voir le script : sur telephone, le detail ferait passer les chiffres
+   cles sous la barre du bas. Le montant net, lui, reste toujours. */
+@media (max-width:700px){
+  .solde__net__d{display:none;}
+  .solde__net{margin-top:4px;}
+}
 /* UN BLOC VIDE PREND MOINS D'AIR. L'ecart au-dessus d'une section est
    calibre sur ce qu'elle PESE : 40 px avant un bloc de cartes de pret
    est juste, 40 px avant une ligne de quinze mots est une respiration
@@ -1424,6 +1453,15 @@ html[data-anim="force"] .v1h__anim{display:none !important;}
    est pire qu'une tuile absente. Le filet suffit — pas de couleur
    d'alerte : declarer un pret n'est pas une mauvaise nouvelle. */
 .tuile-cat--dette{border-style:dashed;}
+/* Son bloc, separe de la grille par un filet : treize tuiles
+   identiques et une quatorzieme en pointille, c'est une aiguille dans
+   une botte de foin. Une ligne de separation et un intitule, et elle
+   se voit sans qu'on la cherche. */
+.ajout-dette{margin-top:20px; padding-top:18px; border-top:1px solid var(--rule);}
+.ajout-dette .tuile-cat{margin-top:10px;}
+@media (max-width:620px){
+  .ajout-dette{margin-top:16px; padding-top:14px;}
+}
 .prets__liste{display:grid; gap:12px;}
 .pret{border:1px solid var(--rule); border-radius:var(--r-2); background:var(--paper-2); padding:15px 16px 16px;}
 .pret--solde{opacity:.6;}
@@ -3932,7 +3970,10 @@ body.detaille .bascule-vue__s{opacity:1;}
    Meme forme que la question de desaccord : un voile, une carte qui
    defile si la liste est longue. Rien de neuf a apprendre a l'oeil. */
 .adm{
-  position:fixed; inset:0; z-index:var(--z-haut, 60);
+  /* --z-haut n'etait defini nulle part : seule sa valeur de secours
+     travaillait. Un nom qui ne designe rien finit par etre « corrige »
+     ailleurs, et ce bloc ne suivrait pas. */
+  position:fixed; inset:0; z-index:var(--z-overlay);
   display:flex; align-items:flex-start; justify-content:center;
   padding:clamp(16px,4vw,48px) var(--pad);
   background:rgba(0,0,0,.42); backdrop-filter:blur(var(--flou, 6px));
@@ -4122,6 +4163,18 @@ body.detaille .bascule-vue__s{opacity:1;}
 .tuile-cat{
   display:flex; align-items:center; gap:10px;
   padding:12px 18px; cursor:pointer; text-align:left;
+  /* LA MEME HAUTEUR DANS LA GRILLE ET HORS D'ELLE. Les tuiles de la
+     grille s'egalisent entre elles (grid-auto-rows:1fr, voir plus
+     haut) sur la plus haute — celle dont le nom passe a la ligne. La
+     tuile du credit, elle, vit dans son propre bloc : elle restait a
+     sa hauteur naturelle, quinze pixels plus courte, et deux objets
+     identiques de hauteurs differentes sur le meme ecran se lisent
+     comme un defaut, pas comme une intention.
+
+     3,75 rem : deux lignes de nom plus le rembourrage, et la valeur
+     suit la taille de texte du lecteur plutot qu'un nombre de pixels
+     fige. */
+  min-height:3.75rem;
   background:color-mix(in srgb, var(--paper) 42%, transparent);
   -webkit-backdrop-filter:blur(12px) saturate(1.4);
   backdrop-filter:blur(12px) saturate(1.4);
@@ -4239,9 +4292,15 @@ body.detaille .bascule-vue__s{opacity:1;}
 
 
 /* ===== Portes d'entrée de l'espace client =====
-   Deux tuiles, puis une vue. Le passage se fait par un voile qui se
-   referme depuis le point cliqué, couvre l'écran le temps d'échanger
-   les contenus, puis se rouvre : on ne voit jamais la bascule. */
+   Deux tuiles, puis une vue.
+
+   Le voile qui devait couvrir l'écran pendant l'échange des contenus
+   a été retiré : son élément était bien dans le document, et sa
+   feuille de style aussi, mais AUCUNE ligne de script ne le fermait
+   jamais. Il ne couvrait donc rien, et ce commentaire décrivait un
+   mécanisme qui n'existait pas — ce qui est pire qu'une absence de
+   commentaire. Le passage se fait par le changement de vue, sans
+   transition. */
 .hub{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:clamp(16px,2.4vw,26px);}
 .tuile{
   position:relative; overflow:hidden; text-align:left; cursor:pointer;
@@ -4518,30 +4577,11 @@ table.actifs tbody tr{cursor:pointer;}
 .pan.entre > *:nth-child(4){animation-delay:.20s;}
 .pan.entre > *:nth-child(5){animation-delay:.26s;}
 
-/* Le voile : un disque d'encre qui se referme puis se rouvre */
-.voile{
-  position:fixed; inset:0; z-index:calc(var(--z-curtain) + 3);
-  background:var(--accent); pointer-events:none;
-  clip-path:circle(0% at var(--vx,50%) var(--vy,50%));
-  transition:clip-path .85s cubic-bezier(.72,0,.24,1);
-}
-.voile.ferme{clip-path:circle(150% at var(--vx,50%) var(--vy,50%));}
-.voile__mot{
-  position:absolute; inset:0; display:grid; place-items:center;
-  font-family:'Archivo Black', sans-serif; color:#fff;
-  font-size:clamp(24px,4.4vw,52px); letter-spacing:.14em;
-  opacity:0; transform:scale(.9);
-  transition:opacity .4s ease .3s, transform .8s cubic-bezier(.2,.7,.2,1) .3s, letter-spacing .9s cubic-bezier(.2,.7,.2,1) .3s;
-}
-/* Le mot se resserre en même temps que le voile se ferme : le mouvement
-   se poursuit au lieu de s'arrêter net pendant l'échange des contenus. */
-.voile.ferme .voile__mot{opacity:1; transform:scale(1); letter-spacing:-.03em;}
 
 @media (prefers-reduced-motion: reduce){
   html:not([data-anim="force"]) .tuile, html:not([data-anim="force"]) .tuile::after, html:not([data-anim="force"]) .tuile__go svg{transition:none;}
   html:not([data-anim="force"]) .tuile:hover{transform:none;}
   html:not([data-anim="force"]) .pan.entre > *{animation:none;}
-  html:not([data-anim="force"]) .voile{display:none;}
 }
 
 
@@ -5014,7 +5054,12 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   .grille{gap:16px; margin-bottom:18px;}
   body.vue-espace .carte[style*="margin-bottom:30px"]{margin-bottom:18px !important;}
   .an-titre{margin-bottom:4px;}
-  .solde__actions{gap:8px; margin-top:14px;}
+  /* 14 px au-dessus des deux boutons, c'etait l'air qu'il restait a
+     prendre : avec la ligne du patrimoine net, les chiffres cles
+     passaient de cinq pixels sous la barre du bas. Neuf suffisent —
+     la separation se lit encore, et le premier ecran redevient
+     complet. */
+  .solde__actions{gap:8px; margin-top:9px;}
 
   /* ===== Le premier ecran de l'espace =====
      Mesure : 342 px passaient avant le premier chiffre, sur 844 — 40 %
@@ -5046,6 +5091,7 @@ body:not(.espace-ouvert) .barre-app{display:none;}
      premier ecran d'un telephone courant, sans toucher a rien. */
   body.vue-espace .site-head{display:none;}
   body.vue-espace .espace{padding-top:14px;}
+  /* L'analyse n'y gagne rien de plus : la barre est deja partie. */
   .board__titre{display:none;}
   .board__barre{gap:10px; margin-bottom:10px;}
   .board__cmd{gap:7px;}
@@ -5056,6 +5102,13 @@ body:not(.espace-ouvert) .barre-app{display:none;}
   }
   .msg{margin-bottom:10px;}
   .kpis{margin-bottom:18px; grid-template-columns:repeat(2, minmax(0,1fr));}
+  /* TROIS PIXELS DE REMBOURRAGE EN MOINS PAR CHIFFRE, SIX PAR RANGEE,
+     DOUZE EN TOUT. C'est la marge qui manquait pour que le premier
+     ecran tienne encore quand la ligne du patrimoine net s'ajoute, et
+     elle ne se voit pas : les tuiles restent plus aerees que les
+     rangees du tableau qui les suit. Tenir a un pixel pres n'est pas
+     tenir — la premiere traduction un peu longue le ferait sauter. */
+  body.vue-espace .kpi{padding:14px 16px;}
   /* Cinq tuiles empilees en une colonne faisaient 354 px — le tiers
      du premier ecran pour cinq nombres courts. Sur deux colonnes,
      trois rangees suffisent. Le chiffre descend juste assez pour que
@@ -5258,6 +5311,26 @@ html[data-variante="1"] .pan.entre > *{animation:none;}
 html[data-variante="1"] .pan.entre [data-bloc]{
   animation:v1-arrive .6s cubic-bezier(.22, 1, .36, 1) backwards;
   animation-delay:calc(var(--i, 0) * .15s);
+}
+/* ===== UNE VUE QUI S'OUVRE N'ARRIVE PAS EN RETARD =====
+   Les blocs d'un panneau entrent en cascade, chacun un cran apres le
+   precedent, et leur rang est compte sur le PANNEAU ENTIER. Or les
+   trois vues qui ne sont pas le marche viennent APRES lui dans le
+   document : elles heritaient des rangs les plus eleves.
+
+   Et une animation ne demarre qu'au moment ou l'element cesse d'etre
+   « display:none ». Leur retard ne courait donc pas pendant l'entree
+   du panneau — il courait a partir du clic sur l'onglet. Resultat
+   mesure : plus d'une seconde d'ecran vide apres le clic, ce qui ne
+   se lit pas comme une entree mais comme une panne.
+
+   Leur cascade ne servait a rien : une vue n'a qu'un a trois blocs,
+   et ils peuvent arriver ensemble. On enleve le retard, pas
+   l'entree. */
+html[data-variante="1"] #an-vue-moi [data-bloc],
+html[data-variante="1"] #an-vue-fiscal [data-bloc],
+html[data-variante="1"] #an-vue-credit [data-bloc]{
+  animation-delay:0s;
 }
 
 html[data-variante="1"] .menu[open] .menu__p{
@@ -7076,6 +7149,40 @@ window.PC = (function(){
   'an.mar.h.30j':         ["30 j", "30d", "30 d", "30 T."],
   'an.mar.disp.k':        ["Dispersion", "Dispersion", "Dispersión", "Streuung"],
   'an.mar.disp.d':        ["Autour d'une moyenne de {{m}}.", "Around an average of {{m}}.", "En torno a una media de {{m}}.", "Um einen Mittelwert von {{m}}."],
+  'an.mar.amp.k':         ["L'ampleur du mouvement", "How much things moved", "La amplitud del movimiento", "Das Ausmaß der Bewegung"],
+  'an.mar.amp.d':         ["Sens confondus : une hausse de 3 % et une baisse de 3 % comptent pareil.", "Direction ignored: up 3% and down 3% count the same.", "Sin distinguir el sentido: +3 % y −3 % cuentan igual.", "Ohne Richtung: +3 % und −3 % zählen gleich."],
+  'an.mar.bat.k':         ["Mieux que le marché", "Beating the market", "Mejor que el mercado", "Besser als der Markt"],
+  'an.mar.bat.d':         ["Au-dessus de {{e}}, la moyenne de ce marché.", "Above {{e}}, this market's average.", "Por encima de {{e}}, la media de este mercado.", "Über {{e}}, dem Durchschnitt dieses Marktes."],
+  'an.mar.four.k':        ["La journée dans sa fourchette", "Where the day sits in its range", "El día en su horquilla", "Der Tag in seiner Spanne"],
+  'an.mar.four.d':        ["0 % au plus bas du jour, 100 % au plus haut.", "0% at the day's low, 100% at its high.", "0 % en el mínimo del día, 100 % en el máximo.", "0 % am Tagestief, 100 % am Tageshoch."],
+  'an.mar.agit.k':        ["Ce qui a changé de mains", "What changed hands", "Lo que cambió de manos", "Was den Besitzer wechselte"],
+  'an.mar.agit.d':        ["Le volume du jour, rapporté à la capitalisation de tout ce marché.", "Today's volume against this whole market's capitalisation.", "El volumen del día frente a la capitalización de todo este mercado.", "Das Tagesvolumen im Verhältnis zur Kapitalisierung dieses ganzen Marktes."],
+  'an.mar.rec.k':         ["Sous leur record", "Below their record", "Bajo su récord", "Unter ihrem Rekord"],
+  'an.mar.rec.d':         ["La valeur du milieu, sur {{n}} qui ont un record connu.", "The middle value, of {{n}} with a known record.", "El valor del medio, de {{n}} con récord conocido.", "Der mittlere Wert, von {{n}} mit bekanntem Rekord."],
+  /* --- Les credits, dans l'analyse --- */
+  'an.vue.credit':        ["Crédits", "Loans", "Créditos", "Kredite"],
+  'an.cr.t':              ["Vos crédits", "Your loans", "Sus créditos", "Ihre Kredite"],
+  'an.cr.d1':             ["Un crédit suivi. Son détail complet est sur le tableau de bord.", "One loan followed. Its full detail is on the dashboard.", "Un crédito seguido. Su detalle completo está en el panel.", "Ein verfolgter Kredit. Alle Einzelheiten stehen im Überblick."],
+  'an.cr.d':              ["{{n}} crédits suivis. Le détail de chacun est sur le tableau de bord.", "{{n}} loans followed. Each one's detail is on the dashboard.", "{{n}} créditos seguidos. El detalle de cada uno está en el panel.", "{{n}} verfolgte Kredite. Die Einzelheiten stehen im Überblick."],
+  'an.cr.part.k':         ["Déjà remboursé", "Already repaid", "Ya devuelto", "Bereits getilgt"],
+  'an.cr.part.d1':        ["{{k}} mensualités payées sur {{n}}.", "{{k}} payments made of {{n}}.", "{{k}} cuotas pagadas de {{n}}.", "{{k}} von {{n}} Raten gezahlt."],
+  'an.cr.part.d':         ["{{d}} remboursés sur {{c}} emprunté.", "{{d}} repaid of {{c}} borrowed.", "{{d}} devueltos de {{c}} prestado.", "{{d}} getilgt von {{c}} aufgenommen."],
+  'an.cr.reste.k':        ["Capital restant dû", "Capital still owed", "Capital pendiente", "Restschuld"],
+  'an.cr.reste.d':        ["Dernière échéance le {{d}}.", "Last payment on {{d}}.", "Último vencimiento el {{d}}.", "Letzte Rate am {{d}}."],
+  'an.cr.cout.k':         ["Ce que le crédit coûte", "What the loan costs", "Lo que cuesta el crédito", "Was der Kredit kostet"],
+  'an.cr.cout.d':         ["{{p}} déjà payés, {{r}} à venir.", "{{p}} paid so far, {{r}} to come.", "{{p}} ya pagados, {{r}} por venir.", "{{p}} bereits gezahlt, {{r}} noch offen."],
+  'an.cr.taux.k':         ["Pour vous, ou contre vous", "For you, or against you", "A su favor, o en contra", "Für Sie oder gegen Sie"],
+  'an.cr.taux.d':         ["Vos actifs rapportent {{r}} par an, le crédit coûte {{c}}.", "Your assets yield {{r}} a year, the loan costs {{c}}.", "Sus activos rinden {{r}} al año, el crédito cuesta {{c}}.", "Ihre Anlagen bringen {{r}} pro Jahr, der Kredit kostet {{c}}."],
+  'an.cr.taux.seul.k':    ["Le taux de vos crédits", "Your loan rate", "El tipo de sus créditos", "Der Satz Ihrer Kredite"],
+  'an.cr.taux.seul.d':    ["Moyenne pondérée par ce qu'il reste à rembourser. Sans revenu saisi sur vos actifs, la comparaison n'est pas possible.", "Weighted by what is still owed. With no income entered on your assets, the comparison cannot be made.", "Media ponderada por lo que queda por devolver. Sin ingresos introducidos en sus activos, la comparación no es posible.", "Gewichtet nach der Restschuld. Ohne erfasste Erträge Ihrer Anlagen ist der Vergleich nicht möglich."],
+  'an.cr.mens.k':         ["Ce qui sort chaque mois", "What goes out each month", "Lo que sale cada mes", "Was monatlich abgeht"],
+  'an.cr.mens.d':         ["Vos revenus d'actifs en couvrent {{p}}.", "Your asset income covers {{p}} of it.", "Sus ingresos de activos cubren {{p}}.", "Ihre Anlageerträge decken davon {{p}}."],
+  'an.cr.mens.d0':        ["Aucun revenu saisi sur vos actifs : la couverture ne peut pas se calculer.", "No income entered on your assets: coverage cannot be computed.", "Sin ingresos introducidos en sus activos: la cobertura no puede calcularse.", "Keine Erträge erfasst: die Deckung lässt sich nicht berechnen."],
+  'an.cr.proch.k':        ["Prochaine échéance", "Next payment", "Próximo vencimiento", "Nächste Rate"],
+  'an.cr.proch.d':        ["Le {{d}} · {{m}}.", "On {{d}} · {{m}}.", "El {{d}} · {{m}}.", "Am {{d}} · {{m}}."],
+  'an.cr.poids.k':        ["Le poids de la dette", "What the debt weighs", "El peso de la deuda", "Das Gewicht der Schuld"],
+  'an.cr.poids.d':        ["{{d}} de dette pour {{v}} d'actifs.", "{{d}} of debt against {{v}} of assets.", "{{d}} de deuda para {{v}} de activos.", "{{d}} Schulden auf {{v}} Vermögen."],
+  'an.aide.cr':           ["<p><b>Pour vous, ou contre vous.</b> On compare ce que le crédit coûte par an à ce que vos actifs rapportent par an — loyers, coupons, intérêts servis. Pas la plus-value : tant que rien n'est vendu, elle ne paie aucune mensualité. Au-dessus de zéro, ce que vous détenez paie le crédit et davantage ; en dessous, c'est vous qui le payez — ce qui peut être un choix parfaitement sensé, pour le logement qu'on habite par exemple.</p><p><b>Le taux retenu</b> est la moyenne des taux de vos crédits, pondérée par ce qu'il reste à rembourser sur chacun : un prêt presque soldé ne coûte presque plus rien.</p><p><b>Ce que le crédit coûte</b> suppose le prêt mené à son terme, aux conditions saisies. Ni assurance emprunteur, ni frais de dossier, ni différé, ni remboursement anticipé : un prêt qui porte l'une de ces choses n'est pas celui-là.</p>", "<p><b>For you, or against you.</b> We compare what the loan costs a year with what your assets yield a year — rent, coupons, interest paid. Not the unrealised gain: while nothing is sold, it pays no instalment. Above zero, what you hold pays the loan and more; below, you pay it yourself — which can be a perfectly sound choice, for the home you live in for instance.</p><p><b>The rate used</b> is the average of your loan rates, weighted by what is still owed on each: a nearly repaid loan costs almost nothing.</p><p><b>What the loan costs</b> assumes it runs to term, on the terms entered. No borrower's insurance, no arrangement fee, no deferral, no early repayment: a loan carrying any of these is not this one.</p>", "<p><b>A su favor, o en contra.</b> Se compara lo que el crédito cuesta al año con lo que sus activos rinden al año — alquileres, cupones, intereses. No la plusvalía: mientras no se venda nada, no paga ninguna cuota. Por encima de cero, lo que posee paga el crédito y más; por debajo, lo paga usted — lo que puede ser una elección muy sensata, por ejemplo para la vivienda habitual.</p><p><b>El tipo utilizado</b> es la media de los tipos de sus créditos, ponderada por lo que queda por devolver en cada uno: un préstamo casi liquidado ya casi no cuesta nada.</p><p><b>Lo que cuesta el crédito</b> supone el préstamo llevado a término, en las condiciones introducidas. Sin seguro de prestatario, sin gastos de apertura, sin carencia, sin amortización anticipada: un préstamo con cualquiera de estas cosas no es este.</p>", "<p><b>Für Sie oder gegen Sie.</b> Verglichen wird, was der Kredit pro Jahr kostet, mit dem, was Ihre Anlagen pro Jahr bringen — Mieten, Kupons, gezahlte Zinsen. Nicht der Buchgewinn: solange nichts verkauft ist, zahlt er keine Rate. Über Null zahlt das, was Sie halten, den Kredit und mehr; darunter zahlen Sie ihn selbst — was eine durchaus vernünftige Wahl sein kann, etwa für die selbst bewohnte Wohnung.</p><p><b>Der verwendete Satz</b> ist der Durchschnitt Ihrer Kreditzinsen, gewichtet nach der jeweiligen Restschuld: ein fast getilgter Kredit kostet fast nichts mehr.</p><p><b>Was der Kredit kostet</b> setzt voraus, dass er zu den erfassten Bedingungen bis zum Ende läuft. Keine Kreditversicherung, keine Bearbeitungsgebühr, keine Stundung, keine Sondertilgung: ein Kredit mit einer dieser Eigenschaften ist nicht dieser.</p>"],
   'an.mar.tend.k':        ["Périodes dans le même sens", "Periods pointing the same way", "Periodos en el mismo sentido", "Zeiträume in gleicher Richtung"],
   'an.mar.ryt.k':         ["Rythme de la semaine", "This week's pace", "Ritmo de la semana", "Tempo der Woche"],
   'an.mar.ryt.d':         ["Le rythme du mois, ramené à sept jours : {{p}}.", "The monthly pace, over seven days: {{p}}.", "El ritmo del mes, reducido a siete días: {{p}}.", "Das Monatstempo, auf sieben Tage: {{p}}."],
@@ -7333,6 +7440,7 @@ window.PC = (function(){
 
   /* --- Portefeuille d'exemple --- */
   'e.ex.1.n':           ["Appartement T3","Two-bed flat","Piso de 2 dormitorios","3-Zimmer-Wohnung"],
+  'e.ex.pret.n':        ["Crédit de l'appartement","The flat's mortgage","Crédito del piso","Kredit für die Wohnung"],
   'e.ex.1.q':           ["1","1","1","1"],
   'e.ex.2.n':           ["ETF Monde","World ETF","ETF mundial","Welt-ETF"],
   'e.ex.2.q':           ["182 parts","182 units","182 participaciones","182 Anteile"],
@@ -7406,7 +7514,7 @@ window.PC = (function(){
   'e.evo.reconstitue':  ["Avant votre premier relev\u00e9, la courbe est reconstitu\u00e9e\u00a0: cours r\u00e9els du march\u00e9 \u00e0 la quantit\u00e9 d\u00e9tenue aujourd'hui, et montant investi pour ce qui n'a pas de cours.","Before your first statement, the curve is rebuilt: real market prices at the quantity held today, and the amount invested for whatever has no price.","Antes de su primer informe, la curva se reconstruye: cotizaciones reales del mercado a la cantidad que posee hoy, y el importe invertido para lo que no tiene cotizaci\u00f3n.","Vor Ihrem ersten Auszug wird die Kurve rekonstruiert: echte Marktkurse mit der heute gehaltenen Menge, und der investierte Betrag f\u00fcr alles ohne Kurs."],
   'e.rev.debut':        ["Perçu depuis le","Received since","Percibido desde el","Erhalten seit"],
   'e.rev.percu':        ["Revenus perçus","Income collected","Ingresos percibidos","Erhaltene Erträge"],
-  'e.pa.c5':            ["Cette ligne vous a versé {x} depuis le {d} : c'est autant que le capital a gagné, sans que la valeur du bien ait bougé.","This holding has paid you {x} since {d}: that is capital gained without the asset's own value moving at all.","Esta línea le ha pagado {x} desde el {d}: es capital ganado sin que el valor del bien se haya movido.","Diese Position hat Ihnen seit dem {d} {x} ausgezahlt: genau so viel Kapital ist hinzugekommen, ohne dass sich der Wert selbst bewegt hat."],
+  'e.pa.c5':            ["Cette ligne vous a versé {{x}} depuis le {{d}} : c'est autant que le capital a gagné, sans que la valeur du bien ait bougé.","This holding has paid you {{x}} since {{d}}: that is capital gained without the asset's own value moving at all.","Esta línea le ha pagado {{x}} desde el {{d}}: es capital ganado sin que el valor del bien se haya movido.","Diese Position hat Ihnen seit dem {{d}} {{x}} ausgezahlt: genau so viel Kapital ist hinzugekommen, ohne dass sich der Wert selbst bewegt hat."],
   'e.rev.periode':      ["Périodicité","Frequency","Periodicidad","Häufigkeit"],
   'e.rev.p.mois':       ["Par mois","Per month","Al mes","Pro Monat"],
   'e.rev.p.trim':       ["Par trimestre","Per quarter","Por trimestre","Pro Quartal"],
@@ -7849,20 +7957,27 @@ window.PC = (function(){
   've.liq.q':             ["C'est ce chiffre qui d\u00e9cide si une mauvaise ann\u00e9e se traverse ou se subit\u00a0: le reste demande de vendre, et vendre au mauvais moment co\u00fbte.", "This figure decides whether a bad year is weathered or endured: the rest requires selling, and selling at the wrong moment costs.", "Esta cifra decide si un mal a\u00f1o se atraviesa o se sufre: el resto exige vender, y vender a destiempo cuesta.", "Diese Zahl entscheidet, ob ein schlechtes Jahr \u00fcberstanden oder erlitten wird: Der Rest verlangt Verk\u00e4ufe, und zur Unzeit zu verkaufen kostet."],
   've.dette':             ["Vous devez <b>{{d}}</b>, soit <b>{{p}}</b> de ce que vous d\u00e9tenez.", "You owe <b>{{d}}</b>, that is <b>{{p}}</b> of what you hold.", "Debe <b>{{d}}</b>, es decir <b>{{p}}</b> de lo que posee.", "Sie schulden <b>{{d}}</b>, also <b>{{p}}</b> dessen, was Sie halten."],
   've.dette.q':           ["La dette ne bouge pas quand les march\u00e9s baissent\u00a0: c'est l'actif qui bouge, et l'\u00e9cart se creuse des deux c\u00f4t\u00e9s \u00e0 la fois.", "Debt does not move when markets fall: the asset moves, and the gap widens from both sides at once.", "La deuda no se mueve cuando los mercados caen: se mueve el activo, y la brecha se abre por ambos lados a la vez.", "Schulden bewegen sich nicht, wenn M\u00e4rkte fallen: Der Verm\u00f6genswert bewegt sich, und die L\u00fccke \u00f6ffnet sich von beiden Seiten zugleich."],
+  've.fisc':              ["<b>{{q}}</b>, c'est {{j}} \u2014 le {{d}}.", "<b>{{q}}</b> is {{j}} \u2014 on {{d}}.", "<b>{{q}}</b> es {{j}} \u2014 el {{d}}.", "<b>{{q}}</b> ist {{j}} \u2014 am {{d}}."],
+  've.fisc.q':            ["Une date fiscale ne se rattrape pas\u00a0: pass\u00e9e, elle est pass\u00e9e. Le calendrier entier est dans l'analyse, onglet Fiscal.", "A tax date cannot be made up: once past, it is past. The whole calendar is in the analysis, Tax tab.", "Una fecha fiscal no se recupera: pasada, est\u00e1 pasada. El calendario completo est\u00e1 en el an\u00e1lisis, pesta\u00f1a Fiscal.", "Ein Steuertermin l\u00e4sst sich nicht nachholen: vorbei ist vorbei. Der ganze Kalender steht in der Analyse, Reiter Steuern."],
+  've.anniv':             ["<b>{{n}}</b>\u00a0: {{q}}, {{j}} \u2014 le {{d}}.", "<b>{{n}}</b>: {{q}}, {{j}} \u2014 on {{d}}.", "<b>{{n}}</b>: {{q}}, {{j}} \u2014 el {{d}}.", "<b>{{n}}</b>: {{q}}, {{j}} \u2014 am {{d}}."],
+  've.anniv.q':           ["C'est la date qui change le r\u00e9gime d'imposition de cette ligne, et elle n'est \u00e9crite que dans votre contrat.", "That date changes how this holding is taxed, and it is written nowhere but in your contract.", "Esa fecha cambia el r\u00e9gimen de imposici\u00f3n de esta l\u00ednea, y no est\u00e1 escrita m\u00e1s que en su contrato.", "Dieses Datum \u00e4ndert die Besteuerung dieser Position, und es steht nirgends au\u00dfer in Ihrem Vertrag."],
   've.rien':              ["Rien ne d\u00e9passe vos seuils aujourd'hui.", "Nothing is above your thresholds today.", "Nada supera sus umbrales hoy.", "Heute liegt nichts \u00fcber Ihren Schwellen."],
   've.s.conc':            ["Une ligne au-del\u00e0 de", "One holding above", "Una l\u00ednea por encima de", "Eine Position \u00fcber"],
   've.s.cat':             ["Une cat\u00e9gorie au-del\u00e0 de", "One category above", "Una categor\u00eda por encima de", "Eine Kategorie \u00fcber"],
   've.s.cats':            ["Moins de \u2026 cat\u00e9gories", "Fewer than \u2026 categories", "Menos de \u2026 categor\u00edas", "Weniger als \u2026 Kategorien"],
   've.s.liq':             ["Mobilisable en de\u00e7\u00e0 de", "Available below", "Disponible por debajo de", "Verf\u00fcgbar unter"],
   've.s.dette':           ["Dette au-del\u00e0 de", "Debt above", "Deuda por encima de", "Schulden \u00fcber"],
+  've.s.fisc':            ["Date fiscale \u00e0 moins de \u2026 jours", "Tax date within \u2026 days", "Fecha fiscal a menos de \u2026 d\u00edas", "Steuertermin in weniger als \u2026 Tagen"],
 
   /* --- Les prets, et le patrimoine net --- */
   'pr.titre':             ["Ce que vous devez", "What you owe", "Lo que debe", "Was Sie schulden"],
   'pr.tuile':             ["Un cr\u00e9dit", "A loan", "Un cr\u00e9dito", "Ein Kredit"],
+  'e.et1.dette':          ["Ou bien, ce que vous devez", "Or else, what you owe", "O bien, lo que debe", "Oder: was Sie schulden"],
   'pr.vide':              ["Aucun cr\u00e9dit enregistr\u00e9. Ajoutez-en un et le total devient un patrimoine net.", "No loan recorded. Add one and the total becomes a net worth.", "Ning\u00fan cr\u00e9dito registrado. A\u00f1ada uno y el total pasa a ser un patrimonio neto.", "Kein Kredit erfasst. Tragen Sie einen ein, und aus der Summe wird ein Nettoverm\u00f6gen."],
   'pr.ajouter':           ["Ajouter un pr\u00eat", "Add a loan", "A\u00f1adir un pr\u00e9stamo", "Kredit hinzuf\u00fcgen"],
   'pr.sup':               ["Retirer ce pr\u00eat", "Remove this loan", "Quitar este pr\u00e9stamo", "Diesen Kredit entfernen"],
-  'pr.net':               ["de patrimoine net\u00a0: {{b}} d'actifs, moins {{d}} qu'il reste \u00e0 rembourser.", "net worth: {{b}} of assets, less {{d}} still to repay.", "de patrimonio neto: {{b}} de activos, menos {{d}} por devolver.", "Nettoverm\u00f6gen: {{b}} an Aktiva, abz\u00fcglich {{d}}, die noch zu tilgen sind."],
+  'pr.net':               ["de patrimoine net", "net worth", "de patrimonio neto", "Nettoverm\u00f6gen"],
+  'pr.net.d':             ["\u00a0: {{b}} d'actifs, moins {{d}} qu'il reste \u00e0 rembourser.", ": {{b}} of assets, less {{d}} still to repay.", ": {{b}} de activos, menos {{d}} por devolver.", ": {{b}} an Aktiva, abz\u00fcglich {{d}}, die noch zu tilgen sind."],
   'pr.m.restant':         ["Capital restant d\u00fb", "Capital still owed", "Capital pendiente", "Restschuld"],
   'pr.m.mens':            ["Mensualit\u00e9", "Monthly payment", "Cuota mensual", "Monatsrate"],
   'pr.m.interets':        ["Int\u00e9r\u00eats d\u00e9j\u00e0 pay\u00e9s", "Interest paid so far", "Intereses ya pagados", "Bisher gezahlte Zinsen"],
@@ -9105,7 +9220,6 @@ document.addEventListener('error', function(ev){
     <path d="M-40 520 C 140 500 220 400 380 350 C 540 300 660 410 820 340 C 980 270 1100 140 1440 120"/>
   </g>
 </svg>
-<div class="voile" id="voile" aria-hidden="true"><span class="voile__mot" id="voile-mot"></span></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 
@@ -10430,6 +10544,22 @@ document.addEventListener('error', function(ev){
         <div id="etape-cat">
           <span class="champ__l" id="lbl-tuiles" data-i18n="e.et1">Que voulez-vous ajouter&nbsp;?</span>
           <div class="tuiles-cat" id="tuiles" role="group" aria-labelledby="lbl-tuiles"></div>
+          <!-- UN CREDIT N'EST PAS LA QUATORZIEME CATEGORIE D'ACTIF.
+               Il etait la derniere tuile d'une grille de treize,
+               distinguee par un filet pointille : pour le trouver, il
+               fallait savoir qu'il existait et le chercher. Son propre
+               bloc, son propre intitule — « ou bien, ce que vous
+               devez » est l'autre moitie de la question, pas un actif
+               de plus. -->
+          <div class="ajout-dette" id="ajout-dette">
+            <span class="champ__l" id="lbl-dette" data-i18n="e.et1.dette">Ou bien, ce que vous devez</span>
+            <div role="group" aria-labelledby="lbl-dette">
+              <button class="tuile-cat tuile-cat--dette" type="button" data-tuile="__pret">
+                <span class="tuile-cat__i" aria-hidden="true">🏦</span>
+                <span class="tuile-cat__n" data-i18n="pr.tuile">Un crédit</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div id="etape-choix" hidden>
@@ -10745,7 +10875,14 @@ document.addEventListener('error', function(ev){
          analyse est un appel payant chez le fournisseur du modele, et
          la declencher en ouvrant l'onglet depenserait l'argent de
          quelqu'un qui passait par la. -->
-    <div class="pan" id="pan-analyse" role="tabpanel" aria-labelledby="ong-analyse" tabindex="0" hidden>
+    <!-- CE PANNEAU N'A PAS D'ONGLET EN HAUT. La rangee du haut porte
+         l'ensemble, les lignes, les marches, l'actualite et « ajouter » ;
+         l'analyse, elle, ne s'ouvre que par la barre du bas. Son
+         « aria-labelledby » designait donc un bouton qui n'a jamais
+         existe — un lecteur d'ecran arrivait sur un panneau sans nom.
+         Il porte desormais le sien. -->
+    <div class="pan" id="pan-analyse" role="tabpanel" data-i18n-aria="an.onglet"
+         aria-label="Analyse" tabindex="0" hidden>
       <section class="actu" id="analyse">
         <div class="section__head section__head--duo">
           <div>
@@ -10775,6 +10912,12 @@ document.addEventListener('error', function(ev){
                   aria-selected="false" data-i18n="b.sous.matieres">Matières premières</button>
           <button class="sous-onglet an-vues__moi" type="button" role="tab" data-vue="moi"
                   aria-selected="false" data-i18n="an.vue.moi">Mes investissements</button>
+          <!-- L'onglet des credits est masque tant qu'aucun credit
+               n'existe : un onglet qui mene a un ecran vide est pire
+               qu'un onglet absent. On y va, on ne comprend pas, et on
+               n'y retourne plus. -->
+          <button class="sous-onglet" type="button" role="tab" data-vue="credit"
+                  aria-selected="false" data-i18n="an.vue.credit" hidden>Crédits</button>
           <button class="sous-onglet" type="button" role="tab" data-vue="fiscal"
                   aria-selected="false" data-i18n="f.onglet">Fiscal</button>
         </div>
@@ -11031,7 +11174,7 @@ document.addEventListener('error', function(ev){
              ce que fait l'ensemble de ce qu'on possede, et d'ou
              vient ce qu'il a fait. -->
         <div class="an-bloc" id="an-moi" hidden>
-          <h3 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h4>
+          <h3 class="an-titre mono" data-i18n="an.moi.t">Votre portefeuille dans son ensemble</h3>
           <!-- ===== LES CHIFFRES, SANS LES PHRASES =====
                Il y avait ici deux paragraphes : « vous avez mis X, ça
                vaut Y, soit tant » et la décomposition de ce qui a
@@ -11111,7 +11254,7 @@ document.addEventListener('error', function(ev){
              douze mois de cours deja en memoire. Gratuite, instantanee,
              et elle ne peut pas se tromper. -->
         <div class="an-bloc" id="an-calc">
-          <h3 class="an-titre mono" data-i18n="an.calc.t">Une ligne en détail</h4>
+          <h3 class="an-titre mono" data-i18n="an.calc.t">Une ligne en détail</h3>
           <p class="an-sous" data-i18n="an.calc.d">Douze mois de cours réels quand la ligne en a, vos relevés datés sinon.</p>
           <!-- Choisir la ligne. Toutes a la fois se lisait a trois
                lignes et plus du tout a douze — et sur telephone, ou
@@ -11156,7 +11299,7 @@ document.addEventListener('error', function(ev){
              seul, et celle qui compte le plus : deux lignes correlees
              ne sont pas une diversification. -->
         <div class="an-bloc" id="an-cor" hidden>
-          <h3 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h4>
+          <h3 class="an-titre mono" data-i18n="an.cor.t">Ce qui bouge ensemble</h3>
           <!-- L'echelle, dite une fois : sans elle le curseur montre une
                position sans dire de quoi. -->
           <!-- La phrase qui nommait la paire la plus liée est partie
@@ -11183,7 +11326,7 @@ document.addEventListener('error', function(ev){
         </div>
 
         <div class="an-bloc" id="an-ia" hidden>
-          <h3 class="an-titre mono" data-i18n="an.ia.t">Vos chiffres, écrits en clair</h4>
+          <h3 class="an-titre mono" data-i18n="an.ia.t">Vos chiffres, écrits en clair</h3>
           <!-- CE QUE LE BOUTON VA FAIRE, AVANT DE L'AVOIR PRESSE. Le
                bloc etait le seul de la page a ne rien dire tant qu'on
                n'avait pas clique : un titre, un bouton, et aucune idee
@@ -11203,6 +11346,25 @@ document.addEventListener('error', function(ev){
             Pierrel &amp; Co n'est pas agréé comme conseiller en investissements financiers.
             Vérifiez tout chiffre avant de vous en servir.</p>
         </div>
+        </div>
+
+        <!-- ===== VOS CREDITS =====
+             Ce qu'on lit ici n'est PAS la liste des prets : elle est
+             sur le tableau de bord, en entier. C'est la lecture
+             qu'aucune ligne ne donne seule — ou en est le
+             remboursement, ce que le credit coute encore, et la seule
+             question qui vaille : est-ce que ce credit travaille pour
+             vous, ou contre vous. -->
+        <div id="an-vue-credit" hidden>
+          <div class="an-bloc" id="an-credit">
+            <h3 class="an-titre mono" data-i18n="an.cr.t">Vos crédits</h3>
+            <p class="an-sous" id="an-cr-sous"></p>
+            <div class="an-mes" id="an-cr-mes"></div>
+            <details class="an-aide" id="an-aide-cr">
+              <summary class="an-aide__t mono" data-i18n="an.aide">Comment lire ces chiffres</summary>
+              <div class="an-aide__c" data-i18n-html="an.aide.cr"></div>
+            </details>
+          </div>
         </div>
 
         <!-- Le commentaire ecrit par l'IA : formule Max seulement. -->
@@ -13835,7 +13997,11 @@ document.addEventListener('error', function(ev){
      faudrait en faire.
      ============================================================ */
   const VE_CLE = 'pierrelco.seuils.v1';
-  const VE_DEFAUT = {conc:35, cats:3, liq:10, cat:50, dette:60};
+  /* `fisc` n'est pas un pourcentage : c'est un NOMBRE DE JOURS. Le
+     bloc des seuils porte deja un compte (`cats`), et un libelle qui
+     dit son unite vaut mieux qu'une colonne de pour-cent ou une
+     valeur serait muette. */
+  const VE_DEFAUT = {conc:35, cats:3, liq:10, cat:50, dette:60, fisc:30};
   function veSeuils(){
     try {
       const o = JSON.parse(localStorage.getItem(VE_CLE) || 'null');
@@ -13895,6 +14061,44 @@ document.addEventListener('error', function(ev){
                   cle:'ve.dette', vars:{p:PC.part(r, 0),
                   d:eur.format(t.dette), s:PC.part(se.dette, 0)}});
       }
+    }
+    /* ===== 6. UNE DATE FISCALE QUI APPROCHE =====
+       Le calendrier est un ecran qu'il faut penser a ouvrir, et une
+       date qu'on consulte apres coup n'est plus une date. La veille,
+       elle, est sur le chemin : elle s'ouvre avec le tableau de bord.
+
+       DEUX SOURCES, ET LA PLUS PROCHE GAGNE. Les echeances publiees —
+       declaration, IFI, acompte — et VOS anniversaires, qu'aucun
+       calendrier imprime ne connait : les huit ans d'une
+       assurance-vie, les cinq ans d'un PEA. Ces deux dates-la ne sont
+       ecrites que dans votre contrat, et la page les tient parce que
+       vous avez saisi la date d'ouverture.
+
+       UNE SEULE LIGNE, et non une par date : « vous avez quatre
+       echeances dans le mois » noie celle de la semaine. C'est la
+       plus proche qui merite le coup d'oeil, les autres sont au
+       calendrier. */
+    if (se.fisc > 0){
+      try {
+        const auj = new Date();
+        let prox = null;
+        const plus = function(c){ if (!prox || c.jours < prox.jours) prox = c; };
+        (PC_FISC.echeances(fiscEtat(), auj) || []).forEach(function(e){
+          if (e.jours < 0 || e.jours > se.fisc) return;
+          plus({jours:e.jours, cle:'ve.fisc',
+                vars:{q:echap(PC.t(e.cle)), j:fiscDelai(e.jours), d:fiscJour(e.date)}});
+        });
+        (PC_FISC.anniversaires(actifs, auj) || []).forEach(function(a){
+          if (a.atteint || a.jours < 0 || a.jours > se.fisc) return;
+          plus({jours:a.jours, cle:'ve.anniv',
+                vars:{n:echap(a.nom), q:echap(PC.t(a.cle)),
+                      j:fiscDelai(a.jours), d:fiscJour(a.date)}});
+        });
+        if (prox){
+          out.push({id:'fisc', seuil:'fisc', v:prox.jours,
+                    cle:prox.cle, vars:prox.vars});
+        }
+      } catch (e){ /* une table fiscale absente ne doit pas vider la veille */ }
     }
     return out;
   }
@@ -14077,8 +14281,19 @@ document.addEventListener('error', function(ev){
            comme un montant ordinaire : devoir plus qu'on ne possede
            est le fait le plus important de la page ce jour-la. */
         hn.setAttribute('data-signe', t.net < 0 ? 'moins' : 'plus');
+        /* LE DETAIL EST DANS SON PROPRE SPAN, et ce n'est pas de la
+           mise en page pour la mise en page : sur un telephone, la
+           phrase entiere prend deux lignes de plus et pousse les
+           chiffres cles SOUS la barre du bas — c'est-a-dire hors du
+           premier ecran, le seul que beaucoup regardent. Le montant
+           net et son nom restent ; « 159 670 d'actifs moins 45 143 a
+           rembourser » se lit sur un ecran plus large, et de toute
+           facon dans le bloc des credits. */
         hn.innerHTML = '<b>' + echap(eur.format(t.net)) + '</b> ' +
-          echap(PC.t('pr.net', {b:eur.format(t.val), d:eur.format(t.dette)}));
+          echap(PC.t('pr.net')) +
+          '<span class="solde__net__d">' +
+            echap(PC.t('pr.net.d', {b:eur.format(t.val), d:eur.format(t.dette)})) +
+          '</span>';
       }
     }
   }
@@ -14929,6 +15144,9 @@ document.addEventListener('error', function(ev){
     pretsBranche();
     peintPrets();
     peintFiscal();
+    /* Les credits de l'analyse suivent les prets : en ajouter un fait
+       apparaitre l'onglet, en solder le dernier le fait disparaitre. */
+    peintCredit();
     document.getElementById('solde-delta').innerHTML =
       marque(t.perf, eur.format(Math.abs(t.gain)) + '  ·  ' + pourcent(t.perf));
     document.getElementById('solde-n').textContent =
@@ -16669,6 +16887,11 @@ document.addEventListener('error', function(ev){
     vueCourante = (permise && (cible === 'actif' || cible === 'ajout' ||
                    cible === 'marches' || cible === 'actu' || cible === 'analyse'))
       ? cible : 'general';
+    /* LE PANNEAU OUVERT, ECRIT SUR LE DOCUMENT. La feuille de style en
+       a besoin : l'en-tete du site n'a rien a commander dans
+       l'analyse, et c'est une affaire de presentation — un script qui
+       masque et remontre des elements finirait par en oublier un. */
+    document.body.setAttribute('data-pan', vueCourante);
     /* Un panneau masqué n'a pas de boîte de mise en page : l'observateur
        du module ne le verrait jamais approcher. C'est l'ouverture de la
        vue qui déclenche le chargement. */
@@ -17920,22 +18143,36 @@ document.addEventListener('error', function(ev){
      mesure d'une de ses lignes comme une mesure de marche. */
   let anVue = 'marche';
 
+  /* Les vues qui ne regardent aucun marche. Elles se reconnaissent
+     ici, en un seul endroit : trois conditions ecrites trois fois
+     ailleurs finissent par n'etre plus que deux a un endroit. */
+  const AN_SANS_MARCHE = {moi:1, fiscal:1, credit:1};
+
   function anPoseVue(){
+    const r = document.getElementById('an-vues');
+    /* L'ONGLET DES CREDITS N'EXISTE QUE S'IL Y A UN CREDIT. Et si le
+       dernier credit part pendant qu'on le regarde, on ne reste pas
+       devant un ecran vide : on retombe sur ses investissements. */
+    const bc = r ? r.querySelector('[data-vue="credit"]') : null;
+    const aCredit = !!(dettes && dettes.length);
+    if (bc) bc.hidden = !aCredit;
+    if (anVue === 'credit' && !aCredit) anVue = 'moi';
     const vm = document.getElementById('an-vue-marche');
     const vo = document.getElementById('an-vue-moi');
     const vf = document.getElementById('an-vue-fiscal');
+    const vc = document.getElementById('an-vue-credit');
     if (vm) vm.hidden = anVue !== 'marche';
     if (vo) vo.hidden = anVue !== 'moi';
     if (vf) vf.hidden = anVue !== 'fiscal';
-    const r = document.getElementById('an-vues');
+    if (vc) vc.hidden = anVue !== 'credit';
     if (!r) return;
     r.querySelectorAll('[data-vue]').forEach(function(x){
       const v = x.getAttribute('data-vue');
-      /* Deux vues ne sont pas des marches — « mes investissements »
-         et « fiscal » — et pour elles c'est la vue qui decide, pas la
-         source de cotation. */
+      /* Trois vues ne sont pas des marches — « mes investissements »,
+         « credits » et « fiscal » — et pour elles c'est la vue qui
+         decide, pas la source de cotation. */
       x.setAttribute('aria-selected',
-        String((anVue === 'moi' || anVue === 'fiscal') ? v === anVue : v === marSrc));
+        String(AN_SANS_MARCHE[anVue] ? v === anVue : v === marSrc));
     });
     /* ===== L'ONGLET CHOISI DOIT SE VOIR =====
        Sur telephone la rangee defile, et « Mes investissements » est
@@ -18244,8 +18481,62 @@ document.addEventListener('error', function(ev){
       vals.forEach(function(v){ q += (v - simpleMoy) * (v - simpleMoy); });
       ecartType = Math.sqrt(q / vals.length);
     }
+    /* ===== QUATRE MESURES DE PLUS, SUR LES MEMES COURS =====
+       Aucune ne demande un appel de plus : tout est dans la reponse
+       deja servie pour l'ecran des marches.
+
+       L'AMPLEUR MOYENNE, SENS CONFONDUS. La dispersion mesure l'ecart
+       AUTOUR de la moyenne : un jour ou chaque valeur monte de 4 %
+       rend un ecart type de zero. L'ampleur, elle, dit combien ca a
+       bouge. Ces deux jours-la ne se ressemblent pas, et jusqu'ici
+       aucun chiffre ne les distinguait.
+
+       SOUS LEUR RECORD : la valeur du milieu des distances au plus
+       haut historique. La mediane et non la moyenne — une ligne qui a
+       perdu 95 % de son record tirerait une moyenne a elle seule.
+
+       DANS LA FOURCHETTE DU JOUR : ou le dernier cours se situe entre
+       le plus bas et le plus haut des vingt-quatre heures. Un marche
+       qui monte de 1 % en finissant au plus bas de sa journee n'a pas
+       la meme allure qu'un marche qui monte de 1 % au plus haut.
+
+       CE QUI A CHANGE DE MAINS : le volume du jour rapporte a la
+       capitalisation du marche entier. La tuile voisine dit QUELLE
+       ligne s'agite ; celle-ci dit si c'est le marche.
+
+       LES TROIS DERNIERES N'EXISTENT QUE LA OU LE FOURNISSEUR SERT
+       CES CHAMPS. Le relais de bourse ne rend qu'un prix : on les
+       tait plutot que de les inventer. */
+    let ampleur = null;
+    if (vals.length){
+      let abs = 0;
+      vals.forEach(function(v){ abs += Math.abs(v); });
+      ampleur = abs / vals.length;
+    }
+    const sous = [];
+    let fSom = 0, fN = 0, volT = 0, capT = 0;
+    vus.forEach(function(c){
+      if (typeof c.ath_change_percentage === 'number' && isFinite(c.ath_change_percentage)){
+        sous.push(c.ath_change_percentage);
+      }
+      const hi = +c.high_24h, lo = +c.low_24h, px = +c.current_price;
+      if (hi > lo && px > 0){
+        fSom += Math.max(0, Math.min(100, (px - lo) / (hi - lo) * 100));
+        fN++;
+      }
+      if (typeof c.total_volume === 'number' && c.total_volume > 0) volT += c.total_volume;
+      if (typeof c.market_cap === 'number' && c.market_cap > 0) capT += c.market_cap;
+    });
+    sous.sort(function(a2, b2){ return a2 - b2; });
+    const sommet = sous.length
+      ? (sous.length % 2 ? sous[(sous.length - 1) / 2]
+                         : (sous[sous.length / 2 - 1] + sous[sous.length / 2]) / 2)
+      : null;
     const extra = {vals:vals, simpleMoy:simpleMoy, median:median, ecartType:ecartType,
-                   fortN:fortN, fortV:fortV, sansMoy:sansMoy, forts:forts};
+                   fortN:fortN, fortV:fortV, sansMoy:sansMoy, forts:forts,
+                   ampleur:ampleur, sommet:sommet, sousN:sous.length,
+                   fourchette:(fN ? fSom / fN : null), fourN:fN,
+                   agitation:((capT > 0 && volT > 0) ? volT / capT * 100 : null)};
 
     if (!(poids > 0) && vus.length){
       let ss = 0, nn = 0;
@@ -18289,6 +18580,130 @@ document.addEventListener('error', function(ev){
     hote.setAttribute('data-neuf', '1');
   }
 
+  /* ============================================================
+     VOS CREDITS, LUS PLUTOT QUE LISTES
+     ------------------------------------------------------------
+     Le tableau de bord liste les prets : capital restant,
+     mensualite, interets deja payes, derniere echeance. Tout y est —
+     et rien n'y repond a la question qu'on se pose en les regardant :
+     « est-ce que ce credit est bon ? »
+
+     CE BLOC Y REPOND, AVEC UN SEUL PRINCIPE, ET IL EST VERIFIABLE :
+     on compare ce que le credit COUTE par an a ce que les actifs
+     RAPPORTENT par an. Pas la plus-value — tant que rien n'est vendu
+     elle ne paie aucune mensualite, et un credit se rembourse en
+     euros reels. Les loyers et les coupons, eux, tombent tous les
+     mois.
+
+     CE QU'IL NE PRETEND PAS SAVOIR : l'assurance emprunteur, les
+     frais de dossier, un differe, un taux variable, un remboursement
+     anticipe. `pretCalc` le dit deja pret par pret, et le pli d'aide
+     le redit ici — une mesure dont on ignore les limites est une
+     mesure fausse.
+     ============================================================ */
+  function creditMesures(){
+    const l = (dettes || []).map(function(d){ return pretCalc(d); })
+                            .filter(function(c){ return c; });
+    if (!l.length) return null;
+    let cap = 0, restant = 0, rembourse = 0, mens = 0, intT = 0, intP = 0, tp = 0;
+    let fin = null, proch = null, encours = 0;
+    l.forEach(function(c){
+      cap += c.capital; restant += c.restant; rembourse += c.rembourse;
+      intT += c.interetsTotal; intP += c.interetsPayes;
+      /* La mensualite d'un pret solde ne sort plus du compte en
+         banque : l'additionner gonflerait la charge d'un credit qui
+         n'existe plus. */
+      if (!c.solde){ mens += c.mens; encours++; }
+      tp += c.taux * c.restant;
+      if (c.fin && (!fin || c.fin > fin)) fin = c.fin;
+      if (c.prochaine && c.jours !== null && (!proch || c.jours < proch.jours)){
+        proch = {jours:c.jours, date:c.prochaine, mens:c.mens};
+      }
+    });
+    return {
+      n:l.length, encours:encours, cap:cap, restant:restant, rembourse:rembourse,
+      mens:mens, intT:intT, intP:intP, intR:Math.max(0, intT - intP),
+      /* LE TAUX MOYEN EST PONDERE PAR CE QU'IL RESTE A REMBOURSER, et
+         non par le capital emprunte : un pret presque solde a 4 % ne
+         coute presque plus rien, et il n'a donc presque plus de poids
+         dans ce que le credit coute AUJOURD'HUI. */
+      taux: restant > 0 ? tp / restant : l[0].taux,
+      part: cap > 0 ? rembourse / cap * 100 : 0,
+      fin:fin, proch:proch, un:(l.length === 1 ? l[0] : null)
+    };
+  }
+
+  function peintCredit(){
+    const hote = document.getElementById('an-cr-mes');
+    const sous = document.getElementById('an-cr-sous');
+    if (!hote) return;
+    const C = creditMesures();
+    if (!C){ hote.innerHTML = ''; if (sous) sous.textContent = ''; return; }
+    const t = totaux();
+    const revAn = revenuTotal();
+    if (sous) sous.textContent = PC.t(C.n === 1 ? 'an.cr.d1' : 'an.cr.d', {n:String(C.n)});
+
+    let m = '';
+    /* OU EN EST LE REMBOURSEMENT : la mesure de tete, parce que c'est
+       la premiere chose qu'on veut savoir d'un credit. */
+    m += anMesure('an.cr.part', PC.part(C.part, 0),
+                  echap(C.un
+                    ? PC.t('an.cr.part.d1', {k:String(C.un.payes), n:String(C.un.mois)})
+                    : PC.t('an.cr.part.d', {d:eur.format(C.rembourse), c:eur.format(C.cap)})),
+                  '', anBarre(C.part), 'an-m--tete');
+    m += anMesure('an.cr.reste', eur.format(C.restant),
+                  C.fin ? echap(PC.t('an.cr.reste.d', {d:fiscJour(C.fin)})) : '');
+    /* CE QUE LE CREDIT COUTE EN TOUT. Les interets payes sont derriere
+       soi, ceux a venir sont devant : les deux dans le meme detail,
+       parce que c'est l'ecart entre eux qui se lit. */
+    if (C.intT > 0){
+      m += anMesure('an.cr.cout', eur.format(C.intT),
+                    echap(PC.t('an.cr.cout.d',
+                          {p:eur.format(C.intP), r:eur.format(C.intR)})));
+    }
+    /* LA QUESTION QUI COMPTE. Au-dessus de zero, ce qu'on detient paie
+       le credit et davantage ; en dessous, c'est le detenteur qui le
+       paie — ce qui peut etre un choix parfaitement sense, et la page
+       ne dit donc pas « bien » ou « mal », elle dit l'ecart. */
+    if (revAn > 0 && t.val > 0){
+      const rend = revAn / t.val * 100;
+      const ec = rend - C.taux;
+      m += anMesure('an.cr.taux', (ec < 0 ? '\u2212' : '+') + anPoints(Math.abs(ec)),
+                    echap(PC.t('an.cr.taux.d',
+                          {r:PC.part(rend, 1), c:PC.part(C.taux, 2)})),
+                    ec < 0 ? 'baisse' : 'hausse',
+                    anBarre(Math.max(0, Math.min(100, 50 + ec * 10))));
+    } else {
+      /* Sans revenu saisi, la comparaison n'existe pas : on donne le
+         taux seul plutot qu'un ecart calcule contre zero, qui dirait
+         « votre credit vous coute tout » a quelqu'un qui n'a
+         simplement rien saisi. */
+      m += anMesure('an.cr.taux.seul', PC.part(C.taux, 2),
+                    echap(PC.t('an.cr.taux.seul.d')));
+    }
+    if (C.mens > 0){
+      const couv = revAn > 0 ? (revAn / 12) / C.mens * 100 : null;
+      m += anMesure('an.cr.mens', eur.format(C.mens),
+                    echap(couv === null ? PC.t('an.cr.mens.d0')
+                          : PC.t('an.cr.mens.d', {p:PC.part(Math.min(999, couv), 0)})),
+                    '', couv === null ? '' : anBarre(Math.min(100, couv)));
+    }
+    if (C.proch){
+      m += anMesure('an.cr.proch', echap(fiscDelai(C.proch.jours)),
+                    echap(PC.t('an.cr.proch.d',
+                          {d:fiscJour(C.proch.date), m:eur.format(C.proch.mens)})));
+    }
+    if (t.val > 0){
+      const poids = C.restant / t.val * 100;
+      m += anMesure('an.cr.poids', PC.part(poids, 0),
+                    echap(PC.t('an.cr.poids.d',
+                          {d:eur.format(C.restant), v:eur.format(t.val)})),
+                    poids >= 100 ? 'attention' : '',
+                    anBarre(Math.min(100, poids)));
+    }
+    hote.innerHTML = m;
+  }
+
   function anMarche(){
     const bloc = document.getElementById('an-marche');
     const hote = document.getElementById('an-mar-mes');
@@ -18312,11 +18727,12 @@ document.addEventListener('error', function(ev){
            des cours avant d'y aller. Une connexion ouverte pour
            alimenter un bloc qu'on ne regarde plus coute au
            fournisseur et a la batterie. */
-        if (v === 'moi' || v === 'fiscal'){
+        if (AN_SANS_MARCHE[v]){
           anVue = v;
           marCoupeFlux();
           anPoseVue();
           if (v === 'fiscal') peintFiscal();
+          if (v === 'credit') peintCredit();
           return;
         }
         const change = (v !== marSrc);
@@ -18443,6 +18859,16 @@ document.addEventListener('error', function(ev){
        nom, une methode. */
     m += anMesure('an.mar.sens', hausses + ' / ' + vus.length, '',
                   '', anBarre(hausses / vus.length * 100));
+    /* COMBIEN BATTENT LE MARCHE. « 32 sur 50 en hausse » ne dit pas
+       combien font MIEUX que la moyenne : un jour ou tout monte, la
+       moitie des lignes monte moins que le marche — et c'est ca qu'on
+       veut savoir quand on en detient une. */
+    if (R.ensemble !== null && R.vals.length >= 3){
+      const bat = R.vals.filter(function(v){ return v > R.ensemble; }).length;
+      m += anMesure('an.mar.bat', bat + ' / ' + R.vals.length,
+                    echap(PC.t('an.mar.bat.d', {e:PC.pourcent(R.ensemble, 1)})), '',
+                    anBarre(bat / R.vals.length * 100));
+    }
     if (haut){
       m += anMesure('an.mar.haut', PC.pourcent(haut.v, 1),
                     echap(PC.t('an.mar.qui.d', {q:haut.n})), haut.v < 0 ? 'baisse' : 'hausse');
@@ -18450,6 +18876,15 @@ document.addEventListener('error', function(ev){
     if (bas){
       m += anMesure('an.mar.bas', PC.pourcent(bas.v, 1),
                     echap(PC.t('an.mar.qui.d', {q:bas.n})), bas.v > 0 ? 'hausse' : 'baisse');
+    }
+    /* DANS LA FOURCHETTE DU JOUR. Le plus haut et le plus bas servis
+       sont ceux des VINGT-QUATRE HEURES : la mesure n'a de sens que
+       sur cette periode-la. Sur sept ou trente jours on la tait,
+       plutot que de comparer un cours de mois a une fourchette de
+       jour. */
+    if (R.fourchette !== null && marH === '24h' && R.fourN >= 3){
+      m += anMesure('an.mar.four', PC.part(R.fourchette, 0),
+                    echap(PC.t('an.mar.four.d')), '', anBarre(R.fourchette));
     }
     /* L'ECART EST PARTI. « De la plus forte hausse a la plus forte
        baisse » est la soustraction des deux tuiles qui precedent,
@@ -18462,6 +18897,15 @@ document.addEventListener('error', function(ev){
       m += anMesure('an.mar.disp', anPoints(R.ecartType),
                     echap(PC.t('an.mar.disp.d', {m: PC.pourcent(R.simpleMoy, 1)})),
                     '', anJauge(Math.min(100, R.ecartType * 10)));
+    }
+    /* L'AMPLEUR, JUSTE A COTE : l'une dit l'ecart autour de la
+       moyenne, l'autre combien ca a bouge. Un jour ou chaque valeur
+       monte de 4 % a une dispersion nulle et une ampleur de 4 — deux
+       journees differentes que rien ne distinguait. */
+    if (R.ampleur !== null && vus.length >= 3){
+      m += anMesure('an.mar.amp', anAmpleur(R.ampleur, 1),
+                    echap(PC.t('an.mar.amp.d')), '',
+                    anJauge(Math.min(100, R.ampleur * 10)));
     }
     /* ===== LES TROIS PERIODES ENSEMBLE =====
        Le seul indicateur de la grille qui ne regarde pas la periode
@@ -18509,6 +18953,14 @@ document.addEventListener('error', function(ev){
                     echap(actif.r !== undefined && actif.r !== null
                       ? PC.t('an.mar.actif.d', {p:anAmpleur(actif.r * 100, 1)})
                       : PC.t('an.mar.actif.dv', {p:PC.compact(actif.v)})));
+    }
+    /* ET LE MARCHE ENTIER. La tuile du dessus dit QUELLE ligne
+       s'agite ; celle-ci dit si c'est le marche. Volume du jour, donc
+       vingt-quatre heures seulement. */
+    if (R.agitation !== null && marH === '24h'){
+      m += anMesure('an.mar.agit', anAmpleur(R.agitation, 1),
+                    echap(PC.t('an.mar.agit.d')), '',
+                    anJauge(Math.min(100, R.agitation * 5)));
     }
     /* ET VOUS, SUR LA MEME PERIODE. La derniere tuile, parce que c'est
        elle qui relie ce bloc au suivant : on passait d'un marche a un
@@ -18559,6 +19011,19 @@ document.addEventListener('error', function(ev){
                     (ecT < 0 ? '\u2212' : '+') + anPoints(Math.abs(ecT)),
                     echap(PC.t('an.mar.taille.d')), '',
                     anBarre(Math.max(0, Math.min(100, 50 + ecT * 10))));
+    }
+    /* SOUS LEUR RECORD. La mediane : une ligne qui a perdu 95 % de
+       son plus haut tirerait une moyenne a elle seule. Et « au plus
+       haut » a ses propres mots — « − 0 % » n'est pas une mesure,
+       c'est une mesure mal arrondie. */
+    if (R.sommet !== null && R.sousN >= 4){
+      const auHaut = Math.abs(R.sommet) < 0.5;
+      m += anMesure('an.mar.rec',
+                    auHaut ? echap(PC.t('an.pos.sommet'))
+                           : '−' + anAmpleur(R.sommet, 0),
+                    echap(PC.t('an.mar.rec.d', {n:String(R.sousN)})),
+                    auHaut ? 'attention' : (Math.abs(R.sommet) >= 50 ? 'baisse' : ''),
+                    anBarre(Math.max(0, Math.min(100, 100 + R.sommet))));
     }
     m += anMesure('an.mar.fort', String(R.forts),
                   echap(PC.t('an.mar.fort.d', {n:String(R.forts)})),
@@ -21431,22 +21896,7 @@ document.addEventListener('error', function(ev){
           '<span class="tuile-cat__i" aria-hidden="true">' + TUILES[c].icone + '</span>' +
           '<span class="tuile-cat__n">' + echap(nomCat(c)) + '</span>' +
         '</button>';
-      }).join('') +
-      /* UN CREDIT N'EST PAS UNE CATEGORIE D'ACTIF, mais c'est la
-         meme question — « que voulez-vous ajouter ? » — et c'est ici
-         qu'on vient y repondre. Le separer dans un coin du tableau de
-         bord revenait a le cacher : il fallait savoir qu'il existait
-         pour le trouver.
-
-         Il ne rejoint pas CATEGORIES pour autant : un pret n'a ni
-         cours, ni part dans la repartition, ni plus-value, et le
-         glisser dans la liste des actifs aurait fausse les sept
-         endroits qui la parcourent. Il est en queue de grille,
-         marque, et son clic part ailleurs. */
-      '<button class="tuile-cat tuile-cat--dette" type="button" data-tuile="__pret">' +
-        '<span class="tuile-cat__i" aria-hidden="true">\ud83c\udfe6</span>' +
-        '<span class="tuile-cat__n">' + echap(PC.t('pr.tuile')) + '</span>' +
-      '</button>';
+      }).join('');
   }
 
   /* Peint la liste de l'etape 2. */
@@ -21961,13 +22411,35 @@ document.addEventListener('error', function(ev){
       });
       return {d:jourISO(d), val:val, inv:inv, lignes:lignes};
     });
+    /* ===== ET UN CREDIT SUR L'APPARTEMENT =====
+       L'exemple montrait sept actifs et aucune dette. Or presque
+       personne n'achete un appartement comptant : l'exemple etait
+       donc faux sur le point qui compte, et surtout il laissait
+       croire que la page ne sait pas suivre un credit — « les credits,
+       je ne les vois pas » est exactement ca. Il en porte un
+       desormais, et l'onglet des credits de l'analyse s'ouvre avec.
+
+       LA DATE EST RELATIVE, jamais ecrite en dur : un exemple date de
+       2021 montrerait dans dix ans un pret solde depuis longtemps, et
+       un pret solde ne montre rien. Cinquante et un mois en arriere
+       sur deux cent quarante : un cinquieme du chemin, de quoi voir
+       une barre d'avancement qui a commence sans etre finie. */
+    const dep = new Date();
+    dep.setMonth(dep.getMonth() - 51);
+    dettes = [{id:neufId(), nom:PC.t('e.ex.pret.n'),
+               capital:PC.enDevise(54000), mois:240, taux:3.1,
+               depuis:jourISO(dep)}];
     ecrire(); rendre();
     dire(PC.t('e.msg.exemple'));
   });
 
   document.getElementById('vider').addEventListener('click', function(){
     if (!actifs.length){ dire(PC.t('e.msg.rien')); return; }
-    actifs = []; historique = []; ecrire(); rendre(); dire(PC.t('e.msg.efface'));
+    /* Les dettes partent avec : un credit qui survit a « tout
+       effacer » n'est pas un oubli de detail, c'est un chiffre faux
+       qui reste. */
+    actifs = []; historique = []; dettes = [];
+    ecrire(); rendre(); dire(PC.t('e.msg.efface'));
   });
 
   /* Un lien de téléchargement ne fonctionne pas dans le cadre où cette

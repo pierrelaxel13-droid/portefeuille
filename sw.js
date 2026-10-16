@@ -12,7 +12,7 @@
    Les chiffres du client ne passent jamais par ici : ils vivent dans
    le stockage local du navigateur, que ce fichier ne touche pas. */
 
-const VERSION = 'pierrelco-portefeuille-261015.0844';
+const VERSION = 'pierrelco-portefeuille-261016.1615';
 const COQUILLE = [
   './',
   './index.html',
@@ -64,17 +64,33 @@ self.addEventListener('fetch', function(e){
      les derniers titres connus plutôt que rien, et c'est le bon
      comportement pour une application installée. */
   if (/\/actu\.json(\?|$)/.test(req.url)){
+    /* LA PAGE DEMANDE « actu.json?t=NNNN », ou NNNN est le quart
+       d'heure en cours : sans ca, GitHub Pages servirait sa copie
+       pendant dix minutes. Mais l'adresse change donc quatre fois par
+       heure, et le cache est indexe sur l'adresse ENTIERE.
+
+       Deux defauts en decoulaient, et le commentaire ci-dessus
+       promettait le contraire de ce qui se passait :
+       — hors ligne, « caches.match(req) » ne retrouvait jamais rien,
+         puisque le « t » du moment n'avait jamais ete mis en cache.
+         La rubrique tombait sur « {} », c'est-a-dire sur rien.
+       — et chaque quart d'heure visite laissait une entree de plus,
+         qui ne servirait plus jamais.
+
+       On range donc sous une adresse SANS le « t », et on relit la
+       meme. Une seule entree, et elle se retrouve. */
+    const CANON = new URL('actu.json', self.location).href;
     e.respondWith(
       fetch(req)
         .then(function(rep){
           if (rep && rep.status === 200){
             const copie = rep.clone();
-            caches.open(VERSION).then(function(c){ c.put(req, copie); });
+            caches.open(VERSION).then(function(c){ c.put(CANON, copie); });
           }
           return rep;
         })
         .catch(function(){
-          return caches.match(req).then(function(r){
+          return caches.match(CANON).then(function(r){
             return r || new Response('{}', {headers:{'Content-Type':'application/json'}});
           });
         })
@@ -86,8 +102,16 @@ self.addEventListener('fetch', function(e){
     e.respondWith(
       fetch(req)
         .then(function(rep){
-          const copie = rep.clone();
-          caches.open(VERSION).then(function(c){ c.put(req, copie); });
+          /* ON NE GARDE QU'UNE REPONSE QUI VA BIEN. Sans ce test, une
+             page d'erreur — 404, 502, une page de maintenance de
+             l'hebergeur — etait mise en cache A LA PLACE de
+             l'application, et servie ensuite hors ligne a chaque
+             ouverture. Les deux autres branches le verifiaient deja ;
+             celle-ci, non. */
+          if (rep && rep.status === 200){
+            const copie = rep.clone();
+            caches.open(VERSION).then(function(c){ c.put(req, copie); });
+          }
           return rep;
         })
         .catch(function(){
