@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.PC_VERSION = "261016.1615";</script>
+<script>window.PC_VERSION = "261016.1900";</script>
 </head>
 <body>
 
@@ -3169,6 +3169,13 @@ body.vue-espace main, body.vue-espace .site-foot{display:none;}
    moins sur douze cases font une demi-page. */
 @media (max-width:620px){
   .an-m{padding:10px 12px 12px;}
+  /* ET LES CASES DE L'ESPACE AUSSI. « .espace .an-m » porte deux
+     classes, la regle du dessus une seule : les grilles du
+     portefeuille gardaient donc leurs quinze pixels sur telephone, et
+     l'economie annoncee juste au-dessus ne s'y appliquait pas. Sur
+     vingt cases rangees deux par rangee, les trois pixels font bien
+     la demi-page promise. */
+  .espace .an-m{padding:10px 12px 11px;}
   .an-m__v{margin:4px 0 1px;}
   .an-m__d{font-size:12px; line-height:1.45;}
 }
@@ -7149,6 +7156,18 @@ window.PC = (function(){
   'an.mar.h.30j':         ["30 j", "30d", "30 d", "30 T."],
   'an.mar.disp.k':        ["Dispersion", "Dispersion", "Dispersión", "Streuung"],
   'an.mar.disp.d':        ["Autour d'une moyenne de {{m}}.", "Around an average of {{m}}.", "En torno a una media de {{m}}.", "Um einen Mittelwert von {{m}}."],
+  /* --- Deux indicateurs qui viennent du dehors --- */
+  'an.mar.peur.k':        ["Indice de peur et d'avidité", "Fear and greed index", "Índice de miedo y codicia", "Angst-und-Gier-Index"],
+  'an.mar.peur.tpeur':    ["Peur extrême.", "Extreme fear.", "Miedo extremo.", "Extreme Angst."],
+  'an.mar.peur.peur':     ["Peur.", "Fear.", "Miedo.", "Angst."],
+  'an.mar.peur.neutre':   ["Neutre.", "Neutral.", "Neutral.", "Neutral."],
+  'an.mar.peur.avid':     ["Avidité.", "Greed.", "Codicia.", "Gier."],
+  'an.mar.peur.tavid':    ["Avidité extrême.", "Extreme greed.", "Codicia extrema.", "Extreme Gier."],
+  'an.mar.peur.d':        ["Hier {{h}}, il y a un mois {{m}}.", "Yesterday {{h}}, a month ago {{m}}.", "Ayer {{h}}, hace un mes {{m}}.", "Gestern {{h}}, vor einem Monat {{m}}."],
+  'an.mar.peur.d1':       ["Hier {{h}}.", "Yesterday {{h}}.", "Ayer {{h}}.", "Gestern {{h}}."],
+  'an.mar.btc.k':         ["La part du bitcoin", "Bitcoin's share", "La parte del bitcoin", "Bitcoins Anteil"],
+  'an.mar.btc.d':         ["Capitalisation mondiale {{c}}, {{v}} sur 24 h.", "World capitalisation {{c}}, {{v}} over 24h.", "Capitalización mundial {{c}}, {{v}} en 24 h.", "Weltkapitalisierung {{c}}, {{v}} über 24 Std."],
+  'an.mar.btc.d1':        ["Capitalisation mondiale {{c}}.", "World capitalisation {{c}}.", "Capitalización mundial {{c}}.", "Weltkapitalisierung {{c}}."],
   'an.mar.amp.k':         ["L'ampleur du mouvement", "How much things moved", "La amplitud del movimiento", "Das Ausmaß der Bewegung"],
   'an.mar.amp.d':         ["Sens confondus : une hausse de 3 % et une baisse de 3 % comptent pareil.", "Direction ignored: up 3% and down 3% count the same.", "Sin distinguir el sentido: +3 % y −3 % cuentan igual.", "Ohne Richtung: +3 % und −3 % zählen gleich."],
   'an.mar.bat.k':         ["Mieux que le marché", "Beating the market", "Mejor que el mercado", "Besser als der Markt"],
@@ -7239,6 +7258,25 @@ window.PC = (function(){
   'an.moi.bouge.k':  ["Fait par le marché","Done by the market","Hecho por el mercado","Vom Markt bewirkt"],
   'an.moi.sens.k':   ["Jours en hausse","Days up","Días al alza","Tage im Plus"],
   'an.moi.sens.d':   ["{{h}} jours sur {{n}} mesurés","{{h}} days out of {{n}} measured","{{h}} días de {{n}} medidos","{{h}} von {{n}} gemessenen Tagen"],
+  /* --- Trois indicateurs nommes, sur vos propres chiffres --- */
+  'an.moi.hhi.k':    ["Vos lignes, à parts égales","Your holdings, evenly weighted","Sus líneas, a partes iguales","Ihre Positionen, gleich gewichtet"],
+  'an.moi.hhi.d':    ["Indice de concentration {{i}}. Vos {{n}} lignes pèsent comme ce nombre de lignes égales.","Concentration index {{i}}. Your {{n}} holdings weigh like that many equal ones.","Índice de concentración {{i}}. Sus {{n}} líneas pesan como ese número de líneas iguales.","Konzentrationsindex {{i}}. Ihre {{n}} Positionen wiegen wie so viele gleich große."],
+  'an.moi.rsi.k':    ["RSI (14 séances)","RSI (14 sessions)","RSI (14 sesiones)","RSI (14 Sitzungen)"],
+  'an.moi.rsi.d':    ["Au-dessus de 70, on a beaucoup monté sans respirer ; sous 30, l'inverse. Ni l'un ni l'autre ne dit ce qui suit.","Above 70, a long climb without a pause; below 30, the opposite. Neither says what comes next.","Por encima de 70, mucha subida sin respiro; por debajo de 30, lo contrario. Ninguno dice lo que viene después.","Über 70 ein langer Anstieg ohne Pause, unter 30 das Gegenteil. Keines sagt, was danach kommt."],
+  'an.moi.meil.k':   ["La meilleure séance","The best session","La mejor sesión","Der beste Handelstag"],
+  'an.moi.som.k':    ["Jours depuis votre sommet","Days since your peak","Días desde su máximo","Tage seit Ihrem Höchststand"],
+  'an.moi.som.d':    ["Votre plus haut date du {{j}}, et vous ne l'avez pas revu depuis.","Your high dates from {{j}}, and you have not seen it since.","Su máximo es del {{j}}, y no lo ha vuelto a ver desde entonces.","Ihr Hoch stammt vom {{j}}, und Sie haben es seitdem nicht wiedergesehen."],
+  'an.moi.som.d0':   ["Vous y êtes aujourd'hui.","You are there today.","Hoy está en él.","Sie sind heute dort."],
+  'an.moi.cal.k':    ["Rendement par unité de pire recul","Return per unit of worst fall","Rendimiento por unidad de peor caída","Ertrag je Einheit des schlimmsten Rückgangs"],
+  'an.moi.cal.d':    ["{{r}} par an pour un pire recul de {{v}}.","{{r}} a year for a worst fall of {{v}}.","{{r}} al año para una peor caída de {{v}}.","{{r}} pro Jahr bei einem schlimmsten Rückgang von {{v}}."],
+  'an.moi.pire.k':   ["La pire séance","The worst session","La peor sesión","Der schlechteste Handelstag"],
+  'an.moi.pire.d':   ["Le {{j}}.","On {{j}}.","El {{j}}.","Am {{j}}."],
+  'an.moi.var.k':    ["Une séance sur vingt","One session in twenty","Una sesión de cada veinte","Einer von zwanzig Handelstagen"],
+  'an.moi.var.d':    ["Une séance sur vingt a fait au moins cela, sur les {{n}} mesurées. Ce n'est pas le pire : c'est l'ordinaire des mauvais jours.","One session in twenty did at least that, out of the {{n}} measured. It is not the worst: it is what a bad day ordinarily looks like.","Una sesión de cada veinte hizo al menos eso, de las {{n}} medidas. No es la peor: es lo corriente de los días malos.","Einer von zwanzig Handelstagen schaffte mindestens das, von {{n}} gemessenen. Es ist nicht der schlimmste: es ist das Übliche an schlechten Tagen."],
+  'an.moi.pos.k':    ["Où vous en êtes dans l'année","Where you stand in the year","Dónde está en el año","Wo Sie im Jahr stehen"],
+  'an.moi.pos.d':    ["0 % au plus bas de la période ({{a}}), 100 % au plus haut ({{b}}).","0% at the period's low ({{a}}), 100% at its high ({{b}}).","0 % en el mínimo del periodo ({{a}}), 100 % en el máximo ({{b}}).","0 % am Tief des Zeitraums ({{a}}), 100 % am Hoch ({{b}})."],
+  'an.moi.rr.k':     ["Rendement par unité de risque","Return per unit of risk","Rendimiento por unidad de riesgo","Ertrag je Risikoeinheit"],
+  'an.moi.rr.d':     ["{{r}} par an pour {{v}} d'amplitude.","{{r}} a year for {{v}} of swing.","{{r}} al año para {{v}} de amplitud.","{{r}} pro Jahr bei {{v}} Schwankung."],
   'an.moi.jours':    ["sur {{n}} jours","over {{n}} days","en {{n}} días","über {{n}} Tage"],
   'an.div.t':        ["Ce que votre répartition vous rend","What your spread gives back","Lo que le devuelve su reparto","Was Ihre Aufteilung einbringt"],
   'an.div.vol.k':    ["Amplitude de l'ensemble","How much the whole moves","Amplitud del conjunto","Schwankung des Ganzen"],
@@ -7249,8 +7287,8 @@ window.PC = (function(){
   'an.div.pire.d':   ["{{q}}, la plus touchée, perdait {{r}}","{{q}}, the hardest hit, lost {{r}}","{{q}}, la más afectada, perdía un {{r}}","{{q}}, die am stärksten betroffene, verlor {{r}}"],
   'an.div.seances':  ["{{n}} séances communes","{{n}} shared sessions","{{n}} sesiones comunes","{{n}} gemeinsame Handelstage"],
   'an.aide':         ["Comment lire ces chiffres","How to read these figures","Cómo leer estas cifras","Wie diese Zahlen zu lesen sind"],
-  'an.aide.mar':     ["<p><b>La moyenne</b> est celle des variations, chaque valeur comptant pour une. Elle dit l'humeur du marché, pas la performance d'un indice, qui pondère par la taille des entreprises.</p><p><b>Le nombre de hausses</b> dit si le mouvement est général ou tenu par deux ou trois valeurs. Dix hausses sur vingt-quatre pendant que la moyenne monte, c'est une hausse portée par peu de monde.</p><p><b>La dispersion</b> se compte en points de pourcentage, pas en pourcent. C'est l'écart type des variations : grande, le marché trie ; petite, il bouge en bloc. Elle compte TOUTES les valeurs, là où l'écart entre la meilleure et la pire n'en connaît que deux — et triple dès qu'une seule s'affole.</p><p><b>Les périodes dans le même sens</b> regardent les trois à la fois. Trois sur trois, c'est une tendance ; deux sur trois, un retournement en cours, et le détail dit lequel des trois ne suit pas.</p><p><b>Le rythme de la semaine</b> compare les sept derniers jours au rythme moyen du mois, ramené à sept jours. Au-dessus de zéro, le mouvement s'accélère ; en dessous, il s'essouffle. Il ne dit pas le sens, seulement la vitesse.</p><p><b>Vos lignes, sur la période</b> comparent ce qu'ont fait vos lignes suivies par ces cotations à la moyenne ci-dessus. Elles y sont pondérées par leur montant : c'est ce que votre argent a fait, et non ce qu'a fait la ligne moyenne de votre liste.</p>", "<p><b>The average</b> is the average of the moves, each security counting once. It tells you the mood of the market, not the performance of an index, which weights by company size.</p><p><b>The number rising</b> tells you whether the move is broad or carried by two or three securities. Ten rising out of twenty-four while the average climbs is a rise held up by very few.</p><p><b>The dispersion</b> is counted in percentage points, not in percent. It is the standard deviation of the moves: wide, the market is sorting; narrow, it moves as a block. It counts EVERY security, where the gap between best and worst knows only two — and triples the moment one of them runs wild.</p><p><b>Periods pointing the same way</b> looks at all three at once. Three out of three is a trend; two out of three, a turn in progress, and the detail says which one is out of step.</p><p><b>This week's pace</b> compares the last seven days with the monthly pace brought back to seven days. Above zero the move is speeding up; below, it is running out of breath. It says nothing about direction, only speed.</p><p><b>Your holdings, over the period</b> compares what your holdings quoted here have done with the average above. They are weighted by their amount: it is what your money did, not what the average line of your list did.</p>", "<p><b>La media</b> es la de las variaciones, contando cada valor una vez. Dice el ánimo del mercado, no el rendimiento de un índice, que pondera por el tamaño de las empresas.</p><p><b>El número de subidas</b> dice si el movimiento es general o lo sostienen dos o tres valores. Diez subidas de veinticuatro mientras la media sube es una subida sostenida por pocos.</p><p><b>La dispersión</b> se cuenta en puntos porcentuales, no en por ciento. Es la desviación típica de las variaciones: grande, el mercado separa; pequeña, se mueve en bloque. Cuenta TODOS los valores, mientras que la horquilla entre el mejor y el peor solo conoce dos — y se triplica en cuanto uno se dispara.</p><p><b>Periodos en el mismo sentido</b> mira los tres a la vez. Tres de tres es una tendencia; dos de tres, un giro en curso, y el detalle dice cuál de los tres no sigue.</p><p><b>El ritmo de la semana</b> compara los últimos siete días con el ritmo medio del mes, reducido a siete días. Por encima de cero el movimiento se acelera; por debajo, se queda sin fuelle. No dice el sentido, solo la velocidad.</p><p><b>Sus líneas, en el periodo</b> comparan lo que han hecho sus líneas cotizadas aquí con la media de arriba. Están ponderadas por su importe: es lo que ha hecho su dinero, no lo que ha hecho la línea media de su lista.</p>", "<p><b>Der Durchschnitt</b> ist der der Veränderungen, jeder Wert zählt einmal. Er sagt die Stimmung des Marktes, nicht die Entwicklung eines Index, der nach Unternehmensgröße gewichtet.</p><p><b>Die Zahl der Gewinner</b> sagt, ob die Bewegung breit ist oder von zwei, drei Werten getragen wird. Zehn Gewinner von vierundzwanzig bei steigendem Durchschnitt ist ein Anstieg, den wenige tragen.</p><p><b>Die Streuung</b> zählt in Prozentpunkten, nicht in Prozent. Sie ist die Standardabweichung der Veränderungen: groß, der Markt sortiert; klein, er bewegt sich als Block. Sie zählt ALLE Werte, während die Spanne zwischen bestem und schlechtestem nur zwei kennt — und sich verdreifacht, sobald einer ausbricht.</p><p><b>Zeiträume in gleicher Richtung</b> betrachtet alle drei zugleich. Drei von drei ist ein Trend; zwei von drei eine laufende Wende, und das Detail nennt den, der nicht mitgeht.</p><p><b>Das Tempo der Woche</b> vergleicht die letzten sieben Tage mit dem Monatstempo, auf sieben Tage gerechnet. Über null beschleunigt die Bewegung; darunter läuft sie aus. Es sagt nichts über die Richtung, nur über das Tempo.</p><p><b>Ihre Positionen im Zeitraum</b> vergleichen, was Ihre hier notierten Positionen getan haben, mit dem Durchschnitt oben. Sie sind nach ihrem Betrag gewichtet: es ist das, was Ihr Geld getan hat, nicht die durchschnittliche Zeile Ihrer Liste.</p>"],
-  'an.aide.moi':     ["<p><b>L'amplitude</b>, ou volatilité, mesure de combien votre total s'écarte de sa moyenne, ramenée à l'année. Trente pour cent veut dire qu'une année ordinaire le fait passer trente pour cent au-dessus ou au-dessous : dans les deux sens, et ce n'est pas une prévision.</p><p><b>Le pire recul</b> est la plus forte chute depuis un sommet, et non l'écart entre le plus haut et le plus bas de l'année. Si le plus bas précède le plus haut, cette chute-là n'a jamais existé. C'est ce qu'il a fallu traverser.</p><p><b>Versé</b> et <b>fait par le marché</b> séparent les deux raisons qu'un total a de monter. Un total qui gagne dix mille euros parce qu'on y a versé dix mille euros n'a rien gagné : c'est la confusion la plus courante, et aucun relevé de banque ne la lève.</p><p><b>La part suivie par un cours</b> dit ce que valent les mesures ci-dessus. Sur un portefeuille dont les trois quarts sont un appartement, une amplitude reste juste — mais sur le quart restant seulement.</p>","<p><b>How much it moves</b>, or volatility, measures how far your total strays from its average, scaled to a year. Thirty percent means an ordinary year takes it thirty percent above or below: both ways, and it is not a forecast.</p><p><b>The worst fall</b> is the largest drop from a peak, not the gap between the year's high and low. If the low comes before the high, that drop never existed. This is what had to be lived through.</p><p><b>Paid in</b> and <b>done by the market</b> separate the two reasons a total has for rising. A total that gains ten thousand because ten thousand was paid into it has gained nothing: it is the commonest confusion, and no bank statement clears it up.</p><p><b>The share followed by a price</b> tells you what the figures above are worth. On a portfolio three quarters of which is a flat, a volatility stays correct — but only on the remaining quarter.</p>","<p><b>La amplitud</b>, o volatilidad, mide cuánto se aparta su total de su media, llevada al año. Treinta por ciento quiere decir que un año corriente lo lleva treinta por ciento por encima o por debajo: en los dos sentidos, y no es una previsión.</p><p><b>La peor caída</b> es el mayor descenso desde un máximo, no la diferencia entre el máximo y el mínimo del año. Si el mínimo precede al máximo, esa caída nunca existió. Es lo que hubo que atravesar.</p><p><b>Aportado</b> y <b>hecho por el mercado</b> separan las dos razones que tiene un total para subir. Un total que gana diez mil euros porque se le han aportado diez mil euros no ha ganado nada: es la confusión más común, y ningún extracto bancario la deshace.</p><p><b>La parte seguida por una cotización</b> dice lo que valen las cifras de arriba. En una cartera de la que tres cuartos son un piso, una volatilidad sigue siendo correcta — pero solo sobre el cuarto restante.</p>","<p><b>Die Schwankung</b>, oder Volatilität, misst, wie weit Ihr Gesamtwert von seinem Durchschnitt abweicht, auf das Jahr gerechnet. Dreißig Prozent heißt, ein gewöhnliches Jahr bringt ihn dreißig Prozent darüber oder darunter: in beide Richtungen, und es ist keine Prognose.</p><p><b>Der schlimmste Rückgang</b> ist der größte Fall von einem Hoch, nicht die Spanne zwischen Jahreshoch und Jahrestief. Liegt das Tief vor dem Hoch, hat dieser Fall nie existiert. Das ist, was durchzustehen war.</p><p><b>Eingezahlt</b> und <b>vom Markt bewirkt</b> trennen die zwei Gründe, aus denen ein Gesamtwert steigt. Ein Gesamtwert, der zehntausend gewinnt, weil zehntausend eingezahlt wurden, hat nichts gewonnen: das ist die häufigste Verwechslung, und kein Kontoauszug klärt sie auf.</p><p><b>Der Anteil mit Marktkurs</b> sagt, was die Zahlen oben wert sind. Bei einem Portfolio, das zu drei Vierteln eine Wohnung ist, bleibt eine Volatilität richtig — aber nur auf dem restlichen Viertel.</p>"],
+  'an.aide.mar':     ["<p><b>La moyenne</b> est celle des variations, chaque valeur comptant pour une. Elle dit l'humeur du marché, pas la performance d'un indice, qui pondère par la taille des entreprises.</p><p><b>L'indice de peur et d'avidité</b> ne vient pas de cette page : il est publié chaque jour par alternative.me, qui agrège volatilité, volume, dominance et recherches. De 0 à 100 — sous 25 la peur extrême, au-dessus de 75 l'avidité extrême. Il décrit l'humeur du marché, pas sa direction : la peur extrême a précédé des hausses comme des baisses.</p><p><b>La part du bitcoin</b> est sa capitalisation rapportée à celle de toutes les cryptos. Elle monte quand on se replie sur la plus grosse, et descend quand on part chercher ailleurs : c'est le meilleur indicateur du goût du risque à l'intérieur du marché. Ces deux chiffres ne valent que pour les cryptos ; pour la bourse, l'équivalent est le VIX, et il demandera le relais.</p><p><b>Le nombre de hausses</b> dit si le mouvement est général ou tenu par deux ou trois valeurs. Dix hausses sur vingt-quatre pendant que la moyenne monte, c'est une hausse portée par peu de monde.</p><p><b>La dispersion</b> se compte en points de pourcentage, pas en pourcent. C'est l'écart type des variations : grande, le marché trie ; petite, il bouge en bloc. Elle compte TOUTES les valeurs, là où l'écart entre la meilleure et la pire n'en connaît que deux — et triple dès qu'une seule s'affole.</p><p><b>Les périodes dans le même sens</b> regardent les trois à la fois. Trois sur trois, c'est une tendance ; deux sur trois, un retournement en cours, et le détail dit lequel des trois ne suit pas.</p><p><b>Le rythme de la semaine</b> compare les sept derniers jours au rythme moyen du mois, ramené à sept jours. Au-dessus de zéro, le mouvement s'accélère ; en dessous, il s'essouffle. Il ne dit pas le sens, seulement la vitesse.</p><p><b>Vos lignes, sur la période</b> comparent ce qu'ont fait vos lignes suivies par ces cotations à la moyenne ci-dessus. Elles y sont pondérées par leur montant : c'est ce que votre argent a fait, et non ce qu'a fait la ligne moyenne de votre liste.</p>", "<p><b>The average</b> is the average of the moves, each security counting once. It tells you the mood of the market, not the performance of an index, which weights by company size.</p><p><b>The fear and greed index</b> does not come from this page: it is published daily by alternative.me, which blends volatility, volume, dominance and searches. From 0 to 100 — below 25 extreme fear, above 75 extreme greed. It describes the market's mood, not its direction: extreme fear has preceded rises as well as falls.</p><p><b>Bitcoin's share</b> is its capitalisation against that of every crypto. It rises when money falls back on the largest, and falls when it goes looking elsewhere: it is the best gauge of appetite for risk inside the market. These two figures hold for cryptos only; for shares the equivalent is the VIX, and it will need the relay.</p><p><b>The number rising</b> tells you whether the move is broad or carried by two or three securities. Ten rising out of twenty-four while the average climbs is a rise held up by very few.</p><p><b>The dispersion</b> is counted in percentage points, not in percent. It is the standard deviation of the moves: wide, the market is sorting; narrow, it moves as a block. It counts EVERY security, where the gap between best and worst knows only two — and triples the moment one of them runs wild.</p><p><b>Periods pointing the same way</b> looks at all three at once. Three out of three is a trend; two out of three, a turn in progress, and the detail says which one is out of step.</p><p><b>This week's pace</b> compares the last seven days with the monthly pace brought back to seven days. Above zero the move is speeding up; below, it is running out of breath. It says nothing about direction, only speed.</p><p><b>Your holdings, over the period</b> compares what your holdings quoted here have done with the average above. They are weighted by their amount: it is what your money did, not what the average line of your list did.</p>", "<p><b>La media</b> es la de las variaciones, contando cada valor una vez. Dice el ánimo del mercado, no el rendimiento de un índice, que pondera por el tamaño de las empresas.</p><p><b>El índice de miedo y codicia</b> no viene de esta página: lo publica cada día alternative.me, que combina volatilidad, volumen, dominancia y búsquedas. De 0 a 100 — por debajo de 25 el miedo extremo, por encima de 75 la codicia extrema. Describe el ánimo del mercado, no su dirección: el miedo extremo ha precedido tanto subidas como caídas.</p><p><b>La parte del bitcoin</b> es su capitalización frente a la de todas las criptos. Sube cuando el dinero se repliega sobre la mayor, y baja cuando va a buscar a otra parte: es el mejor indicador del apetito de riesgo dentro del mercado. Estas dos cifras solo valen para las criptos; para la bolsa el equivalente es el VIX, y necesitará el relé.</p><p><b>El número de subidas</b> dice si el movimiento es general o lo sostienen dos o tres valores. Diez subidas de veinticuatro mientras la media sube es una subida sostenida por pocos.</p><p><b>La dispersión</b> se cuenta en puntos porcentuales, no en por ciento. Es la desviación típica de las variaciones: grande, el mercado separa; pequeña, se mueve en bloque. Cuenta TODOS los valores, mientras que la horquilla entre el mejor y el peor solo conoce dos — y se triplica en cuanto uno se dispara.</p><p><b>Periodos en el mismo sentido</b> mira los tres a la vez. Tres de tres es una tendencia; dos de tres, un giro en curso, y el detalle dice cuál de los tres no sigue.</p><p><b>El ritmo de la semana</b> compara los últimos siete días con el ritmo medio del mes, reducido a siete días. Por encima de cero el movimiento se acelera; por debajo, se queda sin fuelle. No dice el sentido, solo la velocidad.</p><p><b>Sus líneas, en el periodo</b> comparan lo que han hecho sus líneas cotizadas aquí con la media de arriba. Están ponderadas por su importe: es lo que ha hecho su dinero, no lo que ha hecho la línea media de su lista.</p>", "<p><b>Der Durchschnitt</b> ist der der Veränderungen, jeder Wert zählt einmal. Er sagt die Stimmung des Marktes, nicht die Entwicklung eines Index, der nach Unternehmensgröße gewichtet.</p><p><b>Der Angst-und-Gier-Index</b> kommt nicht von dieser Seite: er wird täglich von alternative.me veröffentlicht, das Volatilität, Volumen, Dominanz und Suchanfragen zusammenfasst. Von 0 bis 100 — unter 25 extreme Angst, über 75 extreme Gier. Er beschreibt die Stimmung des Marktes, nicht seine Richtung: extreme Angst ging sowohl Anstiegen als auch Rückgängen voraus.</p><p><b>Bitcoins Anteil</b> ist seine Kapitalisierung gemessen an der aller Kryptos. Er steigt, wenn man sich auf den Größten zurückzieht, und fällt, wenn man woanders sucht: er ist der beste Hinweis auf die Risikoneigung innerhalb des Marktes. Diese zwei Zahlen gelten nur für Kryptos; für die Börse ist das Gegenstück der VIX, und er wird den Relais brauchen.</p><p><b>Die Zahl der Gewinner</b> sagt, ob die Bewegung breit ist oder von zwei, drei Werten getragen wird. Zehn Gewinner von vierundzwanzig bei steigendem Durchschnitt ist ein Anstieg, den wenige tragen.</p><p><b>Die Streuung</b> zählt in Prozentpunkten, nicht in Prozent. Sie ist die Standardabweichung der Veränderungen: groß, der Markt sortiert; klein, er bewegt sich als Block. Sie zählt ALLE Werte, während die Spanne zwischen bestem und schlechtestem nur zwei kennt — und sich verdreifacht, sobald einer ausbricht.</p><p><b>Zeiträume in gleicher Richtung</b> betrachtet alle drei zugleich. Drei von drei ist ein Trend; zwei von drei eine laufende Wende, und das Detail nennt den, der nicht mitgeht.</p><p><b>Das Tempo der Woche</b> vergleicht die letzten sieben Tage mit dem Monatstempo, auf sieben Tage gerechnet. Über null beschleunigt die Bewegung; darunter läuft sie aus. Es sagt nichts über die Richtung, nur über das Tempo.</p><p><b>Ihre Positionen im Zeitraum</b> vergleichen, was Ihre hier notierten Positionen getan haben, mit dem Durchschnitt oben. Sie sind nach ihrem Betrag gewichtet: es ist das, was Ihr Geld getan hat, nicht die durchschnittliche Zeile Ihrer Liste.</p>"],
+  'an.aide.moi':     ["<p><b>L'amplitude</b>, ou volatilité, mesure de combien votre total s'écarte de sa moyenne, ramenée à l'année. Trente pour cent veut dire qu'une année ordinaire le fait passer trente pour cent au-dessus ou au-dessous : dans les deux sens, et ce n'est pas une prévision.</p><p><b>Le pire recul</b> est la plus forte chute depuis un sommet, et non l'écart entre le plus haut et le plus bas de l'année. Si le plus bas précède le plus haut, cette chute-là n'a jamais existé. C'est ce qu'il a fallu traverser.</p><p><b>Versé</b> et <b>fait par le marché</b> séparent les deux raisons qu'un total a de monter. Un total qui gagne dix mille euros parce qu'on y a versé dix mille euros n'a rien gagné : c'est la confusion la plus courante, et aucun relevé de banque ne la lève.</p><p><b>Vos lignes à parts égales</b> est l'indice de Herfindahl, rendu sous sa seule forme lisible : le nombre de lignes de taille ÉGALE qui donnerait la même concentration. Sept lignes dont une pèse la moitié « valent » trois lignes. Au-dessus de 0,25 d'indice — soit moins de quatre lignes équivalentes — une seule décision pèse sur tout le reste.</p><p><b>Le RSI</b> compare la force des hausses à celle des baisses sur quatorze séances, ramenée entre 0 et 100, avec le lissage de Wilder — la définition d'origine, celle que calculent les autres. Il est ici calculé sur VOTRE total, et non sur un marché, et sur les rendements nets de vos versements : un virement de dix mille euros serait le plus gros écart de l'année et ne serait aucune hausse. Au-dessus de 70 on a beaucoup monté sans respirer, sous 30 l'inverse ; ni l'un ni l'autre ne dit ce qui suit.</p><p><b>Le rendement par unité de risque</b> divise ce que vous gagnez par an par l'amplitude de la même période. C'est un ratio de Sharpe sans le taux sans risque, qui demanderait une hypothèse de plus. Huit pour cent par an en bougeant de dix et huit pour cent en bougeant de quarante ne sont pas le même placement : au-dessus de 1, le risque pris a payé.</p><p><b>Le rendement par unité de pire recul</b> est le ratio de Calmar. Il pose la même question que le précédent avec un autre dénominateur : non pas la secousse ordinaire, mais le pire moment. Un portefeuille qui bouge peu et s'est effondré une fois a un bon premier ratio et un mauvais second — et c'est le second qu'on a traversé.</p><p><b>La pire séance</b> est la plus mauvaise journée de la fenêtre quotidienne, avec sa date. Elle se retient mieux qu'un écart-type, parce qu'elle a été vécue. <b>La meilleure</b> se lit juste à côté : n'en publier qu'une serait choisir ce qu'on montre.</p><p><b>Une séance sur vingt</b> est la valeur en risque : le cinquième centile des séances observées. L'amplitude dit la secousse ordinaire et se tait sur la queue ; celle-ci dit ce que font les mauvais jours ordinaires. Elle se mesure sur les séances réellement observées et non sur une loi normale, qui sous-estime précisément ce qu'on cherche.</p><p><b>Où vous en êtes dans l'année</b> place votre total entre le plus bas et le plus haut de la période, versements compris : ce sont les deux nombres qu'on a vus passer sur le relevé. Elle ne prédit rien, elle situe.</p><p><b>Les jours depuis votre sommet</b> datent ce que le pourcentage du dessus ne date pas : un plus haut d'avant-hier et un plus haut de l'an dernier ne sont pas la même nouvelle. C'est le sommet le plus récent qui est compté, celui que l'on attend de revoir.</p><p><b>La part suivie par un cours</b> dit ce que valent les mesures ci-dessus. Sur un portefeuille dont les trois quarts sont un appartement, une amplitude reste juste — mais sur le quart restant seulement.</p>","<p><b>How much it moves</b>, or volatility, measures how far your total strays from its average, scaled to a year. Thirty percent means an ordinary year takes it thirty percent above or below: both ways, and it is not a forecast.</p><p><b>The worst fall</b> is the largest drop from a peak, not the gap between the year's high and low. If the low comes before the high, that drop never existed. This is what had to be lived through.</p><p><b>Paid in</b> and <b>done by the market</b> separate the two reasons a total has for rising. A total that gains ten thousand because ten thousand was paid into it has gained nothing: it is the commonest confusion, and no bank statement clears it up.</p><p><b>Your holdings evenly weighted</b> is the Herfindahl index, given in its only readable form: the number of EQUAL-sized holdings that would give the same concentration. Seven holdings one of which weighs half « amount to » three. Above an index of 0.25 — fewer than four equivalent holdings — one decision bears on all the rest.</p><p><b>The RSI</b> compares the strength of the rises with that of the falls over fourteen sessions, scaled to 0–100, with Wilder's smoothing — the original definition, the one everyone else computes. Here it is computed on YOUR total, not on a market, and on returns net of your contributions: a ten-thousand transfer would be the year's largest move and would be no rise at all. Above 70, a long climb without a pause; below 30, the opposite; neither says what comes next.</p><p><b>Return per unit of risk</b> divides what you make a year by the swing over the same period. It is a Sharpe ratio without the risk-free rate, which would need one more assumption. Eight percent a year moving by ten and eight percent moving by forty are not the same investment: above 1, the risk taken has paid.</p><p><b>Return per unit of worst fall</b> is the Calmar ratio. It asks the same question as the one above with a different denominator: not the ordinary jolt, but the worst moment. A portfolio that moves little and collapsed once has a good first ratio and a bad second — and the second is the one that had to be lived through.</p><p><b>The worst session</b> is the worst single day of the daily window, with its date. It sticks in the mind better than a standard deviation, because it was lived through. <b>The best</b> is read right beside it: publishing only one would be choosing what to show.</p><p><b>One session in twenty</b> is value at risk: the fifth percentile of the sessions observed. Volatility tells you the ordinary jolt and says nothing about the tail; this says what an ordinary bad day does. It is measured on the sessions actually observed and not on a normal distribution, which underestimates exactly what is being looked for.</p><p><b>Where you stand in the year</b> places your total between the period's low and high, contributions included: those are the two figures that went past on the statement. It predicts nothing, it locates.</p><p><b>The days since your peak</b> date what the percentage above does not: a high from the day before yesterday and a high from last year are not the same news. The most recent peak is the one counted, the one you are waiting to see again.</p><p><b>The share followed by a price</b> tells you what the figures above are worth. On a portfolio three quarters of which is a flat, a volatility stays correct — but only on the remaining quarter.</p>","<p><b>La amplitud</b>, o volatilidad, mide cuánto se aparta su total de su media, llevada al año. Treinta por ciento quiere decir que un año corriente lo lleva treinta por ciento por encima o por debajo: en los dos sentidos, y no es una previsión.</p><p><b>La peor caída</b> es el mayor descenso desde un máximo, no la diferencia entre el máximo y el mínimo del año. Si el mínimo precede al máximo, esa caída nunca existió. Es lo que hubo que atravesar.</p><p><b>Aportado</b> y <b>hecho por el mercado</b> separan las dos razones que tiene un total para subir. Un total que gana diez mil euros porque se le han aportado diez mil euros no ha ganado nada: es la confusión más común, y ningún extracto bancario la deshace.</p><p><b>Sus líneas a partes iguales</b> es el índice de Herfindahl, dado en su única forma legible: el número de líneas de tamaño IGUAL que daría la misma concentración. Siete líneas de las que una pesa la mitad « valen » tres líneas. Por encima de 0,25 de índice — menos de cuatro líneas equivalentes — una sola decisión pesa sobre todo lo demás.</p><p><b>El RSI</b> compara la fuerza de las subidas con la de las bajadas en catorce sesiones, llevada entre 0 y 100, con el suavizado de Wilder — la definición original, la que calculan los demás. Aquí se calcula sobre SU total, no sobre un mercado, y sobre los rendimientos netos de sus aportaciones: una transferencia de diez mil euros sería la mayor diferencia del año y no sería ninguna subida. Por encima de 70 mucha subida sin respiro, por debajo de 30 lo contrario; ninguno dice lo que viene después.</p><p><b>El rendimiento por unidad de riesgo</b> divide lo que gana al año por la amplitud del mismo periodo. Es un ratio de Sharpe sin el tipo sin riesgo, que exigiría una hipótesis más. Ocho por ciento al año moviéndose diez y ocho por ciento moviéndose cuarenta no son la misma inversión: por encima de 1, el riesgo asumido ha pagado.</p><p><b>El rendimiento por unidad de peor caída</b> es el ratio de Calmar. Plantea la misma pregunta que el anterior con otro denominador: no la sacudida corriente, sino el peor momento. Una cartera que se mueve poco y se hundió una vez tiene un buen primer ratio y un mal segundo — y el segundo es el que hubo que atravesar.</p><p><b>La peor sesión</b> es el peor día de la ventana diaria, con su fecha. Se recuerda mejor que una desviación típica, porque se vivió. <b>La mejor</b> se lee justo al lado: publicar solo una sería elegir lo que se muestra.</p><p><b>Una sesión de cada veinte</b> es el valor en riesgo: el quinto percentil de las sesiones observadas. La amplitud dice la sacudida corriente y calla sobre la cola; esta dice lo que hacen los malos días corrientes. Se mide sobre las sesiones realmente observadas y no sobre una ley normal, que subestima precisamente lo que se busca.</p><p><b>Dónde está en el año</b> coloca su total entre el mínimo y el máximo del periodo, aportaciones incluidas: son las dos cifras que pasaron por el extracto. No predice nada, sitúa.</p><p><b>Los días desde su máximo</b> fechan lo que el porcentaje de arriba no fecha: un máximo de anteayer y un máximo del año pasado no son la misma noticia. Se cuenta el máximo más reciente, el que se espera volver a ver.</p><p><b>La parte seguida por una cotización</b> dice lo que valen las cifras de arriba. En una cartera de la que tres cuartos son un piso, una volatilidad sigue siendo correcta — pero solo sobre el cuarto restante.</p>","<p><b>Die Schwankung</b>, oder Volatilität, misst, wie weit Ihr Gesamtwert von seinem Durchschnitt abweicht, auf das Jahr gerechnet. Dreißig Prozent heißt, ein gewöhnliches Jahr bringt ihn dreißig Prozent darüber oder darunter: in beide Richtungen, und es ist keine Prognose.</p><p><b>Der schlimmste Rückgang</b> ist der größte Fall von einem Hoch, nicht die Spanne zwischen Jahreshoch und Jahrestief. Liegt das Tief vor dem Hoch, hat dieser Fall nie existiert. Das ist, was durchzustehen war.</p><p><b>Eingezahlt</b> und <b>vom Markt bewirkt</b> trennen die zwei Gründe, aus denen ein Gesamtwert steigt. Ein Gesamtwert, der zehntausend gewinnt, weil zehntausend eingezahlt wurden, hat nichts gewonnen: das ist die häufigste Verwechslung, und kein Kontoauszug klärt sie auf.</p><p><b>Ihre Positionen gleich gewichtet</b> ist der Herfindahl-Index, in seiner einzigen lesbaren Form: die Zahl GLEICH großer Positionen, die dieselbe Konzentration ergäbe. Sieben Positionen, von denen eine die Hälfte wiegt, « entsprechen » drei. Über einem Index von 0,25 — weniger als vier gleichwertige Positionen — lastet eine einzige Entscheidung auf allem anderen.</p><p><b>Der RSI</b> vergleicht die Stärke der Anstiege mit der der Rückgänge über vierzehn Handelstage, auf 0 bis 100 gebracht, mit Wilders Glättung — der ursprünglichen Definition, die auch alle anderen rechnen. Hier wird er auf IHREM Gesamtwert berechnet, nicht auf einem Markt, und auf den Renditen nach Abzug Ihrer Einzahlungen: eine Überweisung von zehntausend wäre der größte Abstand des Jahres und wäre kein Anstieg. Über 70 ein langer Anstieg ohne Pause, unter 30 das Gegenteil; keines sagt, was danach kommt.</p><p><b>Der Ertrag je Risikoeinheit</b> teilt, was Sie im Jahr verdienen, durch die Schwankung desselben Zeitraums. Es ist eine Sharpe-Ratio ohne risikolosen Zins, der eine weitere Annahme bräuchte. Acht Prozent im Jahr bei zehn Prozent Schwankung und acht Prozent bei vierzig sind nicht dieselbe Anlage: über 1 hat das eingegangene Risiko sich bezahlt.</p><p><b>Der Ertrag je Einheit des schlimmsten Rückgangs</b> ist die Calmar-Ratio. Sie stellt dieselbe Frage wie die vorige mit einem anderen Nenner: nicht den gewöhnlichen Stoß, sondern den schlimmsten Moment. Ein Portfolio, das sich wenig bewegt und einmal eingebrochen ist, hat eine gute erste und eine schlechte zweite Ratio — und die zweite ist die, die durchzustehen war.</p><p><b>Der schlechteste Handelstag</b> ist der schlimmste einzelne Tag des täglichen Zeitfensters, mit seinem Datum. Er bleibt besser im Gedächtnis als eine Standardabweichung, weil er erlebt wurde. <b>Der beste</b> steht direkt daneben: nur einen zu nennen hieße zu wählen, was man zeigt.</p><p><b>Einer von zwanzig Handelstagen</b> ist der Wert im Risiko: das fünfte Perzentil der beobachteten Handelstage. Die Schwankung nennt den gewöhnlichen Stoß und schweigt zum Rand der Verteilung; diese Zahl sagt, was ein gewöhnlicher schlechter Tag anrichtet. Sie wird auf den tatsächlich beobachteten Tagen gemessen und nicht auf einer Normalverteilung, die genau das unterschätzt, was gesucht wird.</p><p><b>Wo Sie im Jahr stehen</b> setzt Ihren Gesamtwert zwischen Tief und Hoch des Zeitraums, Einzahlungen eingeschlossen: das sind die zwei Zahlen, die auf dem Auszug vorbeigekommen sind. Sie sagt nichts voraus, sie ordnet ein.</p><p><b>Die Tage seit Ihrem Höchststand</b> datieren, was der Prozentsatz oben nicht datiert: ein Hoch von vorgestern und ein Hoch vom Vorjahr sind nicht dieselbe Nachricht. Gezählt wird das jüngste Hoch, das man wiederzusehen hofft.</p><p><b>Der Anteil mit Marktkurs</b> sagt, was die Zahlen oben wert sind. Bei einem Portfolio, das zu drei Vierteln eine Wohnung ist, bleibt eine Volatilität richtig — aber nur auf dem restlichen Viertel.</p>"],
   'an.aide.l':       ["<p><b>L'amplitude annualisée</b> part des variations d'un jour sur l'autre : on en prend l'écart-type, puis on le multiplie par la racine de 252, le nombre de séances d'une année boursière. Elle ne dit pas un sens, seulement une taille de secousse.</p><p><b>Le pire recul</b> suit le sommet atteint et mesure la plus grande chute depuis ce sommet, avec ses dates. Aucun recul du tout est une réponse, et c'est la plus forte qu'une série puisse rendre.</p><p><b>La position dans l'année</b> place le cours du jour entre son plus bas et son plus haut des douze mois. Elle ne prédit rien : elle situe.</p><p>Une ligne qui n'a pas de cours est mesurée sur <b>vos relevés datés</b>. Un recul et une position s'y lisent ; une amplitude annualisée, non — 252 est un nombre de séances, et en prendre la racine sur des écarts mensuels rendrait un chiffre environ trois fois trop grand.</p>","<p><b>Annualised volatility</b> starts from the day-to-day moves: take their standard deviation, then multiply by the square root of 252, the number of sessions in a market year. It gives no direction, only a size of jolt.</p><p><b>The worst fall</b> tracks the peak reached and measures the largest drop from that peak, with its dates. No fall at all is an answer, and the strongest a series can give.</p><p><b>The position in the year</b> places today's price between its twelve-month low and high. It predicts nothing: it locates.</p><p>A line with no market price is measured on <b>your dated statements</b>. A fall and a position can be read there; an annualised volatility cannot — 252 is a number of sessions, and taking its root on monthly gaps would return a figure about three times too large.</p>","<p><b>La amplitud anualizada</b> parte de las variaciones de un día a otro: se toma su desviación típica y se multiplica por la raíz de 252, el número de sesiones de un año bursátil. No da un sentido, solo un tamaño de sacudida.</p><p><b>La peor caída</b> sigue el máximo alcanzado y mide el mayor descenso desde ese máximo, con sus fechas. Ninguna caída es una respuesta, y la más fuerte que una serie puede dar.</p><p><b>La posición en el año</b> coloca la cotización de hoy entre su mínimo y su máximo de doce meses. No predice nada: sitúa.</p><p>Una línea sin cotización se mide sobre <b>sus extractos fechados</b>. Allí se leen una caída y una posición; una amplitud anualizada, no — 252 es un número de sesiones, y tomar su raíz sobre diferencias mensuales daría una cifra unas tres veces demasiado grande.</p>","<p><b>Die annualisierte Schwankung</b> geht von den Tagesveränderungen aus: man nimmt deren Standardabweichung und multipliziert sie mit der Wurzel aus 252, der Zahl der Handelstage eines Börsenjahres. Sie gibt keine Richtung, nur eine Größe des Stoßes.</p><p><b>Der schlimmste Rückgang</b> folgt dem erreichten Hoch und misst den größten Fall von diesem Hoch, mit seinen Daten. Gar kein Rückgang ist eine Antwort, und die stärkste, die eine Reihe geben kann.</p><p><b>Die Position im Jahr</b> setzt den heutigen Kurs zwischen sein Zwölfmonatstief und -hoch. Sie sagt nichts voraus: sie ordnet ein.</p><p>Eine Position ohne Marktkurs wird auf <b>Ihren datierten Auszügen</b> gemessen. Ein Rückgang und eine Position lassen sich dort lesen; eine annualisierte Schwankung nicht — 252 ist eine Zahl von Handelstagen, und ihre Wurzel auf Monatsabständen ergäbe eine etwa dreimal zu große Zahl.</p>"],
   'an.aide.cor':     ["<p><b>Un coefficient de corrélation</b> va de −1 à +1. À +1 les deux lignes montent et descendent exactement ensemble ; à 0 elles s'ignorent ; à −1 l'une monte quand l'autre descend.</p><p>Il se calcule sur les variations quotidiennes des <b>séances communes</b> seulement. Une crypto cote sept jours sur sept, une action cinq : aligner un lundi sur un dimanche rendrait un chiffre qui ne veut rien dire.</p><p>Ce qu'il sert à voir : <b>deux lignes au-dessus de 0,8 sont, en pratique, le même pari</b>. Les détenir toutes les deux vous expose deux fois au même risque sans rien diversifier — et c'est ce que le bloc « ce que votre répartition vous rend » chiffre en points.</p>","<p><b>A correlation coefficient</b> runs from −1 to +1. At +1 the two lines rise and fall exactly together; at 0 they ignore each other; at −1 one rises as the other falls.</p><p>It is computed on the daily moves of the <b>shared sessions</b> only. A crypto trades seven days a week, a share five: lining a Monday up against a Sunday would return a meaningless figure.</p><p>What it is for: <b>two lines above 0.8 are, in practice, the same bet</b>. Holding both exposes you twice to the same risk without diversifying anything — and that is what the block « what your spread gives back » puts a number on.</p>","<p><b>Un coeficiente de correlación</b> va de −1 a +1. En +1 las dos líneas suben y bajan exactamente juntas; en 0 se ignoran; en −1 una sube cuando la otra baja.</p><p>Se calcula sobre las variaciones diarias de las <b>sesiones comunes</b> únicamente. Una cripto cotiza siete días de siete, una acción cinco: alinear un lunes con un domingo daría una cifra sin sentido.</p><p>Para qué sirve: <b>dos líneas por encima de 0,8 son, en la práctica, la misma apuesta</b>. Tenerlas las dos le expone dos veces al mismo riesgo sin diversificar nada — y eso es lo que el bloque « lo que le devuelve su reparto » cifra en puntos.</p>","<p><b>Ein Korrelationskoeffizient</b> reicht von −1 bis +1. Bei +1 steigen und fallen die beiden Positionen genau gemeinsam; bei 0 ignorieren sie sich; bei −1 steigt die eine, wenn die andere fällt.</p><p>Er wird nur auf den Tagesveränderungen der <b>gemeinsamen Handelstage</b> berechnet. Eine Krypto notiert sieben Tage von sieben, eine Aktie fünf: einen Montag gegen einen Sonntag zu stellen ergäbe eine bedeutungslose Zahl.</p><p>Wozu er dient: <b>zwei Positionen über 0,8 sind in der Praxis dieselbe Wette</b>. Beide zu halten setzt Sie zweimal demselben Risiko aus, ohne etwas zu streuen — und genau das beziffert der Block « was Ihre Aufteilung einbringt » in Punkten.</p>"],
   'an.ia.d':         ["Un modèle de langage reprend les mesures ci-dessus, les marchés du jour et les titres de presse, et en écrit un commentaire. Les mesures, elles, sont calculées ici et ne passent par aucun modèle.","A language model takes the measurements above, the day's markets and the press headlines, and writes them up. The measurements themselves are computed here and go through no model.","Un modelo de lenguaje retoma las mediciones de arriba, los mercados del día y los titulares de prensa, y escribe un comentario. Las mediciones, en cambio, se calculan aquí y no pasan por ningún modelo.","Ein Sprachmodell nimmt die Messungen oben, die Märkte des Tages und die Presseschlagzeilen und schreibt einen Kommentar dazu. Die Messungen selbst werden hier berechnet und laufen durch kein Modell."],
@@ -17230,11 +17268,15 @@ document.addEventListener('error', function(ev){
     let h = null;
     try { h = historiqueComplet(); } catch (e){ return null; }
     if (!h || h.length < 3) return null;
-    const pts = [], inv = [], comp = [];
+    const pts = [], inv = [], comp = [], prov = [];
     h.forEach(function(r){
       const t = Date.parse(r.d + 'T00:00:00Z');
       if (isNaN(t) || !(r.val > 0)) return;
       pts.push([t, r.val]); inv.push(r.inv || 0);
+      /* D'OU VIENT LE POINT. releveCalcule marque les siens ; ce qui
+         n'est pas marque a ete declare. La difference entre les deux
+         n'est pas une variation de marche, et se soustrait plus bas. */
+      prov.push(r.calc ? 'c' : 'd');
       /* Quelles lignes comptaient ce jour-la. Voir plus bas : c'est
          ce qui permet de reconnaitre le jour ou une ligne entre. */
       comp.push(Object.keys(r.lignes || {}).sort().join('|'));
@@ -17246,7 +17288,8 @@ document.addEventListener('error', function(ev){
        franchir ferait passer un mois pour une seance. */
     let i0 = pts.length - 1;
     while (i0 > 0 && pts[i0][0] - pts[i0 - 1][0] <= 4 * JOUR_MS) i0--;
-    const q = pts.slice(i0), qi = inv.slice(i0), qc = comp.slice(i0);
+    const q = pts.slice(i0), qi = inv.slice(i0), qc = comp.slice(i0),
+          qp = prov.slice(i0);
     if (q.length < 3) return null;
     const der = q.length - 1;
 
@@ -17276,7 +17319,11 @@ document.addEventListener('error', function(ev){
     for (let i = 1; i < q.length; i++){
       const a = q[i - 1][1];
       if (!(a > 0)) continue;
-      if (qc[i] !== qc[i - 1]){ sautes++; continue; }
+      /* Changement de composition OU de provenance : dans les deux
+         cas, les deux bornes de la soustraction ne mesurent pas la
+         meme chose. Une seance par ligne et par bascule, sur trois
+         cent soixante. */
+      if (qc[i] !== qc[i - 1] || qp[i] !== qp[i - 1]){ sautes++; continue; }
       const flux = qi[i] - qi[i - 1];
       v.push({t:q[i][0], r:(q[i][1] - flux) / a - 1});
     }
@@ -17305,7 +17352,7 @@ document.addEventListener('error', function(ev){
     let cum = 1, nTout = 0;
     for (let i = 1; i < pts.length; i++){
       const a0 = pts[i - 1][1];
-      if (!(a0 > 0) || comp[i] !== comp[i - 1]) continue;
+      if (!(a0 > 0) || comp[i] !== comp[i - 1] || prov[i] !== prov[i - 1]) continue;
       const r = (pts[i][1] - (inv[i] - inv[i - 1])) / a0 - 1;
       /* Un point reconstitue peut sauter : une ligne dont la quantite
          a change, un relevé saisi a cote. Au-dela de +500 % ou de
@@ -17339,7 +17386,8 @@ document.addEventListener('error', function(ev){
        contre marche, exacte dans tous les cas — et on se tait sur
        l'amplitude et le recul, plutot que d'en publier une version
        qui aurait l'air d'une mesure. */
-    const mouvant = v.length >= 20 && monte > 0 && monte < v.length;
+    const partM = v.length ? monte / v.length : 0;
+    const mouvant = v.length >= 20 && partM > 0.15 && partM < 0.85;
     return {
       pts:q, v:v, debut:q[0][1], fin:q[der][1],
       jours:Math.max(1, Math.round((q[der][0] - q[0][0]) / JOUR_MS)),
@@ -18704,6 +18752,98 @@ document.addEventListener('error', function(ev){
     hote.innerHTML = m;
   }
 
+  /* ============================================================
+     DEUX INDICATEURS QUI NE SE CALCULENT PAS : ILS S'APPRENNENT
+     ------------------------------------------------------------
+     Tout ce que la grille du marche montre par ailleurs se deduit
+     des cours deja servis. Ces deux-la, non : ils existent dehors,
+     ils portent un nom, et d'autres les calculent de la meme facon.
+     C'est exactement ce qu'on demandait — « un indicateur, comme
+     l'indice de peur, qui se rajoute a l'analyse deja presente ».
+
+     L'INDICE DE PEUR ET D'AVIDITE (alternative.me). Une note de 0 a
+     100 qui melange la volatilite, le volume, les reseaux sociaux et
+     la part du bitcoin. Zero : tout le monde a peur. Cent : tout le
+     monde achete. Il ne predit rien, et le pli d'aide le dit.
+
+     LA PART DU BITCOIN (CoinGecko). Quand elle monte, l'argent se
+     replie sur la valeur la plus etablie du marche ; quand elle
+     baisse, il part vers le reste. C'est la premiere chose que
+     regarde quelqu'un qui detient autre chose que du bitcoin.
+
+     LES DEUX ONT ETE MESURES AVANT D'ETRE ECRITS, le 16 octobre
+     2026, depuis une machine qui a le droit de sortir (voir la tache
+     « Sonder une adresse ») : 200, du JSON, et surtout l'en-tete
+     « access-control-allow-origin: * » — c'est elle qui decide si un
+     navigateur a le droit d'appeler l'adresse directement. Sans
+     elle, il aurait fallu passer par le relais. Le VIX de Yahoo, lui,
+     repond mais ne la porte PAS : l'indice de peur de la bourse
+     devra passer par le relais, et il attendra son deploiement.
+
+     UNE HEURE DE GARDE. L'indice de peur ne bouge qu'une fois par
+     jour, et la part du bitcoin de quelques dixiemes : les redemander
+     a chaque rendu serait payer un appel pour rien.
+     ============================================================ */
+  const IND_SOURCE = (typeof window !== 'undefined' && window.PC_PEUR_SOURCE)
+    || 'https://api.alternative.me/fng/';
+  const IND_GARDE = 3600000;
+  const IND = {};
+  const indEnVol = {};
+
+  function indCherche(cle, promesse){
+    const o = IND[cle];
+    if (o && (Date.now() - o.t) < IND_GARDE) return;
+    if (indEnVol[cle]) return;
+    indEnVol[cle] = 1;
+    promesse()
+      .then(function(v){
+        if (v){
+          IND[cle] = Object.assign({t:Date.now()}, v);
+          /* La reponse arrive apres le rendu : on repeint. L'appel ne
+             se rejoue pas — la garde d'une heure vient d'etre posee. */
+          try { anMarche(); } catch (e){}
+        }
+      })
+      .catch(function(){ /* un indicateur absent ne casse pas la grille */ })
+      .then(function(){ indEnVol[cle] = 0; });
+  }
+
+  /* Les cinq paliers d'usage de l'indice, et nos propres mots : la
+     reponse donne « Extreme Greed » en anglais, et une page francaise
+     ne doit pas servir l'anglais d'un fournisseur. On classe sur le
+     NOMBRE, qui ne changera pas de langue. */
+  function indPalier(v){
+    return v <= 24 ? 'tpeur' : v <= 44 ? 'peur'
+         : v <= 55 ? 'neutre' : v <= 74 ? 'avid' : 'tavid';
+  }
+
+  function indPeur(){
+    indCherche('peur', function(){
+      const u = IND_SOURCE + (IND_SOURCE.indexOf('?') === -1 ? '?' : '&') + 'limit=30';
+      return fetch(u, {credentials:'omit'})
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          const l = (d && Array.isArray(d.data)) ? d.data : [];
+          /* Le fournisseur rend ses valeurs en TEXTE (« 63 ») : on les
+             ramene a des nombres, et on jette ce qui n'en est pas un
+             plutot que d'afficher « NaN » au milieu de la grille. */
+          const n = l.map(function(x){ return Math.round(+((x || {}).value)); })
+                     .filter(function(x){ return isFinite(x) && x >= 0 && x <= 100; });
+          return n.length ? {v:n[0], hier:(n.length > 1 ? n[1] : null),
+                             mois:(n.length >= 30 ? n[29] : null)} : null;
+        });
+    });
+    return IND.peur || null;
+  }
+
+  function indGlobal(){
+    indCherche('global', function(){
+      return (window.PC_MARCHES && PC_MARCHES.monde)
+        ? PC_MARCHES.monde() : Promise.resolve(null);
+    });
+    return IND.global || null;
+  }
+
   function anMarche(){
     const bloc = document.getElementById('an-marche');
     const hote = document.getElementById('an-mar-mes');
@@ -18852,6 +18992,38 @@ document.addEventListener('error', function(ev){
                     echap(PC.t((R.simple ? 'an.mar.ens.ds' : 'an.mar.ens.d') +
                                (un ? '1' : ''), {n:String(vus.length)})),
                     ens < 0 ? 'baisse' : 'hausse', '', 'an-m--tete');
+    }
+    /* ===== LES DEUX INDICATEURS QUI VIENNENT DU DEHORS =====
+       Ils se placent juste apres la mesure de tete, et avant tout ce
+       que la page calcule elle-meme : ce sont les seuls chiffres de
+       cette grille que quelqu'un d'autre publie, et c'est ce qui en
+       fait des reperes. Ils ne valent que pour les cryptos — l'indice
+       de peur de la bourse, c'est le VIX, et il devra passer par le
+       relais : Yahoo repond, mais sans l'en-tete qui autoriserait un
+       navigateur a l'appeler. Mesure du 16 octobre 2026. */
+    if (marSrc === 'crypto'){
+      const P = indPeur();
+      if (P){
+        m += anMesure('an.mar.peur', PC.nombre(P.v, 0),
+                      echap(PC.t('an.mar.peur.' + indPalier(P.v)) +
+                            (P.hier !== null
+                              ? ' ' + PC.t(P.mois !== null ? 'an.mar.peur.d' : 'an.mar.peur.d1',
+                                           {h:PC.nombre(P.hier, 0),
+                                            m:(P.mois !== null ? PC.nombre(P.mois, 0) : '')})
+                              : '')),
+                      (P.v <= 24 || P.v >= 75) ? 'attention' : '',
+                      anBarre(P.v));
+      }
+      const G = indGlobal();
+      if (G){
+        m += anMesure('an.mar.btc', PC.part(G.dom, 0),
+                      echap(G.cap !== null
+                        ? PC.t(G.var24 !== null ? 'an.mar.btc.d' : 'an.mar.btc.d1',
+                               {c:PC.compact(G.cap),
+                                v:(G.var24 !== null ? PC.pourcent(G.var24, 1) : '')})
+                        : ''),
+                      '', anBarre(Math.min(100, G.dom)));
+      }
     }
     /* Plus de phrase sous ces deux-la : la phrase de tete les dit
        toutes les deux, et mieux, parce qu'elle les relie. Ce qui
@@ -19206,6 +19378,79 @@ document.addEventListener('error', function(ev){
      C'est donc en euros, et avec une barre, parce que comparer
      quinze nombres de tete n'est pas un travail de lecteur.
      ============================================================ */
+  /* ============================================================
+     TROIS INDICATEURS, SUR VOS PROPRES CHIFFRES
+     ------------------------------------------------------------
+     « Quand je dis indicateur, c'est comme l'indice de peur. » Soit :
+     une mesure qui PORTE UN NOM, que d'autres calculent de la meme
+     facon, et qui s'ajoute a l'analyse au lieu de la remplacer.
+
+     Les trois qui suivent sont de celles-la, et aucune ne demande un
+     appel de plus : elles se calculent sur la serie que la page
+     reconstitue deja.
+     ============================================================ */
+
+  /* L'INDICE DE CONCENTRATION (Herfindahl-Hirschman), la somme des
+     carres des parts. On l'emploie depuis cinquante ans pour mesurer
+     si un marche est tenu par quelques-uns ; un portefeuille est le
+     meme objet.
+
+     SON INVERSE EST CE QU'ON RETIENT : 1/HHI est le NOMBRE DE LIGNES
+     EGALES qui donnerait la meme concentration. Sept lignes dont une
+     pese la moitie « valent » trois lignes. C'est la seule forme de
+     cet indice qui se lise sans avoir a l'avoir appris. */
+  function anHHI(){
+    const t = totaux();
+    if (!(t.val > 0) || actifs.length < 2) return null;
+    let h = 0;
+    actifs.forEach(function(a){
+      const q = (a.val || 0) / t.val;
+      h += q * q;
+    });
+    return (h > 0) ? {hhi:h, equiv:1 / h, n:actifs.length} : null;
+  }
+
+  /* LE RSI, SUR VOS SEANCES. L'indicateur le plus repandu de la
+     lecture technique : la force des hausses rapportee a celle des
+     baisses, sur quatorze seances, ramenee entre 0 et 100.
+
+     LISSAGE DE WILDER, et non une moyenne simple des quatorze
+     derniers jours : c'est la definition d'origine, celle que
+     calculent les autres, et un indicateur qui porte un nom doit
+     rendre le meme nombre que ceux qui portent le meme nom.
+
+     SUR LES RENDEMENTS, ET NON SUR LES ECARTS. Wilder comptait des
+     ecarts de cours, parce qu'un cours ne recoit pas de versement. Un
+     patrimoine, si : un virement de dix mille euros serait le plus
+     gros « ecart » de l'annee et ne serait aucune hausse. On prend
+     donc les rendements nets des versements, ceux que anTotalCalc a
+     deja corriges. Sur quatorze seances l'ecart entre les deux
+     lectures est d'un quart de point — le banc le mesure sur la serie
+     d'origine de Wilder, qui rend 37,79 en ecarts et 38,04 en
+     rendements.
+
+     CE QU'IL NE DIT PAS, et le pli d'aide le repete : rien de ce qui
+     suit. Au-dessus de 70 on a beaucoup monte sans respirer, sous 30
+     l'inverse. C'est un constat sur le passe proche. */
+  function anRSI(v, p){
+    p = p || 14;
+    if (!v || v.length < p + 1) return null;
+    let g = 0, b = 0;
+    for (let i = 0; i < p; i++){
+      const r = v[i].r;
+      if (r > 0) g += r; else b -= r;
+    }
+    g /= p; b /= p;
+    for (let i = p; i < v.length; i++){
+      const r = v[i].r;
+      g = (g * (p - 1) + (r > 0 ? r : 0)) / p;
+      b = (b * (p - 1) + (r < 0 ? -r : 0)) / p;
+    }
+    if (!(b > 0)) return (g > 0) ? 100 : null;
+    if (!(g > 0)) return 0;
+    return 100 - 100 / (1 + g / b);
+  }
+
   function anMoi(){
     const bloc = document.getElementById('an-moi');
     if (!bloc) return;
@@ -19247,6 +19492,25 @@ document.addEventListener('error', function(ev){
       if (t.grosse){
         m += anMesure('an.moi.conc', part0(t.concentration), echap(t.grosse.nom),
                       t.concentration >= 50 ? 'attention' : '', anBarre(t.concentration));
+      }
+      /* ET L'INDICE QUI RESUME TOUTE LA REPARTITION. La tuile du
+         dessus ne dit que la plus grosse ligne ; celle-ci compte les
+         sept. Voir anHHI : c'est l'indice de Herfindahl, rendu sous
+         la seule forme qui se lise — le nombre de lignes EGALES qui
+         donnerait la meme concentration. */
+      const H = anHHI();
+      if (H){
+        m += anMesure('an.moi.hhi', PC.nombre(H.equiv, 1),
+                      echap(PC.t('an.moi.hhi.d',
+                            {n:String(H.n), i:PC.nombre(H.hhi, 2)})),
+                      /* « Moins de quatre lignes equivalentes », comme le dit
+                         le pli d'aide : c'est 1/HHI < 4, soit HHI > 0,25.
+                         Ecrit sur l'indice avec un >=, quatre lignes
+                         rigoureusement egales tombaient dans l'alerte —
+                         on prevenait d'une concentration celui qui avait
+                         le mieux reparti. */
+                      H.equiv < 4 ? 'attention' : '',
+                      anBarre(Math.min(100, H.hhi * 100)));
       }
       m += anMesure('an.moi.lignes', String(actifs.length),
                     echap(t.nbCats + ' ' + PC.pluriel(t.nbCats, 'an.moi.cat.un', 'an.moi.cat.plus')));
@@ -19310,6 +19574,125 @@ document.addEventListener('error', function(ev){
                       echap(PC.t('an.moi.sens.d',
                             {h:String(TT.monte), n:String(TT.seances)})),
                       '', anBarre(part));
+        /* LE RSI, calcule sur VOS seances et non sur un marche : la
+           meme formule que partout ailleurs, appliquee a ce que vous
+           detenez vraiment. */
+        const rsi = anRSI(TT.v, 14);
+        if (rsi !== null){
+          m += anMesure('an.moi.rsi', PC.nombre(rsi, 0),
+                        echap(PC.t('an.moi.rsi.d')),
+                        (rsi >= 70 || rsi <= 30) ? 'attention' : '',
+                        anBarre(rsi));
+        }
+        /* ET CE QUE LE RISQUE A RAPPORTE. Un rendement ne se juge pas
+           seul : 8 % par an en bougeant de 10 % et 8 % par an en
+           bougeant de 40 % ne sont pas le meme placement. Le rapport
+           des deux est ce qu'on appelle un ratio de Sharpe — sans le
+           taux sans risque, qui demanderait une hypothese de plus, et
+           le pli d'aide le dit. */
+        if (TT.parAn !== null && TT.vol > 0){
+          const rr = TT.parAn / TT.vol;
+          m += anMesure('an.moi.rr', PC.nombre(rr, 2),
+                        echap(PC.t('an.moi.rr.d',
+                              /* Une decimale quand l'entier cacherait la
+                                 division : « 2 % » sous un ratio de 6,60
+                                 se divise mal, « 1,9 % » se divise. */
+                              {r:PC.pourcent(TT.parAn, 1),
+                               v:anAmpleur(TT.vol, TT.vol < 10 ? 1 : 0)})),
+                        rr < 0 ? 'baisse' : (rr >= 1 ? 'hausse' : ''));
+          /* ET LE MEME RAPPORT, AU PIRE RECUL. C'est le ratio de
+             Calmar, et il repond a une autre question : le precedent
+             divise par la SECOUSSE ORDINAIRE, celui-ci par le PIRE
+             MOMENT. Un portefeuille qui bouge peu mais s'est effondre
+             une fois les separe, et c'est le second qu'on a vraiment
+             traverse. */
+          if (TT.rec && TT.rec.part > 0){
+            const cal = TT.parAn / TT.rec.part;
+            m += anMesure('an.moi.cal', PC.nombre(cal, 2),
+                          echap(PC.t('an.moi.cal.d',
+                                {r:PC.pourcent(TT.parAn, 1),
+                                 v:anAmpleur(TT.rec.part, TT.rec.part < 10 ? 1 : 0)})),
+                          cal < 0 ? 'baisse' : (cal >= 1 ? 'hausse' : ''));
+          }
+        }
+        /* ===== LA PIRE SEANCE, ET SA DATE =====
+           L'analyse des marches dit « ce qui baisse le plus » ; de ce
+           cote-ci, rien ne disait la pire journee que l'on ait
+           traversee. Elle se retient mieux qu'un ecart-type, parce
+           qu'on l'a vecue : elle porte sa date. */
+        let pire = null;
+        TT.v.forEach(function(x){ if (!pire || x.r < pire.r) pire = x; });
+        if (pire && pire.r < 0){
+          m += anMesure('an.moi.pire', PC.pourcent(pire.r * 100, 1),
+                        echap(PC.t('an.moi.pire.d', {j:anDate(pire.t)})),
+                        'baisse');
+        }
+        /* ET LA MEILLEURE, parce que les deux se lisent ensemble.
+           L'analyse des marches dit ce qui monte le plus ET ce qui
+           baisse le plus ; n'en donner qu'une de ce cote-ci serait
+           choisir ce qu'on montre. */
+        let meil = null;
+        TT.v.forEach(function(x){ if (!meil || x.r > meil.r) meil = x; });
+        if (meil && meil.r > 0){
+          m += anMesure('an.moi.meil', PC.pourcent(meil.r * 100, 1),
+                        echap(PC.t('an.moi.pire.d', {j:anDate(meil.t)})),
+                        'hausse');
+        }
+        /* ===== UNE SEANCE SUR VINGT =====
+           LA VALEUR EN RISQUE, et la seule mesure de risque qui se
+           lise sans avoir rien appris : « une seance sur vingt
+           depasse ceci ». L'amplitude dit la secousse ORDINAIRE et se
+           tait sur la queue ; c'est pourtant la queue qui fait les
+           mauvaises nuits.
+
+           LE CINQUIEME CENTILE DES SEANCES OBSERVEES, pas une loi
+           normale : une loi normale sous-estime precisement ce qu'on
+           cherche. Quarante seances au moins, pour que la queue en
+           contienne deux. */
+        if (TT.v.length >= 40){
+          const tri = TT.v.map(function(x){ return x.r; })
+                          .sort(function(a, b){ return a - b; });
+          const q5 = tri[Math.max(0, Math.ceil(tri.length * 0.05) - 1)];
+          if (q5 < 0){
+            m += anMesure('an.moi.var', '−' + anAmpleur(q5 * 100, 1),
+                          echap(PC.t('an.moi.var.d', {n:String(tri.length)})),
+                          'baisse');
+          }
+        }
+        /* ===== OU L'ON SE SITUE DANS SA PROPRE ANNEE =====
+           L'analyse d'une ligne le disait depuis toujours ; le total,
+           non. Sur le solde reel, versements compris : c'est le plus
+           bas et le plus haut qu'on a vus passer sur le relevé, et ce
+           sont ces deux nombres-la qu'on reconnait. */
+        {
+          let bas = Infinity, haut = -Infinity;
+          TT.pts.forEach(function(p){
+            if (p[1] < bas) bas = p[1];
+            if (p[1] > haut) haut = p[1];
+          });
+          if (haut > bas){
+            const pos = (TT.fin - bas) / (haut - bas) * 100;
+            m += anMesure('an.moi.pos', part0(pos),
+                          echap(PC.t('an.moi.pos.d',
+                                {a:eur.format(bas), b:eur.format(haut)})),
+                          '', anBarre(pos));
+          }
+          /* ===== ET DEPUIS COMBIEN DE TEMPS =====
+             Le pourcentage du dessus situe sans dater. « A 56 % de
+             votre ecart » ne dit pas si le sommet est d'avant-hier ou
+             de l'an dernier, et ce n'est pas la meme nouvelle. Le
+             sommet le plus RECENT, s'il y en a plusieurs au meme
+             niveau : c'est celui-la qu'on attend de revoir. */
+          let tHaut = null;
+          TT.pts.forEach(function(p){ if (p[1] >= haut) tHaut = p[0]; });
+          if (tHaut !== null){
+            const nj = Math.max(0, Math.round((TT.pts[TT.pts.length - 1][0] - tHaut) / JOUR_MS));
+            m += anMesure('an.moi.som', PC.nombre(nj, 0),
+                          echap(nj === 0 ? PC.t('an.moi.som.d0')
+                                         : PC.t('an.moi.som.d', {j:anDate(tHaut)})),
+                          nj >= 180 ? 'attention' : '');
+          }
+        }
       }
       hoteM.innerHTML = m;
     }
@@ -24624,6 +25007,26 @@ document.addEventListener('error', function(ev){
   window.PC_MARCHES = {
     ouvre: eveille,
     source: poseSource,
+    /* ===== L'ETAT DU MARCHE ENTIER =====
+       La part du bitcoin et la capitalisation mondiale. Un appel, et
+       il n'appartient a aucune liste : c'est le marche entier, pas
+       douze lignes de ce marche.
+
+       IL VIT ICI parce que l'adresse du fournisseur et la devise
+       choisie vivent ici. L'analyse ne les connait pas, et c'est tres
+       bien ainsi : elle demande une mesure, pas une adresse. */
+    monde: function(){
+      return json(BASE + '/global').then(function(d){
+        const g = d && d.data;
+        if (!g) return null;
+        const dom = g.market_cap_percentage && +g.market_cap_percentage.btc;
+        if (!(dom > 0)) return null;
+        const cap = g.total_market_cap && +g.total_market_cap[dev()];
+        const v = +g.market_cap_change_percentage_24h_usd;
+        return {dom:dom, cap:(cap > 0 ? cap : null),
+                var24:(isFinite(v) ? v : null)};
+      }).catch(function(){ return null; });
+    },
     plages: PLAGES.map(function(p){ return p[0]; }),
     /* Trace la courbe d'une crypto dans un conteneur désigné par son
        identifiant — jamais par une référence. Entre le départ de la
