@@ -1,16 +1,40 @@
 {
  "lignes": [
   {
-   "titre": "Hausse de taux du Livret A, mauvaise nouvelle pour la taxe foncière... les 3 infos argent du 15 octobre",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110845/hausse-de-taux-du-livret-a-mauvaise-nouvelle-pour-la-taxe-fonciere-les-3-infos-argent-du-15-octobre",
+   "titre": "Budget 2027 : le retour du crédit d'impôt Ehpad, adopté à l'Assemblée",
+   "lien": "https://www.moneyvox.fr/impot/actualites/110859/budget-2027-le-retour-du-credit-impot-ehpad-adopte-a-assemblee",
    "source": "MoneyVox",
-   "date": "2026-10-15T18:00:48.000Z"
+   "date": "2026-10-16T10:36:44.000Z"
   },
   {
-   "titre": "La réforme des retraites fait-elle grimper les départs pour invalidité chez les fonctionnaires ?",
-   "lien": "https://www.moneyvox.fr/retraite/actualites/110848/la-reforme-des-retraites-fait-elle-grimper-les-departs-pour-invalidite-chez-les-fonctionnaires",
+   "titre": "Marché immobilier à Saint-Denis : voici l'évolution des prix en octobre 2026",
+   "lien": "https://www.moneyvox.fr/immobilier/actualites/110785/marche-immobilier-a-saint-denis-voici-evolution-des-prix-en-octobre-2026",
    "source": "MoneyVox",
-   "date": "2026-10-15T16:33:52.000Z"
+   "date": "2026-10-16T10:30:48.000Z"
+  },
+  {
+   "titre": "Cryptos et stablecoins, pourquoi la fiscalité pourrait se durcir en 2027",
+   "lien": "https://www.capital.fr/votre-argent/cryptos-et-stablecoins-pourquoi-la-fiscalite-pourrait-se-durcir-en-2027-1531031",
+   "source": "Capital",
+   "date": "2026-10-16T10:00:00.000Z"
+  },
+  {
+   "titre": "Budget 2027 : les députés votent un amendement pour plafonner l'avantage fiscal des journalistes",
+   "lien": "https://www.moneyvox.fr/impot/actualites/110855/budget-2027-les-deputes-votent-un-amendement-pour-plafonner-avantage-fiscal-des-journalistes",
+   "source": "MoneyVox",
+   "date": "2026-10-16T09:09:21.000Z"
+  },
+  {
+   "titre": "L’investissement socialement responsable reste boudé par les épargnants",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/16/l-investissement-socialement-responsable-reste-boude-par-les-epargnants_6795180_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-16T04:00:26.000Z"
+  },
+  {
+   "titre": "Le pouvoir d’achat des Français a-t-il vraiment décroché ? Ce que disent les chiffres",
+   "lien": "https://www.lemonde.fr/les-decodeurs/article/2026/10/16/le-pouvoir-d-achat-des-francais-a-t-il-vraiment-decroche-ce-que-disent-les-chiffres_6795107_4355770.html",
+   "source": "Le Monde",
+   "date": "2026-10-16T03:30:04.000Z"
   },
   {
    "titre": "L’Arabie saoudite, sous la pression des attaques des houthistes, tente de protéger ses exportations de pétrole",
@@ -19,46 +43,16 @@
    "date": "2026-10-15T16:30:10.000Z"
   },
   {
-   "titre": "Pourquoi les crédits à la consommation sont-ils si chers ?",
-   "lien": "https://www.franceinfo.fr/economie/pourquoi-les-credits-a-la-consommation-sont-ils-si-chers_8238808.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-15T15:14:14.000Z"
-  },
-  {
-   "titre": "« Le cours de la dette publique est un baromètre politique bien plus encore que financier »",
-   "lien": "https://www.lemonde.fr/idees/article/2026/10/15/le-cours-de-la-dette-publique-est-un-barometre-politique-bien-plus-encore-que-financier_6794564_3232.html",
-   "source": "Le Monde",
-   "date": "2026-10-15T15:00:07.000Z"
-  },
-  {
-   "titre": "Marché immobilier à Rennes : légère hausse des maisons et stabilité des appartements en octobre 2026",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/110781/marche-immobilier-a-rennes-legere-hausse-des-maisons-et-stabilite-des-appartements-en-octobre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-15T14:00:48.000Z"
-  },
-  {
    "titre": "Budget 2027 : les députés rejettent le plafonnement d'un abattement fiscal pour les retraités",
    "lien": "https://www.franceinfo.fr/economie/budget/budget-2027-les-deputes-rejettent-le-plafonnement-d-un-abattement-fiscal-pour-les-retraites_8238589.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-10-15T11:20:09.000Z"
   },
   {
-   "titre": "L'entreprise française Ledger confirme qu'un certain nombre de ses portefeuilles de cryptomonnaies a été compromis par des voleurs",
-   "lien": "https://www.franceinfo.fr/economie/bitcoin/l-entreprise-francaise-ledger-confirme-qu-un-certain-nombre-de-ses-portefeuilles-de-cryptomonnaies-a-ete-compromis-par-des-voleurs_8237365.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-15T10:01:46.000Z"
-  },
-  {
    "titre": "Epargne : la France compte le plus de clients auprès des sociétés d’investissement européennes",
    "lien": "https://www.capital.fr/votre-argent/epargne-la-france-compte-le-plus-de-clients-aupres-des-societes-dinvestissement-europeennes-1531006",
    "source": "Capital",
    "date": "2026-10-15T09:38:07.000Z"
-  },
-  {
-   "titre": "Retraites complémentaires du privé : les acteurs sociaux trouvent un accord sur la revalorisation malgré leurs tensions",
-   "lien": "https://www.lemonde.fr/politique/article/2026/10/15/retraites-complementaires-du-prive-un-accord-sur-fond-de-tensions-entre-acteurs-sociaux_6794354_823448.html",
-   "source": "Le Monde",
-   "date": "2026-10-15T08:09:30.000Z"
   },
   {
    "titre": "En revalorisant les retraites complémentaires du secteur privé, l'Agirc-Arrco prend le gouvernement à contrepied",
@@ -71,6 +65,12 @@
    "lien": "https://www.franceinfo.fr/replay-magazine/franceinfo/a-suivre-avec-loic-de-la-mornais/a-suivre-loic-de-la-mornais-les-retraites-doivent-ils-faire-un-effort-dans-le-prochain-budget_8238175.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-10-15T04:42:16.000Z"
+  },
+  {
+   "titre": "Taxe foncière : invoquer la vétusté de son logement peut faire baisser la note",
+   "lien": "https://www.lemonde.fr/argent/article/2026/10/15/taxe-fonciere-invoquer-la-vetuste-de-son-logement-peut-faire-baisser-la-note_6794069_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-10-15T04:00:09.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-15T19:50:36.424Z",
+ "fait": "2026-10-16T11:14:07.550Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1224,
+   "ms": 1131,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,15 +92,15 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1229,
-   "vus": 6,
+   "ms": 932,
+   "vus": 7,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 816,
+   "ms": 1013,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 483,
-   "vus": 4,
+   "ms": 170,
+   "vus": 5,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 710,
+   "ms": 1229,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 287,
-   "vus": 8,
+   "ms": 161,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 745,
-   "vus": 17,
-   "titres": 3,
-   "dit": null
+   "ms": 509,
+   "vus": 20,
+   "titres": 0,
+   "dit": "20 titres lus, aucun ne concerne le sujet du site"
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 471,
-   "vus": 17,
+   "ms": 317,
+   "vus": 18,
    "titres": 3,
    "dit": null
   }
