@@ -23,6 +23,9 @@ on:
       urls:
         description: "Adresses a sonder, separees par des virgules."
         required: true
+      jq:
+        description: "Expression jq appliquee a la reponse, au lieu des 320 premiers caracteres. Ex : 'map(select(.ath_change_percentage==null)) | length'"
+        required: false
 
 permissions:
   contents: read
@@ -34,6 +37,7 @@ jobs:
       - name: Interroger
         env:
           URLS: ${{ inputs.urls }}
+          JQ: ${{ inputs.jq }}
         run: |
           IFS=',' read -ra L <<< "$URLS"
           for u in "${L[@]}"; do
@@ -51,6 +55,18 @@ jobs:
             echo "CODE   : $code"
             echo "TYPE   : $(grep -i '^content-type:' /tmp/tetes | head -1 | tr -d '\r')"
             echo "CORS   : $(grep -i '^access-control-allow-origin:' /tmp/tetes | head -1 | tr -d '\r' || echo 'AUCUN — un navigateur ne pourra pas appeler cette adresse directement')"
-            echo "DEBUT  : $(head -c 320 /tmp/corps | tr -d '\n')"
+            # LES 320 PREMIERS CARACTERES NE REPONDENT PAS A TOUTES LES
+            # QUESTIONS. « Combien de valeurs n'ont pas de record connu ? »
+            # demande de COMPTER dans la reponse entiere, pas de regarder
+            # son debut. L'expression passe par l'environnement et non par
+            # la ligne de commande : une expression jq porte des
+            # parentheses et des guillemets, et elle vient d'une saisie.
+            if [ -n "$JQ" ]; then
+              echo "JQ     : $JQ"
+              echo "REPONSE:"
+              jq -r "$JQ" /tmp/corps 2>&1 | head -40 | sed 's/^/  /'
+            else
+              echo "DEBUT  : $(head -c 320 /tmp/corps | tr -d '\n')"
+            fi
             echo
           done
