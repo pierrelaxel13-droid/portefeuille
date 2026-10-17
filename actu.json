@@ -1,28 +1,40 @@
 {
  "lignes": [
   {
+   "titre": "« L’économie du Brésil est en croissance grâce au niveau élevé des cours mondiaux des matières premières plus qu’à un succès du gouvernement Lula »",
+   "lien": "https://www.lemonde.fr/idees/article/2026/10/17/l-economie-du-bresil-est-en-croissance-grace-au-niveau-eleve-des-cours-mondiaux-des-matieres-premieres-plus-qu-a-un-succes-du-gouvernement-lula_6796586_3232.html",
+   "source": "Le Monde",
+   "date": "2026-10-17T18:00:12.000Z"
+  },
+  {
+   "titre": "Immobilier à Villeurbanne : léger recul des prix de vente en octobre 2026",
+   "lien": "https://www.moneyvox.fr/immobilier/actualites/110791/immobilier-a-villeurbanne-leger-recul-des-prix-de-vente-en-octobre-2026",
+   "source": "MoneyVox",
+   "date": "2026-10-17T15:00:48.000Z"
+  },
+  {
+   "titre": "Immobilier : freins et tensions sur le marché locatif",
+   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-freins-et-tensions-sur-le-marche-locatif_8220577.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-17T14:00:01.000Z"
+  },
+  {
+   "titre": "Assurance-vie, pourquoi la tentation de taxer ses avantages revient avant la présidentielle",
+   "lien": "https://www.capital.fr/votre-argent/assurance-vie-pourquoi-la-tentation-de-taxer-ses-avantages-revient-avant-la-presidentielle-1531054",
+   "source": "Capital",
+   "date": "2026-10-17T14:00:00.000Z"
+  },
+  {
+   "titre": "Immobilier à Tours : légère hausse des prix à l'achat en octobre 2026",
+   "lien": "https://www.moneyvox.fr/immobilier/actualites/110790/immobilier-a-tours-legere-hausse-des-prix-a-achat-en-octobre-2026",
+   "source": "MoneyVox",
+   "date": "2026-10-17T12:00:48.000Z"
+  },
+  {
    "titre": "Immobilier à Toulouse : les prix restent stables en octobre 2026",
    "lien": "https://www.moneyvox.fr/immobilier/actualites/110789/immobilier-a-toulouse-les-prix-restent-stables-en-octobre-2026",
    "source": "MoneyVox",
    "date": "2026-10-17T10:00:48.000Z"
-  },
-  {
-   "titre": "Immobilier à Toulon : évolution des prix en septembre et octobre 2026",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/110788/immobilier-a-toulon-evolution-des-prix-en-septembre-et-octobre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-17T08:00:48.000Z"
-  },
-  {
-   "titre": "« La hausse de 1,4% de la retraite Argirc-Arrco concerne également les pensions de réversion ? »",
-   "lien": "https://www.moneyvox.fr/retraite/actualites/110873/la-hausse-de-1-4-de-la-retraite-argirc-arrco-concerne-egalement-les-pensions-de-reversion",
-   "source": "MoneyVox",
-   "date": "2026-10-17T07:00:48.000Z"
-  },
-  {
-   "titre": "Moteur imaginaire : quand l'art contemporain réinterprète le patrimoine industriel de Renault",
-   "lien": "https://www.franceinfo.fr/culture/arts-expos/moteur-imaginaire-quand-l-art-contemporain-reinterprete-le-patrimoine-industriel-de-renault_8240872.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-17T05:00:02.000Z"
   },
   {
    "titre": "L’accord franco-allemand sur l’automobile ménage Stellantis mais n’épargne pas Renault",
@@ -55,22 +67,10 @@
    "date": "2026-10-16T12:00:01.000Z"
   },
   {
-   "titre": "Cryptos et stablecoins, pourquoi la fiscalité pourrait se durcir en 2027",
-   "lien": "https://www.capital.fr/votre-argent/cryptos-et-stablecoins-pourquoi-la-fiscalite-pourrait-se-durcir-en-2027-1531031",
-   "source": "Capital",
-   "date": "2026-10-16T10:00:00.000Z"
-  },
-  {
    "titre": "L’investissement socialement responsable reste boudé par les épargnants",
    "lien": "https://www.lemonde.fr/economie/article/2026/10/16/l-investissement-socialement-responsable-reste-boude-par-les-epargnants_6795180_3234.html",
    "source": "Le Monde",
    "date": "2026-10-16T04:00:26.000Z"
-  },
-  {
-   "titre": "Budget 2027 : les députés rejettent le plafonnement d'un abattement fiscal pour les retraités",
-   "lien": "https://www.franceinfo.fr/economie/budget/budget-2027-les-deputes-rejettent-le-plafonnement-d-un-abattement-fiscal-pour-les-retraites_8238589.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-15T11:20:09.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-17T10:33:06.549Z",
+ "fait": "2026-10-17T18:24:51.157Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1471,
+   "ms": 826,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 437,
+   "ms": 1000,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 828,
+   "ms": 759,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 248,
+   "ms": 299,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 523,
+   "ms": 670,
    "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +124,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 160,
+   "ms": 125,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,7 +132,7 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 401,
+   "ms": 479,
    "vus": 19,
    "titres": 1,
    "dit": null
@@ -140,8 +140,8 @@
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 266,
-   "vus": 15,
+   "ms": 314,
+   "vus": 18,
    "titres": 3,
    "dit": null
   }
