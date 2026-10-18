@@ -1,6 +1,12 @@
 {
  "lignes": [
   {
+   "titre": "Négligence grave et fraude bancaire, ce que la banque doit prouver pour ne pas rembourser",
+   "lien": "https://www.capital.fr/votre-argent/fraude-bancaire-la-cjue-rappelle-lobligation-de-remboursement-1531064",
+   "source": "Capital",
+   "date": "2026-10-18T14:00:00.000Z"
+  },
+  {
    "titre": "« Impôt : le plafond de 3 000 euros, ça se passe comment si un seul membre du couple est à la retraite ? »",
    "lien": "https://www.moneyvox.fr/retraite/actualites/110876/impot-le-plafond-de-3-000-euros-ca-se-passe-comment-si-un-seul-membre-du-couple-est-a-la-retraite",
    "source": "MoneyVox",
@@ -49,12 +55,6 @@
    "date": "2026-10-16T14:38:50.000Z"
   },
   {
-   "titre": "Faut-il acheter de l’or, «valeur refuge» ? Les conseils de l'économiste Marc Touati",
-   "lien": "https://www.capital.fr/votre-argent/faut-il-acheter-de-lor-valeur-refuge-les-conseils-de-l-economiste-marc-touati-1531049",
-   "source": "Capital",
-   "date": "2026-10-16T12:36:45.000Z"
-  },
-  {
    "titre": "Crédit immobilier : les banques prêtent moins et les taux remontent",
    "lien": "https://www.lemonde.fr/argent/article/2026/10/16/credit-immobilier-les-banques-pretent-moins-et-les-taux-remontent_6795545_1657007.html",
    "source": "Le Monde",
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-18T10:54:54.451Z",
+ "fait": "2026-10-18T18:34:54.762Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1396,
+   "ms": 619,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 892,
+   "ms": 443,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 854,
+   "ms": 1286,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 385,
+   "ms": 315,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 581,
+   "ms": 578,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,15 +124,15 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 166,
-   "vus": 5,
+   "ms": 157,
+   "vus": 6,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 630,
+   "ms": 371,
    "vus": 20,
    "titres": 0,
    "dit": "20 titres lus, aucun ne concerne le sujet du site"
@@ -140,7 +140,7 @@
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 398,
+   "ms": 216,
    "vus": 20,
    "titres": 2,
    "dit": null
