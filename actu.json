@@ -1,6 +1,18 @@
 {
  "lignes": [
   {
+   "titre": "« Impôt : le plafond de 3 000 euros, ça se passe comment si un seul membre du couple est à la retraite ? »",
+   "lien": "https://www.moneyvox.fr/retraite/actualites/110876/impot-le-plafond-de-3-000-euros-ca-se-passe-comment-si-un-seul-membre-du-couple-est-a-la-retraite",
+   "source": "MoneyVox",
+   "date": "2026-10-18T08:00:09.000Z"
+  },
+  {
+   "titre": "2,50% pour le taux du Livret A, revalorisation Agirc-Arrco, CAT à 4%... Les 5 infos argent de la semaine",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110858/2-50-pour-le-taux-du-livret-a-revalorisation-agirc-arrco-cat-a-4-les-5-infos-argent-de-la-semaine",
+   "source": "MoneyVox",
+   "date": "2026-10-18T07:00:09.000Z"
+  },
+  {
    "titre": "« L’économie du Brésil est en croissance grâce au niveau élevé des cours mondiaux des matières premières plus qu’à un succès du gouvernement Lula »",
    "lien": "https://www.lemonde.fr/idees/article/2026/10/17/l-economie-du-bresil-est-en-croissance-grace-au-niveau-eleve-des-cours-mondiaux-des-matieres-premieres-plus-qu-a-un-succes-du-gouvernement-lula_6796586_3232.html",
    "source": "Le Monde",
@@ -13,28 +25,10 @@
    "date": "2026-10-17T15:00:48.000Z"
   },
   {
-   "titre": "Immobilier : freins et tensions sur le marché locatif",
-   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-freins-et-tensions-sur-le-marche-locatif_8220577.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-17T14:00:01.000Z"
-  },
-  {
    "titre": "Assurance-vie, pourquoi la tentation de taxer ses avantages revient avant la présidentielle",
    "lien": "https://www.capital.fr/votre-argent/assurance-vie-pourquoi-la-tentation-de-taxer-ses-avantages-revient-avant-la-presidentielle-1531054",
    "source": "Capital",
    "date": "2026-10-17T14:00:00.000Z"
-  },
-  {
-   "titre": "Immobilier à Tours : légère hausse des prix à l'achat en octobre 2026",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/110790/immobilier-a-tours-legere-hausse-des-prix-a-achat-en-octobre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-17T12:00:48.000Z"
-  },
-  {
-   "titre": "Immobilier à Toulouse : les prix restent stables en octobre 2026",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/110789/immobilier-a-toulouse-les-prix-restent-stables-en-octobre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-17T10:00:48.000Z"
   },
   {
    "titre": "L’accord franco-allemand sur l’automobile ménage Stellantis mais n’épargne pas Renault",
@@ -71,6 +65,12 @@
    "lien": "https://www.lemonde.fr/economie/article/2026/10/16/l-investissement-socialement-responsable-reste-boude-par-les-epargnants_6795180_3234.html",
    "source": "Le Monde",
    "date": "2026-10-16T04:00:26.000Z"
+  },
+  {
+   "titre": "Budget 2027 : les députés rejettent le plafonnement d'un abattement fiscal pour les retraités",
+   "lien": "https://www.franceinfo.fr/economie/budget/budget-2027-les-deputes-rejettent-le-plafonnement-d-un-abattement-fiscal-pour-les-retraites_8238589.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-15T11:20:09.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-17T18:24:51.157Z",
+ "fait": "2026-10-18T10:54:54.451Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 826,
+   "ms": 1396,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1000,
+   "ms": 892,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 759,
+   "ms": 854,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,41 +108,41 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 299,
-   "vus": 5,
+   "ms": 385,
+   "vus": 7,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 670,
-   "vus": 4,
+   "ms": 581,
+   "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
   },
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 125,
-   "vus": 3,
+   "ms": 166,
+   "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 479,
-   "vus": 19,
-   "titres": 1,
-   "dit": null
+   "ms": 630,
+   "vus": 20,
+   "titres": 0,
+   "dit": "20 titres lus, aucun ne concerne le sujet du site"
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 314,
-   "vus": 18,
-   "titres": 3,
+   "ms": 398,
+   "vus": 20,
+   "titres": 2,
    "dit": null
   }
  ]
