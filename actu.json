@@ -1,34 +1,52 @@
 {
  "lignes": [
   {
+   "titre": "Épargne : pourquoi de plus en plus de Français peinent à mettre de l'argent de côté",
+   "lien": "https://www.moneyvox.fr/placement/actualites/110887/epargne-pourquoi-de-plus-en-plus-de-francais-peinent-a-mettre-de-argent-de-cote",
+   "source": "MoneyVox",
+   "date": "2026-10-19T12:50:33.000Z"
+  },
+  {
+   "titre": "Cartes bancaires, retraits, découverts... La Banque Postale augmente ses prix au 1er janvier 2027",
+   "lien": "https://www.moneyvox.fr/tarif-bancaire/actualites/110889/cartes-bancaires-retraits-decouverts-la-banque-postale-augmente-ses-prix-au-1er-janvier-2027",
+   "source": "MoneyVox",
+   "date": "2026-10-19T10:58:37.000Z"
+  },
+  {
+   "titre": "Crédit Agricole : crédit d'urgence de 20 000 euros pour les commerçants après les violences du 17 octobre",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110886/credit-agricole-credit-urgence-de-20-000-euros-pour-les-commercants-apres-les-violences-du-17-octobre",
+   "source": "MoneyVox",
+   "date": "2026-10-19T09:53:17.000Z"
+  },
+  {
+   "titre": "Placements : les Français dans l’étau des taux",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/19/placements-les-francais-dans-l-etau-des-taux_6797492_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-19T06:00:09.000Z"
+  },
+  {
+   "titre": "Les violences du 17 octobre en France sont-elles de nature à inquiéter les marchés financiers ?",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/les-violences-du-17-octobre-en-france-sont-elles-de-nature-a-inquieter-les-marches-financiers_8222707.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-19T05:33:59.000Z"
+  },
+  {
+   "titre": "Les fonds responsables offrent-ils vraiment de mauvais rendements ?",
+   "lien": "https://www.lemonde.fr/argent/article/2026/10/19/les-fonds-responsables-offrent-ils-vraiment-de-mauvais-rendements_6797480_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-10-19T04:00:33.000Z"
+  },
+  {
+   "titre": "Placements : la remontée des taux d’intérêt rebat les cartes de l’épargne",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/19/placements-la-remontee-des-taux-d-interet-rebat-les-cartes-de-l-epargne_6797404_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-19T03:30:08.000Z"
+  },
+  {
    "titre": "Négligence grave et fraude bancaire, ce que la banque doit prouver pour ne pas rembourser",
    "lien": "https://www.capital.fr/votre-argent/fraude-bancaire-la-cjue-rappelle-lobligation-de-remboursement-1531064",
    "source": "Capital",
    "date": "2026-10-18T14:00:00.000Z"
-  },
-  {
-   "titre": "« Impôt : le plafond de 3 000 euros, ça se passe comment si un seul membre du couple est à la retraite ? »",
-   "lien": "https://www.moneyvox.fr/retraite/actualites/110876/impot-le-plafond-de-3-000-euros-ca-se-passe-comment-si-un-seul-membre-du-couple-est-a-la-retraite",
-   "source": "MoneyVox",
-   "date": "2026-10-18T08:00:09.000Z"
-  },
-  {
-   "titre": "2,50% pour le taux du Livret A, revalorisation Agirc-Arrco, CAT à 4%... Les 5 infos argent de la semaine",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110858/2-50-pour-le-taux-du-livret-a-revalorisation-agirc-arrco-cat-a-4-les-5-infos-argent-de-la-semaine",
-   "source": "MoneyVox",
-   "date": "2026-10-18T07:00:09.000Z"
-  },
-  {
-   "titre": "« L’économie du Brésil est en croissance grâce au niveau élevé des cours mondiaux des matières premières plus qu’à un succès du gouvernement Lula »",
-   "lien": "https://www.lemonde.fr/idees/article/2026/10/17/l-economie-du-bresil-est-en-croissance-grace-au-niveau-eleve-des-cours-mondiaux-des-matieres-premieres-plus-qu-a-un-succes-du-gouvernement-lula_6796586_3232.html",
-   "source": "Le Monde",
-   "date": "2026-10-17T18:00:12.000Z"
-  },
-  {
-   "titre": "Immobilier à Villeurbanne : léger recul des prix de vente en octobre 2026",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/110791/immobilier-a-villeurbanne-leger-recul-des-prix-de-vente-en-octobre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-17T15:00:48.000Z"
   },
   {
    "titre": "Assurance-vie, pourquoi la tentation de taxer ses avantages revient avant la présidentielle",
@@ -37,40 +55,22 @@
    "date": "2026-10-17T14:00:00.000Z"
   },
   {
-   "titre": "L’accord franco-allemand sur l’automobile ménage Stellantis mais n’épargne pas Renault",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/16/l-accord-franco-allemand-sur-l-automobile-menage-stellantis-mais-n-epargne-pas-renault_6795636_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-16T19:40:55.000Z"
-  },
-  {
    "titre": "Donner 100 000 euros à son enfant sans impôt deviendrait possible pendant toute l'année 2027",
    "lien": "https://www.capital.fr/votre-argent/donner-100-000-euros-a-son-enfant-sans-impot-deviendrait-possible-pendant-toute-l-annee-2027-1531058",
    "source": "Capital",
    "date": "2026-10-16T16:39:07.000Z"
   },
   {
-   "titre": "Arnaques bancaires : lors d’une « opération non autorisée », la banque doit d’abord rembourser le client",
-   "lien": "https://www.lemonde.fr/argent/article/2026/10/16/arnaques-bancaires-lors-d-une-operation-non-autorisee-la-banque-doit-d-abord-rembourser-le-client_6795559_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-10-16T14:38:50.000Z"
-  },
-  {
-   "titre": "Crédit immobilier : les banques prêtent moins et les taux remontent",
-   "lien": "https://www.lemonde.fr/argent/article/2026/10/16/credit-immobilier-les-banques-pretent-moins-et-les-taux-remontent_6795545_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-10-16T12:00:01.000Z"
-  },
-  {
-   "titre": "L’investissement socialement responsable reste boudé par les épargnants",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/16/l-investissement-socialement-responsable-reste-boude-par-les-epargnants_6795180_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-16T04:00:26.000Z"
-  },
-  {
    "titre": "Budget 2027 : les députés rejettent le plafonnement d'un abattement fiscal pour les retraités",
    "lien": "https://www.franceinfo.fr/economie/budget/budget-2027-les-deputes-rejettent-le-plafonnement-d-un-abattement-fiscal-pour-les-retraites_8238589.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-10-15T11:20:09.000Z"
+  },
+  {
+   "titre": "En revalorisant les retraites complémentaires du secteur privé, l'Agirc-Arrco prend le gouvernement à contrepied",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/en-revalorisant-les-retraites-complementaires-du-secteur-prive-l-agirc-arrco-prend-le-gouvernement-a-contrepied_8217331.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-15T06:12:21.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-18T18:34:54.762Z",
+ "fait": "2026-10-19T12:57:47.106Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 619,
+   "ms": 1017,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 443,
+   "ms": 1429,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1286,
+   "ms": 1259,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 315,
-   "vus": 7,
+   "ms": 564,
+   "vus": 3,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 578,
+   "ms": 511,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,25 +124,25 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 157,
-   "vus": 6,
+   "ms": 162,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 371,
+   "ms": 569,
    "vus": 20,
-   "titres": 0,
-   "dit": "20 titres lus, aucun ne concerne le sujet du site"
+   "titres": 1,
+   "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 216,
-   "vus": 20,
-   "titres": 2,
+   "ms": 610,
+   "vus": 10,
+   "titres": 3,
    "dit": null
   }
  ]
