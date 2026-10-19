@@ -1,34 +1,34 @@
 {
  "lignes": [
   {
-   "titre": "Épargne : pourquoi de plus en plus de Français peinent à mettre de l'argent de côté",
-   "lien": "https://www.moneyvox.fr/placement/actualites/110887/epargne-pourquoi-de-plus-en-plus-de-francais-peinent-a-mettre-de-argent-de-cote",
+   "titre": "Haro sur la fraude bancaire, difficultés à épargner et prêt d'urgence de 20 000 euros : les 3 infos argent du jour",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110893/haro-sur-la-fraude-bancaire-difficultes-a-epargner-et-pret-urgence-de-20-000-euros-les-3-infos-argent-du-jour",
    "source": "MoneyVox",
-   "date": "2026-10-19T12:50:33.000Z"
+   "date": "2026-10-19T18:00:09.000Z"
   },
   {
-   "titre": "Cartes bancaires, retraits, découverts... La Banque Postale augmente ses prix au 1er janvier 2027",
-   "lien": "https://www.moneyvox.fr/tarif-bancaire/actualites/110889/cartes-bancaires-retraits-decouverts-la-banque-postale-augmente-ses-prix-au-1er-janvier-2027",
+   "titre": "Le CAC 40 dans le rouge, les banques françaises plongent... Le journal de la bourse du 19 octobre 2026",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/110895/le-cac-40-dans-le-rouge-les-banques-francaises-plongent-le-journal-de-la-bourse-du-19-octobre-2026",
    "source": "MoneyVox",
-   "date": "2026-10-19T10:58:37.000Z"
+   "date": "2026-10-19T16:41:45.000Z"
   },
   {
-   "titre": "Crédit Agricole : crédit d'urgence de 20 000 euros pour les commerçants après les violences du 17 octobre",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110886/credit-agricole-credit-urgence-de-20-000-euros-pour-les-commercants-apres-les-violences-du-17-octobre",
+   "titre": "Le placement de produit, espoir des producteurs de télévision pour financer leurs émissions",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/19/le-placement-de-produit-espoir-des-producteurs-de-television-pour-financer-leurs-emissions_6797540_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-19T14:07:06.000Z"
+  },
+  {
+   "titre": "Caisse d'Epargne, Banques Populaires : prêt d'urgence jusqu'à 30 000 euros après les violences du 17 octobre",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110886/caisse-epargne-banques-populaires-pret-urgence-jusqua-30-000-euros-apres-les-violences-du-17-octobre",
    "source": "MoneyVox",
-   "date": "2026-10-19T09:53:17.000Z"
+   "date": "2026-10-19T13:06:31.000Z"
   },
   {
    "titre": "Placements : les Français dans l’étau des taux",
    "lien": "https://www.lemonde.fr/economie/article/2026/10/19/placements-les-francais-dans-l-etau-des-taux_6797492_3234.html",
    "source": "Le Monde",
    "date": "2026-10-19T06:00:09.000Z"
-  },
-  {
-   "titre": "Les violences du 17 octobre en France sont-elles de nature à inquiéter les marchés financiers ?",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/les-violences-du-17-octobre-en-france-sont-elles-de-nature-a-inquieter-les-marches-financiers_8222707.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-19T05:33:59.000Z"
   },
   {
    "titre": "Les fonds responsables offrent-ils vraiment de mauvais rendements ?",
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-19T12:57:47.106Z",
+ "fait": "2026-10-19T20:59:50.451Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1017,
+   "ms": 712,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1429,
+   "ms": 1091,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1259,
+   "ms": 1209,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 564,
+   "ms": 353,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 511,
+   "ms": 1054,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 162,
-   "vus": 3,
+   "ms": 177,
+   "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 569,
+   "ms": 448,
    "vus": 20,
-   "titres": 1,
-   "dit": null
+   "titres": 0,
+   "dit": "20 titres lus, aucun ne concerne le sujet du site"
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 610,
-   "vus": 10,
+   "ms": 384,
+   "vus": 16,
    "titres": 3,
    "dit": null
   }
