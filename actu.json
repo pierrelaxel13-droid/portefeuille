@@ -1,16 +1,28 @@
 {
  "lignes": [
   {
-   "titre": "Dette : l'écart entre les taux d'emprunt français et allemand franchit le seuil de 1,5 point",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/110901/dette-ecart-entre-les-taux-emprunt-francais-et-allemand-franchit-le-seuil-de-1-5-point",
+   "titre": "Impôts locaux, panne chez Revolut, prime carburant de 100 euros... Les 3 infos argent du mardi 20 octobre 2026",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110909/impots-locaux-panne-chez-revolut-prime-carburant-de-100-euros-les-3-infos-argent-du-mardi-20-octobre-2026",
    "source": "MoneyVox",
-   "date": "2026-10-20T09:41:30.000Z"
+   "date": "2026-10-20T18:00:09.000Z"
   },
   {
-   "titre": "Assurance vie : Allianz s'engage sur des mots clairs pour les foyers qui préparent une transmission",
-   "lien": "https://www.moneyvox.fr/assurance-vie/actualites/110849/allianz-s-engage-sur-des-mots-clairs-pour-les-foyers-qui-preparent-une-transmission",
+   "titre": "Loyers encadrés : comment certains propriétaires appliquent des compléments abusifs, et quels recours pour les locataires ?",
+   "lien": "https://www.franceinfo.fr/economie/immobilier/encadrement-des-loyers/loyers-encadres-comment-certains-proprietaires-appliquent-des-complements-abusifs-et-quels-recours-pour-les-locataires_8229070.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-20T15:40:27.000Z"
+  },
+  {
+   "titre": "Livret A : « Je paie des impôts sur les intérêts avec le prélèvement à la source et la flat tax ? »",
+   "lien": "https://www.moneyvox.fr/livret/actualites/110911/livret-a-je-paie-des-impots-sur-les-interets-avec-le-prelevement-a-la-source-et-la-flat-tax",
    "source": "MoneyVox",
-   "date": "2026-10-20T09:06:16.000Z"
+   "date": "2026-10-20T15:28:53.000Z"
+  },
+  {
+   "titre": "Crédit Mutuel, Macif... Les indemnisations des assurances pour les particuliers après les violences du 17 octobre",
+   "lien": "https://www.moneyvox.fr/assurance/actualites/110910/credit-mutuel-macif-les-indemnisations-des-assurances-pour-les-particuliers-apres-les-violences-du-17-octobre",
+   "source": "MoneyVox",
+   "date": "2026-10-20T12:52:32.000Z"
   },
   {
    "titre": "Assurance-vie : quels fonds en euros profiteront le plus de la hausse des taux",
@@ -19,40 +31,10 @@
    "date": "2026-10-20T09:05:23.000Z"
   },
   {
-   "titre": "La Commission européenne autorise l'OPA du milliardaire tchèque Daniel Kretinsky sur le groupe Fnac-Darty",
-   "lien": "https://www.franceinfo.fr/economie/commerce/la-commission-europeenne-autorise-l-opa-du-milliardaire-tcheque-daniel-kretinsky-du-groupe-fnac-darty_8245165.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-20T08:13:00.000Z"
-  },
-  {
-   "titre": "Dernier jour, mardi 20 octobre, pour le paiement de la taxe foncière 2026 en ligne à la DGFiP",
-   "lien": "https://www.moneyvox.fr/impot/actualites/110477/dernier-jour-mardi-20-octobre-pour-le-paiement-de-la-taxe-fonciere-2026-en-ligne-a-la-dgfip",
-   "source": "MoneyVox",
-   "date": "2026-10-20T07:39:06.000Z"
-  },
-  {
-   "titre": "La bourse de Paris dévisse, les investisseurs s’inquiètent face aux violences et pillages en France",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-decryptage-eco/la-bourse-de-paris-devisse-les-investisseurs-s-inquietent-face-aux-violences-et-pillages-en-france_8224132.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-20T05:36:38.000Z"
-  },
-  {
    "titre": "Assurance-vie : choisir les fonds en euros reste le placement incontournable pour les épargnants français",
    "lien": "https://www.lemonde.fr/economie/article/2026/10/20/assurance-vie-choisir-les-fonds-en-euros-reste-le-placement-incontournable-pour-les-epargnants-francais_6797873_3234.html",
    "source": "Le Monde",
    "date": "2026-10-20T05:00:16.000Z"
-  },
-  {
-   "titre": "\"Du matraquage fiscal\" : la filière sucrière s'insurge contre un projet d'extension de la taxation des aliments sucrés",
-   "lien": "https://www.franceinfo.fr/economie/budget/du-matraquage-fiscal-la-filiere-sucriere-s-insurge-contre-un-projet-d-extension-de-la-taxation-des-aliments-sucres_8244565.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-20T04:32:58.000Z"
-  },
-  {
-   "titre": "Le placement de produit, espoir des producteurs de télévision pour financer leurs émissions",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/19/le-placement-de-produit-espoir-des-producteurs-de-television-pour-financer-leurs-emissions_6797540_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-19T14:07:06.000Z"
   },
   {
    "titre": "Placements : les Français dans l’étau des taux",
@@ -71,6 +53,24 @@
    "lien": "https://www.capital.fr/votre-argent/fraude-bancaire-la-cjue-rappelle-lobligation-de-remboursement-1531064",
    "source": "Capital",
    "date": "2026-10-18T14:00:00.000Z"
+  },
+  {
+   "titre": "Assurance-vie, pourquoi la tentation de taxer ses avantages revient avant la présidentielle",
+   "lien": "https://www.capital.fr/votre-argent/assurance-vie-pourquoi-la-tentation-de-taxer-ses-avantages-revient-avant-la-presidentielle-1531054",
+   "source": "Capital",
+   "date": "2026-10-17T14:00:00.000Z"
+  },
+  {
+   "titre": "Budget 2027 : les députés rejettent le plafonnement d'un abattement fiscal pour les retraités",
+   "lien": "https://www.franceinfo.fr/economie/budget/budget-2027-les-deputes-rejettent-le-plafonnement-d-un-abattement-fiscal-pour-les-retraites_8238589.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-15T11:20:09.000Z"
+  },
+  {
+   "titre": "En revalorisant les retraites complémentaires du secteur privé, l'Agirc-Arrco prend le gouvernement à contrepied",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/en-revalorisant-les-retraites-complementaires-du-secteur-prive-l-agirc-arrco-prend-le-gouvernement-a-contrepied_8217331.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-15T06:12:21.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-20T11:25:07.830Z",
+ "fait": "2026-10-20T19:58:06.590Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1323,
+   "ms": 1010,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1150,
+   "ms": 748,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1831,
+   "ms": 754,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 430,
+   "ms": 349,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 995,
+   "ms": 975,
    "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,25 +124,25 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 143,
-   "vus": 7,
+   "ms": 167,
+   "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 800,
-   "vus": 17,
-   "titres": 3,
-   "dit": null
+   "ms": 437,
+   "vus": 20,
+   "titres": 0,
+   "dit": "20 titres lus, aucun ne concerne le sujet du site"
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 580,
+   "ms": 329,
    "vus": 20,
-   "titres": 2,
+   "titres": 1,
    "dit": null
   }
  ]
