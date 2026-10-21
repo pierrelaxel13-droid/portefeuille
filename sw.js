@@ -13,6 +13,30 @@
    le stockage local du navigateur, que ce fichier ne touche pas. */
 
 const VERSION = 'pierrelco-portefeuille-261020.2033';
+
+/* ===== LE CACHE APPARTIENT A L'ORIGINE, PAS A CE WORKER =====
+   `caches` n'est pas cloisonne par la portee du service worker : il
+   est commun a toute l'origine. Or une adresse comme
+   « compte.github.io » sert UN SITE PAR DEPOT, tous sur la meme
+   origine — et le menage d'activation, ecrit « supprime tout ce qui
+   n'est pas ma version », effacait donc le cache hors ligne DES
+   AUTRES SITES du meme compte a chaque publication de celui-ci.
+
+   Ce n'est pas une fuite, c'est une degradation : le voisin perd son
+   mode hors ligne et doit tout retelecharger, sans que rien ne
+   paraisse casse. On ne supprime donc plus que ce qui porte notre
+   prefixe.
+
+   LA RECIPROQUE N'EST PAS GARANTIE, et il faut le dire : ce menage
+   aveugle est le modele que tout le monde recopie. Un site voisin qui
+   le garde effacera le notre. De meme, un `localStorage.clear()` chez
+   lui emporte le portefeuille, et un worker pose a la RACINE de
+   l'origine couvre « /portefeuille/ » par sa portee. La seule
+   etancheite reelle entre deux sites est une ORIGINE DISTINCTE —
+   c'est-a-dire une autre adresse. Ce fichier limite les degats qu'il
+   cause ; il ne peut pas se proteger de ceux qu'il subit. */
+const PREFIXE = 'pierrelco-portefeuille-';
+
 const COQUILLE = [
   './',
   './index.html',
@@ -40,7 +64,11 @@ self.addEventListener('activate', function(e){
     caches.keys()
       .then(function(noms){
         return Promise.all(noms.map(function(n){
-          return n === VERSION ? null : caches.delete(n);
+          if (n === VERSION) return null;
+          /* Un nom qui n'est pas le notre appartient a un autre site
+             de la meme origine : on n'y touche pas. */
+          if (n.indexOf(PREFIXE) !== 0) return null;
+          return caches.delete(n);
         }));
       })
       .then(function(){ return self.clients.claim(); })
