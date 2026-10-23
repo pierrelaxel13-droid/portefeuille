@@ -1,28 +1,40 @@
 {
  "lignes": [
   {
-   "titre": "Le « spread », mesure de la méfiance des marchés envers la dette française",
-   "lien": "https://www.moneyvox.fr/actu/110964/le-spread-mesure-de-la-mefiance-des-marches-envers-la-dette-francaise",
+   "titre": "Le CAC 40 dans le rouge vif, l'Oréal ou le refuge du luxe : le journal de la bourse du vendredi 23 octobre",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/110974/le-cac-40-dans-le-rouge-vif-oreal-ou-le-refuge-du-luxe-le-journal-de-la-bourse-du-vendredi-23-octobre",
    "source": "MoneyVox",
-   "date": "2026-10-23T10:28:24.000Z"
+   "date": "2026-10-23T18:04:27.000Z"
+  },
+  {
+   "titre": "Le prêt à taux zéro de Bpifrance pour les commerçants est disponible après les violences du 17 octobre",
+   "lien": "https://www.moneyvox.fr/banque-pro/actualites/110973/le-pret-a-taux-zero-de-bpifrance-pour-les-commercants-est-disponible-apres-les-violences-du-17-octobre",
+   "source": "MoneyVox",
+   "date": "2026-10-23T17:59:13.000Z"
+  },
+  {
+   "titre": "Un taux d'emprunt qui dépasse les 5% \"c'est très grave\", explique le président du directoire d'Euronext",
+   "lien": "https://www.franceinfo.fr/replay-radio/l-interview-eco/un-taux-d-emprunt-qui-depasse-les-5-c-est-tres-grave-explique-le-president-du-directoire-d-euronext_8229256.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-23T16:38:42.000Z"
+  },
+  {
+   "titre": "Les Forges de Tarbes, producteurs des corps d’obus du canon Caesar, demandent leur placement en redressement judiciaire",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/23/les-forges-de-tarbes-producteurs-des-corps-d-obus-du-canon-caesar-demandent-leur-placement-en-redressement-judiciaire_6799119_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-23T16:15:05.000Z"
+  },
+  {
+   "titre": "Retraite Agirc-Arrco décalée, APL boostées... Les dates de vos virements en novembre",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110971/retraite-agirc-arrco-decalee-apl-boostees-les-dates-de-vos-virements-en-novembre",
+   "source": "MoneyVox",
+   "date": "2026-10-23T14:16:55.000Z"
   },
   {
    "titre": "Frais de découvert : comment réduire la note, et ce que les banques n’auront plus le droit de facturer le 20 novembre",
    "lien": "https://www.capital.fr/votre-argent/frais-de-decouvert-comment-reduire-la-note-et-ce-que-les-banques-nauront-plus-le-droit-de-facturer-le-20-novembre-1531213",
    "source": "Capital",
    "date": "2026-10-23T10:00:00.000Z"
-  },
-  {
-   "titre": "Bourse de Paris : Valeo dévisse de 12% au lendemain de ses résultats",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/110960/bourse-de-paris-valeo-devisse-de-12-au-lendemain-de-ses-resultats",
-   "source": "MoneyVox",
-   "date": "2026-10-23T09:12:05.000Z"
-  },
-  {
-   "titre": "Quitter sa banque traditionnelle pour Monabanq : ce qu'on y gagne",
-   "lien": "https://www.moneyvox.fr/banque-en-ligne/actualites/109377/quitter-sa-banque-traditionnelle-pour-monabanq-ce-quon-y-gagne",
-   "source": "MoneyVox",
-   "date": "2026-10-23T08:54:26.000Z"
   },
   {
    "titre": "De quels leviers le gouvernement dispose-t-il pour soutenir le pouvoir d'achat ?",
@@ -37,18 +49,6 @@
    "date": "2026-10-23T07:30:00.000Z"
   },
   {
-   "titre": "Le découvert bancaire devient, chaque mois, une réalité pour près d’un Français sur cinq",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/le-decouvert-bancaire-devient-chaque-mois-une-realite-pour-pres-d-un-francais-sur-cinq_8229238.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-23T06:24:08.000Z"
-  },
-  {
-   "titre": "Mouvement social, crise politique, poids de la dette... Pourquoi l'agence Moody's va sans doute abaisser la note de la France vendredi",
-   "lien": "https://www.franceinfo.fr/economie/crise/crise-de-la-dette/mouvement-social-crise-politique-poids-de-la-dette-pourquoi-l-agence-moody-s-va-sans-doute-abaisser-la-note-de-la-france-vendredi_8249629.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-23T05:36:36.000Z"
-  },
-  {
    "titre": "Mark Zuckerberg restera en Californie, même si l’Etat adopte un impôt sur la fortune inspiré par Gabriel Zucman",
    "lien": "https://www.lemonde.fr/economie/article/2026/10/23/mark-zuckerberg-restera-en-californie-meme-en-cas-d-impot-sur-la-fortune_6798940_3234.html",
    "source": "Le Monde",
@@ -61,16 +61,16 @@
    "date": "2026-10-23T02:45:08.000Z"
   },
   {
-   "titre": "Carburant : le gouvernement rembourse les intérêts de prêts aux petites stations-service pour accélérer la baisse des prix dès novembre",
-   "lien": "https://www.lemonde.fr/penurie-de-carburant/article/2026/10/22/carburant-le-gouvernement-rembourse-les-interets-de-prets-aux-petites-stations-service-pour-accelerer-la-baisse-des-prix-des-novembre_6798648_6145475.html",
-   "source": "Le Monde",
-   "date": "2026-10-22T16:47:23.000Z"
-  },
-  {
    "titre": "Epargnants et actionnaires de Tudigo, premières victimes de sa liquidation",
    "lien": "https://www.lemonde.fr/economie/article/2026/10/22/epargnants-et-actionnaires-de-tudigo-premieres-victimes-de-sa-liquidation_6798615_3234.html",
    "source": "Le Monde",
    "date": "2026-10-22T12:00:00.000Z"
+  },
+  {
+   "titre": "Pourquoi les Français délaissent encore le Livret A malgré la hausse de son taux",
+   "lien": "https://www.capital.fr/votre-argent/pourquoi-les-francais-delaissent-encore-le-livret-a-malgre-la-hausse-de-son-taux-1531184",
+   "source": "Capital",
+   "date": "2026-10-22T10:16:35.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-23T11:30:09.988Z",
+ "fait": "2026-10-23T19:55:36.147Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1221,
+   "ms": 965,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1013,
+   "ms": 736,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1112,
+   "ms": 985,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 337,
+   "ms": 326,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 3970,
+   "ms": 4121,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +124,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 172,
+   "ms": 189,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,16 +132,16 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 1103,
-   "vus": 13,
-   "titres": 3,
+   "ms": 796,
+   "vus": 20,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 395,
-   "vus": 10,
+   "ms": 393,
+   "vus": 16,
    "titres": 3,
    "dit": null
   }
