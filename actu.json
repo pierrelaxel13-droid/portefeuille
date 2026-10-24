@@ -1,6 +1,18 @@
 {
  "lignes": [
   {
+   "titre": "Immobilier : Les marchés sous le signe du ralentissement",
+   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-les-marches-sous-le-signe-du-ralentissement_8230963.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-24T14:00:01.000Z"
+  },
+  {
+   "titre": "Assurance-vie : les députés ont rejeté les hausses d’impôts, une association veut empêcher leur retour au budget 2027",
+   "lien": "https://www.capital.fr/votre-argent/assurance-vie-les-deputes-ont-rejete-les-hausses-dimpots-une-association-veut-empecher-leur-retour-au-budget-2027-1531226",
+   "source": "Capital",
+   "date": "2026-10-24T12:00:00.000Z"
+  },
+  {
    "titre": "Vie chère, pouvoir d’achat, jeunesse : quelles solutions dans un pays surendetté ?",
    "lien": "https://www.franceinfo.fr/replay-radio/les-debats-de-l-eco/vie-chere-pouvoir-d-achat-jeunesse-quelles-solutions-dans-un-pays-surendette_8230990.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
@@ -59,18 +71,6 @@
    "lien": "https://www.capital.fr/votre-argent/assurance-vie-au-luxembourg-accessible-des-50-000-euros-ce-quelle-protege-vraiment-et-ce-quelle-coute-1531195",
    "source": "Capital",
    "date": "2026-10-23T07:30:00.000Z"
-  },
-  {
-   "titre": "Epargnants et actionnaires de Tudigo, premières victimes de sa liquidation",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/22/epargnants-et-actionnaires-de-tudigo-premieres-victimes-de-sa-liquidation_6798615_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-22T12:00:00.000Z"
-  },
-  {
-   "titre": "Pourquoi les Français délaissent encore le Livret A malgré la hausse de son taux",
-   "lien": "https://www.capital.fr/votre-argent/pourquoi-les-francais-delaissent-encore-le-livret-a-malgre-la-hausse-de-son-taux-1531184",
-   "source": "Capital",
-   "date": "2026-10-22T10:16:35.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-24T10:49:26.631Z",
+ "fait": "2026-10-24T18:44:41.727Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1057,
+   "ms": 1068,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 838,
+   "ms": 1056,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1019,
+   "ms": 994,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 452,
+   "ms": 457,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 3626,
+   "ms": 3174,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 142,
-   "vus": 4,
+   "ms": 149,
+   "vus": 6,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 492,
-   "vus": 11,
+   "ms": 1078,
+   "vus": 10,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 389,
-   "vus": 5,
+   "ms": 500,
+   "vus": 7,
    "titres": 3,
    "dit": null
   }
