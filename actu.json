@@ -1,52 +1,58 @@
 {
  "lignes": [
   {
-   "titre": "Impôts sur les intérêts du Livret A, fraude bancaire remboursée : les 5 infos argent de la semaine",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/110963/impots-sur-les-interets-du-livret-a-fraude-bancaire-remboursee-les-5-infos-argent-de-la-semaine",
-   "source": "MoneyVox",
-   "date": "2026-10-25T08:00:09.000Z"
+   "titre": "Hausse des taux d’intérêt : « Sans accalmie sur les marchés financiers, la France pourrait bien avoir besoin d’une aide de la BCE rapidement »",
+   "lien": "https://www.lemonde.fr/idees/article/2026/10/26/hausse-des-taux-d-interet-sans-accalmie-sur-les-marches-financiers-la-france-pourrait-bien-avoir-besoin-d-une-aide-de-la-bce-rapidement_6800743_3232.html",
+   "source": "Le Monde",
+   "date": "2026-10-26T11:00:08.000Z"
   },
   {
-   "titre": "Les 16 chiffres de votre carte bancaire cachent un secret étonnant",
-   "lien": "https://www.moneyvox.fr/carte-bancaire/actualites/110536/les-16-chiffres-de-votre-carte-bancaire-cachent-un-secret-etonnant",
+   "titre": "Impôts : pourquoi le fisc prélève de l'argent sur des millions de comptes bancaires ce lundi",
+   "lien": "https://www.moneyvox.fr/immobilier/actualites/110982/impots-pourquoi-le-fisc-preleve-de-argent-sur-des-millions-de-comptes-bancaires-ce-lundi",
    "source": "MoneyVox",
-   "date": "2026-10-25T04:00:09.000Z"
+   "date": "2026-10-26T10:47:18.000Z"
   },
   {
-   "titre": "Immobilier : Les marchés sous le signe du ralentissement",
-   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-les-marches-sous-le-signe-du-ralentissement_8230963.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Pour répondre à la mobilisation des lycéens, l'ancien gouverneur de la Banque appelle à \"être créatif\" pour trouver des solutions",
+   "lien": "https://www.franceinfo.fr/societe/education/blocage-des-lycees/pour-repondre-a-la-mobilisation-des-lyceens-l-ancien-gouverneur-de-la-banque-appelle-a-etre-creatif-pour-trouver-des-solutions_8254051.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-10-24T14:00:01.000Z"
+   "date": "2026-10-26T10:31:36.000Z"
+  },
+  {
+   "titre": "CAC 40 : La Bourse de Paris dans le vert, Moody's soulage la pression",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/110981/cac-40-la-bourse-de-paris-dans-le-vert-moodys-soulage-la-pression",
+   "source": "MoneyVox",
+   "date": "2026-10-26T10:07:03.000Z"
+  },
+  {
+   "titre": "Dette française : « Le seul signal donné par Moody’s, c’est que le moment est trop inflammable pour craquer une allumette »",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/26/dette-francaise-le-seul-signal-donne-par-moody-s-c-est-que-le-moment-est-trop-inflammable-pour-craquer-une-allumette_6800674_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-26T10:00:07.000Z"
+  },
+  {
+   "titre": "Placement : pourquoi ouvrir une assurance vie chez Hello bank ! quand on est jeune",
+   "lien": "https://www.moneyvox.fr/assurance-vie/actualites/110959/placement-pourquoi-ouvrir-une-assurance-vie-chez-hello-bank-quand-on-est-jeune",
+   "source": "MoneyVox",
+   "date": "2026-10-26T09:35:09.000Z"
+  },
+  {
+   "titre": "Le secteur bancaire directement touché par l’intelligence artificielle",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/le-secteur-bancaire-directement-touche-par-l-intelligence-artificielle_8233156.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-26T08:42:57.000Z"
+  },
+  {
+   "titre": "A Los Angeles, le fléau des vols de câbles en cuivre fait la fortune d’une PME d’Agen",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/26/a-los-angeles-le-fleau-des-vols-de-cables-en-cuivre-fait-la-fortune-d-une-pme-d-agen_6800423_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-26T04:30:11.000Z"
   },
   {
    "titre": "Assurance-vie : les députés ont rejeté les hausses d’impôts, une association veut empêcher leur retour au budget 2027",
    "lien": "https://www.capital.fr/votre-argent/assurance-vie-les-deputes-ont-rejete-les-hausses-dimpots-une-association-veut-empecher-leur-retour-au-budget-2027-1531226",
    "source": "Capital",
    "date": "2026-10-24T12:00:00.000Z"
-  },
-  {
-   "titre": "Vie chère, pouvoir d’achat, jeunesse : quelles solutions dans un pays surendetté ?",
-   "lien": "https://www.franceinfo.fr/replay-radio/les-debats-de-l-eco/vie-chere-pouvoir-d-achat-jeunesse-quelles-solutions-dans-un-pays-surendette_8230990.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-24T09:17:04.000Z"
-  },
-  {
-   "titre": "Placement : l'agence Moody's maintient la note de la dette française à Aa3 avec perspective négative",
-   "lien": "https://www.moneyvox.fr/placement/actualites/110976/agence-moodys-maintient-la-note-de-la-dette-francaise-a-aa3-avec-perspective-negative",
-   "source": "MoneyVox",
-   "date": "2026-10-24T08:05:18.000Z"
-  },
-  {
-   "titre": "Un avertissement \"pour ceux qui jouent la pagaille\", réagit le ministre de l'Economie Roland Lescure après le maintien de la note de la France par l'agence Moody's",
-   "lien": "https://www.franceinfo.fr/economie/budget/un-avertissement-pour-ceux-qui-jouent-la-pagaille-reagit-le-ministre-de-l-economie-roland-lescure-apres-le-maintien-de-la-note-de-la-france-par-l-agence-moody-s_8251963.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-24T06:22:51.000Z"
-  },
-  {
-   "titre": "La raffinerie nigériane de Dangote entre en Bourse, portée par l’envolée des prix des carburants",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/24/la-raffinerie-nigeriane-de-dangote-entre-en-bourse-portee-par-l-envolee-des-prix-des-carburants_6799662_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-24T06:00:07.000Z"
   },
   {
    "titre": "« Le fléchage de l’épargne réglementée offre une piste, modeste mais réelle, pour financer les investissements dont la société a besoin »",
@@ -65,12 +71,6 @@
    "lien": "https://www.capital.fr/votre-argent/frais-de-decouvert-comment-reduire-la-note-et-ce-que-les-banques-nauront-plus-le-droit-de-facturer-le-20-novembre-1531213",
    "source": "Capital",
    "date": "2026-10-23T10:00:00.000Z"
-  },
-  {
-   "titre": "Assurance-vie au Luxembourg : accessible dès 50 000 euros, ce qu’elle protège vraiment et ce qu’elle coûte",
-   "lien": "https://www.capital.fr/votre-argent/assurance-vie-au-luxembourg-accessible-des-50-000-euros-ce-quelle-protege-vraiment-et-ce-quelle-coute-1531195",
-   "source": "Capital",
-   "date": "2026-10-23T07:30:00.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-25T11:15:08.226Z",
+ "fait": "2026-10-26T12:48:42.012Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 776,
+   "ms": 1333,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -92,15 +92,15 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 307,
-   "vus": 7,
+   "ms": 838,
+   "vus": 8,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 260,
+   "ms": 1082,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 137,
-   "vus": 6,
+   "ms": 343,
+   "vus": 7,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 3402,
+   "ms": 4199,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 106,
-   "vus": 6,
+   "ms": 150,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 537,
-   "vus": 15,
-   "titres": 3,
+   "ms": 501,
+   "vus": 20,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 236,
-   "vus": 14,
+   "ms": 342,
+   "vus": 7,
    "titres": 3,
    "dit": null
   }
