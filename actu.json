@@ -1,6 +1,48 @@
 {
  "lignes": [
   {
+   "titre": "La Réserve fédérale américaine choisit d’attendre avant de relever de nouveau ses taux, malgré l’inflation",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/28/la-reserve-federale-americaine-choisit-d-attendre-avant-de-relever-de-nouveau-ses-taux-malgre-l-inflation_6801642_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-28T20:03:17.000Z"
+  },
+  {
+   "titre": "Assurance auto, retraite, Peugeot 208... Les 3 infos argent du mercredi 28 octobre",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111015/assurance-auto-retraite-peugeot-208-les-3-infos-argent-du-mercredi-28-octobre",
+   "source": "MoneyVox",
+   "date": "2026-10-28T19:00:09.000Z"
+  },
+  {
+   "titre": "Le CAC 40 à l'équilibre : le journal de la bourse du mercredi 28 octobre",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/111017/le-cac-40-a-equilibre-le-journal-de-la-bourse-du-mercredi-28-octobre",
+   "source": "MoneyVox",
+   "date": "2026-10-28T18:21:55.000Z"
+  },
+  {
+   "titre": "Immobilier locatif : la hausse des taux obligataires met à mal les vieilles SCPI",
+   "lien": "https://www.moneyvox.fr/immobilier/actualites/111013/immobilier-locatif-la-hausse-des-taux-obligataires-met-a-mal-les-vieilles-scpi",
+   "source": "MoneyVox",
+   "date": "2026-10-28T15:58:50.000Z"
+  },
+  {
+   "titre": "Adoption simple et succession, ce que changerait l’adoption de Claude Chirac par Line Renaud",
+   "lien": "https://www.capital.fr/votre-argent/line-renaud-ce-que-ladoption-de-claude-chirac-pourrait-changer-a-sa-succession-1531327",
+   "source": "Capital",
+   "date": "2026-10-28T15:00:00.000Z"
+  },
+  {
+   "titre": "Bloquer votre épargne jusqu’à 80 ans pour payer l’Ehpad, l’idée d’une ancienne ministre",
+   "lien": "https://www.capital.fr/votre-argent/bloquer-votre-epargne-jusqua-80-ans-pour-payer-lehpad-lidee-dune-ancienne-ministre-1531343",
+   "source": "Capital",
+   "date": "2026-10-28T14:42:33.000Z"
+  },
+  {
+   "titre": "Fonction publique : « Augmenter le point d’indice allégerait le poids de la dette publique dans le PIB »",
+   "lien": "https://www.lemonde.fr/idees/article/2026/10/28/fonction-publique-augmenter-le-point-d-indice-allegerait-le-poids-de-la-dette-publique-dans-le-pib_6801575_3232.html",
+   "source": "Le Monde",
+   "date": "2026-10-28T13:00:10.000Z"
+  },
+  {
    "titre": "Rénovation : \"Laissez-nous travailler\", lance la Capeb qui demande au gouvernement une baisse de la TVA pour les particuliers souhaitant entreprendre des travaux",
    "lien": "https://www.franceinfo.fr/economie/immobilier/renovation-laissez-nous-travailler-lance-la-capeb-qui-demande-au-gouvernement-une-baisse-de-la-tva-pour-les-particuliers-souhaitant-entreprendre-des-travaux_8257144.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
@@ -19,30 +61,6 @@
    "date": "2026-10-28T09:17:27.000Z"
   },
   {
-   "titre": "BNP Paribas : le bénéfice net de la banque grimpe de 13,5 % au troisième trimestre",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111008/bnp-paribas-le-benefice-net-de-la-banque-grimpe-de-13-5-au-troisieme-trimestre",
-   "source": "MoneyVox",
-   "date": "2026-10-28T08:42:21.000Z"
-  },
-  {
-   "titre": "Attentat raciste à Trappes, mobilisations sociales, pouvoir d'achat... Le \"8h30 franceinfo\" de Sarah Knafo",
-   "lien": "https://www.franceinfo.fr/replay-radio/8h30-fauvelle-dely/attentat-raciste-a-trappes-mobilisations-sociales-pouvoir-d-achat-le-8h30-franceinfo-de-sarah-knafo_8236288.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-28T08:19:40.000Z"
-  },
-  {
-   "titre": "Rebond des valeurs de l'IA, la polémique autour de Kylian Mbappé fait chuter On : les infos bourse du mardi 27 octobre 2026",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/111007/rebond-des-valeurs-de-ia-la-polemique-autour-de-kylian-mbappe-fait-chuter-on-les-infos-bourse-du-mardi-27-octobre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-28T08:12:44.000Z"
-  },
-  {
-   "titre": "Défiscalisation : les 3 pièges à éviter si vous voulez réduire votre impôt sur le revenu d'ici la fin d'année",
-   "lien": "https://www.moneyvox.fr/impot/actualites/110986/defiscalisation-les-3-pieges-a-eviter-si-vous-voulez-reduire-votre-impot-sur-le-revenu-ici-la-fin-annee",
-   "source": "MoneyVox",
-   "date": "2026-10-28T06:40:09.000Z"
-  },
-  {
    "titre": "« L’essence et la nourriture, ça devient de la folie » : aux Etats-Unis, des vies minées par l’inflation",
    "lien": "https://www.lemonde.fr/economie/article/2026/10/28/aux-etats-unis-des-vies-minees-par-l-inflation-l-essence-et-la-nourriture-ca-devient-de-la-folie-on-va-finir-par-crever-de-faim_6801535_3234.html",
    "source": "Le Monde",
@@ -53,24 +71,6 @@
    "lien": "https://www.lemonde.fr/argent/article/2026/10/28/les-scpi-a-nouveau-dans-la-tourmente-la-hausse-des-taux-d-interet-conduit-a-de-nouvelles-baisses-de-prix_6801533_1657007.html",
    "source": "Le Monde",
    "date": "2026-10-28T05:00:07.000Z"
-  },
-  {
-   "titre": "Crédits immobiliers : vers des taux d’intérêts à 4% sur 20 ans",
-   "lien": "https://www.franceinfo.fr/replay-jt/france-2/20-heures/credits-immobiliers-vers-des-taux-d-interets-a-4-sur-20-ans_8256442.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-27T22:25:44.000Z"
-  },
-  {
-   "titre": "Le BHV Marais, à Paris, demande son placement en redressement judiciaire",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/27/le-bhv-marais-a-paris-demande-son-placement-en-redressement-judiciaire_6801329_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-27T17:24:34.000Z"
-  },
-  {
-   "titre": "Livrets bancaires : des taux apparemment attractifs, mais gare à l’inflation",
-   "lien": "https://www.lemonde.fr/argent/article/2026/10/27/livrets-bancaires-des-taux-apparemment-attractifs-mais-gare-a-l-inflation_6801102_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-10-27T05:00:04.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-28T12:41:41.892Z",
+ "fait": "2026-10-28T20:58:15.970Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 966,
+   "ms": 929,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 506,
+   "ms": 1025,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1090,
+   "ms": 1719,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 285,
+   "ms": 322,
    "vus": 7,
    "titres": 3,
    "dit": null
@@ -116,32 +116,32 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 123,
-   "vus": 6,
+   "ms": 998,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
   },
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 98,
-   "vus": 5,
+   "ms": 173,
+   "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 476,
-   "vus": 18,
-   "titres": 3,
-   "dit": null
+   "ms": 349,
+   "vus": 20,
+   "titres": 0,
+   "dit": "20 titres lus, aucun ne concerne le sujet du site"
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 340,
-   "vus": 15,
+   "ms": 270,
+   "vus": 16,
    "titres": 3,
    "dit": null
   }
