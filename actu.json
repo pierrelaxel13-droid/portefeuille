@@ -1,22 +1,64 @@
 {
  "lignes": [
   {
-   "titre": "Revalorisation du Smic, hausse des retraites Agirc-Arrco et frais de succession : les 3 infos argent du jour",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111037/revalorisation-du-smic-hausse-des-retraites-agirc-arrco-et-frais-de-succession-les-3-infos-argent-du-jour",
+   "titre": "Les banques françaises engrangent les milliards d'euros avec la hausse des taux mais elles restent aux aguets",
+   "lien": "https://www.moneyvox.fr/banque/actualites/111052/les-banques-francaises-engrangent-les-milliards-euros-avec-la-hausse-des-taux-mais-elles-restent-aux-aguets",
    "source": "MoneyVox",
-   "date": "2026-10-29T19:00:09.000Z"
+   "date": "2026-10-30T12:24:15.000Z"
   },
   {
-   "titre": "A la BCE, Christine Lagarde annonce son départ et veut « s’engager sur des sujets qui ne sont pas des sujets de politique monétaire »",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/29/a-la-bce-christine-lagarde-annonce-son-depart-et-veut-s-engager-sur-des-sujets-qui-ne-sont-pas-des-sujets-de-politique-monetaire_6802379_3234.html",
+   "titre": "Budget 2027 : il faudra faire « davantage d'efforts » que dans le texte initial suite au recul du PIB",
+   "lien": "https://www.moneyvox.fr/actu/111051/budget-2027-il-faudra-faire-davantage-efforts-que-dans-le-texte-initial-suite-au-recul-du-pib",
+   "source": "MoneyVox",
+   "date": "2026-10-30T11:58:34.000Z"
+  },
+  {
+   "titre": "Impôts locaux : pourquoi votre taxe foncière va nettement rebondir en 2027",
+   "lien": "https://www.moneyvox.fr/impot/actualites/110318/impots-locaux-pourquoi-votre-taxe-fonciere-va-nettement-rebondir-en-2027",
+   "source": "MoneyVox",
+   "date": "2026-10-30T11:20:24.000Z"
+  },
+  {
+   "titre": "Concentration dans la livraison alimentaire : « Si tout roule comme le souhaite le propriétaire de Deliveroo, le livreur ne sonnera plus qu’une seule fois »",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/30/concentration-dans-la-livraison-alimentaire-si-tout-roule-comme-le-souhaite-le-proprietaire-de-deliveroo-le-livreur-ne-sonnera-plus-qu-une-seule-fois_6803068_3234.html",
    "source": "Le Monde",
-   "date": "2026-10-29T18:59:25.000Z"
+   "date": "2026-10-30T10:30:04.000Z"
   },
   {
-   "titre": "Renault en tête du CAC 40, TotalEnergies profite de la flambée des prix de l'énergie... Les infos bourse du 29 octobre 2026",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/111039/renault-en-tete-du-cac-40-totalenergies-profite-de-la-flambee-des-prix-de-energie-les-infos-bourse-du-29-octobre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-29T18:05:50.000Z"
+   "titre": "Christine Lagarde démissionne de la présidence de la BCE pour \"reprendre une liberté de parole\"",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-decryptage-eco/christine-lagarde-demissionne-de-la-presidence-de-la-bce-pour-reprendre-une-liberte-de-parole_8239495.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-30T08:53:23.000Z"
+  },
+  {
+   "titre": "Suppression de programmes de lutte contre la précarité énergétique : la Fondation pour le logement des défavorisés dénonce un \"grave recul social et écologique\"",
+   "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-indigne/suppression-de-programmes-de-lutte-contre-la-precarite-energetique-la-fondation-pour-le-logement-des-defavorises-denonce-un-grave-recul-social-et-ecologique_8260073.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-30T08:26:58.000Z"
+  },
+  {
+   "titre": "Avec un recul surprise du PIB au troisième trimestre, l’économie française flirte avec la récession",
+   "lien": "https://www.lemonde.fr/economie/article/2026/10/30/recul-surprise-du-pib-au-troisieme-trimestre-l-economie-francaise-flirte-avec-la-recession_6802918_3234.html",
+   "source": "Le Monde",
+   "date": "2026-10-30T08:26:42.000Z"
+  },
+  {
+   "titre": "Cryptomonnaies : le plateforme Binance victime d'un piratage estimé à 5,6 milliards d'euros",
+   "lien": "https://www.franceinfo.fr/economie/bitcoin/cryptomonnaies-le-plateforme-binance-victime-d-un-piratage-estime-a-5-6-milliards-d-euros_8260088.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-30T08:22:34.000Z"
+  },
+  {
+   "titre": "Des « SCPI zombies » en passe d’être vendues ou de disparaître",
+   "lien": "https://www.lemonde.fr/argent/article/2026/10/30/des-scpi-zombies-en-passe-d-etre-vendues-ou-de-disparaitre_6802771_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-10-30T05:00:09.000Z"
+  },
+  {
+   "titre": "Zéro impôt pour transmettre son entreprise de son vivant, davantage après sa mort, propose Dominique de Villepin",
+   "lien": "https://www.capital.fr/votre-argent/zero-impot-pour-transmettre-son-entreprise-de-son-vivant-davantage-apres-sa-mort-propose-dominique-de-villepin-1531421",
+   "source": "Capital",
+   "date": "2026-10-29T22:38:57.000Z"
   },
   {
    "titre": "Immobilier : est-il de plus en plus difficile d’accéder à la propriété ?",
@@ -25,52 +67,10 @@
    "date": "2026-10-29T17:11:19.000Z"
   },
   {
-   "titre": "Complémentaire santé : la CLCV lance une pétition contre les hausses des cotisations",
-   "lien": "https://www.moneyvox.fr/assurance/actualites/111035/complementaire-sante-la-clcv-lance-une-petition-contre-les-hausses-des-cotisations",
-   "source": "MoneyVox",
-   "date": "2026-10-29T16:32:12.000Z"
-  },
-  {
    "titre": "Rejeté par les députés, le Livret A à 30 000 euros revient par la petite porte",
    "lien": "https://www.capital.fr/votre-argent/rejete-par-les-deputes-le-livret-a-a-30-000-euros-revient-par-la-petite-porte-1531407",
    "source": "Capital",
    "date": "2026-10-29T16:29:29.000Z"
-  },
-  {
-   "titre": "\"39% des Français renoncent à des dépenses essentielles pour payer leur logement\"",
-   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/logement/39-des-francais-renoncent-a-des-depenses-essentielles-pour-payer-leur-logement_8258912.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-29T14:30:02.000Z"
-  },
-  {
-   "titre": "La Banque centrale européenne maintient son principal taux directeur inchangé, à 2,5%",
-   "lien": "https://www.franceinfo.fr/economie/la-banque-centrale-europeenne-maintient-son-principal-taux-directeur-inchange-a-2-5_8258876.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-29T14:11:48.000Z"
-  },
-  {
-   "titre": "La crise du logement \"pourrit depuis 10-15 ans et aucune politique de long terme ne traite le problème\", regrette la présidente du site Particulier à Particulier",
-   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/logement/la-crise-du-logement-pourrit-depuis-10-15-ans-et-aucune-politique-de-long-terme-ne-traite-le-probleme-regrette-la-presidente-du-site-particulier-a-particulier_8258885.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-29T13:40:40.000Z"
-  },
-  {
-   "titre": "« Je veux avoir la liberté de parole », dit Christine Lagarde après l’annonce de son départ de la BCE en février 2027",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/29/christine-lagarde-va-quitter-la-presidence-de-la-bce-le-7-fevrier-2027_6802307_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-29T10:27:15.000Z"
-  },
-  {
-   "titre": "REPORTAGE. \"Le client se bat pour avoir le financement\" : avec des conditions de crédit qui se resserrent et des prix toujours élevés, le marché de l'immobilier est au ralenti",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-choix-franceinfo/reportage-le-client-se-bat-pour-avoir-le-financement-avec-des-conditions-de-credit-qui-se-resserrent-et-des-prix-de-l-immobilier-toujours-eleves-le-marche-de-l-immobilier-est-au-ralenti_8237983.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-29T06:11:40.000Z"
-  },
-  {
-   "titre": "Dans le Vermont, les ravages de la crise du logement aux Etats-Unis : « Si je pouvais ouvrir 100 lits de plus, ils seraient immédiatement pris »",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/29/dans-le-vermont-les-ravages-de-la-crise-du-logement-aux-etats-unis-si-je-pouvais-ouvrir-100-lits-de-plus-ils-seraient-immediatement-pris_6801944_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-29T04:00:09.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-29T21:01:23.676Z",
+ "fait": "2026-10-30T12:42:40.055Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1001,
+   "ms": 968,
    "vus": 8,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 953,
+   "ms": 1302,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1175,
+   "ms": 1101,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 453,
-   "vus": 8,
+   "ms": 411,
+   "vus": 5,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 884,
+   "ms": 1077,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +124,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 139,
+   "ms": 169,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,16 +132,16 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 553,
-   "vus": 9,
+   "ms": 699,
+   "vus": 11,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 488,
-   "vus": 16,
+   "ms": 421,
+   "vus": 7,
    "titres": 3,
    "dit": null
   }
