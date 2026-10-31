@@ -1,6 +1,30 @@
 {
  "lignes": [
   {
+   "titre": "Ballon d'or 2026 : le groupe Amaury, propriétaire de France Football, va déposer plainte après des soupçons de fuites de résultats et de paris frauduleux",
+   "lien": "https://www.franceinfo.fr/sports/foot/ballon-d-or/ballon-d-or-2026-le-groupe-amaury-proprietaire-de-france-football-va-deposer-plainte-apres-des-soupcons-de-fuites-de-resultats-et-de-paris-frauduleux_8261981.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-31T15:57:25.000Z"
+  },
+  {
+   "titre": "Lucya, Meilleurtaux Placement, Linxea, Altaprofits... Voici les bonus d'assurance vie à ne pas louper pour cette fin d'année",
+   "lien": "https://www.moneyvox.fr/assurance-vie/actualites/111034/lucya-meilleurtaux-placement-linxea-altaprofits-voici-les-bonus-assurance-vie-a-ne-pas-louper-pour-cette-fin-annee",
+   "source": "MoneyVox",
+   "date": "2026-10-31T15:00:09.000Z"
+  },
+  {
+   "titre": "Le logement, préoccupation quotidienne et enjeu électoral",
+   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/le-logement-preoccupation-quotidienne-et-enjeu-electoral_8241121.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-10-31T15:00:02.000Z"
+  },
+  {
+   "titre": "« La seule manière de corriger le sous-investissement de la France est d’augmenter le montant de l’épargne disponible »",
+   "lien": "https://www.lemonde.fr/idees/article/2026/10/31/la-seule-maniere-de-corriger-le-sous-investissement-de-la-france-est-d-augmenter-le-montant-de-l-epargne-disponible_6803601_3232.html",
+   "source": "Le Monde",
+   "date": "2026-10-31T13:00:04.000Z"
+  },
+  {
    "titre": "Croissance à l'arrêt, consommation en baisse, prix en hausse... Comment sortir de la crise ?",
    "lien": "https://www.franceinfo.fr/replay-radio/les-debats-de-l-eco/croissance-a-l-arret-consommation-en-baisse-prix-en-hausse-comment-sortir-de-la-crise_8241094.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
@@ -31,28 +55,10 @@
    "date": "2026-10-31T08:00:00.000Z"
   },
   {
-   "titre": "Armes biochimiques, cyberattaques géantes, perte de contrôle... Ce que dit le dossier d'entrée en Bourse d'Anthropic sur les dangers de l'IA",
-   "lien": "https://www.franceinfo.fr/internet/intelligence-artificielle/armes-biochimiques-cyberattaques-geantes-perte-de-controle-ce-que-dit-le-dossier-d-entree-en-bourse-d-anthropic-sur-les-dangers-de-l-ia_8258888.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-10-31T07:25:55.000Z"
-  },
-  {
    "titre": "Peut-on acheter un logement sans devenir propriétaire du terrain ?",
    "lien": "https://www.lemonde.fr/argent/article/2026/10/31/peut-on-acheter-un-logement-sans-devenir-proprietaire-du-terrain_6803390_1657007.html",
    "source": "Le Monde",
    "date": "2026-10-31T05:00:12.000Z"
-  },
-  {
-   "titre": "Livret A, assurance vie, LEP, compte à terme... Le baromètre de votre épargne sans risque en novembre 2026",
-   "lien": "https://www.moneyvox.fr/placement/actualites/111060/livret-a-assurance-vie-lep-compte-a-terme-le-barometre-de-votre-epargne-sans-risque-en-novembre-2026",
-   "source": "MoneyVox",
-   "date": "2026-10-31T05:00:09.000Z"
-  },
-  {
-   "titre": "Pénurie de navires et tarifs record : comment la guerre au Moyen-Orient fait bondir les prix du transport de pétrole",
-   "lien": "https://www.lemonde.fr/economie/article/2026/10/31/penurie-de-navires-et-tarifs-record-comment-la-guerre-au-moyen-orient-fait-bondir-les-prix-du-transport-de-petrole_6803378_3234.html",
-   "source": "Le Monde",
-   "date": "2026-10-31T04:00:48.000Z"
   },
   {
    "titre": "ETF de la semaine : puces chinoises, obligations à 7% et un rival du MSCI World",
@@ -65,12 +71,6 @@
    "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-indigne/suppression-de-programmes-de-lutte-contre-la-precarite-energetique-la-fondation-pour-le-logement-des-defavorises-denonce-un-grave-recul-social-et-ecologique_8260073.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-10-30T08:26:58.000Z"
-  },
-  {
-   "titre": "Des « SCPI zombies » en passe d’être vendues ou de disparaître",
-   "lien": "https://www.lemonde.fr/argent/article/2026/10/30/des-scpi-zombies-en-passe-d-etre-vendues-ou-de-disparaitre_6802771_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-10-30T05:00:09.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-10-31T12:13:00.161Z",
+ "fait": "2026-10-31T19:54:11.752Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1865,
+   "ms": 961,
    "vus": 8,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 289,
+   "ms": 418,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1362,
+   "ms": 1435,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 288,
-   "vus": 5,
+   "ms": 170,
+   "vus": 4,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 953,
+   "ms": 934,
    "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,23 +124,23 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 172,
-   "vus": 5,
+   "ms": 104,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 289,
-   "vus": 9,
+   "ms": 532,
+   "vus": 7,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 211,
+   "ms": 274,
    "vus": 8,
    "titres": 3,
    "dit": null
