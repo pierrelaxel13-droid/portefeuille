@@ -1,52 +1,58 @@
 {
  "lignes": [
   {
+   "titre": "Livret A : le gouvernement envisage une hausse du plafond à 30 000 euros",
+   "lien": "https://www.franceinfo.fr/economie/livret-a-le-gouvernement-envisage-une-hausse-du-plafond-a-30-000-euros_8266541.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-03T20:24:44.000Z"
+  },
+  {
+   "titre": "La SNCF annonce trois mesures pour améliorer le pouvoir d'achat de ses salariés face à l'inflation, dont une prime de 400 euros",
+   "lien": "https://www.franceinfo.fr/economie/transports/sncf/la-sncf-annonce-trois-mesures-pour-ameliorer-le-pouvoir-d-achat-de-ses-salaries-face-a-l-inflation-dont-une-prime-de-400-euros_8266442.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-03T19:06:36.000Z"
+  },
+  {
+   "titre": "Hausse du plafond du Livret A, cumul emploi-retraite, fraude bancaire... Les 3 infos argent du mardi 3 novembre",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111098/hausse-du-plafond-du-livret-a-cumul-emploi-retraite-fraude-bancaire-les-3-infos-argent-du-mardi-3-novembre",
+   "source": "MoneyVox",
+   "date": "2026-11-03T19:00:09.000Z"
+  },
+  {
+   "titre": "Immobilier : une baisse des prix avec la fin de la génération du baby-boom ?",
+   "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-une-baisse-des-prix-avec-la-fin-de-la-generation-du-baby-boom_8266262.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-03T19:00:02.000Z"
+  },
+  {
+   "titre": "BioMérieux, Rubis... le journal de la bourse du mardi 3 novembre 2026",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/111099/biomerieux-rubis-le-journal-de-la-bourse-du-mardi-3-novembre-2026",
+   "source": "MoneyVox",
+   "date": "2026-11-03T18:52:46.000Z"
+  },
+  {
+   "titre": "Jusqu’à 7 000 euros de plus sur votre Livret A, Sébastien Lecornu relève le plafond en février",
+   "lien": "https://www.capital.fr/votre-argent/jusqua-7-000-euros-de-plus-sur-votre-livret-a-sebastien-lecornu-releve-le-plafond-en-fevrier-1531539",
+   "source": "Capital",
+   "date": "2026-11-03T17:34:47.000Z"
+  },
+  {
+   "titre": "Nouveau plafond du Livret A au 1er février 2027 : les gagnants et les perdants",
+   "lien": "https://www.moneyvox.fr/livret-a/actualites/110297/nouveau-plafond-du-livret-a-au-1er-fevrier-2027-les-gagnants-et-les-perdants",
+   "source": "MoneyVox",
+   "date": "2026-11-03T17:13:49.000Z"
+  },
+  {
+   "titre": "La ruée mondiale vers le cuivre, devenu le métal le plus stratégique de la planète",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/03/la-ruee-mondiale-vers-le-cuivre-devenu-le-metal-le-plus-strategique-de-la-planete_6805596_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-03T14:00:16.000Z"
+  },
+  {
    "titre": "La forte demande en cuivre donne de l’allant à l’Afrique dans la course aux métaux",
    "lien": "https://www.lemonde.fr/economie/article/2026/11/03/la-forte-demande-en-cuivre-donne-de-l-allant-a-l-afrique-dans-la-course-aux-metaux_6805589_3234.html",
    "source": "Le Monde",
-   "date": "2026-11-03T13:30:09.000Z"
-  },
-  {
-   "titre": "Après le placement en redressement judiciaire du groupe Gifi, les 6 000 salariés sont inquiets",
-   "lien": "https://www.franceinfo.fr/economie/apres-le-placement-en-redressement-judiciaire-du-groupe-gifi-les-6-000-salaries-sont-inquiets_8265887.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-03T13:24:41.000Z"
-  },
-  {
-   "titre": "Cumul emploi-retraite : tout ce qui change avec les nouvelles règles au 1er janvier 2027",
-   "lien": "https://www.moneyvox.fr/retraite/actualites/111091/cumul-emploi-retraite-tout-ce-qui-change-avec-les-nouvelles-regles-au-1er-janvier-2027",
-   "source": "MoneyVox",
-   "date": "2026-11-03T12:28:08.000Z"
-  },
-  {
-   "titre": "Crédit Agricole : ce qui change pour le Plan d'épargne retraite (PER) Perspective",
-   "lien": "https://www.moneyvox.fr/placement/actualites/111090/credit-agricole-ce-qui-change-pour-le-plan-epargne-retraite-perspective",
-   "source": "MoneyVox",
-   "date": "2026-11-03T11:44:15.000Z"
-  },
-  {
-   "titre": "BHV : « Les syndicats espèrent que le placement en redressement judiciaire permettra de tourner la page de la gestion calamiteuse de Frédéric Merlin »",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/03/bhv-les-syndicats-esperent-que-le-placement-en-redressement-judiciaire-permettra-de-tourner-la-page-de-la-gestion-calamiteuse-de-frederic-merlin_6805557_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-03T09:30:11.000Z"
-  },
-  {
-   "titre": "PER : jusqu'à 200 euros offerts chez Linxea en ce moment",
-   "lien": "https://www.moneyvox.fr/placement/actualites/110758/per-jusqua-200-euros-offerts-chez-linxea-en-ce-moment",
-   "source": "MoneyVox",
-   "date": "2026-11-03T09:22:14.000Z"
-  },
-  {
-   "titre": "États-Unis : ces Américains que l'inflation a rendus pauvres",
-   "lien": "https://www.franceinfo.fr/monde/usa/etats-unis-ces-americains-que-l-inflation-a-rendus-pauvres_8265332.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-03T07:06:32.000Z"
-  },
-  {
-   "titre": "Ryanair annonce un plan d’adaptation face au pétrole cher",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-brief-eco/ryanair-annonce-un-plan-d-adaptation-face-au-petrole-cher_8244766.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-03T06:08:50.000Z"
+   "date": "2026-11-03T13:30:07.000Z"
   },
   {
    "titre": "Assurance-vie : les bonus des fonds en euros, des taux alléchants en trompe-l’œil",
@@ -65,12 +71,6 @@
    "lien": "https://www.lemonde.fr/idees/article/2026/11/02/anthropic-en-bourse-l-apocalypse-est-elle-un-risque-d-investissement-comme-un-autre_6805221_3232.html",
    "source": "Le Monde",
    "date": "2026-11-02T09:00:12.000Z"
-  },
-  {
-   "titre": "Immobilier : Colmar tient bon la barre",
-   "lien": "https://www.lemonde.fr/argent/article/2026/11/02/immobilier-colmar-tient-bon-la-barre_6804879_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-11-02T05:00:05.000Z"
   }
  ],
  "sources": [
@@ -79,20 +79,20 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-03T14:01:56.115Z",
+ "fait": "2026-11-03T21:41:21.209Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1381,
-   "vus": 8,
+   "ms": 890,
+   "vus": 10,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 423,
+   "ms": 555,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 957,
+   "ms": 1347,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 187,
-   "vus": 4,
+   "ms": 190,
+   "vus": 5,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 235,
+   "ms": 1332,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 123,
-   "vus": 5,
+   "ms": 172,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 417,
-   "vus": 13,
+   "ms": 824,
+   "vus": 6,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 279,
-   "vus": 8,
+   "ms": 214,
+   "vus": 15,
    "titres": 3,
    "dit": null
   }
