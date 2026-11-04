@@ -1,10 +1,28 @@
 {
  "lignes": [
   {
-   "titre": "Bourse : les marchés saluent la victoire démocrate, taux et dollar reculent",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/111111/les-marches-saluent-la-victoire-democrate-taux-et-dollar-reculent",
-   "source": "MoneyVox",
-   "date": "2026-11-04T13:54:20.000Z"
+   "titre": "Cyberattaque au Crédit mutuel Arkéa : une enquête ouverte après un détournement estimé à près de 100 millions d’euros",
+   "lien": "https://www.lemonde.fr/pixels/article/2026/11/04/cyberattaque-au-credit-mutuel-arkea-une-enquete-ouverte-apres-un-detournement-estime-a-pres-de-100-millions-d-euros_6806141_4408997.html",
+   "source": "Le Monde",
+   "date": "2026-11-04T20:47:47.000Z"
+  },
+  {
+   "titre": "Avec la cyberattaque au Crédit mutuel Arkéa, les banques européennes prennent conscience de l’ampleur de leur vulnérabilité",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/04/avec-la-cyberattaque-au-credit-mutuel-arkea-les-banques-europeennes-prennent-conscience-de-l-ampleur-de-leur-vulnerabilite_6806367_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-04T16:51:29.000Z"
+  },
+  {
+   "titre": "\"Dès l'origine, ça a été ouvert à tous\" : le plafond du livret A bientôt relevé",
+   "lien": "https://www.franceinfo.fr/economie/votre-argent/livret-a/des-l-origine-ca-a-ete-ouvert-a-tous-le-plafond-du-livret-a-bientot-releve_8267867.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-04T15:35:51.000Z"
+  },
+  {
+   "titre": "Etat, épargnants, banques… A qui profite (vraiment) le relèvement du plafond du livret A ?",
+   "lien": "https://www.franceinfo.fr/economie/votre-argent/livret-a/etat-epargnants-banques-a-qui-profite-vraiment-le-relevement-du-plafond-du-livret-a_8267444.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-04T14:53:35.000Z"
   },
   {
    "titre": "Une croissance de 0,5 % en 2026 est « difficilement atteignable », selon le Haut Conseil des finances publiques",
@@ -13,40 +31,10 @@
    "date": "2026-11-04T13:42:37.000Z"
   },
   {
-   "titre": "Nouveau plafond du Livret A : combien allez-vous pouvoir ajouter sur votre compte ?",
-   "lien": "https://www.moneyvox.fr/livret-a/actualites/111110/nouveau-plafond-du-livret-a-combien-allez-vous-pouvoir-ajouter-sur-votre-compte",
-   "source": "MoneyVox",
-   "date": "2026-11-04T13:24:45.000Z"
-  },
-  {
-   "titre": "Relever le plafond du livret A pour rénover les lycées ? L'initiative du gouvernement laisse ces Français circonspects",
-   "lien": "https://www.franceinfo.fr/societe/education/blocage-des-lycees/le-relevement-du-plafond-du-livret-a-peut-il-etre-efficace-pour-renover-les-lycees_8267264.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-04T11:33:33.000Z"
-  },
-  {
    "titre": "Faillite bancaire : ce qui est garanti pour les comptes, livrets, titres et assurance-vie",
    "lien": "https://www.capital.fr/votre-argent/faillite-bancaire-ce-qui-est-garanti-pour-les-comptes-livrets-titres-et-assurance-vie-1531373",
    "source": "Capital",
    "date": "2026-11-04T11:00:00.000Z"
-  },
-  {
-   "titre": "\"On transforme un peu le livret A en mille-feuille\", dénonce un économiste après l'annonce du gouvernement",
-   "lien": "https://www.franceinfo.fr/economie/votre-argent/livret-a/on-transforme-un-peu-le-livret-a-en-mille-feuille-denonce-un-economiste-apres-l-annonce-du-gouvernement_8267177.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-04T10:57:04.000Z"
-  },
-  {
-   "titre": "Le Crédit Mutuel Arkéa victime d'opérations frauduleuses suite à une cyberattaque",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111108/le-credit-mutuel-arkea-victime-operations-frauduleuses-suite-a-une-cyberattaque",
-   "source": "MoneyVox",
-   "date": "2026-11-04T10:10:56.000Z"
-  },
-  {
-   "titre": "Cyberattaque au Crédit mutuel Arkéa : le détournement est évalué à 118 millions d’euros",
-   "lien": "https://www.lemonde.fr/pixels/article/2026/11/04/le-credit-mutuel-arkea-confirme-avoir-ete-victime-d-une-cyberattaque-le-detournement-est-evalue-a-118-millions-d-euros_6806141_4408996.html",
-   "source": "Le Monde",
-   "date": "2026-11-04T10:08:38.000Z"
   },
   {
    "titre": "Relèvement du plafond du Livret A : « On est loin de la volonté affichée par Emmanuel Macron d’orienter l’épargne des Français vers des placements à long terme »",
@@ -71,20 +59,31 @@
    "lien": "https://www.capital.fr/votre-argent/jusqua-7-000-euros-de-plus-sur-votre-livret-a-sebastien-lecornu-releve-le-plafond-en-fevrier-1531539",
    "source": "Capital",
    "date": "2026-11-03T17:34:47.000Z"
+  },
+  {
+   "titre": "Assurance-vie : les bonus des fonds en euros, des taux alléchants en trompe-l’œil",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/03/assurance-vie-les-bonus-des-fonds-en-euros-des-taux-allechants-en-trompe-l-il_6805533_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-03T05:00:08.000Z"
+  },
+  {
+   "titre": "Baisse des carburants, revalorisation des retraites complémentaires, hausse des prix du gaz : ce qui change pour votre portefeuille dimanche 1er novembre",
+   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/baisse-des-carburants-revalorisation-des-retraites-complementaires-hausse-des-prix-du-gaz-ce-qui-change-pour-votre-portefeuille-dimanche-1er-novembre_8262782.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-01T15:05:28.000Z"
   }
  ],
  "sources": [
   "France Info",
   "Le Monde",
-  "Capital",
-  "MoneyVox"
+  "Capital"
  ],
- "fait": "2026-11-04T14:21:39.690Z",
+ "fait": "2026-11-04T21:49:08.165Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 988,
+   "ms": 623,
    "vus": 10,
    "titres": 3,
    "dit": null
@@ -92,7 +91,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1026,
+   "ms": 610,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +99,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1614,
+   "ms": 1378,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,7 +107,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 75,
+   "ms": 321,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -116,32 +115,32 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 1014,
+   "ms": 892,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
   },
   {
    "nom": "MoneyVox",
-   "etat": 200,
-   "ms": 231,
-   "vus": 4,
-   "titres": 3,
-   "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
+   "etat": 0,
+   "ms": 8000,
+   "vus": 0,
+   "titres": 0,
+   "dit": "This operation was aborted"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
    "ms": 481,
-   "vus": 12,
-   "titres": 3,
+   "vus": 20,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 220,
-   "vus": 7,
+   "ms": 430,
+   "vus": 6,
    "titres": 3,
    "dit": null
   }
