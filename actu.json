@@ -1,34 +1,64 @@
 {
  "lignes": [
   {
+   "titre": "Immobilier : la hausse des taux de crédit plombe les achats de logements",
+   "lien": "https://www.moneyvox.fr/credit/actualites/111129/immobilier-la-hausse-des-taux-de-credit-plombe-les-achats-de-logements",
+   "source": "MoneyVox",
+   "date": "2026-11-05T13:48:09.000Z"
+  },
+  {
+   "titre": "Retraite Agirc-Arrco : 12 500 rendez-vous en novembre pour comprendre majorations et trimestres « enfants »",
+   "lien": "https://www.moneyvox.fr/retraite/actualites/111127/retraite-agirc-arrco-12-500-rendez-vous-en-novembre-pour-comprendre-majorations-et-trimestres-enfants",
+   "source": "MoneyVox",
+   "date": "2026-11-05T12:59:24.000Z"
+  },
+  {
+   "titre": "Des millions d'euros volés, une attaque inédite, une enquête ouverte... Ce que l'on sait du piratage du Crédit mutuel Arkéa",
+   "lien": "https://www.franceinfo.fr/internet/securite-sur-internet/cyberattaques/des-millions-d-euros-voles-une-attaque-inedite-et-une-enquete-ouverte-ce-que-l-on-sait-du-piratage-du-credit-mutuel-arkea_8269124.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-05T12:51:03.000Z"
+  },
+  {
+   "titre": "L'or, un placement à potentiel après le raz-de-marée démocrate aux Etats-Unis ?",
+   "lien": "https://www.capital.fr/votre-argent/l-or-un-placement-a-potentiel-apres-le-raz-de-maree-democrate-aux-etats-unis-1531591",
+   "source": "Capital",
+   "date": "2026-11-05T11:27:35.000Z"
+  },
+  {
+   "titre": "Piratage du Crédit Mutuel Arkéa : les clients sont appelés à « la plus grande vigilance »",
+   "lien": "https://www.moneyvox.fr/banque/actualites/111125/piratage-du-credit-mutuel-arkea-les-clients-sont-appeles-a-la-plus-grande-vigilance",
+   "source": "MoneyVox",
+   "date": "2026-11-05T10:46:24.000Z"
+  },
+  {
+   "titre": "Lycéens, salariés, retraités… Les manifestants se préparent à la mobilisation du 5 novembre",
+   "lien": "https://www.franceinfo.fr/economie/greve/greve/lyceens-salaries-retraites-les-manifestants-se-preparent-a-la-mobilisation-du-5-novembre_8269082.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-05T09:56:15.000Z"
+  },
+  {
+   "titre": "Grève générale, pouvoir d'achat, blocage des lycées... \"Le 8h30 franceinfo\" de Bruno Retailleau",
+   "lien": "https://www.franceinfo.fr/replay-radio/8h30-fauvelle-dely/greve-generale-pouvoir-d-achat-blocage-des-lycees-le-8h30-franceinfo-de-bruno-retailleau_8248147.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-05T08:03:14.000Z"
+  },
+  {
+   "titre": "Mariage sous le régime de la communauté : les loyers du bien propre d’un époux sont communs aux deux",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/05/mariage-sous-le-regime-de-la-communaute-les-loyers-du-bien-propre-d-un-epoux-sont-communs-aux-deux_6806818_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-05T05:01:00.000Z"
+  },
+  {
+   "titre": "Midterms 2026 : Wall Street salue la vague démocrate au Congrès et ses promesses de stabilité et de statu quo",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/05/midterms-2026-wall-street-salue-la-vague-democrate-au-congres-et-ses-promesses-de-certitudes-et-de-statu-quo_6806670_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-05T04:00:03.000Z"
+  },
+  {
    "titre": "Cyberattaque au Crédit mutuel Arkéa : une enquête ouverte après un détournement estimé à près de 100 millions d’euros",
    "lien": "https://www.lemonde.fr/pixels/article/2026/11/04/cyberattaque-au-credit-mutuel-arkea-une-enquete-ouverte-apres-un-detournement-estime-a-pres-de-100-millions-d-euros_6806141_4408997.html",
    "source": "Le Monde",
    "date": "2026-11-04T20:47:47.000Z"
-  },
-  {
-   "titre": "Avec la cyberattaque au Crédit mutuel Arkéa, les banques européennes prennent conscience de l’ampleur de leur vulnérabilité",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/04/avec-la-cyberattaque-au-credit-mutuel-arkea-les-banques-europeennes-prennent-conscience-de-l-ampleur-de-leur-vulnerabilite_6806367_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-04T16:51:29.000Z"
-  },
-  {
-   "titre": "\"Dès l'origine, ça a été ouvert à tous\" : le plafond du livret A bientôt relevé",
-   "lien": "https://www.franceinfo.fr/economie/votre-argent/livret-a/des-l-origine-ca-a-ete-ouvert-a-tous-le-plafond-du-livret-a-bientot-releve_8267867.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-04T15:35:51.000Z"
-  },
-  {
-   "titre": "Etat, épargnants, banques… A qui profite (vraiment) le relèvement du plafond du livret A ?",
-   "lien": "https://www.franceinfo.fr/economie/votre-argent/livret-a/etat-epargnants-banques-a-qui-profite-vraiment-le-relevement-du-plafond-du-livret-a_8267444.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-04T14:53:35.000Z"
-  },
-  {
-   "titre": "Une croissance de 0,5 % en 2026 est « difficilement atteignable », selon le Haut Conseil des finances publiques",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/04/une-croissance-de-0-5-en-2026-est-difficilement-atteignable-selon-le-haut-conseil-des-finances-publiques_6806233_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-04T13:42:37.000Z"
   },
   {
    "titre": "Faillite bancaire : ce qui est garanti pour les comptes, livrets, titres et assurance-vie",
@@ -40,50 +70,21 @@
    "titre": "Relèvement du plafond du Livret A : « On est loin de la volonté affichée par Emmanuel Macron d’orienter l’épargne des Français vers des placements à long terme »",
    "lien": "https://www.lemonde.fr/economie/article/2026/11/04/relevement-du-plafond-du-livret-a-on-est-loin-de-la-volonte-affichee-par-emmanuel-macron-d-orienter-l-epargne-des-francais-vers-des-placements-a-long-terme_6806139_3234.html",
    "source": "Le Monde",
-   "date": "2026-11-04T10:00:06.000Z"
-  },
-  {
-   "titre": "Vers une hausse du livret A en février ? Le ministre Roland Lescure défend l'épargne de précaution des Français",
-   "lien": "https://www.capital.fr/votre-argent/vers-une-hausse-du-livret-a-en-fevrier-le-ministre-roland-lescure-defend-l-epargne-de-precaution-des-francais-1531548",
-   "source": "Capital",
-   "date": "2026-11-04T09:03:51.000Z"
-  },
-  {
-   "titre": "Immobilier : une baisse des prix avec la fin de la génération du baby-boom ?",
-   "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-une-baisse-des-prix-avec-la-fin-de-la-generation-du-baby-boom_8266262.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-03T19:00:02.000Z"
-  },
-  {
-   "titre": "Jusqu’à 7 000 euros de plus sur votre Livret A, Sébastien Lecornu relève le plafond en février",
-   "lien": "https://www.capital.fr/votre-argent/jusqua-7-000-euros-de-plus-sur-votre-livret-a-sebastien-lecornu-releve-le-plafond-en-fevrier-1531539",
-   "source": "Capital",
-   "date": "2026-11-03T17:34:47.000Z"
-  },
-  {
-   "titre": "Assurance-vie : les bonus des fonds en euros, des taux alléchants en trompe-l’œil",
-   "lien": "https://www.lemonde.fr/argent/article/2026/11/03/assurance-vie-les-bonus-des-fonds-en-euros-des-taux-allechants-en-trompe-l-il_6805533_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-11-03T05:00:08.000Z"
-  },
-  {
-   "titre": "Baisse des carburants, revalorisation des retraites complémentaires, hausse des prix du gaz : ce qui change pour votre portefeuille dimanche 1er novembre",
-   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/baisse-des-carburants-revalorisation-des-retraites-complementaires-hausse-des-prix-du-gaz-ce-qui-change-pour-votre-portefeuille-dimanche-1er-novembre_8262782.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-01T15:05:28.000Z"
+   "date": "2026-11-04T10:00:05.000Z"
   }
  ],
  "sources": [
   "France Info",
   "Le Monde",
-  "Capital"
+  "Capital",
+  "MoneyVox"
  ],
- "fait": "2026-11-04T21:49:08.165Z",
+ "fait": "2026-11-05T14:30:32.937Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 623,
+   "ms": 962,
    "vus": 10,
    "titres": 3,
    "dit": null
@@ -91,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 610,
+   "ms": 1076,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -99,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1378,
+   "ms": 1224,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -107,40 +108,40 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 321,
-   "vus": 5,
+   "ms": 629,
+   "vus": 6,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 892,
+   "ms": 1011,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
   },
   {
    "nom": "MoneyVox",
-   "etat": 0,
-   "ms": 8000,
-   "vus": 0,
-   "titres": 0,
-   "dit": "This operation was aborted"
+   "etat": 200,
+   "ms": 166,
+   "vus": 3,
+   "titres": 3,
+   "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 481,
+   "ms": 526,
    "vus": 20,
-   "titres": 2,
+   "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 430,
-   "vus": 6,
+   "ms": 306,
+   "vus": 14,
    "titres": 3,
    "dit": null
   }
