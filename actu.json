@@ -1,22 +1,52 @@
 {
  "lignes": [
   {
-   "titre": "Immobilier : la hausse des taux de crédit plombe les achats de logements",
-   "lien": "https://www.moneyvox.fr/credit/actualites/111129/immobilier-la-hausse-des-taux-de-credit-plombe-les-achats-de-logements",
-   "source": "MoneyVox",
-   "date": "2026-11-05T13:48:09.000Z"
-  },
-  {
-   "titre": "Retraite Agirc-Arrco : 12 500 rendez-vous en novembre pour comprendre majorations et trimestres « enfants »",
-   "lien": "https://www.moneyvox.fr/retraite/actualites/111127/retraite-agirc-arrco-12-500-rendez-vous-en-novembre-pour-comprendre-majorations-et-trimestres-enfants",
-   "source": "MoneyVox",
-   "date": "2026-11-05T12:59:24.000Z"
-  },
-  {
-   "titre": "Des millions d'euros volés, une attaque inédite, une enquête ouverte... Ce que l'on sait du piratage du Crédit mutuel Arkéa",
-   "lien": "https://www.franceinfo.fr/internet/securite-sur-internet/cyberattaques/des-millions-d-euros-voles-une-attaque-inedite-et-une-enquete-ouverte-ce-que-l-on-sait-du-piratage-du-credit-mutuel-arkea_8269124.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Les coûts cachés des mutuelles : comment les courtiers font grimper vos cotisations",
+   "lien": "https://www.franceinfo.fr/economie/les-couts-caches-des-mutuelles-comment-les-courtiers-font-grimper-vos-cotisations_8269862.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-11-05T12:51:03.000Z"
+   "date": "2026-11-05T21:45:27.000Z"
+  },
+  {
+   "titre": "Le CAC 40 résiste, Air France-KLM s'envole : le journal de la bourse du jeudi 5 novembre",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/111137/le-cac-40-resiste-air-france-klm-s-envole-le-journal-de-la-bourse-du-jeudi-5-novembre",
+   "source": "MoneyVox",
+   "date": "2026-11-05T21:43:17.000Z"
+  },
+  {
+   "titre": "Crise au Paraguay : le président Santiago Peña démissionne après le gel des avoirs de près de la moitié de la population dans la principale banque du pays",
+   "lien": "https://www.franceinfo.fr/monde/ameriques/crise-au-paraguay-le-president-santiago-pena-demissionne-apres-le-gel-des-avoirs-de-pres-de-la-moitie-de-la-population-dans-la-principale-banque-du-pays_8269922.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-05T21:41:46.000Z"
+  },
+  {
+   "titre": "« L'État peut-il confisquer nos comptes bancaires et assurances vie pour rembourser sa dette ? »",
+   "lien": "https://www.moneyvox.fr/placement/actualites/111131/etat-peut-il-confisquer-nos-comptes-bancaires-et-assurances-vie-pour-rembourser-sa-dette",
+   "source": "MoneyVox",
+   "date": "2026-11-05T20:00:09.000Z"
+  },
+  {
+   "titre": "A Wall Street, la victoire démocrate aux midterms a fait exploser la bulle de l’IA",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/05/a-wall-street-la-victoire-democrate-aux-midterms-a-fait-exploser-la-bulle-de-l-ia_6807339_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-05T19:35:36.000Z"
+  },
+  {
+   "titre": "Nouveaux taux immobiliers, retraite Agirc-Arrco, mutuelle santé... Les 3 infos argent du 5 novembre 2026",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111136/nouveaux-taux-immobiliers-retraite-agirc-arrco-mutuelle-sante-les-3-infos-argent-du-5-novembre-2026",
+   "source": "MoneyVox",
+   "date": "2026-11-05T19:00:10.000Z"
+  },
+  {
+   "titre": "Dette : les députés veulent mettre fin aux emprunts d’Etat indexés sur l’inflation",
+   "lien": "https://www.lemonde.fr/politique/article/2026/11/05/dette-les-deputes-veulent-mettre-fin-aux-emprunts-d-etat-indexes-sur-l-inflation_6807190_823448.html",
+   "source": "Le Monde",
+   "date": "2026-11-05T17:30:03.000Z"
+  },
+  {
+   "titre": "Sébastien Lecornu exhorte les banques à financer les candidats à l’élection présidentielle",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/05/sebastien-lecornu-exhorte-les-banques-a-financer-les-candidats-a-la-presidentielle_6807149_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-05T16:44:37.000Z"
   },
   {
    "titre": "L'or, un placement à potentiel après le raz-de-marée démocrate aux Etats-Unis ?",
@@ -25,40 +55,10 @@
    "date": "2026-11-05T11:27:35.000Z"
   },
   {
-   "titre": "Piratage du Crédit Mutuel Arkéa : les clients sont appelés à « la plus grande vigilance »",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111125/piratage-du-credit-mutuel-arkea-les-clients-sont-appeles-a-la-plus-grande-vigilance",
-   "source": "MoneyVox",
-   "date": "2026-11-05T10:46:24.000Z"
-  },
-  {
-   "titre": "Lycéens, salariés, retraités… Les manifestants se préparent à la mobilisation du 5 novembre",
-   "lien": "https://www.franceinfo.fr/economie/greve/greve/lyceens-salaries-retraites-les-manifestants-se-preparent-a-la-mobilisation-du-5-novembre_8269082.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-05T09:56:15.000Z"
-  },
-  {
-   "titre": "Grève générale, pouvoir d'achat, blocage des lycées... \"Le 8h30 franceinfo\" de Bruno Retailleau",
-   "lien": "https://www.franceinfo.fr/replay-radio/8h30-fauvelle-dely/greve-generale-pouvoir-d-achat-blocage-des-lycees-le-8h30-franceinfo-de-bruno-retailleau_8248147.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-05T08:03:14.000Z"
-  },
-  {
    "titre": "Mariage sous le régime de la communauté : les loyers du bien propre d’un époux sont communs aux deux",
    "lien": "https://www.lemonde.fr/argent/article/2026/11/05/mariage-sous-le-regime-de-la-communaute-les-loyers-du-bien-propre-d-un-epoux-sont-communs-aux-deux_6806818_1657007.html",
    "source": "Le Monde",
    "date": "2026-11-05T05:01:00.000Z"
-  },
-  {
-   "titre": "Midterms 2026 : Wall Street salue la vague démocrate au Congrès et ses promesses de stabilité et de statu quo",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/05/midterms-2026-wall-street-salue-la-vague-democrate-au-congres-et-ses-promesses-de-certitudes-et-de-statu-quo_6806670_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-05T04:00:03.000Z"
-  },
-  {
-   "titre": "Cyberattaque au Crédit mutuel Arkéa : une enquête ouverte après un détournement estimé à près de 100 millions d’euros",
-   "lien": "https://www.lemonde.fr/pixels/article/2026/11/04/cyberattaque-au-credit-mutuel-arkea-une-enquete-ouverte-apres-un-detournement-estime-a-pres-de-100-millions-d-euros_6806141_4408997.html",
-   "source": "Le Monde",
-   "date": "2026-11-04T20:47:47.000Z"
   },
   {
    "titre": "Faillite bancaire : ce qui est garanti pour les comptes, livrets, titres et assurance-vie",
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-05T14:30:32.937Z",
+ "fait": "2026-11-05T21:55:48.380Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 962,
+   "ms": 1135,
    "vus": 10,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1076,
+   "ms": 876,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1224,
+   "ms": 867,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 629,
-   "vus": 6,
+   "ms": 411,
+   "vus": 4,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 1011,
+   "ms": 1019,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +124,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 166,
+   "ms": 161,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,16 +132,16 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 526,
+   "ms": 527,
    "vus": 20,
-   "titres": 3,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 306,
-   "vus": 14,
+   "ms": 386,
+   "vus": 4,
    "titres": 3,
    "dit": null
   }
