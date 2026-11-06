@@ -1,10 +1,22 @@
 {
  "lignes": [
   {
+   "titre": "Augmentation du Smic : \"La première chose qu'on pourrait faire, dans un budget aujourd'hui, c'est réhabiliter l'Impôt de solidarité sur la fortune\", propose Guillaume Lacroix, président du Parti radical de gauche",
+   "lien": "https://www.franceinfo.fr/politique/augmentation-du-smic-la-premiere-chose-qu-on-pourrait-faire-dans-un-budget-aujourd-hui-c-est-rehabiliter-l-impot-de-solidarite-sur-la-fortune-propose-guillaume-lacroix-president-du-parti-radical-de-gauche_8271443.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-06T19:18:17.000Z"
+  },
+  {
+   "titre": "ETF de la semaine : robotique chinoise, obligations et infrastructures",
+   "lien": "https://www.capital.fr/votre-argent/etf-de-la-semaine-robotique-chinoise-obligations-et-infrastructures-1531651",
+   "source": "Capital",
+   "date": "2026-11-06T17:00:00.000Z"
+  },
+  {
    "titre": "A Taïwan, la frénésie pour les valeurs boursières liées à l’IA : « Ma mère en achète et en revend le même jour. Ses amis font pareil »",
    "lien": "https://www.lemonde.fr/economie/article/2026/11/06/a-taiwan-la-frenesie-pour-les-valeurs-boursieres-liees-a-l-ia-ma-mere-en-achete-et-en-revend-le-meme-jour-ses-amis-font-pareil_6807795_3234.html",
    "source": "Le Monde",
-   "date": "2026-11-06T14:00:07.000Z"
+   "date": "2026-11-06T14:00:00.000Z"
   },
   {
    "titre": "MER Horizon + : jusqu'à 1 000 euros offerts et un bonus de rendement de 1% en 2026",
@@ -43,12 +55,6 @@
    "date": "2026-11-06T06:00:00.000Z"
   },
   {
-   "titre": "\"Le chauffage avant décembre ? Jamais !\" : contraints d'économiser à cause de l'inflation, des utilisateurs de TikTok partagent des astuces pour supporter le froid",
-   "lien": "https://www.franceinfo.fr/environnement/energie/le-chauffage-avant-decembre-jamais-contraints-d-economiser-a-cause-de-l-inflation-des-utilisateurs-de-tiktok-partagent-des-astuces-pour-supporter-le-froid_8269046.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-06T05:09:42.000Z"
-  },
-  {
    "titre": "Pourquoi l’inflation réelle est toujours moins élevée que celle ressentie par les Français",
    "lien": "https://www.lemonde.fr/economie/article/2026/11/06/pourquoi-l-inflation-reelle-est-toujours-moins-elevee-que-celle-ressentie-par-les-francais_6807726_3234.html",
    "source": "Le Monde",
@@ -65,12 +71,6 @@
    "lien": "https://www.lemonde.fr/economie/article/2026/11/05/a-wall-street-la-victoire-democrate-aux-midterms-a-fait-exploser-la-bulle-de-l-ia_6807339_3234.html",
    "source": "Le Monde",
    "date": "2026-11-05T19:35:36.000Z"
-  },
-  {
-   "titre": "L'or, un placement à potentiel après le raz-de-marée démocrate aux Etats-Unis ?",
-   "lien": "https://www.capital.fr/votre-argent/l-or-un-placement-a-potentiel-apres-le-raz-de-maree-democrate-aux-etats-unis-1531591",
-   "source": "Capital",
-   "date": "2026-11-05T11:27:35.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-06T14:09:09.692Z",
+ "fait": "2026-11-06T21:26:36.563Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1229,
+   "ms": 1171,
    "vus": 10,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1035,
+   "ms": 970,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1156,
+   "ms": 987,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 364,
+   "ms": 481,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 615,
+   "ms": 795,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,15 +124,15 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 133,
-   "vus": 4,
+   "ms": 149,
+   "vus": 6,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 687,
+   "ms": 635,
    "vus": 20,
    "titres": 2,
    "dit": null
@@ -140,8 +140,8 @@
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 491,
-   "vus": 11,
+   "ms": 421,
+   "vus": 20,
    "titres": 3,
    "dit": null
   }
