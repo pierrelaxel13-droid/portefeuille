@@ -1,22 +1,34 @@
 {
  "lignes": [
   {
-   "titre": "\"Cette recrudescence des vols impacte la production des parcs\" : 500 km de câbles de cuivre dérobés dans une centrale photovoltaïque",
-   "lien": "https://www.franceinfo.fr/france/nouvelle-aquitaine/gironde/cette-recrudescence-des-vols-impacte-la-production-des-parcs-500-km-de-cables-de-cuivre-derobes-dans-une-centrale-photovoltaique_8272673.html#xtor=RSS-3-%5Bgeneral%5D",
+   "titre": "Nouveau plafond du Livret A, arnaque bancaire, cumul emploi-retraite... Les 5 infos de la semaine",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111142/nouveau-plafond-du-livret-a-arnaque-bancaire-cumul-emploi-retraite-les-5-infos-de-la-semaine",
+   "source": "MoneyVox",
+   "date": "2026-11-08T09:00:09.000Z"
+  },
+  {
+   "titre": "REPORTAGE. \"Il faut appuyer encore, jusqu'à ce qu'on obtienne gain de cause\" : dans l'attente de réponses du gouvernement, les jeunes prêts à poursuivre les mobilisations",
+   "lien": "https://www.franceinfo.fr/societe/education/blocage-des-lycees/reportage-il-faut-appuyer-encore-jusqu-a-ce-qu-on-obtienne-gain-de-cause-dans-l-attente-de-reponses-du-gouvernement-les-jeunes-prets-a-poursuivre-les-mobilisations_8273057.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
-   "date": "2026-11-07T19:22:19.000Z"
+   "date": "2026-11-08T08:05:40.000Z"
+  },
+  {
+   "titre": "Cumuler une pension de retraite et un salaire : les règles seront moins favorables à partir du 1er janvier",
+   "lien": "https://www.franceinfo.fr/replay-radio/c-est-mon-boulot/cumuler-une-pension-de-retraite-et-un-salaire-les-regles-seront-moins-favorables-a-partir-du-1er-janvier_8232067.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-08T08:00:04.000Z"
+  },
+  {
+   "titre": "Collecte de la Banque alimentaire : le nombre de bénéficiaires augmente partout en France",
+   "lien": "https://www.franceinfo.fr/economie/collecte-de-la-banque-alimentaire-le-nombre-de-beneficiaires-augmente-partout-en-france_8273051.html#xtor=RSS-3-%5Bgeneral%5D",
+   "source": "France Info",
+   "date": "2026-11-08T06:57:02.000Z"
   },
   {
    "titre": "Immobilier : Les Assises de l’innovation dans l’habitat",
    "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-les-assises-de-l-innovation-dans-l-habitat_8251705.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
    "date": "2026-11-07T15:30:02.000Z"
-  },
-  {
-   "titre": "\"C'est dans les moments les plus difficiles qu'il faut être le plus solidaire\" : la Banque alimentaire collecte des dons tout le week-end partout en France",
-   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/c-est-dans-les-moments-les-plus-difficiles-qu-il-faut-etre-le-plus-solidaire-la-banque-alimentaire-collecte-des-dons-tous-le-week-end-partout-en-france_8272328.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-07T14:19:42.000Z"
   },
   {
    "titre": "Le CAC 40 victime de l'onde de choc sur la bulle IA : le journal de la Bourse du vendredi 6 novembre",
@@ -29,12 +41,6 @@
    "lien": "https://www.moneyvox.fr/banque/actualites/111150/bce-qui-va-remplacer-christine-lagarde-a-la-tete-de-la-banque-centrale-europeenne",
    "source": "MoneyVox",
    "date": "2026-11-07T09:34:41.000Z"
-  },
-  {
-   "titre": "Crédit Mutuel Arkéa a récupéré « une partie » des 100 millions d'euros dérobés par la cyberattaque",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111149/credit-mutuel-arkea-a-recupere-une-partie-des-100-millions-euros-derobes-par-la-cyberattaque",
-   "source": "MoneyVox",
-   "date": "2026-11-07T09:32:33.000Z"
   },
   {
    "titre": "Après huit mois de guerre au Moyen-Orient, la mue forcée des pays du Golfe producteurs de pétrole et de gaz",
@@ -65,12 +71,6 @@
    "lien": "https://www.lemonde.fr/economie/article/2026/11/06/a-taiwan-la-frenesie-pour-les-valeurs-boursieres-liees-a-l-ia-ma-mere-en-achete-et-en-revend-le-meme-jour-ses-amis-font-pareil_6807795_3234.html",
    "source": "Le Monde",
    "date": "2026-11-06T14:00:00.000Z"
-  },
-  {
-   "titre": "\"Un pays de propriétaires\" : pourquoi y a-t-il si peu de logements sociaux en Espagne ?",
-   "lien": "https://www.franceinfo.fr/monde/espagne/un-pays-de-proprietaires-pourquoi-y-a-t-il-si-peu-de-logements-sociaux-en-espagne_8270816.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-06T12:59:31.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-07T20:09:29.787Z",
+ "fait": "2026-11-08T13:13:57.918Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1306,
+   "ms": 967,
    "vus": 10,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1088,
+   "ms": 1141,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1359,
+   "ms": 1817,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 266,
+   "ms": 352,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -116,23 +116,23 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 1033,
-   "vus": 4,
+   "ms": 770,
+   "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
   },
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 175,
-   "vus": 5,
+   "ms": 141,
+   "vus": 6,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 516,
+   "ms": 578,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -140,9 +140,9 @@
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 434,
+   "ms": 409,
    "vus": 20,
-   "titres": 3,
+   "titres": 2,
    "dit": null
   }
  ]
