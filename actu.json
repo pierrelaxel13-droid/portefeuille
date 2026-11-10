@@ -1,6 +1,18 @@
 {
  "lignes": [
   {
+   "titre": "Succession de Christine Lagarde à la tête de la BCE : Paris pourrait soutenir Pablo Hernandez de Cos face à Klaas Knot dans la course à la présidence",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/09/succession-de-christine-lagarde-a-la-tete-de-la-bce-paris-pourrait-soutenir-pablo-hernandez-de-cos-face-a-klaas-knot-dans-la-course-a-la-presidence_6808703_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-09T21:26:21.000Z"
+  },
+  {
+   "titre": "Nvidia, Crédit Agricole, Legrand.... Le Journal de la bourse du lundi 9 novembre 2026",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/111173/nvidia-credit-agricole-legrand-le-journal-de-la-bourse-du-lundi-9-novembre-2026",
+   "source": "MoneyVox",
+   "date": "2026-11-09T20:38:11.000Z"
+  },
+  {
    "titre": "Logement : la présidente des bailleurs sociaux dénonce les coupes successives dans les APL",
    "lien": "https://www.moneyvox.fr/votre-argent/actualites/111167/logement-la-presidente-des-bailleurs-sociaux-denonce-les-coupes-successives-dans-les-apl",
    "source": "MoneyVox",
@@ -11,12 +23,6 @@
    "lien": "https://www.lemonde.fr/economie/article/2026/11/09/credit-agricole-ambitionne-de-creer-le-troisieme-groupe-bancaire-d-italie_6808659_3234.html",
    "source": "Le Monde",
    "date": "2026-11-09T14:30:01.000Z"
-  },
-  {
-   "titre": "Une intersyndicale de la fonction publique annonce une grève le 17 novembre, la CGT appelle \"l'ensemble des salariés, des retraités, des jeunes\" à se mobiliser",
-   "lien": "https://www.franceinfo.fr/economie/greve/une-intersyndicale-de-la-fonction-publique-appelle-a-la-greve-le-17-novembre_8274494.html#xtor=RSS-3-%5Bgeneral%5D",
-   "source": "France Info",
-   "date": "2026-11-09T14:21:59.000Z"
   },
   {
    "titre": "REPORTAGE. \"On ne peut pas tout faire non plus\" : les locataires satisfaits de l'allègement des tâches de ménage dans les logements Airbnb",
@@ -55,12 +61,6 @@
    "date": "2026-11-09T10:30:07.000Z"
   },
   {
-   "titre": "Assurance vie : comment commencer à épargner sans casser mon budget ?",
-   "lien": "https://www.moneyvox.fr/assurance-vie/actualites/110965/comment-commencer-a-epargner-sans-casser-mon-budget",
-   "source": "MoneyVox",
-   "date": "2026-11-09T10:19:52.000Z"
-  },
-  {
    "titre": "Cumuler une pension de retraite et un salaire : les règles seront moins favorables à partir du 1er janvier",
    "lien": "https://www.franceinfo.fr/replay-radio/c-est-mon-boulot/cumuler-une-pension-de-retraite-et-un-salaire-les-regles-seront-moins-favorables-a-partir-du-1er-janvier_8232067.html#xtor=RSS-3-%5Bgeneral%5D",
    "source": "France Info",
@@ -78,12 +78,12 @@
   "Le Monde",
   "MoneyVox"
  ],
- "fait": "2026-11-09T16:01:48.404Z",
+ "fait": "2026-11-10T00:10:19.334Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 713,
+   "ms": 923,
    "vus": 10,
    "titres": 3,
    "dit": null
@@ -91,15 +91,15 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 679,
-   "vus": 4,
+   "ms": 1496,
+   "vus": 6,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1011,
+   "ms": 1248,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -107,7 +107,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 352,
+   "ms": 542,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -115,7 +115,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 867,
+   "ms": 707,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -123,7 +123,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 163,
+   "ms": 187,
    "vus": 10,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -131,16 +131,16 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 944,
-   "vus": 18,
-   "titres": 3,
-   "dit": null
+   "ms": 769,
+   "vus": 19,
+   "titres": 0,
+   "dit": "19 titres lus, aucun ne concerne le sujet du site"
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 398,
-   "vus": 10,
+   "ms": 495,
+   "vus": 17,
    "titres": 3,
    "dit": null
   }
