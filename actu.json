@@ -1,6 +1,24 @@
 {
  "lignes": [
   {
+   "titre": "En Espagne, des centaines de milliers de personnes ont manifesté pour l'accès au logement et le pouvoir d'achat",
+   "lien": "https://www.franceinfo.fr/monde/espagne/en-espagne-une-greve-generale-pour-defendre-l-acces-au-logement-et-le-pouvoir-d-achat_8277731.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-11T21:01:15.000Z"
+  },
+  {
+   "titre": "Le CAC 40 nage dans le vert, TotalEnergies carbure : les infos bourse du 11 novembre",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/111198/le-cac-40-nage-dans-le-vert-totalenergies-carbure-les-infos-bourse-du-11-novembre",
+   "source": "MoneyVox",
+   "date": "2026-11-11T20:59:06.000Z"
+  },
+  {
+   "titre": "Livret A, assurance-vie : Jordan Bardella promet un nouveau placement «beaucoup plus rémunérateur»",
+   "lien": "https://www.capital.fr/votre-argent/livret-a-assurance-vie-jordan-bardella-promet-un-nouveau-placement-beaucoup-plus-remunerateur-1531770",
+   "source": "Capital",
+   "date": "2026-11-11T15:34:04.000Z"
+  },
+  {
    "titre": "Plus pessimiste que la Banque de France et l'Insee, Moody's vise 0,2% de croissance en France en 2026",
    "lien": "https://www.moneyvox.fr/banque/actualites/111197/plus-pessimiste-que-la-banque-de-france-et-insee-moodys-vise-0-2-de-croissance-en-france-en-2026",
    "source": "MoneyVox",
@@ -11,12 +29,6 @@
    "lien": "https://www.moneyvox.fr/votre-argent/actualites/105771/prime-de-noel-2026-pour-les-retraites-un-virement-caf-de-152-45-euros-le-15-decembre",
    "source": "MoneyVox",
    "date": "2026-11-11T12:35:36.000Z"
-  },
-  {
-   "titre": "Bourse : 5 choses à savoir sur Anthropic, le rival d'OpenAI, en voie d'entrer à Wall Street",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/111196/5-choses-a-savoir-sur-anthropic-le-rival-openai-en-voie-entrer-a-wall-street",
-   "source": "MoneyVox",
-   "date": "2026-11-11T11:52:59.000Z"
   },
   {
    "titre": "REPORTAGE. \"Quoi de mieux pour faire passer le message que de paralyser le pays ?\" : en Espagne, une grève générale pour dénoncer la crise du logement",
@@ -59,18 +71,6 @@
    "lien": "https://www.lemonde.fr/economie/article/2026/11/10/nvidia-le-scandale-d-espionnage-fait-chuter-de-plus-de-6-a-wall-street-l-entreprise-americaine-qui-perd-sa-place-de-deuxieme-capitalisation-mondiale_6808895_3234.html",
    "source": "Le Monde",
    "date": "2026-11-10T18:43:56.000Z"
-  },
-  {
-   "titre": "Les très riches Français ont fait baisser leur impôt sur le revenu en 2025",
-   "lien": "https://www.lemonde.fr/politique/article/2026/11/10/les-tres-riches-francais-ont-fait-baisser-leur-impot-sur-le-revenu-en-2025_6808873_823448.html",
-   "source": "Le Monde",
-   "date": "2026-11-10T16:30:09.000Z"
-  },
-  {
-   "titre": "Plafond du Livret A relevé ? Le gouverneur de la Banque de France plaide pour une hausse «légère»",
-   "lien": "https://www.capital.fr/votre-argent/plafond-du-livret-a-releve-le-gouverneur-de-la-banque-de-france-plaide-pour-une-hausse-legere-1531751",
-   "source": "Capital",
-   "date": "2026-11-10T13:12:26.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-11T14:03:54.911Z",
+ "fait": "2026-11-11T22:37:36.394Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1638,
+   "ms": 1009,
    "vus": 8,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 489,
+   "ms": 926,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 828,
+   "ms": 1018,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 266,
+   "ms": 195,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 642,
+   "ms": 734,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 138,
-   "vus": 3,
+   "ms": 219,
+   "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 463,
-   "vus": 12,
-   "titres": 3,
+   "ms": 348,
+   "vus": 20,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 248,
-   "vus": 13,
+   "ms": 311,
+   "vus": 19,
    "titres": 3,
    "dit": null
   }
