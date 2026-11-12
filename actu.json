@@ -1,16 +1,58 @@
 {
  "lignes": [
   {
-   "titre": "En Espagne, des centaines de milliers de personnes ont manifesté pour l'accès au logement et le pouvoir d'achat",
-   "lien": "https://www.franceinfo.fr/monde/espagne/en-espagne-une-greve-generale-pour-defendre-l-acces-au-logement-et-le-pouvoir-d-achat_8277731.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-11T21:01:15.000Z"
+   "titre": "« On va toucher le fond » : les ventes dans l'immobilier neuf tombent à un nouveau plancher « historique »",
+   "lien": "https://www.moneyvox.fr/immobilier/actualites/111211/on-va-toucher-le-fond-les-ventes-dans-immobilier-neuf-tombent-a-un-nouveau-plancher-historique",
+   "source": "MoneyVox",
+   "date": "2026-11-12T14:25:06.000Z"
   },
   {
-   "titre": "Le CAC 40 nage dans le vert, TotalEnergies carbure : les infos bourse du 11 novembre",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/111198/le-cac-40-nage-dans-le-vert-totalenergies-carbure-les-infos-bourse-du-11-novembre",
+   "titre": "Yomoni : jusqu'à 1 000 euros de frais remboursés sur son PER",
+   "lien": "https://www.moneyvox.fr/placement/actualites/111208/yomoni-jusqua-1-000-euros-de-frais-rembourses-sur-son-per",
    "source": "MoneyVox",
-   "date": "2026-11-11T20:59:06.000Z"
+   "date": "2026-11-12T14:07:28.000Z"
+  },
+  {
+   "titre": "Budget 2027 : le Sénat reporte en avril les économies sur les cotisations patronales et alourdit le déficit",
+   "lien": "https://www.moneyvox.fr/impot/actualites/111210/budget-2027-le-senat-reporte-en-avril-les-economies-sur-les-cotisations-patronales-et-alourdit-le-deficit",
+   "source": "MoneyVox",
+   "date": "2026-11-12T13:38:51.000Z"
+  },
+  {
+   "titre": "Avec l'intelligence artificielle, le fisc traque les abris de jardin non déclarés",
+   "lien": "https://www.franceinfo.fr/economie/impots/avec-l-intelligence-artificielle-le-fisc-traque-les-abris-de-jardin-non-declares_8279357.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
+   "source": "France Info",
+   "date": "2026-11-12T13:31:49.000Z"
+  },
+  {
+   "titre": "Logements : les promoteurs immobiliers s’enfoncent un peu plus dans la crise",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/12/logements-les-promoteurs-immobiliers-s-enfoncent-un-peu-plus-dans-la-crise_6809079_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-12T09:24:16.000Z"
+  },
+  {
+   "titre": "SCPI : faut-il vendre ou acheter des parts alors que le marché recule ?",
+   "lien": "https://www.capital.fr/votre-argent/scpi-faut-il-vendre-ou-acheter-des-parts-alors-que-le-marche-recule-1531747",
+   "source": "Capital",
+   "date": "2026-11-12T08:30:00.000Z"
+  },
+  {
+   "titre": "\"Je ne sais pas pourquoi c'est moi qu'on a choisi\" : le journaliste Paul Gogo confie avoir découvert son interdiction de territoire en Russie \"dans la presse\"",
+   "lien": "https://www.franceinfo.fr/monde/russie/je-ne-sais-pas-pourquoi-c-est-moi-qu-on-a-choisi-le-journaliste-paul-gogo-confie-avoir-decouvert-son-interdiction-de-territoire-en-russie-dans-la-presse-comme-tout-le-monde_8278895.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-12T08:10:28.000Z"
+  },
+  {
+   "titre": "Crédit d’impôt recherche, pacte Dutreil… : « Quitte à mettre un “pognon de dingue” dans les aides publiques aux entreprises, encore faudrait-il que la collectivité en ait pour son argent »",
+   "lien": "https://www.lemonde.fr/idees/article/2026/11/12/credit-d-impot-recherche-pacte-dutreil-quitte-a-mettre-un-pognon-de-dingue-dans-les-aides-publiques-aux-entreprises-encore-faudrait-il-que-la-collectivite-en-ait-pour-son-argent_6809058_3232.html",
+   "source": "Le Monde",
+   "date": "2026-11-12T05:00:42.000Z"
+  },
+  {
+   "titre": "Donation d’argent investie dans une société : quel rapport à la succession ?",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/12/donation-d-argent-investie-dans-une-societe-quel-rapport-a-la-succession_6809054_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-12T05:00:28.000Z"
   },
   {
    "titre": "Livret A, assurance-vie : Jordan Bardella promet un nouveau placement «beaucoup plus rémunérateur»",
@@ -19,58 +61,16 @@
    "date": "2026-11-11T15:34:04.000Z"
   },
   {
-   "titre": "Plus pessimiste que la Banque de France et l'Insee, Moody's vise 0,2% de croissance en France en 2026",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111197/plus-pessimiste-que-la-banque-de-france-et-insee-moodys-vise-0-2-de-croissance-en-france-en-2026",
-   "source": "MoneyVox",
-   "date": "2026-11-11T12:40:34.000Z"
-  },
-  {
-   "titre": "Prime de Noël 2026 : pour les retraités, un virement CAF de 152,45 euros le 15 décembre ?",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/105771/prime-de-noel-2026-pour-les-retraites-un-virement-caf-de-152-45-euros-le-15-decembre",
-   "source": "MoneyVox",
-   "date": "2026-11-11T12:35:36.000Z"
-  },
-  {
-   "titre": "REPORTAGE. \"Quoi de mieux pour faire passer le message que de paralyser le pays ?\" : en Espagne, une grève générale pour dénoncer la crise du logement",
-   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/logement/reportage-quoi-de-mieux-pour-faire-passer-le-message-que-de-paralyser-le-pays-en-espagne-une-greve-generale-pour-denoncer-la-crise-du-logement_8277602.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-11T11:39:36.000Z"
-  },
-  {
    "titre": "Bientôt 5 000 euros de votre épargne salariale récupérables sans impôt ? La date est fixée",
    "lien": "https://www.capital.fr/votre-argent/bientot-5-000-euros-de-votre-epargne-salariale-recuperables-sans-impot-la-date-est-fixee-1531765",
    "source": "Capital",
    "date": "2026-11-11T08:32:12.000Z"
   },
   {
-   "titre": "Immobilier : les transactions ralentissent sur fond de hausse des taux d’intérêt",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/11/immobilier-les-transactions-ralentissent-sur-fond-de-hausse-des-taux-d-interet_6808945_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-11T08:00:07.000Z"
-  },
-  {
    "titre": "L'impôt sur le revenu génère plus de recettes pour l'Etat, mais les crédits et réductions augmentent aussi",
    "lien": "https://www.franceinfo.fr/economie/impots/impot-sur-le-revenu-ce-que-paient-et-ne-paient-pas-les-francais_8276942.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
    "source": "France Info",
    "date": "2026-11-11T05:32:46.000Z"
-  },
-  {
-   "titre": "« Un programme sérieux de développement social et écologique peut réduire le ratio dette/PIB »",
-   "lien": "https://www.lemonde.fr/idees/article/2026/11/11/un-programme-serieux-de-developpement-social-et-ecologique-peut-reduire-le-ratio-dette-pib_6808935_3232.html",
-   "source": "Le Monde",
-   "date": "2026-11-11T05:00:42.000Z"
-  },
-  {
-   "titre": "Le milliardaire tchèque Daniel Kretinsky remporte son OPA sur Fnac Darty",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/10/le-milliardaire-tcheque-daniel-kretinsky-remporte-son-opa-sur-fnac-darty_6808902_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-10T19:33:20.000Z"
-  },
-  {
-   "titre": "Nvidia : le scandale d’espionnage fait chuter de plus de 6 % à Wall Street l’entreprise américaine, qui perd sa place de deuxième capitalisation mondiale",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/10/nvidia-le-scandale-d-espionnage-fait-chuter-de-plus-de-6-a-wall-street-l-entreprise-americaine-qui-perd-sa-place-de-deuxieme-capitalisation-mondiale_6808895_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-10T18:43:56.000Z"
   }
  ],
  "sources": [
@@ -79,20 +79,20 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-11T22:37:36.394Z",
+ "fait": "2026-11-12T15:02:12.902Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1009,
-   "vus": 8,
+   "ms": 432,
+   "vus": 9,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 926,
+   "ms": 406,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1018,
+   "ms": 517,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 195,
+   "ms": 222,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 734,
+   "ms": 633,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +124,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 219,
+   "ms": 114,
    "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,7 +132,7 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 348,
+   "ms": 470,
    "vus": 20,
    "titres": 2,
    "dit": null
@@ -140,8 +140,8 @@
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 311,
-   "vus": 19,
+   "ms": 320,
+   "vus": 10,
    "titres": 3,
    "dit": null
   }
