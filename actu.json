@@ -1,6 +1,24 @@
 {
  "lignes": [
   {
+   "titre": "Des milliers de Portugais manifestent contre la crise du logement",
+   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/logement/des-milliers-de-portugais-manifestent-contre-la-crise-du-logement_8282765.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-14T18:23:08.000Z"
+  },
+  {
+   "titre": "Le projet de loi pour relancer le logement enfin à l’Assemblée nationale",
+   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/le-projet-de-loi-pour-relancer-le-logement-enfin-a-l-assemblee-nationale_8261225.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "source": "France Info",
+   "date": "2026-11-14T15:30:08.000Z"
+  },
+  {
+   "titre": "Surendettement : 10,2% de dossiers supplémentaires déposés à la Banque de France depuis le début de l'année 2026",
+   "lien": "https://www.franceinfo.fr/economie/surendettement-10-2-de-dossiers-supplementaires-deposes-a-la-banque-de-france-depuis-le-debut-de-l-annee-2026_8282537.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-14T14:22:08.000Z"
+  },
+  {
    "titre": "Livret Goodvest : 4,20% pendant 6 mois pour une épargne qui finance la transition énergétique",
    "lien": "https://www.moneyvox.fr/livret/actualites/111213/livret-goodvest-4-20-pendant-6-mois-pour-une-epargne-qui-finance-la-transition-energetique",
    "source": "MoneyVox",
@@ -13,12 +31,6 @@
    "date": "2026-11-14T08:00:00.000Z"
   },
   {
-   "titre": "INFO RADIO FRANCE. Sept Français sur dix ont changé leurs habitudes alimentaires avec la baisse de leur pouvoir d'achat, selon un baromètre",
-   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/info-radio-france-sept-francais-sur-dix-ont-change-leurs-habitudes-alimentaires-avec-la-baisse-de-leur-pouvoir-d-achat-selon-un-barometre_8282183.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-14T07:22:35.000Z"
-  },
-  {
    "titre": "La plus-value immobilière est-elle exonérée en cas de départ volontaire de l’entreprise ?",
    "lien": "https://www.lemonde.fr/argent/article/2026/11/14/la-plus-value-immobiliere-est-elle-exoneree-en-cas-de-depart-volontaire-de-l-entreprise_6809690_1657007.html",
    "source": "Le Monde",
@@ -29,12 +41,6 @@
    "lien": "https://www.moneyvox.fr/votre-argent/actualites/111235/impot-des-retraites-nouveau-taux-du-livret-a-les-3-infos-argent-du-vendredi-13-novembre",
    "source": "MoneyVox",
    "date": "2026-11-13T19:00:09.000Z"
-  },
-  {
-   "titre": "L'Agence internationale de l'énergie prévoit que l'offre mondiale de pétrole va dépasser la demande en fin d'année",
-   "lien": "https://www.franceinfo.fr/environnement/energie/energies-fossiles/l-agence-internationale-de-l-energie-prevoit-que-l-offre-mondiale-de-petrole-va-depasser-la-demande-en-fin-d-annee_8281379.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-13T18:27:01.000Z"
   },
   {
    "titre": "Le CAC 40, TotalEnergies en forme : le journal de la bourse du vendredi 13 novembre 2026",
@@ -65,12 +71,6 @@
    "lien": "https://www.capital.fr/votre-argent/livret-a-ou-bourse-ce-que-seraient-devenus-vos-100-euros-en-dix-ans-le-calcul-de-leconomiste-marc-touati-1531822",
    "source": "Capital",
    "date": "2026-11-13T11:18:11.000Z"
-  },
-  {
-   "titre": "Les promoteurs immobiliers prennent la crise du logement de plein fouet",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-decryptage-eco/les-promoteurs-immobiliers-prennent-la-crise-du-logement-de-plein-fouet_8259734.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
-   "source": "France Info",
-   "date": "2026-11-13T09:22:50.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-14T13:23:56.852Z",
+ "fait": "2026-11-14T20:38:31.574Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 805,
+   "ms": 1187,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 977,
+   "ms": 944,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 770,
+   "ms": 1212,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 296,
+   "ms": 328,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 1185,
+   "ms": 676,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +124,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 179,
+   "ms": 145,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,16 +132,16 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 437,
-   "vus": 20,
-   "titres": 2,
+   "ms": 548,
+   "vus": 6,
+   "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 239,
-   "vus": 15,
+   "ms": 399,
+   "vus": 18,
    "titres": 3,
    "dit": null
   }
