@@ -1,6 +1,30 @@
 {
  "lignes": [
   {
+   "titre": "Livret Goodvest : 4,20% pendant 6 mois pour une épargne qui finance la transition énergétique",
+   "lien": "https://www.moneyvox.fr/livret/actualites/111213/livret-goodvest-4-20-pendant-6-mois-pour-une-epargne-qui-finance-la-transition-energetique",
+   "source": "MoneyVox",
+   "date": "2026-11-14T12:24:24.000Z"
+  },
+  {
+   "titre": "Faut-il vraiment ouvrir un PER avant le 31 décembre ? La chronique de Jean-Jacques Manceau",
+   "lien": "https://www.capital.fr/votre-argent/faut-il-vraiment-ouvrir-un-per-avant-le-31-decembre-la-chronique-de-jean-jacques-manceau-1531820",
+   "source": "Capital",
+   "date": "2026-11-14T08:00:00.000Z"
+  },
+  {
+   "titre": "INFO RADIO FRANCE. Sept Français sur dix ont changé leurs habitudes alimentaires avec la baisse de leur pouvoir d'achat, selon un baromètre",
+   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/info-radio-france-sept-francais-sur-dix-ont-change-leurs-habitudes-alimentaires-avec-la-baisse-de-leur-pouvoir-d-achat-selon-un-barometre_8282183.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-14T07:22:35.000Z"
+  },
+  {
+   "titre": "La plus-value immobilière est-elle exonérée en cas de départ volontaire de l’entreprise ?",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/14/la-plus-value-immobiliere-est-elle-exoneree-en-cas-de-depart-volontaire-de-l-entreprise_6809690_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-14T05:00:30.000Z"
+  },
+  {
    "titre": "Impôt des retraités, nouveau taux du Livret A : les 3 infos argent du vendredi 13 novembre",
    "lien": "https://www.moneyvox.fr/votre-argent/actualites/111235/impot-des-retraites-nouveau-taux-du-livret-a-les-3-infos-argent-du-vendredi-13-novembre",
    "source": "MoneyVox",
@@ -25,12 +49,6 @@
    "date": "2026-11-13T17:00:00.000Z"
   },
   {
-   "titre": "Fraude bancaire : le Fonds de garantie ne prend pas automatiquement le relais de votre banque",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111233/fraude-bancaire-le-fonds-de-garantie-ne-prend-pas-automatiquement-le-relais-de-votre-banque",
-   "source": "MoneyVox",
-   "date": "2026-11-13T16:08:40.000Z"
-  },
-  {
    "titre": "Du Moyen-Orient à l’Asie, la grande course au stockage du pétrole",
    "lien": "https://www.lemonde.fr/economie/article/2026/11/13/du-moyen-orient-en-asie-la-grande-course-au-stockage-du-petrole_6809338_3234.html",
    "source": "Le Monde",
@@ -53,24 +71,6 @@
    "lien": "https://www.franceinfo.fr/replay-radio/le-decryptage-eco/les-promoteurs-immobiliers-prennent-la-crise-du-logement-de-plein-fouet_8259734.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
    "date": "2026-11-13T09:22:50.000Z"
-  },
-  {
-   "titre": "Quelle banque choisir pour réaliser des virements en devises ?",
-   "lien": "https://www.lemonde.fr/argent/article/2026/11/13/quelle-banque-choisir-pour-realiser-des-virements-en-devises_6809279_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-11-13T05:00:35.000Z"
-  },
-  {
-   "titre": "Pourquoi les Français les plus aisés ont-ils payé moins d'impôt sur le revenu en 2025 que l'année précédente ?",
-   "lien": "https://www.franceinfo.fr/economie/impots/pourquoi-les-francais-les-plus-aises-ont-ils-paye-moins-d-impot-sur-le-revenu-en-2025-que-l-annee-precedente_8279105.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
-   "source": "France Info",
-   "date": "2026-11-12T19:26:23.000Z"
-  },
-  {
-   "titre": "Avec l'intelligence artificielle, le fisc traque les abris de jardin non déclarés",
-   "lien": "https://www.franceinfo.fr/economie/impots/avec-l-intelligence-artificielle-le-fisc-traque-les-abris-de-jardin-non-declares_8279357.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
-   "source": "France Info",
-   "date": "2026-11-12T16:20:23.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-13T21:55:22.427Z",
+ "fait": "2026-11-14T13:23:56.852Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1321,
+   "ms": 805,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 389,
+   "ms": 977,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1044,
+   "ms": 770,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -108,15 +108,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 320,
-   "vus": 4,
+   "ms": 296,
+   "vus": 3,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 1215,
+   "ms": 1185,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 190,
-   "vus": 6,
+   "ms": 179,
+   "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 580,
-   "vus": 19,
-   "titres": 1,
+   "ms": 437,
+   "vus": 20,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 298,
-   "vus": 17,
+   "ms": 239,
+   "vus": 15,
    "titres": 3,
    "dit": null
   }
