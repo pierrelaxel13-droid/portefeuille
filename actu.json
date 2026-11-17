@@ -1,76 +1,76 @@
 {
  "lignes": [
   {
+   "titre": "L’Assemblée nationale adopte un texte pour débloquer l’épargne salariale, à la veille d’une nouvelle mobilisation pour le pouvoir d’achat",
+   "lien": "https://www.lemonde.fr/politique/article/2026/11/16/l-assemblee-nationale-adopte-un-texte-pour-debloquer-l-epargne-salariale-a-la-veille-d-une-nouvelle-mobilisation-pour-le-pouvoir-d-achat_6812558_823448.html",
+   "source": "Le Monde",
+   "date": "2026-11-16T22:05:22.000Z"
+  },
+  {
+   "titre": "Pouvoir d'achat : Marine Le Pen propose une TVA à 0% sur les produits de première nécessité",
+   "lien": "https://www.capital.fr/votre-argent/pouvoir-d-achat-marine-le-pen-propose-une-tva-a-0-sur-les-produits-de-premiere-necessite-1531894",
+   "source": "Capital",
+   "date": "2026-11-16T21:31:25.000Z"
+  },
+  {
+   "titre": "Retraites : existe-t-il des trimestres validés sans travailler ?",
+   "lien": "https://www.franceinfo.fr/vrai-ou-fake/retraites-existe-t-il-des-trimestres-valides-sans-travailler_8285468.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
+   "source": "France Info",
+   "date": "2026-11-16T21:00:31.000Z"
+  },
+  {
+   "titre": "Logement : faut-il assouplir l'interdiction de louer les passoires thermiques ?",
+   "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-indigne/logement-faut-il-assouplir-l-interdiction-de-louer-les-passoires-thermiques_8285441.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "source": "France Info",
+   "date": "2026-11-16T20:23:42.000Z"
+  },
+  {
+   "titre": "CAC 40 en baisse, Nvidia... Le Journal de la bourse du lundi 16 novembre 2026",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/111256/cac-40-en-baisse-nvidia-le-journal-de-la-bourse-du-lundi-16-novembre-2026",
+   "source": "MoneyVox",
+   "date": "2026-11-16T20:23:30.000Z"
+  },
+  {
+   "titre": "Épargne salariale : les députés votent un déblocage exceptionnel jusqu’à 10 000 euros",
+   "lien": "https://www.capital.fr/votre-argent/epargne-salariale-les-deputes-votent-un-deblocage-exceptionnel-jusqua-10-000-euros-1531892",
+   "source": "Capital",
+   "date": "2026-11-16T19:15:34.000Z"
+  },
+  {
+   "titre": "Calendrier 2027 des pompiers, découvert bancaire... Les 3 infos du jour pour votre argent",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111251/calendrier-2027-des-pompiers-decouvert-bancaire-les-3-infos-du-jour-pour-votre-argent",
+   "source": "MoneyVox",
+   "date": "2026-11-16T19:00:09.000Z"
+  },
+  {
+   "titre": "Bruxelles autorise le rachat de Commerzbank par UniCredit, au nom du renforcement du secteur bancaire européen",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/16/bruxelles-autorise-le-rachat-de-commerzbank-par-unicredit-au-nom-du-renforcement-du-secteur-bancaire-europeen_6812172_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-16T16:34:55.000Z"
+  },
+  {
+   "titre": "VIDEO. \"Si l'acquéreur ne trouve pas de financement, c'est lui qui a le vrai prix\" : à Rennes, des vendeurs doivent réduire leurs exigences face aux difficultés d'accès au crédit immobilier",
+   "lien": "https://www.franceinfo.fr/economie/immobilier/prix-immobilier/la-hausse-des-taux-aujourd-hui-c-est-le-critere-principal-des-acquereurs-a-rennes-des-prix-de-vente-revus-a-la-baisse-face-aux-taux-d-emprunt-qui-grimpent-en-fleche_8284949.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "source": "France Info",
+   "date": "2026-11-16T16:13:43.000Z"
+  },
+  {
+   "titre": "Retraite minimum, réversion, trimestres... Ce que la hausse du Smic va changer, et quand",
+   "lien": "https://www.moneyvox.fr/retraite/actualites/111247/retraite-minimum-reversion-trimestres-ce-que-la-hausse-du-smic-va-changer-et-quand",
+   "source": "MoneyVox",
+   "date": "2026-11-16T15:39:02.000Z"
+  },
+  {
    "titre": "À Honfleur, la mairie demande aux propriétaires des immeubles à risque du centre historique de faire expertiser leur bien",
    "lien": "https://www.franceinfo.fr/economie/immobilier/a-honfleur-la-mairie-demande-aux-proprietaires-des-immeubles-a-risque-du-centre-historique-de-faire-expertiser-leur-bien_8284976.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
    "date": "2026-11-16T14:57:31.000Z"
   },
   {
-   "titre": "\"La hausse des taux aujourd'hui, c'est le critère principal des acquéreurs\" : à Rennes, des prix de vente revus à la baisse face aux taux d'emprunt qui grimpent en flèche",
-   "lien": "https://www.franceinfo.fr/economie/immobilier/prix-immobilier/la-hausse-des-taux-aujourd-hui-c-est-le-critere-principal-des-acquereurs-a-rennes-des-prix-de-vente-revus-a-la-baisse-face-aux-taux-d-emprunt-qui-grimpent-en-fleche_8284949.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
-   "source": "France Info",
-   "date": "2026-11-16T14:23:17.000Z"
-  },
-  {
    "titre": "Bien préparer la retraite",
    "lien": "https://www.lemonde.fr/argent/article/2026/11/16/bien-preparer-la-retraite_6811901_1657007.html",
    "source": "Le Monde",
    "date": "2026-11-16T14:00:08.000Z"
-  },
-  {
-   "titre": "« L’entrée en Bourse d’Anthropic est un test de confiance XXL des marchés financiers à l’égard du secteur de l’IA »",
-   "lien": "https://www.lemonde.fr/idees/article/2026/11/16/l-entree-en-bourse-d-anthropic-est-un-test-de-confiance-xxl-des-marches-financiers-a-l-egard-du-secteur-de-l-ia_6811899_3232.html",
-   "source": "Le Monde",
-   "date": "2026-11-16T14:00:02.000Z"
-  },
-  {
-   "titre": "Immobilier locatif : un simulateur lancé pour relancer le dispositif Jeanbrun",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/111245/immobilier-locatif-un-simulateur-lance-pour-relancer-le-dispositif-jeanbrun",
-   "source": "MoneyVox",
-   "date": "2026-11-16T13:58:37.000Z"
-  },
-  {
-   "titre": "Logement classé F ou G au DPE : ce que change le projet de loi du gouvernement pour la location",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/111248/logement-classe-f-ou-g-au-dpe-ce-que-change-le-projet-de-loi-du-gouvernement-pour-la-location",
-   "source": "MoneyVox",
-   "date": "2026-11-16T13:15:10.000Z"
-  },
-  {
-   "titre": "EN DIRECT, présidentielle 2027 : « En France, seul le smic est indexé sur l’inflation. C’est donc le seul salaire qui garantit le pouvoir d’achat » : l’économiste Mathieu Plane a répondu à vos questions sur la vie chère",
-   "lien": "https://www.lemonde.fr/election-presidentielle-2027/live/2026/11/16/en-direct-presidentielle-2027-pouvoir-d-achat-posez-vos-questions-a-l-economiste-mathieu-plane_6811633_6205049.html",
-   "source": "Le Monde",
-   "date": "2026-11-16T12:59:22.000Z"
-  },
-  {
-   "titre": "Le projet de loi sur le logement examiné à l'Assemblée \"va uniquement dans le sens des bailleurs\", dénonce la Fondation pour le logement des défavorisés",
-   "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-indigne/le-projet-de-loi-sur-le-logement-examine-a-l-assemblee-va-uniquement-dans-le-sens-des-bailleurs-denonce-la-fondation-pour-le-logement-des-defavorises_8284769.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
-   "source": "France Info",
-   "date": "2026-11-16T11:29:37.000Z"
-  },
-  {
-   "titre": "Taux du Livret A : pourquoi il devrait dépasser 2% au 1er février 2027",
-   "lien": "https://www.capital.fr/votre-argent/taux-du-livret-a-pourquoi-il-devrait-depasser-2-au-1er-fevrier-2027-1531750",
-   "source": "Capital",
-   "date": "2026-11-16T11:00:00.000Z"
-  },
-  {
-   "titre": "VIDEO. Marine Le Pen, qui va présenter mardi son projet de réforme des retraites, a \"une solution pour financer une part de capitalisation pour tous les Français\", assure Jean-Philippe Tanguy",
-   "lien": "https://www.franceinfo.fr/economie/retraite/il-y-a-30-ans-de-mensonges-sur-le-systeme-des-retraites-lance-jean-philippe-tanguy-depute-rn_8284433.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
-   "source": "France Info",
-   "date": "2026-11-16T10:41:43.000Z"
-  },
-  {
-   "titre": "Assurance vie : 7 conseils pour les jeunes qui veulent cumuler performance et disponibilité des fonds",
-   "lien": "https://www.moneyvox.fr/assurance-vie/actualites/110625/7-conseils-pour-les-jeunes-qui-veulent-cumuler-performance-et-disponibilite-des-fonds",
-   "source": "MoneyVox",
-   "date": "2026-11-16T10:28:43.000Z"
-  },
-  {
-   "titre": "Le plan d’épargne-retraite monte en puissance",
-   "lien": "https://www.lemonde.fr/argent/article/2026/11/16/le-plan-d-epargne-retraite-monte-en-puissance_6811502_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-11-16T06:00:11.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-16T15:34:34.111Z",
+ "fait": "2026-11-17T00:10:37.268Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 921,
+   "ms": 1191,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 193,
+   "ms": 854,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,23 +100,23 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 578,
-   "vus": 5,
+   "ms": 992,
+   "vus": 4,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 143,
-   "vus": 5,
+   "ms": 149,
+   "vus": 3,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 501,
+   "ms": 655,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,15 +124,15 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 110,
-   "vus": 5,
+   "ms": 189,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 207,
+   "ms": 605,
    "vus": 6,
    "titres": 3,
    "dit": null
@@ -140,8 +140,8 @@
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 141,
-   "vus": 7,
+   "ms": 183,
+   "vus": 13,
    "titres": 3,
    "dit": null
   }
