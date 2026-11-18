@@ -1,34 +1,64 @@
 {
  "lignes": [
   {
+   "titre": "Au Texas, la pollution liée à l'exploitation du pétrole et du gaz inquiète les habitants et reste taboue au pays de l'or noir",
+   "lien": "https://www.franceinfo.fr/environnement/energie/energies-fossiles/au-texas-la-pollution-liee-a-l-exploitation-du-petrole-et-du-gaz-inquiete-les-habitants-et-reste-taboue-au-pays-de-l-or-noir_8288936.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-18T20:59:29.000Z"
+  },
+  {
+   "titre": "Vous avez une assurance-vie à la Macif ? Votre mot de passe était stocké en clair, 5 millions d’euros d’amende",
+   "lien": "https://www.capital.fr/votre-argent/vous-avez-une-assurance-vie-a-la-macif-votre-mot-de-passe-etait-stocke-en-clair-5-millions-deuros-damende-1531968",
+   "source": "Capital",
+   "date": "2026-11-18T19:14:12.000Z"
+  },
+  {
+   "titre": "Réforme des retraites du RN : \"On ferait payer plus les plus vulnérables\", estime la députée EPR Violette Spillebout",
+   "lien": "https://www.franceinfo.fr/politique/reforme-des-retraites-du-rn-on-ferait-payer-plus-les-plus-vulnerables-estime-la-deputee-epr-violette-spillebout_8288867.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
+   "source": "France Info",
+   "date": "2026-11-18T19:06:33.000Z"
+  },
+  {
+   "titre": "Réduction d'impôt, stress de l'épargnant, nouveauté BoursoBank... Les 3 infos argent du mercredi 18 novembre",
+   "lien": "https://www.moneyvox.fr/impot/actualites/111303/reduction-impot-stress-de-epargnant-nouveaute-boursobank-les-3-infos-argent-du-mercredi-18-novembre",
+   "source": "MoneyVox",
+   "date": "2026-11-18T19:00:09.000Z"
+  },
+  {
+   "titre": "Le Sénat adopte en première lecture le projet de budget de la Sécurité sociale pour 2027",
+   "lien": "https://www.franceinfo.fr/economie/budget/le-senat-adopte-en-premiere-lecture-le-projet-de-budget-de-la-securite-sociale-pour-2027_8288699.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-18T18:55:50.000Z"
+  },
+  {
+   "titre": "L'heure de vérité pour l'IA ? Le journal de la bourse du mercredi 18 novembre 2026",
+   "lien": "https://www.moneyvox.fr/bourse/actualites/111307/heure-de-verite-pour-ia-le-journal-de-la-bourse-du-mercredi-18-novembre-2026",
+   "source": "MoneyVox",
+   "date": "2026-11-18T18:14:24.000Z"
+  },
+  {
+   "titre": "Impôts : la déclaration papier, un marqueur social pour les ménages pauvres et les personnes âgées",
+   "lien": "https://www.lemonde.fr/politique/article/2026/11/18/impots-la-declaration-papier-un-marqueur-social-pour-les-menages-pauvres-et-les-personnes-agees_6813176_823448.html",
+   "source": "Le Monde",
+   "date": "2026-11-18T17:00:49.000Z"
+  },
+  {
+   "titre": "Pension de retraite : le calendrier 2027 des versements Cnav et Carsat",
+   "lien": "https://www.moneyvox.fr/retraite/actualites/111304/pension-de-retraite-le-calendrier-2027-des-versements-cnav-et-carsat",
+   "source": "MoneyVox",
+   "date": "2026-11-18T16:22:09.000Z"
+  },
+  {
+   "titre": "« La profitabilité des géants technologiques est considérable et leurs valorisations boursières sont aberrantes »",
+   "lien": "https://www.lemonde.fr/idees/article/2026/11/18/la-profitabilite-des-geants-technologiques-est-considerable-et-leurs-valorisations-boursieres-sont-aberrantes_6813163_3232.html",
+   "source": "Le Monde",
+   "date": "2026-11-18T16:00:26.000Z"
+  },
+  {
    "titre": "\"Un bras d'honneur invraisemblable aux locataires en précarité énergétique\" : les députés votent un amendement du RN levant les interdictions de louer des passoires thermiques",
-   "lien": "https://www.franceinfo.fr/economie/immobilier/reforme-du-logement/un-bras-d-honneur-invraisemblable-aux-locataires-en-precarite-energetique-les-deputes-votent-un-amendement-du-rn-levant-les-interdictions-de-louer-des-passoires-thermiques_8288078.html#xtor=RSS-3-%5Beconomie%5D",
+   "lien": "https://www.franceinfo.fr/economie/immobilier/reforme-du-logement/un-bras-d-honneur-invraisemblable-aux-locataires-en-precarite-energetique-les-deputes-votent-un-amendement-du-rn-levant-les-interdictions-de-louer-des-passoires-thermiques_8288078.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
    "date": "2026-11-18T15:29:12.000Z"
-  },
-  {
-   "titre": "Loyer : pouvez-vous encore payer le propriétaire en liquide au-delà de 1 000 euros ?",
-   "lien": "https://www.moneyvox.fr/immobilier/actualites/111301/loyer-pouvez-vous-encore-payer-le-proprietaire-en-liquide-au-dela-de-1-000-euros",
-   "source": "MoneyVox",
-   "date": "2026-11-18T15:25:53.000Z"
-  },
-  {
-   "titre": "REPORTAGE. \"Je vois un changement sur ma facture\" : à Lyon, un bailleur installe des boîtiers connectés pour réduire la facture d'eau chaude de ses locataires",
-   "lien": "https://www.franceinfo.fr/economie/pouvoir-achat/reportage-je-vois-un-changement-sur-ma-facture-a-lyon-un-bailleur-installe-des-boitiers-connectes-pour-reduire-la-facture-d-eau-chaude-de-ses-locataires_8288237.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-18T14:35:52.000Z"
-  },
-  {
-   "titre": "Assurance vie luxembourgeoise : les clients lésés par la faillite de FWU Life Insurance Lux appelés à se manifester",
-   "lien": "https://www.moneyvox.fr/assurance-vie/actualites/111297/assurance-vie-luxembourgeoise-les-clients-leses-par-la-faillite-de-fwu-life-insurance-lux-appeles-a-se-manifester",
-   "source": "MoneyVox",
-   "date": "2026-11-18T11:32:11.000Z"
-  },
-  {
-   "titre": "La BCE appelle à renforcer la coopération contre les cyberattaques dopées par l'IA",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111296/la-bce-appelle-a-renforcer-la-cooperation-contre-les-cyberattaques-dopees-par-ia",
-   "source": "MoneyVox",
-   "date": "2026-11-18T11:07:53.000Z"
   },
   {
    "titre": "« Inside Deutsche Bank » : comment le géant bancaire a découvert qu’il avait servi d’intermédiaire à un gigantesque réseau de blanchiment",
@@ -37,40 +67,10 @@
    "date": "2026-11-18T10:00:47.000Z"
   },
   {
-   "titre": "La prévision de croissance de 1% en France pour 2027 \"est à risque\", reconnaît le ministre de l'Economie",
-   "lien": "https://www.franceinfo.fr/economie/budget/la-prevision-de-croissance-de-1-en-france-pour-2027-est-a-risque-reconnait-le-ministre-de-l-economie-roland-lescure_8288000.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-18T09:50:37.000Z"
-  },
-  {
    "titre": "Réserver les HLM aux Français ? Cécile Duflot, ancienne ministre du Logement, s’insurge contre cette mesure du RN",
    "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-indigne/reserver-les-hlm-aux-francais-cecile-duflot-face-a-un-depute-rn_8287040.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
    "date": "2026-11-18T09:49:46.000Z"
-  },
-  {
-   "titre": "La réforme des retraites de Marine Le Pen décryptée : un départ à 60 ans mais à quelles conditions et à quel prix ?",
-   "lien": "https://www.franceinfo.fr/replay-radio/le-decryptage-eco/la-reforme-des-retraites-de-marine-le-pen-decryptee-un-depart-a-60-ans-mais-a-quelles-conditions-et-a-quel-prix_8266760.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
-   "source": "France Info",
-   "date": "2026-11-18T08:34:00.000Z"
-  },
-  {
-   "titre": "Primaire à droite et au centre, présidentielle, retraites... Le \"8h30 franceinfo\" de Jean-François Copé",
-   "lien": "https://www.franceinfo.fr/replay-radio/8h30-fauvelle-dely/primaire-a-droite-et-au-centre-presidentielle-retraites-le-8h30-franceinfo-de-jean-francois-cope_8266766.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
-   "source": "France Info",
-   "date": "2026-11-18T08:25:15.000Z"
-  },
-  {
-   "titre": "Assurance-vie : la chasse aux produits trop chers est ouverte",
-   "lien": "https://www.lemonde.fr/argent/article/2026/11/18/assurance-vie-la-chasse-aux-produits-trop-chers-est-ouverte_6813072_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-11-18T05:00:20.000Z"
-  },
-  {
-   "titre": "Votre assurance vie plus taxée ? Le président de l’Union des entreprises de proximité le réclame",
-   "lien": "https://www.capital.fr/votre-argent/votre-assurance-vie-plus-taxee-le-president-de-lunion-des-entreprises-de-proximite-le-reclame-1531931",
-   "source": "Capital",
-   "date": "2026-11-17T17:47:13.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-18T15:31:43.176Z",
+ "fait": "2026-11-18T22:55:12.554Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 898,
+   "ms": 972,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -92,15 +92,15 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 771,
-   "vus": 4,
+   "ms": 657,
+   "vus": 5,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 873,
+   "ms": 1203,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 385,
+   "ms": 494,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 960,
+   "ms": 834,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,25 +124,25 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 315,
-   "vus": 4,
+   "ms": 168,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 532,
-   "vus": 10,
+   "ms": 646,
+   "vus": 8,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 396,
-   "vus": 20,
-   "titres": 2,
+   "ms": 369,
+   "vus": 14,
+   "titres": 3,
    "dit": null
   }
  ]
