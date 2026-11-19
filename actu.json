@@ -1,10 +1,64 @@
 {
  "lignes": [
   {
-   "titre": "Au Texas, la pollution liée à l'exploitation du pétrole et du gaz inquiète les habitants et reste taboue au pays de l'or noir",
-   "lien": "https://www.franceinfo.fr/environnement/energie/energies-fossiles/au-texas-la-pollution-liee-a-l-exploitation-du-petrole-et-du-gaz-inquiete-les-habitants-et-reste-taboue-au-pays-de-l-or-noir_8288936.html#xtor=RSS-3-%5Beconomie%5D",
+   "titre": "Assurance vie : ce nouveau fonds euros combine sécurité, rendement garanti et responsabilité environnementale",
+   "lien": "https://www.moneyvox.fr/assurance-vie/actualites/111319/ce-nouveau-fonds-euros-combine-securite-rendement-garanti-et-responsabilite-environnementale",
+   "source": "MoneyVox",
+   "date": "2026-11-19T14:13:45.000Z"
+  },
+  {
+   "titre": "Pension de retraite : le bonus de 10% à partir de trois enfants maintenu par le Sénat",
+   "lien": "https://www.moneyvox.fr/retraite/actualites/111317/pension-de-retraite-le-bonus-de-10-a-partir-de-trois-enfants-maintenu-par-le-senat",
+   "source": "MoneyVox",
+   "date": "2026-11-19T13:30:43.000Z"
+  },
+  {
+   "titre": "Une nouvelle SCPI disparaît faute d’épargnants",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/19/une-nouvelle-scpi-disparait-faute-d-epargnants_6813306_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-19T13:25:15.000Z"
+  },
+  {
+   "titre": "Crédit Agricole : jusqu'à 100 euros offerts pour ouvrir un compte bancaire avant le 31 décembre",
+   "lien": "https://www.moneyvox.fr/banque-en-ligne/actualites/111311/credit-agricole-jusqua-100-euros-offerts-pour-ouvrir-un-compte-bancaire-avant-le-31-decembre",
+   "source": "MoneyVox",
+   "date": "2026-11-19T13:01:03.000Z"
+  },
+  {
+   "titre": "Budget de la « Sécu » pour 2027 : la question-clé de l’effort demandé aux retraités",
+   "lien": "https://www.lemonde.fr/politique/article/2026/11/19/budget-de-la-secu-pour-2027-la-question-cle-de-l-effort-demande-aux-retraites_6813262_823448.html",
+   "source": "Le Monde",
+   "date": "2026-11-19T09:07:47.000Z"
+  },
+  {
+   "titre": "Vrai ou faux. \"Tous les autres pays européens\" ont-ils repoussé l'âge de départ à la retraite à 66 ou 67 ans comme l'affirme Patrick Martin ?",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-vrai-du-faux/vrai-ou-faux-tous-les-autres-pays-europeens-ont-ils-repousse-l-age-de-depart-a-la-retraite-a-66-ou-67-ans-comme-l-affirme-patrick-martin_8268653.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
    "source": "France Info",
-   "date": "2026-11-18T20:59:29.000Z"
+   "date": "2026-11-19T07:32:28.000Z"
+  },
+  {
+   "titre": "Véritable test pour le secteur de l'IA, Anthropic, créateur de l'IA Claude, entre en bourse avec une valorisation astronomique",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-decryptage-eco/veritable-test-pour-le-secteur-de-l-ia-anthropic-createur-de-l-ia-claude-entre-en-bourse-avec-une-valorisation-astronomique_8268659.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-19T07:05:02.000Z"
+  },
+  {
+   "titre": "Indivision : le concubin violent écarté du logement peut réclamer une indemnité d’occupation à sa victime",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/19/indivision-le-concubin-violent-ecarte-du-logement-peut-reclamer-une-indemnite-d-occupation-a-sa-victime_6813237_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-19T05:35:06.000Z"
+  },
+  {
+   "titre": "Aux Etats-Unis, Wall Street met fin à l’euphorie généralisée sur l’IA et cherche à trier les gagnants et les perdants de cette révolution",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/19/aux-etats-unis-wall-street-met-fin-a-l-euphorie-generalisee-sur-l-ia-et-cherche-a-trier-les-gagnants-et-les-perdants-de-cette-revolution_6813232_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-19T05:00:17.000Z"
+  },
+  {
+   "titre": "Moins d'impôt sur le revenu pour les plus riches en 2025",
+   "lien": "https://www.franceinfo.fr/economie/moins-d-impot-sur-le-revenu-pour-les-plus-riches-en-2025_8288705.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
+   "source": "France Info",
+   "date": "2026-11-19T05:00:02.000Z"
   },
   {
    "titre": "Vous avez une assurance-vie à la Macif ? Votre mot de passe était stocké en clair, 5 millions d’euros d’amende",
@@ -17,60 +71,6 @@
    "lien": "https://www.franceinfo.fr/politique/reforme-des-retraites-du-rn-on-ferait-payer-plus-les-plus-vulnerables-estime-la-deputee-epr-violette-spillebout_8288867.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
    "source": "France Info",
    "date": "2026-11-18T19:06:33.000Z"
-  },
-  {
-   "titre": "Réduction d'impôt, stress de l'épargnant, nouveauté BoursoBank... Les 3 infos argent du mercredi 18 novembre",
-   "lien": "https://www.moneyvox.fr/impot/actualites/111303/reduction-impot-stress-de-epargnant-nouveaute-boursobank-les-3-infos-argent-du-mercredi-18-novembre",
-   "source": "MoneyVox",
-   "date": "2026-11-18T19:00:09.000Z"
-  },
-  {
-   "titre": "Le Sénat adopte en première lecture le projet de budget de la Sécurité sociale pour 2027",
-   "lien": "https://www.franceinfo.fr/economie/budget/le-senat-adopte-en-premiere-lecture-le-projet-de-budget-de-la-securite-sociale-pour-2027_8288699.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-18T18:55:50.000Z"
-  },
-  {
-   "titre": "L'heure de vérité pour l'IA ? Le journal de la bourse du mercredi 18 novembre 2026",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/111307/heure-de-verite-pour-ia-le-journal-de-la-bourse-du-mercredi-18-novembre-2026",
-   "source": "MoneyVox",
-   "date": "2026-11-18T18:14:24.000Z"
-  },
-  {
-   "titre": "Impôts : la déclaration papier, un marqueur social pour les ménages pauvres et les personnes âgées",
-   "lien": "https://www.lemonde.fr/politique/article/2026/11/18/impots-la-declaration-papier-un-marqueur-social-pour-les-menages-pauvres-et-les-personnes-agees_6813176_823448.html",
-   "source": "Le Monde",
-   "date": "2026-11-18T17:00:49.000Z"
-  },
-  {
-   "titre": "Pension de retraite : le calendrier 2027 des versements Cnav et Carsat",
-   "lien": "https://www.moneyvox.fr/retraite/actualites/111304/pension-de-retraite-le-calendrier-2027-des-versements-cnav-et-carsat",
-   "source": "MoneyVox",
-   "date": "2026-11-18T16:22:09.000Z"
-  },
-  {
-   "titre": "« La profitabilité des géants technologiques est considérable et leurs valorisations boursières sont aberrantes »",
-   "lien": "https://www.lemonde.fr/idees/article/2026/11/18/la-profitabilite-des-geants-technologiques-est-considerable-et-leurs-valorisations-boursieres-sont-aberrantes_6813163_3232.html",
-   "source": "Le Monde",
-   "date": "2026-11-18T16:00:26.000Z"
-  },
-  {
-   "titre": "\"Un bras d'honneur invraisemblable aux locataires en précarité énergétique\" : les députés votent un amendement du RN levant les interdictions de louer des passoires thermiques",
-   "lien": "https://www.franceinfo.fr/economie/immobilier/reforme-du-logement/un-bras-d-honneur-invraisemblable-aux-locataires-en-precarite-energetique-les-deputes-votent-un-amendement-du-rn-levant-les-interdictions-de-louer-des-passoires-thermiques_8288078.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
-   "source": "France Info",
-   "date": "2026-11-18T15:29:12.000Z"
-  },
-  {
-   "titre": "« Inside Deutsche Bank » : comment le géant bancaire a découvert qu’il avait servi d’intermédiaire à un gigantesque réseau de blanchiment",
-   "lien": "https://www.lemonde.fr/les-decodeurs/article/2026/11/18/inside-deutsche-bank-comment-le-geant-bancaire-a-decouvert-qu-il-avait-servi-d-intermediaire-a-un-gigantesque-reseau-de-blanchiment_6813105_4355770.html",
-   "source": "Le Monde",
-   "date": "2026-11-18T10:00:47.000Z"
-  },
-  {
-   "titre": "Réserver les HLM aux Français ? Cécile Duflot, ancienne ministre du Logement, s’insurge contre cette mesure du RN",
-   "lien": "https://www.franceinfo.fr/economie/immobilier/immobilier-indigne/reserver-les-hlm-aux-francais-cecile-duflot-face-a-un-depute-rn_8287040.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
-   "source": "France Info",
-   "date": "2026-11-18T09:49:46.000Z"
   }
  ],
  "sources": [
@@ -79,28 +79,28 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-18T22:55:12.554Z",
+ "fait": "2026-11-19T15:38:37.560Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 972,
-   "vus": 4,
+   "ms": 641,
+   "vus": 3,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 657,
-   "vus": 5,
+   "ms": 241,
+   "vus": 7,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1203,
+   "ms": 837,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 494,
+   "ms": 232,
    "vus": 4,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 834,
+   "ms": 197,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,24 +124,24 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 168,
-   "vus": 3,
+   "ms": 108,
+   "vus": 4,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 646,
-   "vus": 8,
-   "titres": 3,
+   "ms": 249,
+   "vus": 20,
+   "titres": 2,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 369,
-   "vus": 14,
+   "ms": 199,
+   "vus": 15,
    "titres": 3,
    "dit": null
   }
