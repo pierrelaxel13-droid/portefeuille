@@ -1,34 +1,52 @@
 {
  "lignes": [
   {
-   "titre": "L'entreprise américaine d'intelligence artificielle Anthropic signe une entrée en Bourse historique en détrônant SpaceX",
-   "lien": "https://www.franceinfo.fr/economie/bourse/l-entreprise-americaine-d-intelligence-artificielle-anthropic-signe-une-entree-en-bourse-historique-en-detronant-spacex_8290763.html#xtor=RSS-3-%5Beconomie%5D",
+   "titre": "Encadrement des loyers: est-ce que ça fonctionne ?",
+   "lien": "https://www.franceinfo.fr/economie/encadrement-des-loyers-est-ce-que-ca-fonctionne_8292497.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
-   "date": "2026-11-19T22:53:30.000Z"
+   "date": "2026-11-20T15:15:13.000Z"
   },
   {
-   "titre": "Virement de retraite avancé, facture d'énergie : les 3 infos argent du jeudi 19 novembre",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111325/virement-de-retraite-avance-facture-energie-les-3-infos-argent-du-jeudi-19-novembre",
-   "source": "MoneyVox",
-   "date": "2026-11-19T19:00:09.000Z"
-  },
-  {
-   "titre": "Le Parlement prolonge l'encadrement des loyers de deux ans",
-   "lien": "https://www.franceinfo.fr/economie/immobilier/encadrement-des-loyers/le-parlement-prolonge-l-encadrement-des-loyers-de-deux-ans_8290517.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "titre": "Crédit conso, paiements fractionnés, découverts bancaires… Les règles se durcissent",
+   "lien": "https://www.franceinfo.fr/replay-jt/france-2/13-heures/credit-conso-paiements-fractionnes-decouverts-bancaires-les-regles-se-durcissent_8292464.html#xtor=RSS-3-%5Beconomie%5D",
    "source": "France Info",
-   "date": "2026-11-19T18:25:53.000Z"
+   "date": "2026-11-20T15:07:06.000Z"
   },
   {
-   "titre": "Vous avez un PEL ou un livret ? Un courrier à votre banque d'ici la fin novembre peut vous éviter l'impôt 2027",
-   "lien": "https://www.moneyvox.fr/impot/actualites/111321/vous-avez-un-pel-ou-un-livret-un-courrier-a-votre-banque-ici-la-fin-novembre-peut-vous-eviter-impot-2027",
+   "titre": "Escroquerie aux métaux précieux et aux cryptomonnaies : dix personnes mises en examen",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111347/escroquerie-aux-metaux-precieux-et-aux-cryptomonnaies-dix-personnes-mises-en-examen",
    "source": "MoneyVox",
-   "date": "2026-11-19T17:27:08.000Z"
+   "date": "2026-11-20T14:19:09.000Z"
   },
   {
-   "titre": "CAC 40 : l'euphorie aura été de courte durée, retrouvez les infos bourse du 19 novembre",
-   "lien": "https://www.moneyvox.fr/bourse/actualites/111326/cac-40-euphorie-aura-ete-de-courte-duree-retrouvez-les-infos-bourse-du-19-novembre",
+   "titre": "Retraites : la réforme du RN, un net durcissement pour les carrières hachées",
+   "lien": "https://www.moneyvox.fr/retraite/actualites/111346/retraites-la-reforme-du-rn-un-net-durcissement-pour-les-carrieres-hachees",
    "source": "MoneyVox",
-   "date": "2026-11-19T17:17:51.000Z"
+   "date": "2026-11-20T14:04:22.000Z"
+  },
+  {
+   "titre": "49.3, ordonnances, compromis sur les retraites... Les dilemmes du gouvernement pour adopter un budget 2027",
+   "lien": "https://www.moneyvox.fr/impot/actualites/111344/493-ordonnances-compromis-sur-les-retraites-les-dilemmes-du-gouvernement-pour-adopter-un-budget-2027",
+   "source": "MoneyVox",
+   "date": "2026-11-20T13:49:27.000Z"
+  },
+  {
+   "titre": "Les découverts bancaires de moins de 200 euros désormais considérés comme des crédits à la consommation",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/20/les-decouverts-bancaires-de-moins-de-200-euros-desormais-consideres-comme-des-credits-a-la-consommation_6813600_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-20T07:25:58.000Z"
+  },
+  {
+   "titre": "Vrai ou faux. La suppression de l'ISF n'a-t-elle eu qu'un effet \"marginal\" sur le retour des très riches en France ?",
+   "lien": "https://www.franceinfo.fr/replay-radio/le-vrai-du-faux/vrai-ou-faux-la-suppression-de-l-isf-n-a-t-elle-eu-qu-un-effet-marginal-sur-le-retour-des-tres-riches-en-france_8270108.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
+   "source": "France Info",
+   "date": "2026-11-20T06:59:14.000Z"
+  },
+  {
+   "titre": "Les nouvelles règles d’Airbnb suscitent la colère des petits propriétaires : « Le fait de payer n’offre pas tous les droits »",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/20/vaisselle-poubelles-draps-les-nouvelles-regles-d-airbnb-suscitent-la-colere-des-petits-proprietaires_6813590_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-20T05:03:10.000Z"
   },
   {
    "titre": "A Lyon, le promoteur immobilier Nexity livre des logements innovants conçus sans climatisation ni chauffage",
@@ -43,48 +61,29 @@
    "date": "2026-11-19T13:25:15.000Z"
   },
   {
-   "titre": "Budget de la « Sécu » pour 2027 : la question-clé de l’effort demandé aux retraités",
-   "lien": "https://www.lemonde.fr/politique/article/2026/11/19/budget-de-la-secu-pour-2027-la-question-cle-de-l-effort-demande-aux-retraites_6813262_823448.html",
-   "source": "Le Monde",
-   "date": "2026-11-19T09:07:47.000Z"
-  },
-  {
    "titre": "Vrai ou faux. \"Tous les autres pays européens\" ont-ils repoussé l'âge de départ à la retraite à 66 ou 67 ans comme l'affirme Patrick Martin ?",
    "lien": "https://www.franceinfo.fr/replay-radio/le-vrai-du-faux/vrai-ou-faux-tous-les-autres-pays-europeens-ont-ils-repousse-l-age-de-depart-a-la-retraite-a-66-ou-67-ans-comme-l-affirme-patrick-martin_8268653.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
    "source": "France Info",
    "date": "2026-11-19T07:32:28.000Z"
   },
   {
-   "titre": "Indivision : le concubin violent écarté du logement peut réclamer une indemnité d’occupation à sa victime",
-   "lien": "https://www.lemonde.fr/argent/article/2026/11/19/indivision-le-concubin-violent-ecarte-du-logement-peut-reclamer-une-indemnite-d-occupation-a-sa-victime_6813237_1657007.html",
-   "source": "Le Monde",
-   "date": "2026-11-19T05:35:06.000Z"
-  },
-  {
    "titre": "Moins d'impôt sur le revenu pour les plus riches en 2025",
    "lien": "https://www.franceinfo.fr/economie/moins-d-impot-sur-le-revenu-pour-les-plus-riches-en-2025_8288705.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
    "source": "France Info",
    "date": "2026-11-19T05:00:02.000Z"
-  },
-  {
-   "titre": "Vous avez une assurance-vie à la Macif ? Votre mot de passe était stocké en clair, 5 millions d’euros d’amende",
-   "lien": "https://www.capital.fr/votre-argent/vous-avez-une-assurance-vie-a-la-macif-votre-mot-de-passe-etait-stocke-en-clair-5-millions-deuros-damende-1531968",
-   "source": "Capital",
-   "date": "2026-11-18T19:14:12.000Z"
   }
  ],
  "sources": [
   "France Info",
   "Le Monde",
-  "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-19T23:00:10.651Z",
+ "fait": "2026-11-20T15:19:30.204Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1230,
+   "ms": 1657,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -92,15 +91,15 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1144,
-   "vus": 7,
+   "ms": 306,
+   "vus": 3,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 2687,
+   "ms": 1025,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,15 +107,15 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 350,
-   "vus": 3,
+   "ms": 193,
+   "vus": 4,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 960,
+   "ms": 328,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +123,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 196,
+   "ms": 171,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,16 +131,16 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 546,
-   "vus": 20,
-   "titres": 2,
+   "ms": 165,
+   "vus": 8,
+   "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 412,
-   "vus": 12,
+   "ms": 82,
+   "vus": 18,
    "titres": 3,
    "dit": null
   }
