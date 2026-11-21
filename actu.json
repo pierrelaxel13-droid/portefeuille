@@ -1,6 +1,18 @@
 {
  "lignes": [
   {
+   "titre": "Pourquoi la France est-elle trop lente à construire des logements ?",
+   "lien": "https://www.franceinfo.fr/vrai-ou-fake/pourquoi-la-france-est-elle-trop-lente-a-construire-des-logements_8293841.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "source": "France Info",
+   "date": "2026-11-21T15:53:31.000Z"
+  },
+  {
+   "titre": "Immobilier solidaire : quand l’épargne citoyenne fait revivre de nouveaux lieux de vie",
+   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-solidaire-quand-l-epargne-citoyenne-fait-revivre-de-nouveaux-lieux-de-vie_8271686.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "source": "France Info",
+   "date": "2026-11-21T15:05:01.000Z"
+  },
+  {
    "titre": "La Bourse de Wall Street enregistre des centaines de milliards de dollars de pertes, pénalisée par le secteur de l'IA",
    "lien": "https://www.franceinfo.fr/internet/intelligence-artificielle/la-bourse-de-wall-street-enregistre-des-centaines-de-milliards-de-dollars-de-pertes-penalisee-par-le-secteur-de-l-ia_8293667.html#xtor=RSS-3-%5Beconomie%5D",
    "source": "France Info",
@@ -17,12 +29,6 @@
    "lien": "https://www.lemonde.fr/la-chronique-de-thomas-piketty/article/2026/11/21/thomas-piketty-le-projet-de-convention-fiscale-de-l-onu-a-le-potentiel-de-changer-la-face-du-monde_6813978_6649149.html",
    "source": "Le Monde",
    "date": "2026-11-21T10:00:13.000Z"
-  },
-  {
-   "titre": "Surinvestissements boursiers dans l’IA : plus dure sera la chute ?",
-   "lien": "https://www.franceinfo.fr/replay-radio/les-debats-de-l-eco/surinvestissements-boursiers-dans-l-ia-plus-dure-sera-la-chute_8271716.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-21T09:35:28.000Z"
   },
   {
    "titre": "Capitalisation : votre retraite placée en bourse ?",
@@ -65,12 +71,6 @@
    "lien": "https://www.capital.fr/votre-argent/votre-banque-augmente-ses-tarifs-au-1er-janvier-2027-et-certains-frais-font-plus-que-doubler-est-ce-la-votre-1532044",
    "source": "Capital",
    "date": "2026-11-20T18:59:43.000Z"
-  },
-  {
-   "titre": "Chez Accor, le premier actionnaire exige le départ du PDG Sébastien Bazin",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/20/chez-accor-le-premier-actionnaire-exige-le-depart-du-pdg_6813670_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-20T17:00:02.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-21T14:33:08.531Z",
+ "fait": "2026-11-21T21:36:32.497Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 875,
+   "ms": 1619,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -92,15 +92,15 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 556,
-   "vus": 4,
+   "ms": 1360,
+   "vus": 3,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1233,
+   "ms": 1005,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,7 +108,7 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 138,
+   "ms": 283,
    "vus": 5,
    "titres": 3,
    "dit": null
@@ -116,7 +116,7 @@
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 209,
+   "ms": 352,
    "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
@@ -124,7 +124,7 @@
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 102,
+   "ms": 143,
    "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
@@ -132,16 +132,16 @@
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 302,
-   "vus": 6,
+   "ms": 532,
+   "vus": 11,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 137,
-   "vus": 12,
+   "ms": 289,
+   "vus": 14,
    "titres": 3,
    "dit": null
   }
