@@ -1,6 +1,30 @@
 {
  "lignes": [
   {
+   "titre": "\"Un peu peur de ce qui m'arrive\" : le cauchemar d'un propriétaire dont la maison présente d'importantes fissures",
+   "lien": "https://www.franceinfo.fr/replay-jt/france-2/13-heures/un-peu-peur-de-ce-qui-m-arrive-le-cauchemar-d-un-proprietaire-dont-la-maison-presente-d-importantes-fissures_8294873.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "source": "France Info",
+   "date": "2026-11-22T13:26:24.000Z"
+  },
+  {
+   "titre": "Palmarès des meilleures banques 2027, nouvelles règles pour la LOA : les 5 infos argent de la semaine",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111340/palmares-des-meilleures-banques-2027-nouvelles-regles-pour-la-loa-les-5-infos-argent-de-la-semaine",
+   "source": "MoneyVox",
+   "date": "2026-11-22T08:00:09.000Z"
+  },
+  {
+   "titre": "Donald Trump reçoit les plus gros détenteurs de sa cryptomonnaie, qui l'a considérablement enrichi",
+   "lien": "https://www.franceinfo.fr/economie/bitcoin/donald-trump-recoit-les-plus-gros-detenteurs-de-sa-cryptomonnaie-qui-l-a-considerablement-enrichi_8294492.html#xtor=RSS-3-%5Beconomie%5D",
+   "source": "France Info",
+   "date": "2026-11-22T06:49:37.000Z"
+  },
+  {
+   "titre": "Prime de Noël : un deuxième versement programmé en janvier 2027",
+   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111350/prime-de-noel-un-deuxieme-versement-programme-en-janvier-2027",
+   "source": "MoneyVox",
+   "date": "2026-11-22T05:30:09.000Z"
+  },
+  {
    "titre": "Pourquoi la France est-elle trop lente à construire des logements ?",
    "lien": "https://www.franceinfo.fr/vrai-ou-fake/pourquoi-la-france-est-elle-trop-lente-a-construire-des-logements_8293841.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
@@ -11,18 +35,6 @@
    "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-solidaire-quand-l-epargne-citoyenne-fait-revivre-de-nouveaux-lieux-de-vie_8271686.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
    "date": "2026-11-21T15:05:01.000Z"
-  },
-  {
-   "titre": "La Bourse de Wall Street enregistre des centaines de milliards de dollars de pertes, pénalisée par le secteur de l'IA",
-   "lien": "https://www.franceinfo.fr/internet/intelligence-artificielle/la-bourse-de-wall-street-enregistre-des-centaines-de-milliards-de-dollars-de-pertes-penalisee-par-le-secteur-de-l-ia_8293667.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-21T11:44:42.000Z"
-  },
-  {
-   "titre": "L'association Droit au logement appelle à \"renforcer l'encadrement des loyers\" et à \"produire du logement social\"",
-   "lien": "https://www.franceinfo.fr/societe/manifestations/l-association-droit-au-logement-appelle-a-renforcer-l-encadrement-des-loyers-et-a-produire-du-logement-social_8293607.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
-   "source": "France Info",
-   "date": "2026-11-21T10:24:55.000Z"
   },
   {
    "titre": "Thomas Piketty : « Le projet de convention fiscale de l’ONU a le potentiel de changer la face du monde »",
@@ -41,18 +53,6 @@
    "lien": "https://www.moneyvox.fr/banque/actualites/111356/cette-ancienne-ministre-va-integrer-le-directoire-de-la-bce-qui-est-la-francaise-laurence-boone",
    "source": "MoneyVox",
    "date": "2026-11-21T08:24:12.000Z"
-  },
-  {
-   "titre": "Déclaration de revenus : plus les impôts s'automatisent, plus ils s'éloignent de chez vous",
-   "lien": "https://www.moneyvox.fr/impot/actualites/111349/declaration-de-revenus-plus-les-impots-s-automatisent-plus-ils-s-eloignent-de-chez-vous",
-   "source": "MoneyVox",
-   "date": "2026-11-21T06:15:09.000Z"
-  },
-  {
-   "titre": "Compte à terme : nouveau taux, versement minimum... Ce qui change chez BoursoBank",
-   "lien": "https://www.moneyvox.fr/placement/actualites/111341/compte-a-terme-nouveau-taux-versement-minimum-ce-qui-change-chez-boursobank",
-   "source": "MoneyVox",
-   "date": "2026-11-21T06:00:09.000Z"
   },
   {
    "titre": "Aux Etats-Unis, Wall Street en déroute après la dégringolade des sociétés liées à l’IA",
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-21T21:36:32.497Z",
+ "fait": "2026-11-22T14:27:53.459Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 1619,
+   "ms": 1461,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 1360,
+   "ms": 1455,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1005,
+   "ms": 1088,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,40 +108,40 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 283,
-   "vus": 5,
+   "ms": 385,
+   "vus": 7,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 352,
-   "vus": 5,
+   "ms": 887,
+   "vus": 6,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
   },
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 143,
-   "vus": 3,
+   "ms": 171,
+   "vus": 5,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 532,
-   "vus": 11,
+   "ms": 516,
+   "vus": 12,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 289,
-   "vus": 14,
+   "ms": 529,
+   "vus": 19,
    "titres": 3,
    "dit": null
   }
