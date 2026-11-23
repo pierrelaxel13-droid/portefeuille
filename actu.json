@@ -1,16 +1,58 @@
 {
  "lignes": [
   {
-   "titre": "Une épicerie itinérante pour les petits budgets mise en place par la Banque Alimentaire",
-   "lien": "https://www.franceinfo.fr/replay-jt/france-2/13-heures/une-epicerie-itinerante-pour-les-petits-budgets-mise-en-place-par-la-banque-alimentaire_8294912.html#xtor=RSS-3-%5Beconomie%5D",
-   "source": "France Info",
-   "date": "2026-11-22T15:08:28.000Z"
+   "titre": "La Banque de France veut relancer la circulation des billets de 5 euros, prisés des Français mais difficiles à trouver",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/23/la-banque-de-france-veut-relancer-la-circulation-des-billets-de-5-euros-prises-des-francais-mais-difficiles-a-trouver_6814430_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-23T17:05:04.000Z"
   },
   {
-   "titre": "\"The Altruits\": la cryptomonnaie pour les nuls",
-   "lien": "https://www.franceinfo.fr/replay-radio/l-empire-des-series/the-altruits-la-cryptomonnaie-pour-les-nuls_8250505.html#xtor=RSS-3-%5Beconomie%5D",
+   "titre": "Billet de 5 euros : ce qui va changer pour vos retraits dans les DAB des banques",
+   "lien": "https://www.moneyvox.fr/banque/actualites/111368/billet-de-5-euros-ce-qui-va-changer-pour-vos-retraits-dans-les-dab-des-banques",
+   "source": "MoneyVox",
+   "date": "2026-11-23T17:00:09.000Z"
+  },
+  {
+   "titre": "Budget 2027 : familles, apprentis... les avantages fiscaux visés ou préservés",
+   "lien": "https://www.moneyvox.fr/impot/actualites/111371/budget-2027-familles-apprentis-les-avantages-fiscaux-vises-ou-preserves",
+   "source": "MoneyVox",
+   "date": "2026-11-23T16:32:49.000Z"
+  },
+  {
+   "titre": "BoursoBank : un nouveau logo pour la banque en ligne",
+   "lien": "https://www.moneyvox.fr/banque-en-ligne/actualites/111367/boursobank-un-nouveau-logo-pour-la-banque-en-ligne",
+   "source": "MoneyVox",
+   "date": "2026-11-23T16:21:45.000Z"
+  },
+  {
+   "titre": "Le Premier ministre espagnol, Pedro Sanchez, propose de taxer les patrimoines supérieurs à 100 millions d'euros",
+   "lien": "https://www.franceinfo.fr/monde/espagne/le-premier-ministre-espagnol-pedro-sanchez-propose-de-taxer-les-patrimoines-superieurs-a-100-millions-d-euros_8295806.html#xtor=RSS-3-%5Beconomie%2Fimpots%5D",
    "source": "France Info",
-   "date": "2026-11-22T15:05:02.000Z"
+   "date": "2026-11-23T11:13:23.000Z"
+  },
+  {
+   "titre": "« La chute des Bourses asiatiques ressemble plus à un krach qu’à une simple correction »",
+   "lien": "https://www.lemonde.fr/economie/article/2026/11/23/la-chute-des-bourses-asiatiques-ressemble-plus-a-un-krach-qu-a-une-simple-correction_6814369_3234.html",
+   "source": "Le Monde",
+   "date": "2026-11-23T09:30:06.000Z"
+  },
+  {
+   "titre": "Cryptomonnaies : comment faire le tri parmi 66 millions d’actifs possibles",
+   "lien": "https://www.lemonde.fr/argent/article/2026/11/23/cryptomonnaies-comment-faire-le-tri-parmi-66-millions-d-actifs-possibles_6814342_1657007.html",
+   "source": "Le Monde",
+   "date": "2026-11-23T05:00:00.000Z"
+  },
+  {
+   "titre": "On vous explique les débats autour de la retraite par capitalisation, que plusieurs candidats à la présidentielle proposent d'introduire pour financer les pensions",
+   "lien": "https://www.franceinfo.fr/economie/retraite/reforme-des-retraites/on-vous-explique-les-debats-autour-de-la-retraite-par-capitalisation-que-plusieurs-candidats-a-la-presidentielle-proposent-d-introduire-pour-financer-les-pensions_8288555.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
+   "source": "France Info",
+   "date": "2026-11-23T04:59:45.000Z"
+  },
+  {
+   "titre": "\"Aujourd'hui, des personnes sans logement, on en voit tous les jours\" : quand trouver une location devient un parcours du combattant",
+   "lien": "https://www.franceinfo.fr/economie/immobilier/aujourd-hui-des-personnes-sans-logement-on-en-voit-tous-les-jours-quand-trouver-une-location-devient-un-parcours-du-combattant_8295185.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
+   "source": "France Info",
+   "date": "2026-11-22T21:42:46.000Z"
   },
   {
    "titre": "PER : la date limite de versement pour payer moins d’impôt en 2027",
@@ -25,52 +67,10 @@
    "date": "2026-11-22T14:44:00.000Z"
   },
   {
-   "titre": "Palmarès des meilleures banques 2027, nouvelles règles pour la LOA : les 5 infos argent de la semaine",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111340/palmares-des-meilleures-banques-2027-nouvelles-regles-pour-la-loa-les-5-infos-argent-de-la-semaine",
-   "source": "MoneyVox",
-   "date": "2026-11-22T08:00:09.000Z"
-  },
-  {
-   "titre": "Prime de Noël : un deuxième versement programmé en janvier 2027",
-   "lien": "https://www.moneyvox.fr/votre-argent/actualites/111350/prime-de-noel-un-deuxieme-versement-programme-en-janvier-2027",
-   "source": "MoneyVox",
-   "date": "2026-11-22T05:30:09.000Z"
-  },
-  {
    "titre": "Pourquoi la France est-elle trop lente à construire des logements ?",
    "lien": "https://www.franceinfo.fr/vrai-ou-fake/pourquoi-la-france-est-elle-trop-lente-a-construire-des-logements_8293841.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
    "source": "France Info",
    "date": "2026-11-21T15:53:31.000Z"
-  },
-  {
-   "titre": "Immobilier solidaire : quand l’épargne citoyenne fait revivre de nouveaux lieux de vie",
-   "lien": "https://www.franceinfo.fr/replay-radio/info-immobilier/immobilier-solidaire-quand-l-epargne-citoyenne-fait-revivre-de-nouveaux-lieux-de-vie_8271686.html#xtor=RSS-3-%5Beconomie%2Fimmobilier%5D",
-   "source": "France Info",
-   "date": "2026-11-21T15:05:01.000Z"
-  },
-  {
-   "titre": "Thomas Piketty : « Le projet de convention fiscale de l’ONU a le potentiel de changer la face du monde »",
-   "lien": "https://www.lemonde.fr/la-chronique-de-thomas-piketty/article/2026/11/21/thomas-piketty-le-projet-de-convention-fiscale-de-l-onu-a-le-potentiel-de-changer-la-face-du-monde_6813978_6649149.html",
-   "source": "Le Monde",
-   "date": "2026-11-21T10:00:13.000Z"
-  },
-  {
-   "titre": "Capitalisation : votre retraite placée en bourse ?",
-   "lien": "https://www.franceinfo.fr/economie/retraite/capitalisation-votre-retraite-placee-en-bourse_8292569.html#xtor=RSS-3-%5Beconomie%2Fretraite%5D",
-   "source": "France Info",
-   "date": "2026-11-21T09:00:06.000Z"
-  },
-  {
-   "titre": "Cette ancienne ministre va intégrer le directoire de la BCE : qui est la Française Laurence Boone ?",
-   "lien": "https://www.moneyvox.fr/banque/actualites/111356/cette-ancienne-ministre-va-integrer-le-directoire-de-la-bce-qui-est-la-francaise-laurence-boone",
-   "source": "MoneyVox",
-   "date": "2026-11-21T08:24:12.000Z"
-  },
-  {
-   "titre": "Aux Etats-Unis, Wall Street en déroute après la dégringolade des sociétés liées à l’IA",
-   "lien": "https://www.lemonde.fr/economie/article/2026/11/21/aux-etats-unis-wall-street-en-deroute-apres-la-degringolade-des-societes-liees-a-l-intelligence-artificielle_6813811_3234.html",
-   "source": "Le Monde",
-   "date": "2026-11-21T00:33:30.000Z"
   }
  ],
  "sources": [
@@ -79,12 +79,12 @@
   "Capital",
   "MoneyVox"
  ],
- "fait": "2026-11-22T21:41:46.673Z",
+ "fait": "2026-11-23T17:56:28.361Z",
  "flux": [
   {
    "nom": "France Info/Impots",
    "etat": 200,
-   "ms": 848,
+   "ms": 1021,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -92,7 +92,7 @@
   {
    "nom": "France Info/Immobilier",
    "etat": 200,
-   "ms": 714,
+   "ms": 303,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -100,7 +100,7 @@
   {
    "nom": "France Info/Retraite",
    "etat": 200,
-   "ms": 1110,
+   "ms": 802,
    "vus": 3,
    "titres": 3,
    "dit": null
@@ -108,41 +108,41 @@
   {
    "nom": "Le Monde/Argent",
    "etat": 200,
-   "ms": 408,
-   "vus": 7,
+   "ms": 111,
+   "vus": 3,
    "titres": 3,
    "dit": null
   },
   {
    "nom": "Capital/Votre argent",
    "etat": 200,
-   "ms": 313,
-   "vus": 6,
+   "ms": 912,
+   "vus": 7,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://feed.prismamediadigital.com/v1/cap/rss?limit=20&categories=votre-argent"
   },
   {
    "nom": "MoneyVox",
    "etat": 200,
-   "ms": 523,
-   "vus": 5,
+   "ms": 187,
+   "vus": 3,
    "titres": 3,
    "dit": "page web ; flux annonce suivi vers https://www.moneyvox.fr/actu/rss.php"
   },
   {
    "nom": "France Info/Economie",
    "etat": 200,
-   "ms": 443,
-   "vus": 7,
-   "titres": 3,
-   "dit": null
+   "ms": 308,
+   "vus": 20,
+   "titres": 0,
+   "dit": "20 titres lus, aucun ne concerne le sujet du site"
   },
   {
    "nom": "Le Monde/Economie",
    "etat": 200,
-   "ms": 312,
-   "vus": 20,
-   "titres": 1,
+   "ms": 113,
+   "vus": 19,
+   "titres": 3,
    "dit": null
   }
  ]
